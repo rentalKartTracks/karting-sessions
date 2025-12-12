@@ -1,0 +1,17 @@
+{
+  "sessions": [
+    {
+      "id": "example-session",
+      "driver": "Povilas L.",
+      "track": {
+        "name": "Plytinės Kartodromas",
+        "configuration": "Summer"
+      },
+      "session_date": "2025-07-17",
+      "fastest_lap": "00:44.030",
+      "kart": "9 Ag",
+      "laps_count": 7,
+      "average_lap": "00:44.67"
+    }
+  ]
+}
