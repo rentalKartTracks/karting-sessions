@@ -1,0 +1,30 @@
+{
+  "session_id": "example-session",
+  "driver": "Povilas L.",
+  "fastest_lap": "01:06.329",
+
+  "track": {
+    "name": "Plytinės Kartodromas",
+    "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysc..."
+  },
+
+  "kart": "SR4",
+  "session_date": "2025-10-29",
+
+  "laps": [
+    { "timestamp": "00:22", "lap": 1, "time": "71.547", "bar": 100 },
+    { "timestamp": "01:33", "lap": 2, "time": "68.621", "bar": 100 },
+    { "timestamp": "02:42", "lap": 3, "time": "67.267", "bar": 100 },
+    { "timestamp": "03:49", "lap": 4, "time": "68.690", "bar": 100 },
+    { "timestamp": "04:58", "lap": 5, "time": "66.329", "bar": 95 },
+    { "timestamp": "06:04", "lap": 6, "time": "68.439", "bar": 100 },
+    { "timestamp": "07:12", "lap": 7, "time": "01.000", "bar": 20, "best": true },
+    { "timestamp": "07:13", "lap": null, "note": "Return to Pit Box — Close" }
+  ],
+
+  "socials": {
+    "instagram": "https://instagram.com/helmet.cam.heroes",
+    "facebook": "https://facebook.com/helmet.cam.heroes",
+    "website": "http://www.rental-kart-tracks.com/"
+  }
+}
