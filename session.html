@@ -84,6 +84,7 @@
       border-radius: 12px;
       margin-bottom: 30px;
       box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      position: relative;
     }
 
     .chart-title {
@@ -95,7 +96,7 @@
     .line-chart {
       position: relative;
       height: 300px;
-      margin-bottom: 40px;
+      margin-bottom: 10px;
     }
 
     .chart-canvas {
@@ -403,9 +404,11 @@
     function setupTooltipInteractions() {
       const canvas = document.getElementById('lap-chart');
       const tooltip = document.getElementById('chart-tooltip');
+      const chartContainer = canvas.closest('.chart-container');
       
       canvas.addEventListener('mousemove', (e) => {
         const rect = canvas.getBoundingClientRect();
+        const containerRect = chartContainer.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
         
@@ -422,7 +425,7 @@
         });
         
         if (closestPoint) {
-          showTooltip(closestPoint, x, y);
+          showTooltip(closestPoint, e.clientX - containerRect.left, e.clientY - containerRect.top);
         } else {
           hideTooltip();
         }
@@ -433,8 +436,8 @@
     
     function showTooltip(point, mouseX, mouseY) {
       const tooltip = document.getElementById('chart-tooltip');
-      const canvas = document.getElementById('lap-chart');
-      const rect = canvas.getBoundingClientRect();
+      const chartContainer = document.querySelector('.chart-container');
+      const rect = chartContainer.getBoundingClientRect();
       
       let tooltipHTML = '';
       
@@ -461,7 +464,6 @@
         
         tooltipHTML = `
           <div class="tooltip-header">
-            <span class="tooltip-driver">${currentSessionData.driver}</span>
             <span class="tooltip-lap">Lap ${point.lapNumber}</span>
           </div>
           <div class="tooltip-time">${point.lap.time}</div>
@@ -477,22 +479,21 @@
       tooltip.innerHTML = tooltipHTML + '<div class="tooltip-arrow"></div>';
       tooltip.classList.add('tooltip-visible');
       
-      // Position tooltip
+      // Position tooltip at the bottom of the chart area (like in the image)
       const tooltipWidth = tooltip.offsetWidth;
       const tooltipHeight = tooltip.offsetHeight;
       
-      let left = mouseX + 15;
-      let top = mouseY - tooltipHeight / 2;
+      // Position at the bottom of the chart container, centered horizontally
+      const chartBottom = document.querySelector('.line-chart').getBoundingClientRect().bottom - rect.top;
+      let left = mouseX - tooltipWidth / 2;
+      let top = chartBottom + 20; // Position below the chart
       
-      // Adjust if tooltip goes beyond canvas boundaries
-      if (left + tooltipWidth > rect.width) {
-        left = mouseX - tooltipWidth - 15;
+      // Adjust if tooltip goes beyond container boundaries
+      if (left < 20) {
+        left = 20;
       }
-      if (top < 0) {
-        top = 10;
-      }
-      if (top + tooltipHeight > rect.height) {
-        top = rect.height - tooltipHeight - 10;
+      if (left + tooltipWidth > rect.width - 20) {
+        left = rect.width - tooltipWidth - 20;
       }
       
       tooltip.style.left = left + 'px';
@@ -668,26 +669,19 @@
         legend.innerHTML = `
           <div class="legend-item">
             <div class="legend-color" style="background: #f44336;"></div>
-            <span>${currentSessionData.driver} (Current)</span>
+            <span>${currentSessionData.driver}</span>
           </div>
           <div class="legend-item">
             <div class="legend-color" style="background: #4caf50;"></div>
-            <span>${comparisonSessionData.driver} (Comparison)</span>
+            <span>${comparisonSessionData.driver}</span>
           </div>
           <div class="legend-item">
             <div class="legend-color" style="background: #ffd700;"></div>
             <span>★ Best Lap</span>
           </div>
-          <div class="legend-item">
-            <small>Hover over points to see lap details</small>
-          </div>
         `;
       } else {
         legend.innerHTML = `
-          <div class="legend-item">
-            <div class="legend-color" style="background: #f44336;"></div>
-            <span>${currentSessionData.driver}</span>
-          </div>
           <div class="legend-item">
             <div class="legend-color" style="background: #ffd700;"></div>
             <span>★ Best Lap</span>
