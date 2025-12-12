@@ -204,6 +204,86 @@
       height: 20px;
       border-radius: 4px;
     }
+
+    /* Tooltip Styles */
+    .tooltip {
+      position: absolute;
+      background: rgba(30, 30, 30, 0.95);
+      border: 2px solid #f44336;
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: #e0e0e0;
+      font-size: 14px;
+      pointer-events: none;
+      z-index: 1000;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      max-width: 250px;
+      transition: opacity 0.2s ease;
+      opacity: 0;
+    }
+
+    .tooltip-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      border-bottom: 1px solid #444;
+      padding-bottom: 4px;
+    }
+
+    .tooltip-driver {
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .tooltip-lap {
+      color: #f44336;
+      font-weight: bold;
+    }
+
+    .tooltip-time {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 8px 0;
+      color: #fff;
+    }
+
+    .tooltip-best {
+      color: #ffd700;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .tooltip-delta {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .tooltip-footer {
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px solid #444;
+      font-size: 12px;
+      color: #aaa;
+    }
+
+    .tooltip-visible {
+      opacity: 1;
+    }
+
+    .tooltip-arrow {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 8px solid #f44336;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
   </style>
 </head>
 <body>
@@ -268,10 +348,15 @@
     </div>
   </div>
 
+  <!-- Tooltip element -->
+  <div id="chart-tooltip" class="tooltip"></div>
+
   <script>
     let currentSessionData = null;
     let comparisonSessionData = null;
-    let chartInstance = null;
+    let chartPoints = []; // Store point positions for hover detection
+    let currentDataset = [];
+    let comparisonDataset = [];
     const params = new URLSearchParams(window.location.search);
     const sessionId = params.get("id") || "example-session";
 
@@ -315,6 +400,110 @@
       return { text: 'Variable', class: 'consistency-poor' };
     }
 
+    function setupTooltipInteractions() {
+      const canvas = document.getElementById('lap-chart');
+      const tooltip = document.getElementById('chart-tooltip');
+      
+      canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        let closestPoint = null;
+        let minDistance = Infinity;
+        
+        // Find the closest point to the cursor
+        chartPoints.forEach(point => {
+          const distance = Math.sqrt(Math.pow(x - point.x, 2) + Math.pow(y - point.y, 2));
+          if (distance < 20 && distance < minDistance) {
+            minDistance = distance;
+            closestPoint = point;
+          }
+        });
+        
+        if (closestPoint) {
+          showTooltip(closestPoint, x, y);
+        } else {
+          hideTooltip();
+        }
+      });
+      
+      canvas.addEventListener('mouseleave', hideTooltip);
+    }
+    
+    function showTooltip(point, mouseX, mouseY) {
+      const tooltip = document.getElementById('chart-tooltip');
+      const canvas = document.getElementById('lap-chart');
+      const rect = canvas.getBoundingClientRect();
+      
+      let tooltipHTML = '';
+      
+      if (point.isComparison && comparisonSessionData) {
+        // Comparison session tooltip
+        tooltipHTML = `
+          <div class="tooltip-header">
+            <span class="tooltip-driver">${comparisonSessionData.driver}</span>
+            <span class="tooltip-lap">Lap ${point.lapNumber}</span>
+          </div>
+          <div class="tooltip-time">${point.lap.time}</div>
+          ${point.lap.best ? '<div class="tooltip-best">★ Best Lap</div>' : ''}
+          <div class="tooltip-footer">
+            Session: ${new Date(comparisonSessionData.session_date).toLocaleDateString()}<br>
+            Kart: ${comparisonSessionData.kart}
+          </div>
+        `;
+      } else {
+        // Current session tooltip
+        const currentFastest = Math.min(...currentDataset.map(l => parseTime(l.time)));
+        const currentTime = parseTime(point.lap.time);
+        const delta = currentTime - currentFastest;
+        const deltaStr = delta === 0 ? '' : (delta > 0 ? `+${delta.toFixed(3)}s` : `${delta.toFixed(3)}s`);
+        
+        tooltipHTML = `
+          <div class="tooltip-header">
+            <span class="tooltip-driver">${currentSessionData.driver}</span>
+            <span class="tooltip-lap">Lap ${point.lapNumber}</span>
+          </div>
+          <div class="tooltip-time">${point.lap.time}</div>
+          ${point.lap.best ? '<div class="tooltip-best">★ Best Lap</div>' : ''}
+          <div class="tooltip-delta">${delta !== 0 ? `Δ ${deltaStr}` : 'Fastest Lap'}</div>
+          <div class="tooltip-footer">
+            Session: ${new Date(currentSessionData.session_date).toLocaleDateString()}<br>
+            Kart: ${currentSessionData.kart}
+          </div>
+        `;
+      }
+      
+      tooltip.innerHTML = tooltipHTML + '<div class="tooltip-arrow"></div>';
+      tooltip.classList.add('tooltip-visible');
+      
+      // Position tooltip
+      const tooltipWidth = tooltip.offsetWidth;
+      const tooltipHeight = tooltip.offsetHeight;
+      
+      let left = mouseX + 15;
+      let top = mouseY - tooltipHeight / 2;
+      
+      // Adjust if tooltip goes beyond canvas boundaries
+      if (left + tooltipWidth > rect.width) {
+        left = mouseX - tooltipWidth - 15;
+      }
+      if (top < 0) {
+        top = 10;
+      }
+      if (top + tooltipHeight > rect.height) {
+        top = rect.height - tooltipHeight - 10;
+      }
+      
+      tooltip.style.left = left + 'px';
+      tooltip.style.top = top + 'px';
+    }
+    
+    function hideTooltip() {
+      const tooltip = document.getElementById('chart-tooltip');
+      tooltip.classList.remove('tooltip-visible');
+    }
+
     function drawLineChart(mainLaps, compareLaps = null) {
       const canvas = document.getElementById('lap-chart');
       const ctx = canvas.getContext('2d');
@@ -326,15 +515,18 @@
       const chartWidth = canvas.width - padding * 2;
       const chartHeight = canvas.height - padding * 2;
 
-      // Clear canvas
+      // Clear canvas and reset points
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      chartPoints = [];
+      currentDataset = mainLaps;
+      comparisonDataset = compareLaps || [];
 
       // Determine time range for scaling
       const allLaps = compareLaps ? [...mainLaps, ...compareLaps] : mainLaps;
       const lapTimes = allLaps.map(lap => parseTime(lap.time));
       const minTime = Math.min(...lapTimes);
       const maxTime = Math.max(...lapTimes);
-      const timeRange = maxTime - minTime || 1; // Avoid division by zero
+      const timeRange = maxTime - minTime || 1;
 
       // Draw grid
       ctx.strokeStyle = '#3d3d3d';
@@ -358,8 +550,8 @@
         ctx.stroke();
       }
 
-      // Function to draw a single lap line
-      function drawLapLine(laps, color, pointColor) {
+      // Function to draw a single lap line and store point positions
+      function drawLapLine(laps, color, pointColor, isComparison = false) {
         ctx.strokeStyle = color;
         ctx.lineWidth = 3;
         ctx.beginPath();
@@ -374,6 +566,14 @@
           } else {
             ctx.lineTo(x, y);
           }
+          
+          // Store point position for hover detection
+          chartPoints.push({
+            x, y,
+            lap: lap,
+            lapNumber: lap.lap,
+            isComparison: isComparison
+          });
         });
         ctx.stroke();
 
@@ -392,16 +592,25 @@
           ctx.strokeStyle = '#fff';
           ctx.lineWidth = 1;
           ctx.stroke();
+          
+          // Draw a subtle glow on hover points
+          ctx.shadowColor = pointColor;
+          ctx.shadowBlur = 10;
+          ctx.beginPath();
+          ctx.arc(x, y, 10, 0, Math.PI * 2);
+          ctx.fillStyle = 'transparent';
+          ctx.fill();
+          ctx.shadowBlur = 0;
         });
       }
 
       // Draw comparison line first (behind)
       if (compareLaps) {
-        drawLapLine(compareLaps, '#4caf50', '#8bc34a');
+        drawLapLine(compareLaps, '#4caf50', '#8bc34a', true);
       }
 
       // Draw main line (on top)
-      drawLapLine(mainLaps, '#f44336', '#ff5252');
+      drawLapLine(mainLaps, '#f44336', '#ff5252', false);
 
       // Draw best lap markers
       function drawBestLapMarkers(laps, color) {
@@ -469,6 +678,9 @@
             <div class="legend-color" style="background: #ffd700;"></div>
             <span>★ Best Lap</span>
           </div>
+          <div class="legend-item">
+            <small>Hover over points to see lap details</small>
+          </div>
         `;
       } else {
         legend.innerHTML = `
@@ -480,8 +692,14 @@
             <div class="legend-color" style="background: #ffd700;"></div>
             <span>★ Best Lap</span>
           </div>
+          <div class="legend-item">
+            <small>Hover over points to see lap details</small>
+          </div>
         `;
       }
+
+      // Setup tooltip interactions
+      setupTooltipInteractions();
     }
 
     function renderSession(data) {
