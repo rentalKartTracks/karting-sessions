@@ -1,25 +1,25 @@
 {
   "session_id": "example-session",
   "driver": "Povilas L.",
-  "fastest_lap": "01:06.329",
+  "fastest_lap": "00:‎44.030",
 
   "track": {
     "name": "Plytinės Kartodromas",
     "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
   },
 
-  "kart": "SR4",
-  "session_date": "2025-10-29",
+  "kart": "9 Ag",
+  "session_date": "2025-07-17",
 
   "laps": [
-    { "timestamp": "00:22", "lap": 1, "time": "71.547", "bar": 100 },
-    { "timestamp": "01:33", "lap": 2, "time": "68.621", "bar": 100 },
-    { "timestamp": "02:42", "lap": 3, "time": "67.267", "bar": 100 },
-    { "timestamp": "03:49", "lap": 4, "time": "68.690", "bar": 100 },
-    { "timestamp": "04:58", "lap": 5, "time": "66.329", "bar": 95 },
-    { "timestamp": "06:04", "lap": 6, "time": "68.439", "bar": 100 },
-    { "timestamp": "07:12", "lap": 7, "time": "01.000", "bar": 20, "best": true },
-    { "timestamp": "07:13", "lap": null, "note": "Return to Pit Box — Close" }
+    {  "lap": 1, "time": "00:46.557" },
+    {  "lap": 2, "time": "00:44.789", },
+    {  "lap": 3, "time": "00:44.603"},
+    {  "lap": 4, "time": "00:44.488" },
+    {  "lap": 5, "time": "00:44.809"},
+    {  "lap": 6, "time": "00:44.490" },
+    {  "lap": 7, "time": "01.000",  "best": true },
+    { "lap": null, "note": "Return to Pit Box — Close" }
   ],
 
   "socials": {
