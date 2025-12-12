@@ -265,7 +265,6 @@
       <div class="filter-group">
         <button class="filter-btn active" data-sort="date">Latest First</button>
         <button class="filter-btn" data-sort="fastest">Fastest First</button>
-        <button class="filter-btn" data-sort="driver">By Driver</button>
       </div>
     </div>
 
@@ -279,25 +278,15 @@
     let filteredSessions = [];
     let currentSort = 'date';
 
-    const sessionIds = [
-      'example-session'
-    ];
-
-    async function loadAllSessions() {
+    async function loadSessionsList() {
       const container = document.getElementById('sessions-container');
-      
-      try {
-        const promises = sessionIds.map(id => 
-          fetch(`sessions/${id}.json`)
-            .then(r => r.json())
-            .then(data => ({ ...data, id }))
-            .catch(() => null)
-        );
 
-        const results = await Promise.all(promises);
-        allSessions = results.filter(s => s !== null);
-        
-        if (allSessions.length === 0) {
+      try {
+        const res = await fetch('sessions/sessions-list.json');
+        const list = await res.json();
+        allSessions = list.sessions;
+
+        if (!allSessions || allSessions.length === 0) {
           container.innerHTML = '<div class="error">No sessions found.</div>';
           return;
         }
@@ -306,9 +295,9 @@
         populateFilters();
         filteredSessions = [...allSessions];
         renderSessions();
-        
-      } catch (error) {
-        container.innerHTML = '<div class="error">Error loading sessions.</div>';
+
+      } catch (e) {
+        container.innerHTML = '<div class="error">Failed to load sessions list.</div>';
       }
     }
 
@@ -336,154 +325,130 @@
     }
 
     function parseTime(timeStr) {
-      const parts = timeStr.split(':');
-      if (parts.length === 2) {
-        const minutes = parseInt(parts[0]);
-        const seconds = parseFloat(parts[1]);
-        return minutes * 60 + seconds;
-      }
-      return parseFloat(timeStr);
+      const p = timeStr.split(":");
+      return parseInt(p[0]) * 60 + parseFloat(p[1]);
     }
 
     function updateSummaryStats() {
-      const totalSessions = allSessions.length;
-      const totalLaps = allSessions.reduce((sum, s) => 
-        sum + s.laps.filter(l => l.lap !== null).length, 0
-      );
-      
-      const allFastestLaps = allSessions.map(s => parseTime(s.fastest_lap));
-      const bestLapEver = Math.min(...allFastestLaps);
-      
-      const uniqueTracks = new Set(allSessions.map(s => s.track.name));
+      document.getElementById("total-sessions").textContent = allSessions.length;
 
-      document.getElementById('total-sessions').textContent = totalSessions;
-      document.getElementById('total-laps').textContent = totalLaps;
-      document.getElementById('tracks-count').textContent = uniqueTracks.size;
-      
-      const bestSession = allSessions.find(s => parseTime(s.fastest_lap) === bestLapEver);
-      document.getElementById('best-lap-ever').textContent = bestSession ? bestSession.fastest_lap : '-';
+      const totalLaps = allSessions.reduce((a, s) => a + s.laps_count, 0);
+      document.getElementById("total-laps").textContent = totalLaps;
+
+      const trackSet = new Set(allSessions.map(s => s.track.name));
+      document.getElementById("tracks-count").textContent = trackSet.size;
+
+      const allFastestTimes = allSessions.map(s => parseTime(s.fastest_lap));
+      const minTime = Math.min(...allFastestTimes);
+      const best = allSessions.find(s => parseTime(s.fastest_lap) === minTime);
+      document.getElementById("best-lap-ever").textContent = best.fastest_lap;
     }
 
     function renderSessions() {
       const container = document.getElementById('sessions-container');
-      
       if (filteredSessions.length === 0) {
-        container.innerHTML = '<div class="no-results">No sessions match your search.</div>';
+        container.innerHTML = '<div class="no-results">No matching sessions.</div>';
         return;
       }
 
-      const html = filteredSessions.map(session => {
-        const validLaps = session.laps.filter(l => l.lap !== null);
-        const lapTimes = validLaps.map(l => parseTime(l.time));
-        const avgTime = lapTimes.reduce((a, b) => a + b, 0) / lapTimes.length;
-
-        return `
-          <div class="session-card" onclick="viewSession('${session.id}')">
-            <div class="session-header">
-              <div class="driver-name">${session.driver}</div>
-              <div class="session-date">${new Date(session.session_date).toLocaleDateString()}</div>
-            </div>
-            
-            <div class="session-stats">
-              <div class="session-stat">
-                <span class="stat-name">Track</span>
-                <span class="stat-val">${session.track.name}</span>
-              </div>
-              <div class="session-stat">
-                <span class="stat-name">Config</span>
-                <span class="stat-val">${session.track.configuration || '-'}</span>
-              </div>
-              <div class="session-stat">
-                <span class="stat-name">Kart</span>
-                <span class="stat-val">${session.kart}</span>
-              </div>
-              <div class="session-stat">
-                <span class="stat-name">Fastest</span>
-                <span class="stat-val">🏆 ${session.fastest_lap}</span>
-              </div>
-              <div class="session-stat">
-                <span class="stat-name">Average</span>
-                <span class="stat-val">${formatTime(avgTime)}</span>
-              </div>
-              <div class="session-stat">
-                <span class="stat-name">Laps</span>
-                <span class="stat-val">${validLaps.length}</span>
-              </div>
-            </div>
-            
-            <button class="view-btn">View Full Telemetry →</button>
+      const html = filteredSessions.map(s => `
+        <div class="session-card" onclick="viewSession('${s.id}')">
+          <div class="session-header">
+            <div class="driver-name">${s.driver}</div>
+            <div class="session-date">${new Date(s.session_date).toLocaleDateString()}</div>
           </div>
-        `;
-      }).join('');
+
+          <div class="session-stats">
+            <div class="session-stat">
+              <span class="stat-name">Track</span>
+              <span class="stat-val">${s.track.name}</span>
+            </div>
+
+            <div class="session-stat">
+              <span class="stat-name">Configuration</span>
+              <span class="stat-val">${s.track.configuration}</span>
+            </div>
+
+            <div class="session-stat">
+              <span class="stat-name">Kart</span>
+              <span class="stat-val">${s.kart}</span>
+            </div>
+
+            <div class="session-stat">
+              <span class="stat-name">Fastest</span>
+              <span class="stat-val">🏆 ${s.fastest_lap}</span>
+            </div>
+
+            <div class="session-stat">
+              <span class="stat-name">Average</span>
+              <span class="stat-val">${s.average_lap}</span>
+            </div>
+
+            <div class="session-stat">
+              <span class="stat-name">Laps</span>
+              <span class="stat-val">${s.laps_count}</span>
+            </div>
+          </div>
+
+          <button class="view-btn">View Full Telemetry →</button>
+        </div>
+      `).join("");
 
       container.innerHTML = `<div class="sessions-grid">${html}</div>`;
     }
 
-    function formatTime(seconds) {
-      const mins = Math.floor(seconds / 60);
-      const secs = (seconds % 60).toFixed(3);
-      return mins > 0 ? `${mins}:${secs.padStart(6, '0')}` : `${secs}s`;
+    function viewSession(id) {
+      window.location.href = `session.html?id=${id}`;
     }
 
-    function viewSession(sessionId) {
-      window.location.href = `session.html?id=${sessionId}`;
-    }
+    function sortSessions(type) {
+      currentSort = type;
 
-    function sortSessions(sortType) {
-      currentSort = sortType;
-      
-      if (sortType === 'date') {
+      if (type === "date") {
         filteredSessions.sort((a, b) => new Date(b.session_date) - new Date(a.session_date));
-      } else if (sortType === 'fastest') {
+      } else if (type === "fastest") {
         filteredSessions.sort((a, b) => parseTime(a.fastest_lap) - parseTime(b.fastest_lap));
-      } else if (sortType === 'driver') {
-        filteredSessions.sort((a, b) => a.driver.localeCompare(b.driver));
       }
-      
+
       renderSessions();
     }
 
     function filterSessions(searchTerm) {
       const term = searchTerm.toLowerCase();
+      const t = document.getElementById("track-filter").value;
+      const c = document.getElementById("config-filter").value;
 
-      const track = document.getElementById("track-filter").value;
-      const config = document.getElementById("config-filter").value;
-
-      filteredSessions = allSessions.filter(session => {
-        const matchSearch =
-          session.driver.toLowerCase().includes(term) ||
-          session.track.name.toLowerCase().includes(term);
-
-        const matchTrack = track === "" || session.track.name === track;
-        const matchConfig = config === "" || session.track.configuration === config;
-
-        return matchSearch && matchTrack && matchConfig;
-      });
+      filteredSessions = allSessions.filter(s =>
+        (s.driver.toLowerCase().includes(term) ||
+        s.track.name.toLowerCase().includes(term)) &&
+        (t === "" || s.track.name === t) &&
+        (c === "" || s.track.configuration === c)
+      );
 
       sortSessions(currentSort);
     }
 
-    document.getElementById('search-input').addEventListener('input', (e) => {
+    document.getElementById("search-input").addEventListener("input", e => {
       filterSessions(e.target.value);
     });
 
     document.getElementById("track-filter").addEventListener("change", () => {
-      filterSessions(document.getElementById('search-input').value);
+      filterSessions(document.getElementById("search-input").value);
     });
 
     document.getElementById("config-filter").addEventListener("change", () => {
-      filterSessions(document.getElementById('search-input').value);
+      filterSessions(document.getElementById("search-input").value);
     });
 
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", e => {
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+        e.target.classList.add("active");
         sortSessions(e.target.dataset.sort);
       });
     });
 
-    loadAllSessions();
+    loadSessionsList();
   </script>
 </body>
 </html>
