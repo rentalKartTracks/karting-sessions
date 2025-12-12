@@ -102,6 +102,7 @@
     .chart-canvas {
       width: 100%;
       height: 100%;
+      cursor: pointer;
     }
 
     .socials {
@@ -285,6 +286,11 @@
       left: 50%;
       transform: translateX(-50%);
     }
+
+    /* Hover effect for points */
+    .point-hover {
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -358,6 +364,7 @@
     let chartPoints = []; // Store point positions for hover detection
     let currentDataset = [];
     let comparisonDataset = [];
+    let activePoint = null;
     const params = new URLSearchParams(window.location.search);
     const sessionId = params.get("id") || "example-session";
 
@@ -404,11 +411,9 @@
     function setupTooltipInteractions() {
       const canvas = document.getElementById('lap-chart');
       const tooltip = document.getElementById('chart-tooltip');
-      const chartContainer = canvas.closest('.chart-container');
       
       canvas.addEventListener('mousemove', (e) => {
         const rect = canvas.getBoundingClientRect();
-        const containerRect = chartContainer.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
         
@@ -418,26 +423,36 @@
         // Find the closest point to the cursor
         chartPoints.forEach(point => {
           const distance = Math.sqrt(Math.pow(x - point.x, 2) + Math.pow(y - point.y, 2));
-          if (distance < 20 && distance < minDistance) {
+          // Only show tooltip when very close to a point (within 15px)
+          if (distance < 15 && distance < minDistance) {
             minDistance = distance;
             closestPoint = point;
           }
         });
         
         if (closestPoint) {
-          showTooltip(closestPoint, e.clientX - containerRect.left, e.clientY - containerRect.top);
+          if (!activePoint || activePoint.lapNumber !== closestPoint.lapNumber || activePoint.isComparison !== closestPoint.isComparison) {
+            activePoint = closestPoint;
+            showTooltip(activePoint, e.clientX, e.clientY);
+          }
         } else {
+          activePoint = null;
           hideTooltip();
         }
       });
       
-      canvas.addEventListener('mouseleave', hideTooltip);
+      canvas.addEventListener('mouseleave', () => {
+        activePoint = null;
+        hideTooltip();
+      });
     }
     
     function showTooltip(point, mouseX, mouseY) {
       const tooltip = document.getElementById('chart-tooltip');
       const chartContainer = document.querySelector('.chart-container');
-      const rect = chartContainer.getBoundingClientRect();
+      const chartRect = chartContainer.getBoundingClientRect();
+      const canvas = document.getElementById('lap-chart');
+      const canvasRect = canvas.getBoundingClientRect();
       
       let tooltipHTML = '';
       
@@ -479,21 +494,40 @@
       tooltip.innerHTML = tooltipHTML + '<div class="tooltip-arrow"></div>';
       tooltip.classList.add('tooltip-visible');
       
-      // Position tooltip at the bottom of the chart area (like in the image)
+      // Position tooltip above the point, centered horizontally
       const tooltipWidth = tooltip.offsetWidth;
       const tooltipHeight = tooltip.offsetHeight;
       
-      // Position at the bottom of the chart container, centered horizontally
-      const chartBottom = document.querySelector('.line-chart').getBoundingClientRect().bottom - rect.top;
-      let left = mouseX - tooltipWidth / 2;
-      let top = chartBottom + 20; // Position below the chart
+      // Convert canvas coordinates to page coordinates
+      const pointX = point.x + canvasRect.left - chartRect.left;
+      const pointY = point.y + canvasRect.top - chartRect.top;
+      
+      // Position above the point
+      let left = pointX - tooltipWidth / 2;
+      let top = pointY - tooltipHeight - 20; // 20px above the point
       
       // Adjust if tooltip goes beyond container boundaries
       if (left < 20) {
         left = 20;
       }
-      if (left + tooltipWidth > rect.width - 20) {
-        left = rect.width - tooltipWidth - 20;
+      if (left + tooltipWidth > chartRect.width - 20) {
+        left = chartRect.width - tooltipWidth - 20;
+      }
+      
+      // If tooltip would go above container, show below the point
+      if (top < 20) {
+        top = pointY + 30; // 30px below the point
+        // Flip arrow to top
+        tooltip.querySelector('.tooltip-arrow').style.borderTop = 'none';
+        tooltip.querySelector('.tooltip-arrow').style.borderBottom = '8px solid #f44336';
+        tooltip.querySelector('.tooltip-arrow').style.top = '-8px';
+        tooltip.querySelector('.tooltip-arrow').style.bottom = 'auto';
+      } else {
+        // Reset arrow to default (pointing down)
+        tooltip.querySelector('.tooltip-arrow').style.borderTop = '8px solid #f44336';
+        tooltip.querySelector('.tooltip-arrow').style.borderBottom = 'none';
+        tooltip.querySelector('.tooltip-arrow').style.bottom = '-8px';
+        tooltip.querySelector('.tooltip-arrow').style.top = 'auto';
       }
       
       tooltip.style.left = left + 'px';
@@ -578,12 +612,19 @@
         });
         ctx.stroke();
 
-        // Draw points
+        // Draw points with larger hover area
         laps.forEach((lap, i) => {
           const x = padding + (chartWidth / (laps.length - 1 || 1)) * i;
           const lapTime = parseTime(lap.time);
           const y = padding + chartHeight - ((lapTime - minTime) / timeRange) * chartHeight;
 
+          // Draw hover area (invisible but interactive)
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+          ctx.beginPath();
+          ctx.arc(x, y, 15, 0, Math.PI * 2);
+          ctx.fill();
+          
+          // Draw actual point
           ctx.fillStyle = pointColor;
           ctx.beginPath();
           ctx.arc(x, y, 6, 0, Math.PI * 2);
@@ -593,15 +634,6 @@
           ctx.strokeStyle = '#fff';
           ctx.lineWidth = 1;
           ctx.stroke();
-          
-          // Draw a subtle glow on hover points
-          ctx.shadowColor = pointColor;
-          ctx.shadowBlur = 10;
-          ctx.beginPath();
-          ctx.arc(x, y, 10, 0, Math.PI * 2);
-          ctx.fillStyle = 'transparent';
-          ctx.fill();
-          ctx.shadowBlur = 0;
         });
       }
 
