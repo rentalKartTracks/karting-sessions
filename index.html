@@ -53,13 +53,17 @@
 
     .search-box {
       flex: 1;
-      min-width: 250px;
+      min-width: 220px;
       padding: 12px;
       background: #1e1e1e;
       border: 2px solid #3d3d3d;
       color: #e0e0e0;
       border-radius: 8px;
       font-size: 1em;
+    }
+
+    select.search-box {
+      cursor: pointer;
     }
 
     .filter-group {
@@ -214,15 +218,6 @@
       margin: 20px 0;
       text-align: center;
     }
-
-    .skeleton {
-      animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
   </style>
 </head>
 <body>
@@ -256,8 +251,17 @@
         type="text" 
         class="search-box" 
         id="search-input" 
-        placeholder="🔍 Search by driver, track, or kart..."
+        placeholder="🔍 Search by driver..."
       >
+
+      <select id="track-filter" class="search-box">
+        <option value="">All Tracks</option>
+      </select>
+
+      <select id="config-filter" class="search-box">
+        <option value="">All Configurations</option>
+      </select>
+
       <div class="filter-group">
         <button class="filter-btn active" data-sort="date">Latest First</button>
         <button class="filter-btn" data-sort="fastest">Fastest First</button>
@@ -275,12 +279,8 @@
     let filteredSessions = [];
     let currentSort = 'date';
 
-    // You need to manually list your session IDs here, or use a sessions-list.json file
     const sessionIds = [
-      'example-session',
-      // Add more session IDs here as you create them
-      // 'session-2025-07-20',
-      // 'session-2025-07-18',
+      'example-session'
     ];
 
     async function loadAllSessions() {
@@ -298,17 +298,41 @@
         allSessions = results.filter(s => s !== null);
         
         if (allSessions.length === 0) {
-          container.innerHTML = '<div class="error">No sessions found. Make sure your JSON files are in the sessions/ folder.</div>';
+          container.innerHTML = '<div class="error">No sessions found.</div>';
           return;
         }
 
         updateSummaryStats();
+        populateFilters();
         filteredSessions = [...allSessions];
         renderSessions();
         
       } catch (error) {
-        container.innerHTML = '<div class="error">Error loading sessions. Please check your setup.</div>';
+        container.innerHTML = '<div class="error">Error loading sessions.</div>';
       }
+    }
+
+    function populateFilters() {
+      const trackSelect = document.getElementById("track-filter");
+      const configSelect = document.getElementById("config-filter");
+
+      const tracks = [...new Set(allSessions.map(s => s.track.name))];
+      const configs = [...new Set(allSessions.map(s => s.track.configuration || ""))];
+
+      tracks.forEach(t => {
+        const opt = document.createElement("option");
+        opt.value = t;
+        opt.textContent = t;
+        trackSelect.appendChild(opt);
+      });
+
+      configs.forEach(c => {
+        if (!c) return;
+        const opt = document.createElement("option");
+        opt.value = c;
+        opt.textContent = c;
+        configSelect.appendChild(opt);
+      });
     }
 
     function parseTime(timeStr) {
@@ -366,11 +390,15 @@
                 <span class="stat-val">${session.track.name}</span>
               </div>
               <div class="session-stat">
+                <span class="stat-name">Config</span>
+                <span class="stat-val">${session.track.configuration || '-'}</span>
+              </div>
+              <div class="session-stat">
                 <span class="stat-name">Kart</span>
                 <span class="stat-val">${session.kart}</span>
               </div>
               <div class="session-stat">
-                <span class="stat-name">Fastest Lap</span>
+                <span class="stat-name">Fastest</span>
                 <span class="stat-val">🏆 ${session.fastest_lap}</span>
               </div>
               <div class="session-stat">
@@ -417,18 +445,34 @@
 
     function filterSessions(searchTerm) {
       const term = searchTerm.toLowerCase();
-      filteredSessions = allSessions.filter(session => 
-        session.driver.toLowerCase().includes(term) ||
-        session.track.name.toLowerCase().includes(term) ||
-        session.kart.toLowerCase().includes(term) ||
-        session.session_date.includes(term)
-      );
+
+      const track = document.getElementById("track-filter").value;
+      const config = document.getElementById("config-filter").value;
+
+      filteredSessions = allSessions.filter(session => {
+        const matchSearch =
+          session.driver.toLowerCase().includes(term) ||
+          session.track.name.toLowerCase().includes(term);
+
+        const matchTrack = track === "" || session.track.name === track;
+        const matchConfig = config === "" || session.track.configuration === config;
+
+        return matchSearch && matchTrack && matchConfig;
+      });
+
       sortSessions(currentSort);
     }
 
-    // Event listeners
     document.getElementById('search-input').addEventListener('input', (e) => {
       filterSessions(e.target.value);
+    });
+
+    document.getElementById("track-filter").addEventListener("change", () => {
+      filterSessions(document.getElementById('search-input').value);
+    });
+
+    document.getElementById("config-filter").addEventListener("change", () => {
+      filterSessions(document.getElementById('search-input').value);
     });
 
     document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -439,7 +483,6 @@
       });
     });
 
-    // Load sessions on page load
     loadAllSessions();
   </script>
 </body>
