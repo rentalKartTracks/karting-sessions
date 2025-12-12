@@ -53,7 +53,7 @@
 
     .search-box {
       flex: 1;
-      min-width: 250px;
+      min-width: 200px;
       padding: 12px;
       background: #1e1e1e;
       border: 2px solid #3d3d3d;
@@ -65,6 +65,7 @@
     .filter-group {
       display: flex;
       gap: 10px;
+      flex-wrap: wrap;
     }
 
     .filter-btn {
@@ -85,6 +86,42 @@
     .filter-btn.active {
       background: #f44336;
       color: white;
+    }
+
+    .select-filter {
+      padding: 10px 15px;
+      background: #1e1e1e;
+      border: 2px solid #3d3d3d;
+      color: #e0e0e0;
+      border-radius: 8px;
+      font-size: 1em;
+      min-width: 180px;
+    }
+
+    .date-filter-group {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .date-input {
+      padding: 10px;
+      background: #1e1e1e;
+      border: 2px solid #3d3d3d;
+      color: #e0e0e0;
+      border-radius: 8px;
+      font-size: 1em;
+      min-width: 150px;
+    }
+
+    .date-range {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+
+    .date-range span {
+      color: #999;
     }
 
     .stats-summary {
@@ -258,10 +295,34 @@
         id="search-input" 
         placeholder="🔍 Search by driver, track, or kart..."
       >
+      
+      <select class="select-filter" id="track-filter">
+        <option value="">All Tracks</option>
+      </select>
+      
+      <select class="select-filter" id="config-filter">
+        <option value="">All Configurations</option>
+      </select>
+      
+      <div class="date-filter-group">
+        <select class="select-filter" id="date-filter">
+          <option value="all">All Time</option>
+          <option value="today">Today</option>
+          <option value="week">Last 7 Days</option>
+          <option value="month">Last 30 Days</option>
+          <option value="custom">Custom Range</option>
+        </select>
+        
+        <div class="date-range" id="custom-date-range" style="display: none;">
+          <input type="date" class="date-input" id="date-from">
+          <span>to</span>
+          <input type="date" class="date-input" id="date-to">
+        </div>
+      </div>
+      
       <div class="filter-group">
         <button class="filter-btn active" data-sort="date">Latest First</button>
         <button class="filter-btn" data-sort="fastest">Fastest First</button>
-        <button class="filter-btn" data-sort="driver">By Driver</button>
       </div>
     </div>
 
@@ -274,23 +335,29 @@
     let allSessions = [];
     let filteredSessions = [];
     let currentSort = 'date';
-
-    // You need to manually list your session IDs here, or use a sessions-list.json file
-    const sessionIds = [
-      'example-session',
-      // Add more session IDs here as you create them
-      // 'session-2025-07-20',
-      // 'session-2025-07-18',
-    ];
+    let uniqueTracks = new Set();
+    let uniqueConfigs = new Set();
 
     async function loadAllSessions() {
       const container = document.getElementById('sessions-container');
       
       try {
-        const promises = sessionIds.map(id => 
-          fetch(`sessions/${id}.json`)
+        // First load the sessions list
+        const listResponse = await fetch('sessions-list.json');
+        if (!listResponse.ok) throw new Error('Cannot load sessions-list.json');
+        
+        const sessionList = await listResponse.json();
+        
+        // Load each session data
+        const promises = sessionList.sessions.map(session => 
+          fetch(`sessions/${session.id}.json`)
             .then(r => r.json())
-            .then(data => ({ ...data, id }))
+            .then(data => ({ 
+              ...data, 
+              id: session.id,
+              track_name: session.track.name,
+              track_config: session.track.configuration
+            }))
             .catch(() => null)
         );
 
@@ -302,13 +369,42 @@
           return;
         }
 
+        // Extract unique tracks and configurations
+        allSessions.forEach(session => {
+          uniqueTracks.add(session.track_name);
+          uniqueConfigs.add(session.track_config);
+        });
+        
+        populateFilters();
         updateSummaryStats();
         filteredSessions = [...allSessions];
         renderSessions();
         
       } catch (error) {
+        console.error('Error loading sessions:', error);
         container.innerHTML = '<div class="error">Error loading sessions. Please check your setup.</div>';
       }
+    }
+
+    function populateFilters() {
+      const trackFilter = document.getElementById('track-filter');
+      const configFilter = document.getElementById('config-filter');
+      
+      // Populate track filter
+      uniqueTracks.forEach(track => {
+        const option = document.createElement('option');
+        option.value = track;
+        option.textContent = track;
+        trackFilter.appendChild(option);
+      });
+      
+      // Populate configuration filter
+      uniqueConfigs.forEach(config => {
+        const option = document.createElement('option');
+        option.value = config;
+        option.textContent = config;
+        configFilter.appendChild(option);
+      });
     }
 
     function parseTime(timeStr) {
@@ -330,11 +426,11 @@
       const allFastestLaps = allSessions.map(s => parseTime(s.fastest_lap));
       const bestLapEver = Math.min(...allFastestLaps);
       
-      const uniqueTracks = new Set(allSessions.map(s => s.track.name));
+      const uniqueTrackNames = new Set(allSessions.map(s => s.track_name));
 
       document.getElementById('total-sessions').textContent = totalSessions;
       document.getElementById('total-laps').textContent = totalLaps;
-      document.getElementById('tracks-count').textContent = uniqueTracks.size;
+      document.getElementById('tracks-count').textContent = uniqueTrackNames.size;
       
       const bestSession = allSessions.find(s => parseTime(s.fastest_lap) === bestLapEver);
       document.getElementById('best-lap-ever').textContent = bestSession ? bestSession.fastest_lap : '-';
@@ -363,7 +459,7 @@
             <div class="session-stats">
               <div class="session-stat">
                 <span class="stat-name">Track</span>
-                <span class="stat-val">${session.track.name}</span>
+                <span class="stat-val">${session.track_name} (${session.track_config})</span>
               </div>
               <div class="session-stat">
                 <span class="stat-name">Kart</span>
@@ -408,28 +504,89 @@
         filteredSessions.sort((a, b) => new Date(b.session_date) - new Date(a.session_date));
       } else if (sortType === 'fastest') {
         filteredSessions.sort((a, b) => parseTime(a.fastest_lap) - parseTime(b.fastest_lap));
-      } else if (sortType === 'driver') {
-        filteredSessions.sort((a, b) => a.driver.localeCompare(b.driver));
       }
       
       renderSessions();
     }
 
-    function filterSessions(searchTerm) {
-      const term = searchTerm.toLowerCase();
-      filteredSessions = allSessions.filter(session => 
-        session.driver.toLowerCase().includes(term) ||
-        session.track.name.toLowerCase().includes(term) ||
-        session.kart.toLowerCase().includes(term) ||
-        session.session_date.includes(term)
-      );
+    function filterSessions() {
+      const searchTerm = document.getElementById('search-input').value.toLowerCase();
+      const selectedTrack = document.getElementById('track-filter').value;
+      const selectedConfig = document.getElementById('config-filter').value;
+      const dateFilter = document.getElementById('date-filter').value;
+      
+      filteredSessions = allSessions.filter(session => {
+        // Search filter
+        if (searchTerm && 
+            !session.driver.toLowerCase().includes(searchTerm) &&
+            !session.track_name.toLowerCase().includes(searchTerm) &&
+            !session.kart.toLowerCase().includes(searchTerm)) {
+          return false;
+        }
+        
+        // Track filter
+        if (selectedTrack && session.track_name !== selectedTrack) {
+          return false;
+        }
+        
+        // Configuration filter
+        if (selectedConfig && session.track_config !== selectedConfig) {
+          return false;
+        }
+        
+        // Date filter
+        const sessionDate = new Date(session.session_date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        if (dateFilter === 'today') {
+          const sessionDay = new Date(sessionDate);
+          sessionDay.setHours(0, 0, 0, 0);
+          if (sessionDay.getTime() !== today.getTime()) return false;
+        } else if (dateFilter === 'week') {
+          const weekAgo = new Date(today);
+          weekAgo.setDate(weekAgo.getDate() - 7);
+          if (sessionDate < weekAgo) return false;
+        } else if (dateFilter === 'month') {
+          const monthAgo = new Date(today);
+          monthAgo.setDate(monthAgo.getDate() - 30);
+          if (sessionDate < monthAgo) return false;
+        } else if (dateFilter === 'custom') {
+          const dateFrom = document.getElementById('date-from').value;
+          const dateTo = document.getElementById('date-to').value;
+          
+          if (dateFrom && new Date(session.session_date) < new Date(dateFrom)) return false;
+          if (dateTo && new Date(session.session_date) > new Date(dateTo)) return false;
+        }
+        
+        return true;
+      });
+      
       sortSessions(currentSort);
     }
 
+    function updateDateFilterVisibility() {
+      const dateFilter = document.getElementById('date-filter').value;
+      const customRange = document.getElementById('custom-date-range');
+      
+      if (dateFilter === 'custom') {
+        customRange.style.display = 'flex';
+      } else {
+        customRange.style.display = 'none';
+      }
+    }
+
     // Event listeners
-    document.getElementById('search-input').addEventListener('input', (e) => {
-      filterSessions(e.target.value);
+    document.getElementById('search-input').addEventListener('input', filterSessions);
+    document.getElementById('track-filter').addEventListener('change', filterSessions);
+    document.getElementById('config-filter').addEventListener('change', filterSessions);
+    document.getElementById('date-filter').addEventListener('change', function() {
+      updateDateFilterVisibility();
+      filterSessions();
     });
+    
+    document.getElementById('date-from').addEventListener('change', filterSessions);
+    document.getElementById('date-to').addEventListener('change', filterSessions);
 
     document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -438,6 +595,19 @@
         sortSessions(e.target.dataset.sort);
       });
     });
+
+    // Set default date values
+    const today = new Date().toISOString().split('T')[0];
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 30);
+    const defaultFrom = weekAgo.toISOString().split('T')[0];
+    
+    document.getElementById('date-from').value = defaultFrom;
+    document.getElementById('date-to').value = today;
+    document.getElementById('date-from').max = today;
+    document.getElementById('date-to').max = today;
+    document.getElementById('date-to').min = defaultFrom;
+    document.getElementById('date-from').min = '2020-01-01';
 
     // Load sessions on page load
     loadAllSessions();
