@@ -13,5 +13,18 @@
       "laps_count": 7,
       "average_lap": "00:44.67"
     }
+     {
+      "id": "2ffe82e0-f2df-4334-80ba-c3e6125b82c9",
+      "driver": "Povilas L.",
+      "track": {
+        "name": "Plytinės Kartodromas",
+        "configuration": "Summer"
+      },
+      "session_date": "2025-12-07",
+      "fastest_lap": "00:43.997",
+      "kart": "9 Ag",
+      "laps_count": 13,
+      "average_lap": "00:44.67"
+    }
   ]
 }
