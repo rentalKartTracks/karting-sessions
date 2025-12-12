@@ -338,28 +338,29 @@
     let uniqueTracks = new Set();
     let uniqueConfigs = new Set();
 
-    async function loadAllSessions() {
-      const container = document.getElementById('sessions-container');
-      
-      try {
-        // First load the sessions list
-        const listResponse = await fetch('sessions-list.json');
-        if (!listResponse.ok) throw new Error('Cannot load sessions-list.json');
-        
-        const sessionList = await listResponse.json();
-        
-        // Load each session data
-        const promises = sessionList.sessions.map(session => 
-          fetch(`sessions/${session.id}.json`)
-            .then(r => r.json())
-            .then(data => ({ 
-              ...data, 
-              id: session.id,
-              track_name: session.track.name,
-              track_config: session.track.configuration
-            }))
-            .catch(() => null)
-        );
+async function loadAllSessions() {
+  const container = document.getElementById('sessions-container');
+  
+  try {
+    // FIX: Add 'sessions/' to the path
+    const listResponse = await fetch('sessions/sessions-list.json');
+    
+    if (!listResponse.ok) throw new Error('Cannot load sessions-list.json');
+    
+    const sessionList = await listResponse.json();
+    
+    // Also update the individual session file paths
+    const promises = sessionList.sessions.map(session => 
+      fetch(`sessions/${session.id}.json`)  // FIX: Make sure this path is correct
+        .then(r => r.json())
+        .then(data => ({ 
+          ...data, 
+          id: session.id,
+          track_name: session.track.name,
+          track_config: session.track.configuration
+        }))
+        .catch(() => null)
+    );
 
         const results = await Promise.all(promises);
         allSessions = results.filter(s => s !== null);
