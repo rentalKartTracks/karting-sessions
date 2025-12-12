@@ -1,726 +1,446 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kart Session Statistics</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #e6e6e6;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #0f3460;
-        }
-        
-        h1 {
-            color: #e94560;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        .subtitle {
-            color: #7d8da6;
-            font-size: 1.1rem;
-        }
-        
-        .filter-section {
-            background: rgba(15, 52, 96, 0.3);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 30px;
-            border: 1px solid #0f3460;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        
-        .filter-title {
-            color: #4cc9f0;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-        }
-        
-        .filter-controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            align-items: center;
-        }
-        
-        select, input {
-            background: rgba(22, 33, 62, 0.8);
-            border: 1px solid #0f3460;
-            border-radius: 6px;
-            padding: 10px 15px;
-            color: #e6e6e6;
-            font-size: 1rem;
-            min-width: 200px;
-        }
-        
-        select:focus, input:focus {
-            outline: none;
-            border-color: #4cc9f0;
-            box-shadow: 0 0 0 2px rgba(76, 201, 240, 0.2);
-        }
-        
-        button {
-            background: linear-gradient(to right, #e94560, #d4334e);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 10px 20px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        button:hover {
-            background: linear-gradient(to right, #d4334e, #c3223e);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(233, 69, 96, 0.3);
-        }
-        
-        button#reset-filter {
-            background: linear-gradient(to right, #4cc9f0, #2db8e0);
-        }
-        
-        button#reset-filter:hover {
-            background: linear-gradient(to right, #2db8e0, #1ca7cf);
-            box-shadow: 0 4px 8px rgba(76, 201, 240, 0.3);
-        }
-        
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-        
-        .stat-card {
-            background: rgba(22, 33, 62, 0.6);
-            border-radius: 12px;
-            padding: 25px;
-            border: 1px solid #0f3460;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-            border-color: #4cc9f0;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
-        }
-        
-        .stat-label {
-            color: #7d8da6;
-            font-size: 1rem;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
-        
-        .session-stat {
-            color: #f8f9fa;
-            font-size: 2rem;
-            font-weight: 700;
-            font-family: 'Courier New', monospace;
-        }
-        
-        .highlight {
-            color: #4cc9f0;
-        }
-        
-        .danger {
-            color: #e94560;
-        }
-        
-        .success {
-            color: #4ade80;
-        }
-        
-        .sessions-table-container {
-            background: rgba(22, 33, 62, 0.6);
-            border-radius: 12px;
-            padding: 25px;
-            border: 1px solid #0f3460;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        
-        .table-title {
-            color: #4cc9f0;
-            margin-bottom: 20px;
-            font-size: 1.3rem;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        thead {
-            background: rgba(15, 52, 96, 0.5);
-        }
-        
-        th {
-            padding: 15px;
-            text-align: left;
-            color: #4cc9f0;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-bottom: 2px solid #0f3460;
-        }
-        
-        td {
-            padding: 15px;
-            border-bottom: 1px solid rgba(15, 52, 96, 0.3);
-        }
-        
-        tr:hover {
-            background: rgba(76, 201, 240, 0.1);
-        }
-        
-        .filter-indicator {
-            background: rgba(233, 69, 96, 0.1);
-            border-left: 4px solid #e94560;
-            padding: 15px;
-            border-radius: 0 6px 6px 0;
-            margin-bottom: 20px;
-            display: none;
-        }
-        
-        .filter-indicator.active {
-            display: block;
-        }
-        
-        .status-indicator {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-        
-        .status-active {
-            background: #4ade80;
-        }
-        
-        @media (max-width: 768px) {
-            .filter-controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            select, input, button {
-                width: 100%;
-            }
-            
-            .stats-container {
-                grid-template-columns: 1fr;
-            }
-            
-            th, td {
-                padding: 10px;
-                font-size: 0.9rem;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Karting Telemetry Sessions</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #d32f2f 0%, #f44336 100%);
+      padding: 40px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 32px rgba(211, 47, 47, 0.3);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .subtitle {
+      font-size: 1.2em;
+      opacity: 0.9;
+    }
+
+    .controls {
+      background: #2d2d2d;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 250px;
+      padding: 12px;
+      background: #1e1e1e;
+      border: 2px solid #3d3d3d;
+      color: #e0e0e0;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .filter-btn {
+      padding: 10px 20px;
+      background: #3d3d3d;
+      color: #e0e0e0;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .filter-btn:hover {
+      background: #4d4d4d;
+    }
+
+    .filter-btn.active {
+      background: #f44336;
+      color: white;
+    }
+
+    .stats-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: #2d2d2d;
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 4px solid #f44336;
+      text-align: center;
+    }
+
+    .stat-label {
+      color: #999;
+      font-size: 0.9em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 2em;
+      font-weight: bold;
+      color: #ffd700;
+    }
+
+    .sessions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 20px;
+    }
+
+    .session-card {
+      background: #2d2d2d;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      transition: all 0.3s;
+      cursor: pointer;
+      border-top: 4px solid #f44336;
+    }
+
+    .session-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 24px rgba(244, 67, 54, 0.3);
+    }
+
+    .session-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .driver-name {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .session-date {
+      color: #999;
+      font-size: 0.9em;
+    }
+
+    .session-stats {
+      margin: 15px 0;
+    }
+
+    .session-stat {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+      padding: 8px 0;
+      border-bottom: 1px solid #3d3d3d;
+    }
+
+    .stat-name {
+      color: #999;
+    }
+
+    .stat-val {
+      font-weight: bold;
+      color: #ffd700;
+    }
+
+    .view-btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: #f44336;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 15px;
+    }
+
+    .view-btn:hover {
+      background: #d32f2f;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 50px;
+      font-size: 1.5em;
+      color: #999;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 50px;
+      color: #999;
+    }
+
+    .error {
+      background: #f44336;
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .skeleton {
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🏎️ Kart Session Statistics</h1>
-            <p class="subtitle">Track your performance with detailed session analytics</p>
-        </header>
-        
-        <div class="filter-indicator" id="filterIndicator">
-            <strong>Active Filters:</strong> <span id="activeFiltersText">None</span>
-            <div id="filterStats" style="margin-top: 5px; font-size: 0.9rem;"></div>
-        </div>
-        
-        <section class="filter-section">
-            <h2 class="filter-title">Filter Sessions</h2>
-            <div class="filter-controls">
-                <select id="track-filter">
-                    <option value="">All Tracks</option>
-                    <option value="Plytinės Kartodromas">Plytinės Kartodromas</option>
-                    <option value="Other Track">Other Track</option>
-                </select>
-                
-                <select id="driver-filter">
-                    <option value="">All Drivers</option>
-                    <option value="Povilas L.">Povilas L.</option>
-                    <option value="Other Driver">Other Driver</option>
-                </select>
-                
-                <input type="date" id="date-from" placeholder="Date From">
-                <input type="date" id="date-to" placeholder="Date To">
-                
-                <button id="apply-filter">
-                    <span>🔍 Apply Filter</span>
-                </button>
-                <button id="reset-filter">
-                    <span>🔄 Reset Filter</span>
-                </button>
-            </div>
-        </section>
-        
-        <section class="stats-container">
-            <div class="stat-card">
-                <div class="stat-label">Fastest Lap</div>
-                <div class="session-stat highlight" data-stat="fastest-lap">--:--.--</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-label">Average Lap</div>
-                <div class="session-stat" data-stat="average-lap">--:--.--</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-label">Total Laps</div>
-                <div class="session-stat success" data-stat="laps-count">0</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-label">Kart Number</div>
-                <div class="session-stat" data-stat="kart-number">N/A</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-label">Sessions Count</div>
-                <div class="session-stat success" data-stat="sessions-count">0</div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-label">Avg Laps/Session</div>
-                <div class="session-stat" data-stat="avg-laps-per-session">0</div>
-            </div>
-        </section>
-        
-        <section class="sessions-table-container">
-            <h2 class="table-title">Session History</h2>
-            <table id="sessionsTable">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Driver</th>
-                        <th>Track</th>
-                        <th>Fastest Lap</th>
-                        <th>Avg Lap</th>
-                        <th>Laps</th>
-                        <th>Kart</th>
-                    </tr>
-                </thead>
-                <tbody id="sessionsTableBody">
-                    <!-- Sessions will be populated by JavaScript -->
-                </tbody>
-            </table>
-        </section>
+  <div class="container">
+    <div class="header">
+      <h1>🏎️ Karting Telemetry</h1>
+      <div class="subtitle">Track your performance across all sessions</div>
     </div>
 
-    <script>
-        // Session Data
-        const sessionsData = {
-            "sessions": [
-                {
-                    "id": "example-session",
-                    "driver": "Povilas L.",
-                    "track": {
-                        "name": "Plytinės Kartodromas",
-                        "configuration": "Summer"
-                    },
-                    "session_date": "2025-07-17",
-                    "fastest_lap": "00:44.030",
-                    "kart": "9 Ag",
-                    "laps_count": 7,
-                    "average_lap": "00:44.67"
-                },
-                {
-                    "id": "2ffe82e0-f2df-4334-80ba-c3e6125b82c9",
-                    "driver": "Povilas L.",
-                    "track": {
-                        "name": "Plytinės Kartodromas",
-                        "configuration": "Summer"
-                    },
-                    "session_date": "2025-12-07",
-                    "fastest_lap": "00:43.997",
-                    "kart": "9 Ag",
-                    "laps_count": 13,
-                    "average_lap": "00:45.478"
-                },
-                {
-                    "id": "3ffe82e0-f2df-4334-80ba-c3e6125b82c9",
-                    "driver": "Povilas L.",
-                    "track": {
-                        "name": "Plytinės Kartodromas",
-                        "configuration": "Winter"
-                    },
-                    "session_date": "2025-01-15",
-                    "fastest_lap": "00:45.120",
-                    "kart": "7 Ag",
-                    "laps_count": 10,
-                    "average_lap": "00:46.210"
-                },
-                {
-                    "id": "4ffe82e0-f2df-4334-80ba-c3e6125b82c9",
-                    "driver": "Other Driver",
-                    "track": {
-                        "name": "Other Track",
-                        "configuration": "Standard"
-                    },
-                    "session_date": "2025-09-22",
-                    "fastest_lap": "00:42.850",
-                    "kart": "12 Ag",
-                    "laps_count": 15,
-                    "average_lap": "00:44.150"
-                }
-            ]
-        };
+    <div class="stats-summary" id="summary-stats">
+      <div class="stat-card">
+        <div class="stat-label">Total Sessions</div>
+        <div class="stat-value" id="total-sessions">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Best Lap Ever</div>
+        <div class="stat-value" id="best-lap-ever" style="font-size: 1.5em;">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Laps</div>
+        <div class="stat-value" id="total-laps">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Tracks Driven</div>
+        <div class="stat-value" id="tracks-count">-</div>
+      </div>
+    </div>
 
-        // DOM Elements
-        const filterIndicator = document.getElementById('filterIndicator');
-        const activeFiltersText = document.getElementById('activeFiltersText');
-        const filterStats = document.getElementById('filterStats');
-        const sessionsTableBody = document.getElementById('sessionsTableBody');
+    <div class="controls">
+      <input 
+        type="text" 
+        class="search-box" 
+        id="search-input" 
+        placeholder="🔍 Search by driver, track, or kart..."
+      >
+      <div class="filter-group">
+        <button class="filter-btn active" data-sort="date">Latest First</button>
+        <button class="filter-btn" data-sort="fastest">Fastest First</button>
+        <button class="filter-btn" data-sort="driver">By Driver</button>
+      </div>
+    </div>
 
-        // Helper function to convert lap time string to milliseconds
-        function convertLapTimeToMs(lapTime) {
-            if (!lapTime || lapTime === 'N/A' || lapTime === '--:--.--') return Infinity;
-            
-            try {
-                // Handle format "00:44.030"
-                const [minSec, ms] = lapTime.split('.');
-                const [minutes, seconds] = minSec.split(':').map(Number);
-                
-                return (minutes * 60000) + (seconds * 1000) + (Number(ms) * 10);
-            } catch (e) {
-                console.error('Error converting lap time:', lapTime, e);
-                return Infinity;
-            }
+    <div id="sessions-container">
+      <div class="loading">Loading sessions...</div>
+    </div>
+  </div>
+
+  <script>
+    let allSessions = [];
+    let filteredSessions = [];
+    let currentSort = 'date';
+
+    // You need to manually list your session IDs here, or use a sessions-list.json file
+    const sessionIds = [
+      'example-session',
+      // Add more session IDs here as you create them
+      // 'session-2025-07-20',
+      // 'session-2025-07-18',
+    ];
+
+    async function loadAllSessions() {
+      const container = document.getElementById('sessions-container');
+      
+      try {
+        const promises = sessionIds.map(id => 
+          fetch(`sessions/${id}.json`)
+            .then(r => r.json())
+            .then(data => ({ ...data, id }))
+            .catch(() => null)
+        );
+
+        const results = await Promise.all(promises);
+        allSessions = results.filter(s => s !== null);
+        
+        if (allSessions.length === 0) {
+          container.innerHTML = '<div class="error">No sessions found. Make sure your JSON files are in the sessions/ folder.</div>';
+          return;
         }
 
-        // Helper function to convert milliseconds to lap time string
-        function convertMsToLapTime(ms) {
-            if (!isFinite(ms) || ms === Infinity || ms === 0) return '--:--.--';
-            
-            const minutes = Math.floor(ms / 60000);
-            const seconds = Math.floor((ms % 60000) / 1000);
-            const milliseconds = Math.floor((ms % 1000) / 10);
-            
-            return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(2, '0')}`;
-        }
+        updateSummaryStats();
+        filteredSessions = [...allSessions];
+        renderSessions();
+        
+      } catch (error) {
+        container.innerHTML = '<div class="error">Error loading sessions. Please check your setup.</div>';
+      }
+    }
 
-        // Function to get the latest session
-        function getLatestSession(sessions) {
-            if (sessions.length === 0) return null;
-            
-            return sessions.reduce((latest, current) => {
-                const latestDate = new Date(latest.session_date);
-                const currentDate = new Date(current.session_date);
-                return currentDate > latestDate ? current : latest;
-            });
-        }
+    function parseTime(timeStr) {
+      const parts = timeStr.split(':');
+      if (parts.length === 2) {
+        const minutes = parseInt(parts[0]);
+        const seconds = parseFloat(parts[1]);
+        return minutes * 60 + seconds;
+      }
+      return parseFloat(timeStr);
+    }
 
-        // Function to filter sessions based on criteria
-        function filterSessions(filters = {}) {
-            let filtered = [...sessionsData.sessions];
-            
-            // Apply filters
-            if (filters.track) {
-                filtered = filtered.filter(session => 
-                    session.track.name === filters.track
-                );
-            }
-            
-            if (filters.driver) {
-                filtered = filtered.filter(session => 
-                    session.driver === filters.driver
-                );
-            }
-            
-            if (filters.dateFrom) {
-                filtered = filtered.filter(session => {
-                    const sessionDate = new Date(session.session_date);
-                    return sessionDate >= new Date(filters.dateFrom);
-                });
-            }
-            
-            if (filters.dateTo) {
-                filtered = filtered.filter(session => {
-                    const sessionDate = new Date(session.session_date);
-                    // Set to end of day
-                    const toDate = new Date(filters.dateTo);
-                    toDate.setHours(23, 59, 59, 999);
-                    return sessionDate <= toDate;
-                });
-            }
-            
-            return filtered;
-        }
+    function updateSummaryStats() {
+      const totalSessions = allSessions.length;
+      const totalLaps = allSessions.reduce((sum, s) => 
+        sum + s.laps.filter(l => l.lap !== null).length, 0
+      );
+      
+      const allFastestLaps = allSessions.map(s => parseTime(s.fastest_lap));
+      const bestLapEver = Math.min(...allFastestLaps);
+      
+      const uniqueTracks = new Set(allSessions.map(s => s.track.name));
 
-        // Function to calculate aggregate stats from filtered sessions
-        function calculateFilteredStats(filteredSessions) {
-            if (filteredSessions.length === 0) {
-                return {
-                    fastest_lap: '--:--.--',
-                    average_lap: '--:--.--',
-                    total_laps: 0,
-                    avg_laps_per_session: 0,
-                    sessions_count: 0,
-                    kart_number: 'N/A'
-                };
-            }
-            
-            // Find fastest lap across all filtered sessions
-            let fastestLap = filteredSessions[0].fastest_lap;
-            let fastestTime = convertLapTimeToMs(fastestLap);
-            
-            filteredSessions.forEach(session => {
-                const currentTime = convertLapTimeToMs(session.fastest_lap);
-                if (currentTime < fastestTime) {
-                    fastestTime = currentTime;
-                    fastestLap = session.fastest_lap;
-                }
-            });
-            
-            // Calculate average of averages weighted by laps count
-            const totalLaps = filteredSessions.reduce((sum, session) => 
-                sum + session.laps_count, 0
-            );
-            
-            const totalTime = filteredSessions.reduce((sum, session) => {
-                const avgTimeMs = convertLapTimeToMs(session.average_lap);
-                return sum + (avgTimeMs * session.laps_count);
-            }, 0);
-            
-            const overallAverageLap = totalLaps > 0 ? 
-                convertMsToLapTime(totalTime / totalLaps) : '--:--.--';
-            
-            // Get most recent kart (for single session view)
-            const latestSession = getLatestSession(filteredSessions);
-            
-            return {
-                fastest_lap: fastestLap,
-                average_lap: overallAverageLap,
-                total_laps: totalLaps,
-                avg_laps_per_session: totalLaps > 0 ? Math.round(totalLaps / filteredSessions.length) : 0,
-                sessions_count: filteredSessions.length,
-                kart_number: filteredSessions.length === 1 ? latestSession.kart : 'Multiple'
-            };
-        }
+      document.getElementById('total-sessions').textContent = totalSessions;
+      document.getElementById('total-laps').textContent = totalLaps;
+      document.getElementById('tracks-count').textContent = uniqueTracks.size;
+      
+      const bestSession = allSessions.find(s => parseTime(s.fastest_lap) === bestLapEver);
+      document.getElementById('best-lap-ever').textContent = bestSession ? bestSession.fastest_lap : '-';
+    }
 
-        // Function to update stat cards
-        function updateStatCards(stats) {
-            const statElements = document.querySelectorAll('.session-stat');
-            
-            statElements.forEach(stat => {
-                const statType = stat.getAttribute('data-stat');
-                
-                if (!statType) return;
-                
-                switch(statType) {
-                    case 'fastest-lap':
-                        stat.textContent = stats.fastest_lap;
-                        break;
-                    case 'average-lap':
-                        stat.textContent = stats.average_lap;
-                        break;
-                    case 'laps-count':
-                        stat.textContent = stats.total_laps;
-                        break;
-                    case 'sessions-count':
-                        stat.textContent = stats.sessions_count;
-                        break;
-                    case 'avg-laps-per-session':
-                        stat.textContent = stats.avg_laps_per_session;
-                        break;
-                    case 'kart-number':
-                        stat.textContent = stats.kart_number;
-                        break;
-                }
-            });
-        }
+    function renderSessions() {
+      const container = document.getElementById('sessions-container');
+      
+      if (filteredSessions.length === 0) {
+        container.innerHTML = '<div class="no-results">No sessions match your search.</div>';
+        return;
+      }
 
-        // Function to populate sessions table
-        function populateSessionsTable(sessions) {
-            sessionsTableBody.innerHTML = '';
-            
-            if (sessions.length === 0) {
-                sessionsTableBody.innerHTML = `
-                    <tr>
-                        <td colspan="7" style="text-align: center; padding: 40px; color: #7d8da6;">
-                            No sessions found matching the selected filters
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-            
-            sessions.forEach(session => {
-                const row = document.createElement('tr');
-                
-                // Format date for display
-                const sessionDate = new Date(session.session_date);
-                const formattedDate = sessionDate.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric'
-                });
-                
-                row.innerHTML = `
-                    <td>${formattedDate}</td>
-                    <td>${session.driver}</td>
-                    <td>${session.track.name} (${session.track.configuration})</td>
-                    <td class="highlight">${session.fastest_lap}</td>
-                    <td>${session.average_lap}</td>
-                    <td>${session.laps_count}</td>
-                    <td>${session.kart}</td>
-                `;
-                
-                sessionsTableBody.appendChild(row);
-            });
-        }
+      const html = filteredSessions.map(session => {
+        const validLaps = session.laps.filter(l => l.lap !== null);
+        const lapTimes = validLaps.map(l => parseTime(l.time));
+        const avgTime = lapTimes.reduce((a, b) => a + b, 0) / lapTimes.length;
 
-        // Function to update filter indicator
-        function updateFilterIndicator(filters, filteredSessions) {
-            const activeFilters = [];
+        return `
+          <div class="session-card" onclick="viewSession('${session.id}')">
+            <div class="session-header">
+              <div class="driver-name">${session.driver}</div>
+              <div class="session-date">${new Date(session.session_date).toLocaleDateString()}</div>
+            </div>
             
-            if (filters.track) activeFilters.push(`Track: ${filters.track}`);
-            if (filters.driver) activeFilters.push(`Driver: ${filters.driver}`);
-            if (filters.dateFrom) activeFilters.push(`From: ${filters.dateFrom}`);
-            if (filters.dateTo) activeFilters.push(`To: ${filters.dateTo}`);
+            <div class="session-stats">
+              <div class="session-stat">
+                <span class="stat-name">Track</span>
+                <span class="stat-val">${session.track.name}</span>
+              </div>
+              <div class="session-stat">
+                <span class="stat-name">Kart</span>
+                <span class="stat-val">${session.kart}</span>
+              </div>
+              <div class="session-stat">
+                <span class="stat-name">Fastest Lap</span>
+                <span class="stat-val">🏆 ${session.fastest_lap}</span>
+              </div>
+              <div class="session-stat">
+                <span class="stat-name">Average</span>
+                <span class="stat-val">${formatTime(avgTime)}</span>
+              </div>
+              <div class="session-stat">
+                <span class="stat-name">Laps</span>
+                <span class="stat-val">${validLaps.length}</span>
+              </div>
+            </div>
             
-            if (activeFilters.length > 0) {
-                activeFiltersText.textContent = activeFilters.join(', ');
-                filterIndicator.classList.add('active');
-                
-                // Update filter stats
-                filterStats.innerHTML = `
-                    Showing ${filteredSessions.length} of ${sessionsData.sessions.length} sessions
-                    (${Math.round((filteredSessions.length / sessionsData.sessions.length) * 100)}%)
-                `;
-            } else {
-                filterIndicator.classList.remove('active');
-                activeFiltersText.textContent = 'None';
-                filterStats.innerHTML = '';
-            }
-        }
+            <button class="view-btn">View Full Telemetry →</button>
+          </div>
+        `;
+      }).join('');
 
-        // Function to apply filters and update everything
-        function applyFilters() {
-            const filters = {
-                track: document.getElementById('track-filter').value,
-                driver: document.getElementById('driver-filter').value,
-                dateFrom: document.getElementById('date-from').value,
-                dateTo: document.getElementById('date-to').value
-            };
-            
-            const filteredSessions = filterSessions(filters);
-            
-            // Update everything based on filtered sessions
-            if (filteredSessions.length === 1) {
-                // Single session - show that session's data
-                const session = filteredSessions[0];
-                const stats = {
-                    fastest_lap: session.fastest_lap,
-                    average_lap: session.average_lap,
-                    total_laps: session.laps_count,
-                    avg_laps_per_session: session.laps_count,
-                    sessions_count: 1,
-                    kart_number: session.kart
-                };
-                updateStatCards(stats);
-            } else {
-                // Multiple sessions - show aggregated stats
-                const stats = calculateFilteredStats(filteredSessions);
-                updateStatCards(stats);
-            }
-            
-            // Update table and filter indicator
-            populateSessionsTable(filteredSessions);
-            updateFilterIndicator(filters, filteredSessions);
-        }
+      container.innerHTML = `<div class="sessions-grid">${html}</div>`;
+    }
 
-        // Function to reset filters
-        function resetFilters() {
-            document.getElementById('track-filter').value = '';
-            document.getElementById('driver-filter').value = '';
-            document.getElementById('date-from').value = '';
-            document.getElementById('date-to').value = '';
-            
-            // Show latest session data
-            const latestSession = getLatestSession(sessionsData.sessions);
-            const stats = {
-                fastest_lap: latestSession.fastest_lap,
-                average_lap: latestSession.average_lap,
-                total_laps: latestSession.laps_count,
-                avg_laps_per_session: latestSession.laps_count,
-                sessions_count: 1,
-                kart_number: latestSession.kart
-            };
-            
-            updateStatCards(stats);
-            populateSessionsTable(sessionsData.sessions);
-            updateFilterIndicator({}, sessionsData.sessions);
-        }
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = (seconds % 60).toFixed(3);
+      return mins > 0 ? `${mins}:${secs.padStart(6, '0')}` : `${secs}s`;
+    }
 
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            // Set default date values to last 30 days
-            const today = new Date();
-            const thirtyDaysAgo = new Date();
-            thirtyDaysAgo.setDate(today.getDate() - 30);
-            
-            document.getElementById('date-from').valueAsDate = thirtyDaysAgo;
-            document.getElementById('date-to').valueAsDate = today;
-            
-            // Initial load with latest session
-            const latestSession = getLatestSession(sessionsData.sessions);
-            const initialStats = {
-                fastest_lap: latestSession.fastest_lap,
-                average_lap: latestSession.average_lap,
-                total_laps: latestSession.laps_count,
-                avg_laps_per_session: latestSession.laps_count,
-                sessions_count: sessionsData.sessions.length,
-                kart_number: latestSession.kart
-            };
-            
-            updateStatCards(initialStats);
-            populateSessionsTable(sessionsData.sessions);
-            
-            // Add event listeners
-            document.getElementById('apply-filter').addEventListener('click', applyFilters);
-            document.getElementById('reset-filter').addEventListener('click', resetFilters);
-            
-            // Apply filters on filter change (optional)
-            document.getElementById('track-filter').addEventListener('change', applyFilters);
-            document.getElementById('driver-filter').addEventListener('change', applyFilters);
-            document.getElementById('date-from').addEventListener('change', applyFilters);
-            document.getElementById('date-to').addEventListener('change', applyFilters);
-        });
-    </script>
+    function viewSession(sessionId) {
+      window.location.href = `session.html?id=${sessionId}`;
+    }
+
+    function sortSessions(sortType) {
+      currentSort = sortType;
+      
+      if (sortType === 'date') {
+        filteredSessions.sort((a, b) => new Date(b.session_date) - new Date(a.session_date));
+      } else if (sortType === 'fastest') {
+        filteredSessions.sort((a, b) => parseTime(a.fastest_lap) - parseTime(b.fastest_lap));
+      } else if (sortType === 'driver') {
+        filteredSessions.sort((a, b) => a.driver.localeCompare(b.driver));
+      }
+      
+      renderSessions();
+    }
+
+    function filterSessions(searchTerm) {
+      const term = searchTerm.toLowerCase();
+      filteredSessions = allSessions.filter(session => 
+        session.driver.toLowerCase().includes(term) ||
+        session.track.name.toLowerCase().includes(term) ||
+        session.kart.toLowerCase().includes(term) ||
+        session.session_date.includes(term)
+      );
+      sortSessions(currentSort);
+    }
+
+    // Event listeners
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      filterSessions(e.target.value);
+    });
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        sortSessions(e.target.dataset.sort);
+      });
+    });
+
+    // Load sessions on page load
+    loadAllSessions();
+  </script>
 </body>
 </html>
