@@ -286,9 +286,10 @@
         const deltaStr = delta === 0 ? '' : (delta > 0 ? `+${delta.toFixed(3)}` : delta.toFixed(3));
         const deltaClass = delta > 0 ? 'delta-positive' : 'delta-negative';
 
-        // Calculate bar width: fastest lap = 100%, slowest = ~70%
+        // Calculate bar width: faster lap = shorter bar (more accurate racing visual)
+        // Slowest lap = 100%, fastest lap = ~60%
         const range = slowestTime - fastestTime;
-        const barWidth = range === 0 ? 100 : (100 - ((lapTime - fastestTime) / range * 30));
+        const barWidth = range === 0 ? 100 : (100 - ((slowestTime - lapTime) / range * 40));
 
         return `
           <div class="lap-row ${lap.best ? 'best-lap' : ''}">
