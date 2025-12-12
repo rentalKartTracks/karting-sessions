@@ -16,7 +16,7 @@
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
     }
 
@@ -37,7 +37,7 @@
 
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 20px;
       margin-bottom: 30px;
     }
@@ -64,10 +64,19 @@
       color: #fff;
     }
 
+    .stat-value.small {
+      font-size: 1.4em;
+    }
+
     .fastest-time {
       color: #ffd700;
       font-size: 2.2em;
     }
+
+    .consistency-excellent { color: #4caf50; }
+    .consistency-good { color: #8bc34a; }
+    .consistency-fair { color: #ffc107; }
+    .consistency-poor { color: #ff9800; }
 
     .chart-container {
       background: #2d2d2d;
@@ -81,6 +90,17 @@
       font-size: 1.5em;
       margin-bottom: 20px;
       color: #fff;
+    }
+
+    .line-chart {
+      position: relative;
+      height: 300px;
+      margin-bottom: 40px;
+    }
+
+    .chart-canvas {
+      width: 100%;
+      height: 100%;
     }
 
     .lap-row {
@@ -101,6 +121,14 @@
     .lap-row.best-lap {
       background: linear-gradient(90deg, #1e1e1e 0%, #3d2f00 100%);
       border: 2px solid #ffd700;
+    }
+
+    .lap-row.top-25 {
+      border-left: 3px solid #4caf50;
+    }
+
+    .lap-row.top-50 {
+      border-left: 3px solid #8bc34a;
     }
 
     .lap-number {
@@ -151,6 +179,13 @@
       font-size: 0.9em;
     }
 
+    .lap-percentile {
+      width: 80px;
+      text-align: center;
+      font-size: 0.85em;
+      color: #999;
+    }
+
     .delta-positive { color: #f44336; }
     .delta-negative { color: #4caf50; }
 
@@ -193,6 +228,57 @@
     .track-link:hover {
       color: #ff5252;
     }
+
+    .comparison-container {
+      margin-top: 30px;
+      padding: 20px;
+      background: #2d2d2d;
+      border-radius: 12px;
+    }
+
+    .comparison-input {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .comparison-input input {
+      flex: 1;
+      padding: 10px;
+      background: #1e1e1e;
+      border: 2px solid #3d3d3d;
+      color: #e0e0e0;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+
+    .comparison-input button {
+      padding: 10px 20px;
+      background: #f44336;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+
+    .comparison-input button:hover {
+      background: #d32f2f;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .comparison-card {
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 8px;
+      border-top: 4px solid #f44336;
+    }
   </style>
 </head>
 <body>
@@ -206,6 +292,14 @@
       <div class="stat-card">
         <div class="stat-label">Fastest Lap</div>
         <div class="stat-value fastest-time" id="fastest"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Average Lap</div>
+        <div class="stat-value small" id="average"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Consistency</div>
+        <div class="stat-value small" id="consistency"></div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Track</div>
@@ -224,8 +318,24 @@
     </div>
 
     <div class="chart-container">
-      <div class="chart-title">📊 Lap Times</div>
+      <div class="chart-title">📈 Lap Time Progression</div>
+      <div class="line-chart">
+        <canvas id="lap-chart" class="chart-canvas"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-title">📊 Lap Times Analysis</div>
       <div id="laps"></div>
+    </div>
+
+    <div class="comparison-container">
+      <div class="chart-title">🔄 Compare Sessions</div>
+      <div class="comparison-input">
+        <input type="text" id="compare-id" placeholder="Enter session ID to compare (e.g., session-2025-07-20)">
+        <button onclick="compareSession()">Compare</button>
+      </div>
+      <div id="comparison-results" class="comparison-grid"></div>
     </div>
 
     <div class="socials">
@@ -237,18 +347,21 @@
   </div>
 
   <script>
+    let currentSessionData = null;
     const params = new URLSearchParams(window.location.search);
     const sessionId = params.get("id") || "example-session";
 
     fetch(`sessions/${sessionId}.json`)
       .then(r => r.json())
-      .then(data => renderSession(data))
+      .then(data => {
+        currentSessionData = data;
+        renderSession(data);
+      })
       .catch(err => {
         document.body.innerHTML = '<div style="text-align:center; padding: 50px; color: #f44336;"><h1>❌ Session not found</h1></div>';
       });
 
     function parseTime(timeStr) {
-      // Parse format "00:44.030" to seconds
       const parts = timeStr.split(':');
       if (parts.length === 2) {
         const minutes = parseInt(parts[0]);
@@ -256,6 +369,101 @@
         return minutes * 60 + seconds;
       }
       return parseFloat(timeStr);
+    }
+
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = (seconds % 60).toFixed(3);
+      return mins > 0 ? `${mins}:${secs.padStart(6, '0')}` : `${secs}s`;
+    }
+
+    function calculateConsistency(lapTimes) {
+      const avg = lapTimes.reduce((a, b) => a + b, 0) / lapTimes.length;
+      const variance = lapTimes.reduce((sum, time) => sum + Math.pow(time - avg, 2), 0) / lapTimes.length;
+      const stdDev = Math.sqrt(variance);
+      return stdDev;
+    }
+
+    function getConsistencyRating(stdDev) {
+      if (stdDev < 0.3) return { text: 'Excellent', class: 'consistency-excellent' };
+      if (stdDev < 0.6) return { text: 'Good', class: 'consistency-good' };
+      if (stdDev < 1.0) return { text: 'Fair', class: 'consistency-fair' };
+      return { text: 'Variable', class: 'consistency-poor' };
+    }
+
+    function drawLineChart(validLaps) {
+      const canvas = document.getElementById('lap-chart');
+      const ctx = canvas.getContext('2d');
+      
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+
+      const padding = 40;
+      const chartWidth = canvas.width - padding * 2;
+      const chartHeight = canvas.height - padding * 2;
+
+      const lapTimes = validLaps.map(lap => parseTime(lap.time));
+      const minTime = Math.min(...lapTimes);
+      const maxTime = Math.max(...lapTimes);
+      const timeRange = maxTime - minTime;
+
+      // Draw grid
+      ctx.strokeStyle = '#3d3d3d';
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 5; i++) {
+        const y = padding + (chartHeight / 5) * i;
+        ctx.beginPath();
+        ctx.moveTo(padding, y);
+        ctx.lineTo(canvas.width - padding, y);
+        ctx.stroke();
+      }
+
+      // Draw line
+      ctx.strokeStyle = '#f44336';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+
+      validLaps.forEach((lap, i) => {
+        const x = padding + (chartWidth / (validLaps.length - 1)) * i;
+        const lapTime = parseTime(lap.time);
+        const y = padding + chartHeight - ((lapTime - minTime) / timeRange) * chartHeight;
+
+        if (i === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      });
+      ctx.stroke();
+
+      // Draw points
+      validLaps.forEach((lap, i) => {
+        const x = padding + (chartWidth / (validLaps.length - 1)) * i;
+        const lapTime = parseTime(lap.time);
+        const y = padding + chartHeight - ((lapTime - minTime) / timeRange) * chartHeight;
+
+        ctx.fillStyle = lap.best ? '#ffd700' : '#f44336';
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Draw labels
+      ctx.fillStyle = '#999';
+      ctx.font = '12px Arial';
+      ctx.textAlign = 'center';
+      validLaps.forEach((lap, i) => {
+        const x = padding + (chartWidth / (validLaps.length - 1)) * i;
+        ctx.fillText(`L${lap.lap}`, x, canvas.height - 10);
+      });
+
+      // Y-axis labels
+      ctx.textAlign = 'right';
+      for (let i = 0; i <= 5; i++) {
+        const y = padding + (chartHeight / 5) * i;
+        const time = maxTime - (timeRange / 5) * i;
+        ctx.fillText(time.toFixed(2) + 's', padding - 10, y + 4);
+      }
     }
 
     function renderSession(data) {
@@ -271,11 +479,27 @@
       const validLaps = data.laps.filter(lap => lap.lap !== null);
       document.getElementById('total-laps').textContent = validLaps.length;
 
-      // Calculate bar widths
       const lapTimes = validLaps.map(lap => parseTime(lap.time));
       const fastestTime = Math.min(...lapTimes);
       const slowestTime = Math.max(...lapTimes);
+      const avgTime = lapTimes.reduce((a, b) => a + b, 0) / lapTimes.length;
       
+      document.getElementById('average').textContent = formatTime(avgTime);
+
+      const stdDev = calculateConsistency(lapTimes);
+      const consistency = getConsistencyRating(stdDev);
+      const consistencyEl = document.getElementById('consistency');
+      consistencyEl.textContent = `${consistency.text} (±${stdDev.toFixed(3)}s)`;
+      consistencyEl.className = `stat-value small ${consistency.class}`;
+
+      // Draw chart
+      drawLineChart(validLaps);
+
+      // Calculate percentiles
+      const sortedTimes = [...lapTimes].sort((a, b) => a - b);
+      const percentile25 = sortedTimes[Math.floor(sortedTimes.length * 0.25)];
+      const percentile50 = sortedTimes[Math.floor(sortedTimes.length * 0.50)];
+
       const lapsHTML = data.laps.map(lap => {
         if (lap.lap === null) {
           return `<div class="note-row">🏁 ${lap.note}</div>`;
@@ -286,19 +510,28 @@
         const deltaStr = delta === 0 ? '' : (delta > 0 ? `+${delta.toFixed(3)}` : delta.toFixed(3));
         const deltaClass = delta > 0 ? 'delta-positive' : 'delta-negative';
 
-        // Calculate bar width: faster lap = shorter bar (more accurate racing visual)
-        // Slowest lap = 100%, fastest lap = ~60%
         const range = slowestTime - fastestTime;
         const barWidth = range === 0 ? 100 : (100 - ((slowestTime - lapTime) / range * 40));
 
+        let percentileClass = '';
+        let percentileText = '';
+        if (lapTime <= percentile25) {
+          percentileClass = 'top-25';
+          percentileText = 'Top 25%';
+        } else if (lapTime <= percentile50) {
+          percentileClass = 'top-50';
+          percentileText = 'Top 50%';
+        }
+
         return `
-          <div class="lap-row ${lap.best ? 'best-lap' : ''}">
+          <div class="lap-row ${lap.best ? 'best-lap' : ''} ${percentileClass}">
             <div class="lap-number">Lap ${lap.lap}</div>
             <div class="lap-time">${lap.time}</div>
             <div class="lap-bar-container">
               <div class="lap-bar" style="width: ${barWidth}%"></div>
             </div>
             <div class="lap-delta ${deltaClass}">${deltaStr}</div>
+            <div class="lap-percentile">${percentileText}</div>
           </div>
         `;
       }).join('');
@@ -308,6 +541,49 @@
       document.getElementById('ig').href = data.socials.instagram;
       document.getElementById('fb').href = data.socials.facebook;
       document.getElementById('web').href = data.socials.website;
+    }
+
+    async function compareSession() {
+      const compareId = document.getElementById('compare-id').value.trim();
+      if (!compareId) return;
+
+      try {
+        const response = await fetch(`sessions/${compareId}.json`);
+        const compareData = await response.json();
+        
+        const currentLaps = currentSessionData.laps.filter(l => l.lap !== null);
+        const compareLaps = compareData.laps.filter(l => l.lap !== null);
+        
+        const currentFastest = Math.min(...currentLaps.map(l => parseTime(l.time)));
+        const compareFastest = Math.min(...compareLaps.map(l => parseTime(l.time)));
+        const currentAvg = currentLaps.reduce((sum, l) => sum + parseTime(l.time), 0) / currentLaps.length;
+        const compareAvg = compareLaps.reduce((sum, l) => sum + parseTime(l.time), 0) / compareLaps.length;
+
+        const resultHTML = `
+          <div class="comparison-card">
+            <h3>${currentSessionData.driver} - ${currentSessionData.session_date}</h3>
+            <p><strong>Fastest:</strong> ${formatTime(currentFastest)}</p>
+            <p><strong>Average:</strong> ${formatTime(currentAvg)}</p>
+            <p><strong>Laps:</strong> ${currentLaps.length}</p>
+          </div>
+          <div class="comparison-card">
+            <h3>${compareData.driver} - ${compareData.session_date}</h3>
+            <p><strong>Fastest:</strong> ${formatTime(compareFastest)}</p>
+            <p><strong>Average:</strong> ${formatTime(compareAvg)}</p>
+            <p><strong>Laps:</strong> ${compareLaps.length}</p>
+          </div>
+          <div class="comparison-card">
+            <h3>Difference</h3>
+            <p><strong>Fastest:</strong> ${(currentFastest - compareFastest).toFixed(3)}s</p>
+            <p><strong>Average:</strong> ${(currentAvg - compareAvg).toFixed(3)}s</p>
+            <p><strong>Winner:</strong> ${currentFastest < compareFastest ? currentSessionData.driver : compareData.driver}</p>
+          </div>
+        `;
+        
+        document.getElementById('comparison-results').innerHTML = resultHTML;
+      } catch (err) {
+        document.getElementById('comparison-results').innerHTML = '<p style="color: #f44336;">Session not found</p>';
+      }
     }
   </script>
 </body>
