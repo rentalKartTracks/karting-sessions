@@ -237,17 +237,25 @@
   </div>
 
   <script>
-    async function loadSession() {
-      const params = new URLSearchParams(window.location.search);
-      const sessionId = params.get('id') || 'example-session';
-      
-      try {
-        const response = await fetch(`sessions/${sessionId}.json`);
-        const data = await response.json();
-        renderSession(data);
-      } catch (error) {
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("id") || "example-session";
+
+    fetch(`sessions/${sessionId}.json`)
+      .then(r => r.json())
+      .then(data => renderSession(data))
+      .catch(err => {
         document.body.innerHTML = '<div style="text-align:center; padding: 50px; color: #f44336;"><h1>❌ Session not found</h1></div>';
+      });
+
+    function parseTime(timeStr) {
+      // Parse format "00:44.030" to seconds
+      const parts = timeStr.split(':');
+      if (parts.length === 2) {
+        const minutes = parseInt(parts[0]);
+        const seconds = parseFloat(parts[1]);
+        return minutes * 60 + seconds;
       }
+      return parseFloat(timeStr);
     }
 
     function renderSession(data) {
@@ -263,24 +271,31 @@
       const validLaps = data.laps.filter(lap => lap.lap !== null);
       document.getElementById('total-laps').textContent = validLaps.length;
 
-      const fastestLapTime = parseFloat(validLaps.find(lap => lap.best)?.time || data.fastest_lap);
+      // Calculate bar widths
+      const lapTimes = validLaps.map(lap => parseTime(lap.time));
+      const fastestTime = Math.min(...lapTimes);
+      const slowestTime = Math.max(...lapTimes);
       
       const lapsHTML = data.laps.map(lap => {
         if (lap.lap === null) {
           return `<div class="note-row">🏁 ${lap.note}</div>`;
         }
 
-        const lapTime = parseFloat(lap.time);
-        const delta = lapTime - fastestLapTime;
+        const lapTime = parseTime(lap.time);
+        const delta = lapTime - fastestTime;
         const deltaStr = delta === 0 ? '' : (delta > 0 ? `+${delta.toFixed(3)}` : delta.toFixed(3));
         const deltaClass = delta > 0 ? 'delta-positive' : 'delta-negative';
+
+        // Calculate bar width: fastest lap = 100%, slowest = ~70%
+        const range = slowestTime - fastestTime;
+        const barWidth = range === 0 ? 100 : (100 - ((lapTime - fastestTime) / range * 30));
 
         return `
           <div class="lap-row ${lap.best ? 'best-lap' : ''}">
             <div class="lap-number">Lap ${lap.lap}</div>
-            <div class="lap-time">${formatTime(lap.time)}</div>
+            <div class="lap-time">${lap.time}</div>
             <div class="lap-bar-container">
-              <div class="lap-bar" style="width: ${lap.bar}%"></div>
+              <div class="lap-bar" style="width: ${barWidth}%"></div>
             </div>
             <div class="lap-delta ${deltaClass}">${deltaStr}</div>
           </div>
@@ -293,16 +308,6 @@
       document.getElementById('fb').href = data.socials.facebook;
       document.getElementById('web').href = data.socials.website;
     }
-
-    function formatTime(time) {
-      const t = parseFloat(time);
-      if (t < 60) return t.toFixed(3) + 's';
-      const minutes = Math.floor(t / 60);
-      const seconds = (t % 60).toFixed(3);
-      return `${minutes}:${seconds.padStart(6, '0')}`;
-    }
-
-    loadSession();
   </script>
 </body>
 </html>
