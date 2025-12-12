@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Karting Telemetry Sessions</title>
+  <title>Karting Session Viewer</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
@@ -22,76 +22,20 @@
 
     .header {
       background: linear-gradient(135deg, #d32f2f 0%, #f44336 100%);
-      padding: 40px;
+      padding: 30px;
       border-radius: 12px;
       margin-bottom: 30px;
       box-shadow: 0 8px 32px rgba(211, 47, 47, 0.3);
-      text-align: center;
     }
 
-    h1 {
-      font-size: 3em;
+    .driver-name {
+      font-size: 2.5em;
+      font-weight: bold;
       margin-bottom: 10px;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
 
-    .subtitle {
-      font-size: 1.2em;
-      opacity: 0.9;
-    }
-
-    .controls {
-      background: #2d2d2d;
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 30px;
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .search-box {
-      flex: 1;
-      min-width: 220px;
-      padding: 12px;
-      background: #1e1e1e;
-      border: 2px solid #3d3d3d;
-      color: #e0e0e0;
-      border-radius: 8px;
-      font-size: 1em;
-    }
-
-    select.search-box {
-      cursor: pointer;
-    }
-
-    .filter-group {
-      display: flex;
-      gap: 10px;
-    }
-
-    .filter-btn {
-      padding: 10px 20px;
-      background: #3d3d3d;
-      color: #e0e0e0;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s;
-    }
-
-    .filter-btn:hover {
-      background: #4d4d4d;
-    }
-
-    .filter-btn.active {
-      background: #f44336;
-      color: white;
-    }
-
-    .stats-summary {
+    .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 20px;
@@ -103,352 +47,726 @@
       padding: 20px;
       border-radius: 12px;
       border-left: 4px solid #f44336;
-      text-align: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
     }
 
     .stat-label {
       color: #999;
       font-size: 0.9em;
       text-transform: uppercase;
+      letter-spacing: 1px;
       margin-bottom: 8px;
     }
 
     .stat-value {
-      font-size: 2em;
-      font-weight: bold;
-      color: #ffd700;
-    }
-
-    .sessions-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 20px;
-    }
-
-    .session-card {
-      background: #2d2d2d;
-      border-radius: 12px;
-      padding: 25px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-      transition: all 0.3s;
-      cursor: pointer;
-      border-top: 4px solid #f44336;
-    }
-
-    .session-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 24px rgba(244, 67, 54, 0.3);
-    }
-
-    .session-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-
-    .driver-name {
-      font-size: 1.5em;
+      font-size: 1.8em;
       font-weight: bold;
       color: #fff;
     }
 
-    .session-date {
-      color: #999;
-      font-size: 0.9em;
+    .stat-value.small {
+      font-size: 1.4em;
     }
 
-    .session-stats {
-      margin: 15px 0;
-    }
-
-    .session-stat {
-      display: flex;
-      justify-content: space-between;
-      margin: 8px 0;
-      padding: 8px 0;
-      border-bottom: 1px solid #3d3d3d;
-    }
-
-    .stat-name {
-      color: #999;
-    }
-
-    .stat-val {
-      font-weight: bold;
+    .fastest-time {
       color: #ffd700;
+      font-size: 2.2em;
     }
 
-    .view-btn {
-      display: block;
+    .consistency-excellent { color: #4caf50; }
+    .consistency-good { color: #8bc34a; }
+    .consistency-fair { color: #ffc107; }
+    .consistency-poor { color: #ff9800; }
+
+    .chart-container {
+      background: #2d2d2d;
+      padding: 30px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      position: relative;
+    }
+
+    .chart-title {
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .chart-area {
+      display: flex;
+      gap: 30px;
+    }
+
+    .chart-wrapper {
+      flex: 1;
+      position: relative;
+    }
+
+    .line-chart {
+      position: relative;
+      height: 300px;
+    }
+
+    .chart-canvas {
       width: 100%;
-      padding: 12px;
+      height: 100%;
+    }
+
+    .tooltip-sidebar {
+      width: 250px;
+      background: rgba(45, 45, 45, 0.9);
+      border-radius: 12px;
+      padding: 20px;
+      border: 2px solid #3d3d3d;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .tooltip-sidebar.visible {
+      display: flex;
+    }
+
+    .tooltip-lap-title {
+      font-size: 1.2em;
+      color: #f44336;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .tooltip-lap-time {
+      font-size: 2.5em;
+      font-weight: bold;
+      color: #fff;
+      text-align: center;
+      margin-bottom: 10px;
+      font-family: 'Courier New', monospace;
+    }
+
+    .tooltip-lap-delta {
+      font-size: 1.2em;
+      color: #f44336;
+      text-align: center;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+
+    .tooltip-lap-info {
+      font-size: 0.9em;
+      color: #999;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .socials {
+      background: #2d2d2d;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+
+    .socials a {
+      display: inline-block;
+      margin: 0 15px;
+      color: #f44336;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .socials a:hover {
+      color: #ff5252;
+      transform: translateY(-2px);
+    }
+
+    .track-link {
+      color: #f44336;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .track-link:hover {
+      color: #ff5252;
+    }
+
+    .comparison-container {
+      margin-top: 30px;
+      padding: 20px;
+      background: #2d2d2d;
+      border-radius: 12px;
+    }
+
+    .comparison-input {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .comparison-input input {
+      flex: 1;
+      padding: 10px;
+      background: #1e1e1e;
+      border: 2px solid #3d3d3d;
+      color: #e0e0e0;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+
+    .comparison-input button {
+      padding: 10px 20px;
       background: #f44336;
       color: white;
       border: none;
       border-radius: 8px;
-      font-weight: bold;
       cursor: pointer;
+      font-weight: bold;
       transition: all 0.3s;
-      margin-top: 15px;
     }
 
-    .view-btn:hover {
+    .comparison-input button:hover {
       background: #d32f2f;
     }
 
-    .loading {
-      text-align: center;
-      padding: 50px;
-      font-size: 1.5em;
-      color: #999;
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
     }
 
-    .no-results {
-      text-align: center;
-      padding: 50px;
-      color: #999;
-    }
-
-    .error {
-      background: #f44336;
-      color: white;
+    .comparison-card {
+      background: #1e1e1e;
       padding: 20px;
       border-radius: 8px;
-      margin: 20px 0;
-      text-align: center;
+      border-top: 4px solid #f44336;
+    }
+
+    .legend {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .legend-color {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+    }
+
+    /* Highlight for hovered point */
+    .point-highlight {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid #fff;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      display: none;
+    }
+
+    .point-highlight.visible {
+      display: block;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>🏎️ Karting Telemetry</h1>
-      <div class="subtitle">Track your performance across all sessions</div>
+      <div class="driver-name" id="driver"></div>
+      <div id="session-date"></div>
     </div>
 
-    <div class="stats-summary" id="summary-stats">
+    <div class="stats-grid">
       <div class="stat-card">
-        <div class="stat-label">Total Sessions</div>
-        <div class="stat-value" id="total-sessions">-</div>
+        <div class="stat-label">Fastest Lap</div>
+        <div class="stat-value fastest-time" id="fastest"></div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Best Lap Ever</div>
-        <div class="stat-value" id="best-lap-ever" style="font-size: 1.5em;">-</div>
+        <div class="stat-label">Average Lap</div>
+        <div class="stat-value small" id="average"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Consistency</div>
+        <div class="stat-value small" id="consistency"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Track</div>
+        <div class="stat-value" style="font-size: 1.3em;">
+          <a class="track-link" id="track-link" target="_blank"></a>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Kart</div>
+        <div class="stat-value" id="kart"></div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Total Laps</div>
-        <div class="stat-value" id="total-laps">-</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Tracks Driven</div>
-        <div class="stat-value" id="tracks-count">-</div>
+        <div class="stat-value" id="total-laps"></div>
       </div>
     </div>
 
-    <div class="controls">
-      <input 
-        type="text" 
-        class="search-box" 
-        id="search-input" 
-        placeholder="🔍 Search by driver..."
-      >
-
-      <select id="track-filter" class="search-box">
-        <option value="">All Tracks</option>
-      </select>
-
-      <select id="config-filter" class="search-box">
-        <option value="">All Configurations</option>
-      </select>
-
-      <div class="filter-group">
-        <button class="filter-btn active" data-sort="date">Latest First</button>
-        <button class="filter-btn" data-sort="fastest">Fastest First</button>
+    <div class="chart-container">
+      <div class="chart-title">📈 Lap Time Progression</div>
+      <div class="chart-area">
+        <div class="chart-wrapper">
+          <div class="line-chart">
+            <canvas id="lap-chart" class="chart-canvas"></canvas>
+            <div id="point-highlight" class="point-highlight"></div>
+          </div>
+          <div id="chart-legend" class="legend"></div>
+        </div>
+        <div id="tooltip-sidebar" class="tooltip-sidebar">
+          <div class="tooltip-lap-title" id="tooltip-lap-title">Lap 1</div>
+          <div class="tooltip-lap-time" id="tooltip-lap-time">00:46.557</div>
+          <div class="tooltip-lap-delta" id="tooltip-lap-delta">Δ +3.557s</div>
+          <div class="tooltip-lap-info" id="tooltip-lap-info">
+            Session: 7/17/2025<br>
+            Kart: 9 Ag
+          </div>
+        </div>
       </div>
     </div>
 
-    <div id="sessions-container">
-      <div class="loading">Loading sessions...</div>
+    <div class="comparison-container">
+      <div class="chart-title">🔄 Compare Sessions</div>
+      <div class="comparison-input">
+        <input type="text" id="compare-id" placeholder="Enter session ID to compare (e.g., session-2025-07-20)">
+        <button onclick="compareSession()">Compare</button>
+        <button onclick="clearComparison()" style="background: #666;">Clear</button>
+      </div>
+      <div id="comparison-results" class="comparison-grid"></div>
+    </div>
+
+    <div class="socials">
+      <strong>Follow:</strong>
+      <a id="ig" target="_blank">Instagram</a>
+      <a id="fb" target="_blank">Facebook</a>
+      <a id="web" target="_blank">Website</a>
     </div>
   </div>
 
   <script>
-    let allSessions = [];
-    let filteredSessions = [];
-    let currentSort = 'date';
+    let currentSessionData = null;
+    let comparisonSessionData = null;
+    let chartPoints = [];
+    let currentDataset = [];
+    let comparisonDataset = [];
+    let currentFastestTime = 0;
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("id") || "example-session";
 
-    async function loadSessionsList() {
-      const container = document.getElementById('sessions-container');
-
-      try {
-        const res = await fetch('sessions/sessions-list.json');
-        const list = await res.json();
-        allSessions = list.sessions;
-
-        if (!allSessions || allSessions.length === 0) {
-          container.innerHTML = '<div class="error">No sessions found.</div>';
-          return;
-        }
-
-        updateSummaryStats();
-        populateFilters();
-        filteredSessions = [...allSessions];
-        renderSessions();
-
-      } catch (e) {
-        container.innerHTML = '<div class="error">Failed to load sessions list.</div>';
-      }
-    }
-
-    function populateFilters() {
-      const trackSelect = document.getElementById("track-filter");
-      const configSelect = document.getElementById("config-filter");
-
-      const tracks = [...new Set(allSessions.map(s => s.track.name))];
-      const configs = [...new Set(allSessions.map(s => s.track.configuration || ""))];
-
-      tracks.forEach(t => {
-        const opt = document.createElement("option");
-        opt.value = t;
-        opt.textContent = t;
-        trackSelect.appendChild(opt);
+    fetch(`sessions/${sessionId}.json`)
+      .then(r => r.json())
+      .then(data => {
+        currentSessionData = data;
+        renderSession(data);
+      })
+      .catch(err => {
+        document.body.innerHTML = '<div style="text-align:center; padding: 50px; color: #f44336;"><h1>❌ Session not found</h1></div>';
       });
-
-      configs.forEach(c => {
-        if (!c) return;
-        const opt = document.createElement("option");
-        opt.value = c;
-        opt.textContent = c;
-        configSelect.appendChild(opt);
-      });
-    }
 
     function parseTime(timeStr) {
-      const p = timeStr.split(":");
-      return parseInt(p[0]) * 60 + parseFloat(p[1]);
-    }
-
-    function updateSummaryStats() {
-      document.getElementById("total-sessions").textContent = allSessions.length;
-
-      const totalLaps = allSessions.reduce((a, s) => a + s.laps_count, 0);
-      document.getElementById("total-laps").textContent = totalLaps;
-
-      const trackSet = new Set(allSessions.map(s => s.track.name));
-      document.getElementById("tracks-count").textContent = trackSet.size;
-
-      const allFastestTimes = allSessions.map(s => parseTime(s.fastest_lap));
-      const minTime = Math.min(...allFastestTimes);
-      const best = allSessions.find(s => parseTime(s.fastest_lap) === minTime);
-      document.getElementById("best-lap-ever").textContent = best.fastest_lap;
-    }
-
-    function renderSessions() {
-      const container = document.getElementById('sessions-container');
-      if (filteredSessions.length === 0) {
-        container.innerHTML = '<div class="no-results">No matching sessions.</div>';
-        return;
+      const parts = timeStr.split(':');
+      if (parts.length === 2) {
+        const minutes = parseInt(parts[0]);
+        const seconds = parseFloat(parts[1]);
+        return minutes * 60 + seconds;
       }
-
-      const html = filteredSessions.map(s => `
-        <div class="session-card" onclick="viewSession('${s.id}')">
-          <div class="session-header">
-            <div class="driver-name">${s.driver}</div>
-            <div class="session-date">${new Date(s.session_date).toLocaleDateString()}</div>
-          </div>
-
-          <div class="session-stats">
-            <div class="session-stat">
-              <span class="stat-name">Track</span>
-              <span class="stat-val">${s.track.name}</span>
-            </div>
-
-            <div class="session-stat">
-              <span class="stat-name">Configuration</span>
-              <span class="stat-val">${s.track.configuration}</span>
-            </div>
-
-            <div class="session-stat">
-              <span class="stat-name">Kart</span>
-              <span class="stat-val">${s.kart}</span>
-            </div>
-
-            <div class="session-stat">
-              <span class="stat-name">Fastest</span>
-              <span class="stat-val">🏆 ${s.fastest_lap}</span>
-            </div>
-
-            <div class="session-stat">
-              <span class="stat-name">Average</span>
-              <span class="stat-val">${s.average_lap}</span>
-            </div>
-
-            <div class="session-stat">
-              <span class="stat-name">Laps</span>
-              <span class="stat-val">${s.laps_count}</span>
-            </div>
-          </div>
-
-          <button class="view-btn">View Full Telemetry →</button>
-        </div>
-      `).join("");
-
-      container.innerHTML = `<div class="sessions-grid">${html}</div>`;
+      return parseFloat(timeStr);
     }
 
-    function viewSession(id) {
-      window.location.href = `session.html?id=${id}`;
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = (seconds % 60).toFixed(3);
+      return mins > 0 ? `${mins}:${secs.padStart(6, '0')}` : `${secs}s`;
     }
 
-    function sortSessions(type) {
-      currentSort = type;
-
-      if (type === "date") {
-        filteredSessions.sort((a, b) => new Date(b.session_date) - new Date(a.session_date));
-      } else if (type === "fastest") {
-        filteredSessions.sort((a, b) => parseTime(a.fastest_lap) - parseTime(b.fastest_lap));
-      }
-
-      renderSessions();
+    function calculateConsistency(lapTimes) {
+      const avg = lapTimes.reduce((a, b) => a + b, 0) / lapTimes.length;
+      const variance = lapTimes.reduce((sum, time) => sum + Math.pow(time - avg, 2), 0) / lapTimes.length;
+      const stdDev = Math.sqrt(variance);
+      return stdDev;
     }
 
-    function filterSessions(searchTerm) {
-      const term = searchTerm.toLowerCase();
-      const t = document.getElementById("track-filter").value;
-      const c = document.getElementById("config-filter").value;
-
-      filteredSessions = allSessions.filter(s =>
-        (s.driver.toLowerCase().includes(term) ||
-        s.track.name.toLowerCase().includes(term)) &&
-        (t === "" || s.track.name === t) &&
-        (c === "" || s.track.configuration === c)
-      );
-
-      sortSessions(currentSort);
+    function getConsistencyRating(stdDev) {
+      if (stdDev < 0.3) return { text: 'Excellent', class: 'consistency-excellent' };
+      if (stdDev < 0.6) return { text: 'Good', class: 'consistency-good' };
+      if (stdDev < 1.0) return { text: 'Fair', class: 'consistency-fair' };
+      return { text: 'Variable', class: 'consistency-poor' };
     }
 
-    document.getElementById("search-input").addEventListener("input", e => {
-      filterSessions(e.target.value);
-    });
-
-    document.getElementById("track-filter").addEventListener("change", () => {
-      filterSessions(document.getElementById("search-input").value);
-    });
-
-    document.getElementById("config-filter").addEventListener("change", () => {
-      filterSessions(document.getElementById("search-input").value);
-    });
-
-    document.querySelectorAll(".filter-btn").forEach(btn => {
-      btn.addEventListener("click", e => {
-        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-        e.target.classList.add("active");
-        sortSessions(e.target.dataset.sort);
+    function setupChartInteractions() {
+      const canvas = document.getElementById('lap-chart');
+      const highlight = document.getElementById('point-highlight');
+      const tooltipSidebar = document.getElementById('tooltip-sidebar');
+      
+      canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        let closestPoint = null;
+        let minDistance = Infinity;
+        
+        // Find the closest point to the cursor
+        chartPoints.forEach(point => {
+          const distance = Math.sqrt(Math.pow(x - point.x, 2) + Math.pow(y - point.y, 2));
+          if (distance < 30 && distance < minDistance) {
+            minDistance = distance;
+            closestPoint = point;
+          }
+        });
+        
+        if (closestPoint) {
+          // Show highlight on the point
+          highlight.style.left = closestPoint.x + 'px';
+          highlight.style.top = closestPoint.y + 'px';
+          highlight.classList.add('visible');
+          
+          // Update sidebar tooltip
+          updateTooltipSidebar(closestPoint);
+          tooltipSidebar.classList.add('visible');
+        } else {
+          // Hide highlight and tooltip
+          highlight.classList.remove('visible');
+          tooltipSidebar.classList.remove('visible');
+        }
       });
-    });
+      
+      canvas.addEventListener('mouseleave', () => {
+        highlight.classList.remove('visible');
+        tooltipSidebar.classList.remove('visible');
+      });
+    }
+    
+    function updateTooltipSidebar(point) {
+      const lapTitle = document.getElementById('tooltip-lap-title');
+      const lapTime = document.getElementById('tooltip-lap-time');
+      const lapDelta = document.getElementById('tooltip-lap-delta');
+      const lapInfo = document.getElementById('tooltip-lap-info');
+      
+      if (point.isComparison && comparisonSessionData) {
+        // Comparison session
+        const compareFastest = Math.min(...comparisonDataset.map(l => parseTime(l.time)));
+        const currentTime = parseTime(point.lap.time);
+        const delta = currentTime - compareFastest;
+        const deltaStr = delta === 0 ? '' : (delta > 0 ? `+${delta.toFixed(3)}s` : `${delta.toFixed(3)}s`);
+        
+        lapTitle.textContent = `${comparisonSessionData.driver} - Lap ${point.lapNumber}`;
+        lapTime.textContent = point.lap.time;
+        lapDelta.textContent = delta !== 0 ? `Δ ${deltaStr}` : 'Fastest Lap';
+        lapDelta.style.color = delta === 0 ? '#ffd700' : '#f44336';
+        lapInfo.innerHTML = `
+          Session: ${new Date(comparisonSessionData.session_date).toLocaleDateString()}<br>
+          Kart: ${comparisonSessionData.kart}
+        `;
+      } else {
+        // Current session
+        const currentTime = parseTime(point.lap.time);
+        const delta = currentTime - currentFastestTime;
+        const deltaStr = delta === 0 ? '' : (delta > 0 ? `+${delta.toFixed(3)}s` : `${delta.toFixed(3)}s`);
+        
+        lapTitle.textContent = `Lap ${point.lapNumber}`;
+        lapTime.textContent = point.lap.time;
+        lapDelta.textContent = delta !== 0 ? `Δ ${deltaStr}` : 'Fastest Lap';
+        lapDelta.style.color = delta === 0 ? '#ffd700' : '#f44336';
+        lapInfo.innerHTML = `
+          Session: ${new Date(currentSessionData.session_date).toLocaleDateString()}<br>
+          Kart: ${currentSessionData.kart}
+        `;
+      }
+    }
 
-    loadSessionsList();
+    function drawLineChart(mainLaps, compareLaps = null) {
+      const canvas = document.getElementById('lap-chart');
+      const ctx = canvas.getContext('2d');
+      
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+
+      const padding = 60;
+      const chartWidth = canvas.width - padding * 2;
+      const chartHeight = canvas.height - padding * 2;
+
+      // Clear canvas and reset points
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      chartPoints = [];
+      currentDataset = mainLaps;
+      comparisonDataset = compareLaps || [];
+
+      // Calculate fastest time for delta calculations
+      const mainLapTimes = mainLaps.map(lap => parseTime(lap.time));
+      currentFastestTime = Math.min(...mainLapTimes);
+
+      // Determine time range for scaling
+      const allLaps = compareLaps ? [...mainLaps, ...compareLaps] : mainLaps;
+      const lapTimes = allLaps.map(lap => parseTime(lap.time));
+      const minTime = Math.min(...lapTimes);
+      const maxTime = Math.max(...lapTimes);
+      const timeRange = maxTime - minTime || 1;
+
+      // Draw grid
+      ctx.strokeStyle = '#3d3d3d';
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 5; i++) {
+        const y = padding + (chartHeight / 5) * i;
+        ctx.beginPath();
+        ctx.moveTo(padding, y);
+        ctx.lineTo(canvas.width - padding, y);
+        ctx.stroke();
+      }
+
+      // Draw vertical grid lines (lap markers)
+      const totalLaps = Math.max(mainLaps.length, compareLaps ? compareLaps.length : 0);
+      for (let i = 0; i < totalLaps; i++) {
+        const x = padding + (chartWidth / (totalLaps - 1 || 1)) * i;
+        ctx.beginPath();
+        ctx.moveTo(x, padding);
+        ctx.lineTo(x, canvas.height - padding);
+        ctx.strokeStyle = '#2d2d2d';
+        ctx.stroke();
+      }
+
+      // Function to draw a single lap line and store point positions
+      function drawLapLine(laps, color, pointColor, isComparison = false) {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+
+        laps.forEach((lap, i) => {
+          const x = padding + (chartWidth / (laps.length - 1 || 1)) * i;
+          const lapTime = parseTime(lap.time);
+          const y = padding + chartHeight - ((lapTime - minTime) / timeRange) * chartHeight;
+
+          if (i === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+          
+          // Store point position for hover detection
+          chartPoints.push({
+            x, y,
+            lap: lap,
+            lapNumber: lap.lap,
+            isComparison: isComparison
+          });
+        });
+        ctx.stroke();
+
+        // Draw points
+        laps.forEach((lap, i) => {
+          const x = padding + (chartWidth / (laps.length - 1 || 1)) * i;
+          const lapTime = parseTime(lap.time);
+          const y = padding + chartHeight - ((lapTime - minTime) / timeRange) * chartHeight;
+
+          ctx.fillStyle = pointColor;
+          ctx.beginPath();
+          ctx.arc(x, y, 6, 0, Math.PI * 2);
+          ctx.fill();
+          
+          // Add a white border to points for better visibility
+          ctx.strokeStyle = '#fff';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        });
+      }
+
+      // Draw comparison line first (behind)
+      if (compareLaps) {
+        drawLapLine(compareLaps, '#4caf50', '#8bc34a', true);
+      }
+
+      // Draw main line (on top)
+      drawLapLine(mainLaps, '#f44336', '#ff5252', false);
+
+      // Draw best lap markers
+      function drawBestLapMarkers(laps, color) {
+        const bestLapIndex = laps.findIndex(lap => lap.best);
+        if (bestLapIndex !== -1) {
+          const x = padding + (chartWidth / (laps.length - 1 || 1)) * bestLapIndex;
+          const lapTime = parseTime(laps[bestLapIndex].time);
+          const y = padding + chartHeight - ((lapTime - minTime) / timeRange) * chartHeight;
+
+          // Draw a star for best lap
+          ctx.fillStyle = '#ffd700';
+          ctx.beginPath();
+          ctx.moveTo(x, y - 10);
+          for (let i = 1; i <= 5; i++) {
+            const angle = (i * 4 * Math.PI) / 5;
+            const radius = i % 2 === 0 ? 8 : 4;
+            ctx.lineTo(x + Math.sin(angle) * radius, y - Math.cos(angle) * radius);
+          }
+          ctx.closePath();
+          ctx.fill();
+          ctx.strokeStyle = '#fff';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      }
+
+      drawBestLapMarkers(mainLaps, '#ffd700');
+      if (compareLaps) {
+        drawBestLapMarkers(compareLaps, '#ffd700');
+      }
+
+      // Draw X-axis labels (lap numbers)
+      ctx.fillStyle = '#999';
+      ctx.font = '12px Arial';
+      ctx.textAlign = 'center';
+      for (let i = 0; i < totalLaps; i++) {
+        const x = padding + (chartWidth / (totalLaps - 1 || 1)) * i;
+        if (i % Math.ceil(totalLaps / 10) === 0 || i === totalLaps - 1) {
+          ctx.fillText(`L${i + 1}`, x, canvas.height - 20);
+        }
+      }
+
+      // Draw Y-axis labels (times)
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      for (let i = 0; i <= 5; i++) {
+        const y = padding + (chartHeight / 5) * i;
+        const time = maxTime - (timeRange / 5) * i;
+        ctx.fillText(formatTime(time), padding - 10, y);
+      }
+
+      // Update legend
+      const legend = document.getElementById('chart-legend');
+      if (compareLaps) {
+        legend.innerHTML = `
+          <div class="legend-item">
+            <div class="legend-color" style="background: #f44336;"></div>
+            <span>${currentSessionData.driver}</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #4caf50;"></div>
+            <span>${comparisonSessionData.driver}</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #ffd700;"></div>
+            <span>★ Best Lap</span>
+          </div>
+        `;
+      } else {
+        legend.innerHTML = `
+          <div class="legend-item">
+            <div class="legend-color" style="background: #ffd700;"></div>
+            <span>★ Best Lap</span>
+          </div>
+          <div class="legend-item">
+            <small>Hover over chart to see lap details</small>
+          </div>
+        `;
+      }
+
+      // Setup chart interactions
+      setupChartInteractions();
+    }
+
+    function renderSession(data) {
+      document.getElementById('driver').textContent = data.driver;
+      document.getElementById('fastest').textContent = data.fastest_lap;
+      document.getElementById('track-link').textContent = data.track.name;
+      document.getElementById('track-link').href = data.track.maps_link;
+      document.getElementById('kart').textContent = data.kart;
+      document.getElementById('session-date').textContent = new Date(data.session_date).toLocaleDateString('en-US', { 
+        year: 'numeric', month: 'long', day: 'numeric' 
+      });
+
+      const validLaps = data.laps.filter(lap => lap.lap !== null);
+      document.getElementById('total-laps').textContent = validLaps.length;
+
+      const lapTimes = validLaps.map(lap => parseTime(lap.time));
+      const avgTime = lapTimes.reduce((a, b) => a + b, 0) / lapTimes.length;
+      
+      document.getElementById('average').textContent = formatTime(avgTime);
+
+      const stdDev = calculateConsistency(lapTimes);
+      const consistency = getConsistencyRating(stdDev);
+      const consistencyEl = document.getElementById('consistency');
+      consistencyEl.textContent = `${consistency.text} (±${stdDev.toFixed(3)}s)`;
+      consistencyEl.className = `stat-value small ${consistency.class}`;
+
+      // Draw chart with all laps
+      drawLineChart(validLaps);
+
+      document.getElementById('ig').href = data.socials.instagram;
+      document.getElementById('fb').href = data.socials.facebook;
+      document.getElementById('web').href = data.socials.website;
+    }
+
+    async function compareSession() {
+      const compareId = document.getElementById('compare-id').value.trim();
+      if (!compareId) return;
+
+      try {
+        const response = await fetch(`sessions/${compareId}.json`);
+        comparisonSessionData = await response.json();
+        
+        const currentLaps = currentSessionData.laps.filter(l => l.lap !== null);
+        const compareLaps = comparisonSessionData.laps.filter(l => l.lap !== null);
+        
+        const currentFastest = Math.min(...currentLaps.map(l => parseTime(l.time)));
+        const compareFastest = Math.min(...compareLaps.map(l => parseTime(l.time)));
+        const currentAvg = currentLaps.reduce((sum, l) => sum + parseTime(l.time), 0) / currentLaps.length;
+        const compareAvg = compareLaps.reduce((sum, l) => sum + parseTime(l.time), 0) / compareLaps.length;
+
+        // Draw comparison chart
+        drawLineChart(currentLaps, compareLaps);
+
+        const resultHTML = `
+          <div class="comparison-card">
+            <h3>${currentSessionData.driver} - ${currentSessionData.session_date}</h3>
+            <p><strong>Fastest:</strong> ${formatTime(currentFastest)}</p>
+            <p><strong>Average:</strong> ${formatTime(currentAvg)}</p>
+            <p><strong>Laps:</strong> ${currentLaps.length}</p>
+            <p><strong>Kart:</strong> ${currentSessionData.kart}</p>
+          </div>
+          <div class="comparison-card">
+            <h3>${comparisonSessionData.driver} - ${comparisonSessionData.session_date}</h3>
+            <p><strong>Fastest:</strong> ${formatTime(compareFastest)}</p>
+            <p><strong>Average:</strong> ${formatTime(compareAvg)}</p>
+            <p><strong>Laps:</strong> ${compareLaps.length}</p>
+            <p><strong>Kart:</strong> ${comparisonSessionData.kart}</p>
+          </div>
+          <div class="comparison-card">
+            <h3>Comparison</h3>
+            <p><strong>Fastest Diff:</strong> <span style="color: ${currentFastest < compareFastest ? '#4caf50' : '#f44336'}">${(currentFastest - compareFastest).toFixed(3)}s</span></p>
+            <p><strong>Average Diff:</strong> <span style="color: ${currentAvg < compareAvg ? '#4caf50' : '#f44336'}">${(currentAvg - compareAvg).toFixed(3)}s</span></p>
+            <p><strong>Winner:</strong> <strong style="color: ${currentFastest < compareFastest ? '#4caf50' : '#f44336'}">${currentFastest < compareFastest ? currentSessionData.driver : comparisonSessionData.driver}</strong></p>
+            <p><strong>Gap:</strong> ${Math.abs(currentFastest - compareFastest).toFixed(3)}s</p>
+          </div>
+        `;
+        
+        document.getElementById('comparison-results').innerHTML = resultHTML;
+      } catch (err) {
+        document.getElementById('comparison-results').innerHTML = '<p style="color: #f44336;">Session not found</p>';
+      }
+    }
+
+    function clearComparison() {
+      comparisonSessionData = null;
+      document.getElementById('compare-id').value = '';
+      document.getElementById('comparison-results').innerHTML = '';
+      
+      // Redraw chart without comparison
+      if (currentSessionData) {
+        const validLaps = currentSessionData.laps.filter(lap => lap.lap !== null);
+        drawLineChart(validLaps);
+      }
+    }
   </script>
 </body>
 </html>
