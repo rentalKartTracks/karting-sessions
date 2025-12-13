@@ -106,24 +106,32 @@
     }
 
     .home-button {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 12px 24px;
-      background: #f44336;
+      display: inline-block;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.2);
       color: white;
       text-decoration: none;
       border-radius: 8px;
       font-weight: bold;
-      box-shadow: 0 4px 16px rgba(244, 67, 54, 0.3);
       transition: all 0.3s;
-      z-index: 1000;
+      border: 2px solid rgba(255, 255, 255, 0.3);
     }
 
     .home-button:hover {
-      background: #d32f2f;
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.5);
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .header-info {
+      flex: 1;
     }
 
     .socials {
@@ -313,12 +321,15 @@
   </style>
 </head>
 <body>
-  <a href="index.html" class="home-button">🏠 Home</a>
-
   <div class="container">
     <div class="header">
-      <div class="driver-name" id="driver"></div>
-      <div id="session-date"></div>
+      <div class="header-content">
+        <div class="header-info">
+          <div class="driver-name" id="driver"></div>
+          <div id="session-date"></div>
+        </div>
+        <a href="index.html" class="home-button">🏠 Home</a>
+      </div>
     </div>
 
     <div class="stats-grid">
@@ -581,9 +592,10 @@
         ctx.stroke();
       }
 
-      const totalLaps = Math.max(mainLaps.length, compareLaps ? compareLaps.length : 0);
-      for (let i = 0; i < totalLaps; i++) {
-        const x = padding + (chartWidth / (totalLaps - 1 || 1)) * i;
+      // Use the maximum number of laps for grid lines
+      const maxLapsCount = Math.max(mainLaps.length, compareLaps ? compareLaps.length : 0);
+      for (let i = 0; i < maxLapsCount; i++) {
+        const x = padding + (chartWidth / (maxLapsCount - 1 || 1)) * i;
         ctx.beginPath();
         ctx.moveTo(x, padding);
         ctx.lineTo(x, canvas.height - padding);
@@ -591,13 +603,15 @@
         ctx.stroke();
       }
 
+      // Function to draw a single lap line - now uses maxLapsCount for alignment
       function drawLapLine(laps, color, pointColor, isComparison = false) {
         ctx.strokeStyle = color;
         ctx.lineWidth = 3;
         ctx.beginPath();
 
         laps.forEach((lap, i) => {
-          const x = padding + (chartWidth / (laps.length - 1 || 1)) * i;
+          // Use maxLapsCount to align all sessions on the same x-axis scale
+          const x = padding + (chartWidth / (maxLapsCount - 1 || 1)) * i;
           const lapTime = parseTime(lap.time);
           const y = padding + chartHeight - ((lapTime - minTime) / timeRange) * chartHeight;
 
@@ -617,7 +631,8 @@
         ctx.stroke();
 
         laps.forEach((lap, i) => {
-          const x = padding + (chartWidth / (laps.length - 1 || 1)) * i;
+          // Use maxLapsCount for consistent point positioning
+          const x = padding + (chartWidth / (maxLapsCount - 1 || 1)) * i;
           const lapTime = parseTime(lap.time);
           const y = padding + chartHeight - ((lapTime - minTime) / timeRange) * chartHeight;
 
@@ -646,7 +661,8 @@
       function drawBestLapMarkers(laps, color) {
         const bestLapIndex = laps.findIndex(lap => lap.best);
         if (bestLapIndex !== -1) {
-          const x = padding + (chartWidth / (laps.length - 1 || 1)) * bestLapIndex;
+          // Use maxLapsCount for consistent marker positioning
+          const x = padding + (chartWidth / (maxLapsCount - 1 || 1)) * bestLapIndex;
           const lapTime = parseTime(laps[bestLapIndex].time);
           const y = padding + chartHeight - ((lapTime - minTime) / timeRange) * chartHeight;
 
@@ -671,12 +687,13 @@
         drawBestLapMarkers(compareLaps, '#ffd700');
       }
 
+      // X-axis labels - use maxLapsCount
       ctx.fillStyle = '#999';
       ctx.font = '12px Arial';
       ctx.textAlign = 'center';
-      for (let i = 0; i < totalLaps; i++) {
-        const x = padding + (chartWidth / (totalLaps - 1 || 1)) * i;
-        if (i % Math.ceil(totalLaps / 10) === 0 || i === totalLaps - 1) {
+      for (let i = 0; i < maxLapsCount; i++) {
+        const x = padding + (chartWidth / (maxLapsCount - 1 || 1)) * i;
+        if (i % Math.ceil(maxLapsCount / 10) === 0 || i === maxLapsCount - 1) {
           ctx.fillText(`L${i + 1}`, x, canvas.height - 20);
         }
       }
@@ -694,11 +711,11 @@
         legend.innerHTML = `
           <div class="legend-item">
             <div class="legend-color" style="background: #f44336;"></div>
-            <span>${currentSessionData.driver}</span>
+            <span>${currentSessionData.driver} (${mainLaps.length} laps)</span>
           </div>
           <div class="legend-item">
             <div class="legend-color" style="background: #4caf50;"></div>
-            <span>${comparisonSessionData.driver}</span>
+            <span>${comparisonSessionData.driver} (${compareLaps.length} laps)</span>
           </div>
           <div class="legend-item">
             <div class="legend-color" style="background: #ffd700;"></div>
