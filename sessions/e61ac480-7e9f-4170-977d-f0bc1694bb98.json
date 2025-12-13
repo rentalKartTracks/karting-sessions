@@ -1,0 +1,66 @@
+{
+  "session_id": "e61ac480-7e9f-4170-977d-f0bc1694bb98",
+  "driver": "Povilas L.",
+  "track": {
+    "name": "Plytinės Kartodromas",
+    "configuration": "Autumn",
+    "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
+  },
+  "kart": "9 Ag",
+  "session_date": "2025-12-08",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "00:50.116"
+    },
+    {
+      "lap": 2,
+      "time": "00:45.787"
+    },
+    {
+      "lap": 3,
+      "time": "00:45.055"
+    },
+    {
+      "lap": 4,
+      "time": "00:44.607"
+    },
+    {
+      "lap": 5,
+      "time": "00:45.204"
+    },
+    {
+      "lap": 6,
+      "time": "00:44.563"
+    },
+    {
+      "lap": 7,
+      "time": "00:44.770"
+    },
+    {
+      "lap": 8,
+      "time": "00:44.872"
+    },
+    {
+      "lap": 9,
+      "time": "00:45.097"
+    },
+    {
+      "lap": 10,
+      "time": "00:45.354"
+    },
+    {
+      "lap": 11,
+      "time": "00:44.812"
+    },
+    {
+      "lap": 12,
+      "time": "00:45.193"
+    }
+  ],
+  "socials": {
+    "instagram": "https://instagram.com/helmet.cam.heroes",
+    "facebook": "https://facebook.com/helmet.cam.heroes",
+    "website": "http://www.rental-kart-tracks.com/"
+  }
+}
