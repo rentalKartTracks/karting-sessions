@@ -351,48 +351,79 @@
       const container = document.getElementById('sessions-container');
 
       try {
-        // FIX: Add 'sessions/' to the path
+        // Fetch the central list file containing all summary data
         const listResponse = await fetch('sessions/sessions-list.json');
 
-        if (!listResponse.ok) throw new Error('Cannot load sessions-list.json');
+        if (!listResponse.ok) {
+          throw new Error(`Failed to load sessions-list.json: ${listResponse.statusText}`);
+        }
 
         const sessionList = await listResponse.json();
 
-        // Also update the individual session file paths
-        const promises = sessionList.sessions.map(session =>
-          fetch(`sessions/${session.id}.json`) // FIX: Make sure this path is correct
-            .then(r => r.json())
-            .then(data => ({
-              ...data,
-              id: session.id,
-              track_name: session.track.name,
-              track_config: session.track.configuration
-            }))
-            .catch(() => null)
-        );
+        if (!sessionList || !Array.isArray(sessionList.sessions)) {
+          throw new Error('sessions-list.json is missing the required "sessions" array.');
+        }
 
-        const results = await Promise.all(promises);
-        allSessions = results.filter(s => s !== null);
+        // Map the list data into the primary array.
+        // NOTE: This assumes 'fastest_lap', 'laps_count', and 'average_lap' are pre-calculated
+        // and present in the sessions-list.json file.
+        allSessions = sessionList.sessions.map(session => ({
+          id: session.id,
+          driver: session.driver,
+          track_name: session.track ? session.track.name : 'N/A',
+          track_config: session.track ? session.track.configuration : 'N/A',
+          session_date: session.session_date,
+          fastest_lap: session.fastest_lap,
+          kart: session.kart,
+          laps_count: session.laps_count,
+          average_lap: session.average_lap
+        }));
 
         if (allSessions.length === 0) {
-          container.innerHTML = '<div class="error">No sessions found. Make sure your JSON files are in the sessions/ folder.</div>';
+          container.innerHTML = '<div class="no-results">No sessions found in the list.</div>';
           return;
         }
 
-        // Extract unique tracks and configurations
+        // Extract unique tracks and configurations for filters
         allSessions.forEach(session => {
           uniqueTracks.add(session.track_name);
           uniqueConfigs.add(session.track_config);
         });
 
         populateFilters();
-        // updateGlobalSummaryStats(); // Don't show global stats in the filtered area
         filteredSessions = [...allSessions];
-        renderSessions(); // This calls updateFilteredSummaryStats()
+        renderSessions();
       } catch (error) {
-        console.error('Error loading sessions:', error);
-        container.innerHTML = '<div class="error">Error loading sessions. Please check your setup.</div>';
+        console.error('Error loading or processing sessions:', error);
+        container.innerHTML = `<div class="error">Error loading sessions: ${error.message}. Please ensure 'sessions/sessions-list.json' is accessible and correctly formatted with summary data.</div>`;
       }
+    }
+
+    /**
+     * Converts time string (MM:SS.mmm or SS.mmm) to seconds float for calculations.
+     */
+    function parseTime(timeStr) {
+      if (!timeStr) return Infinity;
+      timeStr = String(timeStr).trim();
+      const parts = timeStr.split(':');
+      if (parts.length === 2) {
+        const minutes = parseInt(parts[0]);
+        const seconds = parseFloat(parts[1]);
+        return minutes * 60 + seconds;
+      }
+      // Handle raw seconds string (e.g., "55.300s")
+      const seconds = parseFloat(timeStr.replace('s', ''));
+      return isNaN(seconds) ? Infinity : seconds;
+    }
+
+    /**
+     * Converts seconds float back to time string (MM:SS.mmm or SS.mmm).
+     */
+    function formatTime(seconds) {
+      if (seconds === Infinity || isNaN(seconds)) return '-';
+      const mins = Math.floor(seconds / 60);
+      const secs = (seconds % 60).toFixed(3);
+      return mins > 0 ? `${mins}:${secs.padStart(6, '0')}` : `${secs}s`;
     }
 
     function populateFilters() {
@@ -416,33 +447,24 @@
       });
     }
 
-    function parseTime(timeStr) {
-      const parts = timeStr.split(':');
-      if (parts.length === 2) {
-        const minutes = parseInt(parts[0]);
-        const seconds = parseFloat(parts[1]);
-        return minutes * 60 + seconds;
-      }
-      return parseFloat(timeStr);
-    }
-
-    // Removed the original updateSummaryStats() as we now only need the filtered one.
-
     /**
-     * UPDATED FUNCTION: Calculates and displays stats based on the filtered sessions.
+     * Calculates and displays dashboard summary stats (Filtered).
      */
     function updateFilteredSummaryStats() {
       const sessionsToUse = filteredSessions;
 
       const totalSessions = sessionsToUse.length;
-      const totalLaps = sessionsToUse.reduce((sum, s) =>
-        sum + s.laps.filter(l => l.lap !== null).length, 0
-      );
+      // Sum pre-calculated laps_count
+      const totalLaps = sessionsToUse.reduce((sum, s) => sum + (s.laps_count || 0), 0);
 
-      const allFastestLaps = sessionsToUse.map(s => parseTime(s.fastest_lap)).filter(t => !isNaN(t));
+      // Find the best lap by parsing and finding the minimum of the fastest_lap strings
+      const allFastestLaps = sessionsToUse
+        .map(s => parseTime(s.fastest_lap))
+        .filter(t => t !== Infinity);
+
       const bestLapEver = allFastestLaps.length > 0 ? Math.min(...allFastestLaps) : null;
 
-      const uniqueTrackNames = new Set(sessionsToUse.map(s => s.track_name));
+      const uniqueTrackNames = new Set(sessionsToUse.map(s => s.track_name).filter(n => n && n !== 'N/A'));
 
       document.getElementById('filtered-sessions-count').textContent = totalSessions;
       document.getElementById('filtered-total-laps').textContent = totalLaps;
@@ -459,59 +481,54 @@
         container.innerHTML = '<div class="no-results">No sessions match your search.</div>';
       } else {
         const html = filteredSessions.map(session => {
-          const validLaps = session.laps.filter(l => l.lap !== null);
-          const lapTimes = validLaps.map(l => parseTime(l.time));
-          const avgTime = lapTimes.reduce((a, b) => a + b, 0) / lapTimes.length;
+          // Direct use of pre-calculated list data
+          const fastestTime = session.fastest_lap || '-';
+          const averageTime = session.average_lap || '-';
+          const lapsCount = session.laps_count || 0;
 
           return `
-                        <div class="session-card" onclick="viewSession('${session.id}')">
-                            <div class="session-header">
-                                <div class="driver-name">${session.driver}</div>
-                                <div class="session-date">${new Date(session.session_date).toLocaleDateString()}</div>
-                            </div>
-                            
-                            <div class="session-stats">
-                                <div class="session-stat">
-                                    <span class="stat-name">Track</span>
-                                    <span class="stat-val">${session.track_name} (${session.track_config})</span>
+                                <div class="session-card" onclick="viewSession('${session.id}')">
+                                    <div class="session-header">
+                                        <div class="driver-name">${session.driver}</div>
+                                        <div class="session-date">${new Date(session.session_date).toLocaleDateString()}</div>
+                                    </div>
+                                    
+                                    <div class="session-stats">
+                                        <div class="session-stat">
+                                            <span class="stat-name">Track</span>
+                                            <span class="stat-val">${session.track_name} (${session.track_config})</span>
+                                        </div>
+                                        <div class="session-stat">
+                                            <span class="stat-name">Kart</span>
+                                            <span class="stat-val">${session.kart || '-'}</span>
+                                        </div>
+                                        <div class="session-stat">
+                                            <span class="stat-name">Fastest Lap</span>
+                                            <span class="stat-val">🏆 ${fastestTime}</span>
+                                        </div>
+                                        <div class="session-stat">
+                                            <span class="stat-name">Average</span>
+                                            <span class="stat-val">${averageTime}</span>
+                                        </div>
+                                        <div class="session-stat">
+                                            <span class="stat-name">Laps</span>
+                                            <span class="stat-val">${lapsCount}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <button class="view-btn">View Full Telemetry →</button>
                                 </div>
-                                <div class="session-stat">
-                                    <span class="stat-name">Kart</span>
-                                    <span class="stat-val">${session.kart}</span>
-                                </div>
-                                <div class="session-stat">
-                                    <span class="stat-name">Fastest Lap</span>
-                                    <span class="stat-val">🏆 ${session.fastest_lap}</span>
-                                </div>
-                                <div class="session-stat">
-                                    <span class="stat-name">Average</span>
-                                    <span class="stat-val">${formatTime(avgTime)}</span>
-                                </div>
-                                <div class="session-stat">
-                                    <span class="stat-name">Laps</span>
-                                    <span class="stat-val">${validLaps.length}</span>
-                                </div>
-                            </div>
-                            
-                            <button class="view-btn">View Full Telemetry →</button>
-                        </div>
-                    `;
+                            `;
         }).join('');
 
         container.innerHTML = `<div class="sessions-grid">${html}</div>`;
       }
 
-      // FIX: Update the summary stats after rendering the filtered list
       updateFilteredSummaryStats();
     }
 
-    function formatTime(seconds) {
-      const mins = Math.floor(seconds / 60);
-      const secs = (seconds % 60).toFixed(3);
-      return mins > 0 ? `${mins}:${secs.padStart(6, '0')}` : `${secs}s`;
-    }
-
     function viewSession(sessionId) {
+      // This function directs the user to the detailed page using the session ID
       window.location.href = `session.html?id=${sessionId}`;
     }
 
@@ -521,6 +538,7 @@
       if (sortType === 'date') {
         filteredSessions.sort((a, b) => new Date(b.session_date) - new Date(a.session_date));
       } else if (sortType === 'fastest') {
+        // Sorting uses the parsed fastest_lap string from the list
         filteredSessions.sort((a, b) => parseTime(a.fastest_lap) - parseTime(b.fastest_lap));
       }
 
@@ -535,10 +553,11 @@
 
       filteredSessions = allSessions.filter(session => {
         // Search filter
+        const kart = (session.kart || '').toLowerCase();
         if (searchTerm &&
           !session.driver.toLowerCase().includes(searchTerm) &&
           !session.track_name.toLowerCase().includes(searchTerm) &&
-          !session.kart.toLowerCase().includes(searchTerm)) {
+          !kart.includes(searchTerm)) {
           return false;
         }
 
@@ -552,7 +571,7 @@
           return false;
         }
 
-        // Date filter
+        // Date filter logic
         const sessionDate = new Date(session.session_date);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -574,7 +593,6 @@
           const dateTo = document.getElementById('date-to').value;
 
           if (dateFrom && new Date(session.session_date) < new Date(dateFrom)) return false;
-          // Add 1 day to dateTo to include the entire day selected
           if (dateTo) {
             const dateToMax = new Date(dateTo);
             dateToMax.setDate(dateToMax.getDate() + 1);
@@ -586,7 +604,6 @@
       });
 
       sortSessions(currentSort);
-      // The call to renderSessions() inside sortSessions() will update the summary stats
     }
 
     function updateDateFilterVisibility() {
@@ -600,7 +617,7 @@
       }
     }
 
-    // Event listeners
+    // --- Event Listeners and Initialization ---
     document.getElementById('search-input').addEventListener('input', filterSessions);
     document.getElementById('track-filter').addEventListener('change', filterSessions);
     document.getElementById('config-filter').addEventListener('change', filterSessions);
@@ -620,7 +637,7 @@
       });
     });
 
-    // Set default date values
+    // Set default date values for custom range inputs
     const today = new Date().toISOString().split('T')[0];
     const monthAgo = new Date();
     monthAgo.setDate(monthAgo.getDate() - 30);
@@ -630,8 +647,8 @@
     document.getElementById('date-to').value = today;
     document.getElementById('date-from').max = today;
     document.getElementById('date-to').max = today;
-    document.getElementById('date-to').min = '2020-01-01'; // Default min to prevent invalid range
-    document.getElementById('date-from').min = '2020-01-01'; // Default min to prevent invalid range
+    document.getElementById('date-to').min = '2020-01-01';
+    document.getElementById('date-from').min = '2020-01-01';
 
     // Load sessions on page load
     loadAllSessions();
