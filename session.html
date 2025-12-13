@@ -236,6 +236,14 @@
       border-radius: 4px;
     }
 
+    .error-message {
+      color: #f44336;
+      padding: 10px;
+      background: rgba(244, 67, 54, 0.1);
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
     .tooltip {
       position: absolute;
       background: rgba(30, 30, 30, 0.95);
@@ -372,7 +380,7 @@
     <div class="comparison-container">
       <div class="chart-title">🔄 Compare Sessions</div>
       <div class="comparison-input">
-        <input type="text" id="compare-id" placeholder="Enter session ID to compare (e.g., session-2025-07-20)">
+        <input type="text" id="compare-id" placeholder="Enter session ID(s) to compare, separated by commas (e.g., session-2025-07-20, session-2025-07-21)">
         <button onclick="compareSession()">Compare</button>
         <button onclick="clearComparison()" style="background: #666;">Clear</button>
       </div>
@@ -391,13 +399,25 @@
 
   <script>
     let currentSessionData = null;
-    let comparisonSessionData = null;
+    let comparisonSessions = []; // Changed to array to hold multiple sessions
     let chartPoints = [];
     let currentDataset = [];
-    let comparisonDataset = [];
+    let comparisonDatasets = []; // Array of comparison datasets
     let activePoint = null;
     const params = new URLSearchParams(window.location.search);
     const sessionId = params.get("id") || "example-session";
+
+    // Color palette for multiple comparisons
+    const comparisonColors = [
+      { line: '#4caf50', point: '#8bc34a' },
+      { line: '#2196f3', point: '#64b5f6' },
+      { line: '#ff9800', point: '#ffb74d' },
+      { line: '#9c27b0', point: '#ba68c8' },
+      { line: '#00bcd4', point: '#4dd0e1' },
+      { line: '#ffeb3b', point: '#fff176' },
+      { line: '#795548', point: '#a1887f' },
+      { line: '#e91e63', point: '#f06292' }
+    ];
 
     fetch(`sessions/${sessionId}.json`)
       .then(r => r.json())
@@ -483,17 +503,18 @@
       
       let tooltipHTML = '';
       
-      if (point.isComparison && comparisonSessionData) {
+      if (point.isComparison && point.sessionIndex !== undefined && comparisonSessions[point.sessionIndex]) {
+        const compSession = comparisonSessions[point.sessionIndex];
         tooltipHTML = `
           <div class="tooltip-header">
-            <span class="tooltip-driver">${comparisonSessionData.driver}</span>
+            <span class="tooltip-driver">${compSession.driver}</span>
             <span class="tooltip-lap">Lap ${point.lapNumber}</span>
           </div>
           <div class="tooltip-time">${point.lap.time}</div>
           ${point.lap.best ? '<div class="tooltip-best">★ Best Lap</div>' : ''}
           <div class="tooltip-footer">
-            Session: ${new Date(comparisonSessionData.session_date).toLocaleDateString()}<br>
-            Kart: ${comparisonSessionData.kart}
+            Session: ${new Date(compSession.session_date).toLocaleDateString()}<br>
+            Kart: ${compSession.kart}
           </div>
         `;
       } else {
@@ -836,13 +857,13 @@
     }
 
     function clearComparison() {
-      comparisonSessionData = null;
+      comparisonSessions = [];
       document.getElementById('compare-id').value = '';
       document.getElementById('comparison-results').innerHTML = '';
       
       if (currentSessionData) {
         const validLaps = currentSessionData.laps.filter(lap => lap.lap !== null);
-        drawLineChart(validLaps);
+        drawLineChart(validLaps, []);
       }
     }
   </script>
