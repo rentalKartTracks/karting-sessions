@@ -374,61 +374,67 @@
               </div>
           </div>
 
-        <div class="stats-grid">
+    <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-label">Fastest Lap</div>
-                <div class="stat-value fastest-time" id="fastest"></div>
+                <div class="stat-value fastest-time" id="fastest">00:44.030</div>
               </div>
-            <div class="stat-card">
-                <div class="stat-label">Average Lap</div>
-                <div class="stat-value small" id="average"></div>
-              </div>
-            <div class="stat-card">
-                <div class="stat-label">Consistency</div>
-                <div class="stat-value small" id="consistency"></div>
-              </div>
-            <div class="stat-card">
-                <div class="stat-label">Track</div>
-                <div class="stat-value" style="font-size: 1.3em;">
-                    <a class="track-link" id="track-link" target="_blank"></a>
-                  </div>
-              </div>
-            <div class="stat-card">
-                <div class="stat-label">Kart</div>
-                <div class="stat-value" id="kart"></div>
-              </div>
-            <div class="stat-card">
+                  <div class="stat-card">
                 <div class="stat-label">Total Laps</div>
-                <div class="stat-value" id="total-laps"></div>
+                <div class="stat-value" id="total-laps">13</div>
               </div>
-          </div>
+    </div>
+          <div class="stat-card">
+              <div class="stat-label">Average Lap</div>
+              <div class="stat-value small" id="average"></div>
+            </div>
+          <div class="stat-card">
+              <div class="stat-label">Consistency</div>
+              <div class="stat-value small" id="consistency"></div>
+            </div>
+          <div class="stat-card">
+              <div class="stat-label">Track</div>
+              <div class="stat-value" style="font-size: 1.3em;">
+                  <a class="track-link" id="track-link" target="_blank"></a>
+                </div>
+            </div>
+          <div class="stat-card">
+              <div class="stat-label">Kart</div>
+              <div class="stat-value" id="kart"></div>
+            </div>
+          <div class="stat-card">
+              <div class="stat-label">Total Laps</div>
+              <div class="stat-value" id="total-laps"></div>
+            </div>
+       
+  </div>
 
-        <div class="chart-container">
-            <div class="chart-title">📈 Lap Time Progression</div>
-            <div class="line-chart">
-                <canvas id="lap-chart" class="chart-canvas"></canvas>
-              </div>
-            <div id="chart-legend" class="legend"></div>
-          </div>
+      <div class="chart-container">
+          <div class="chart-title">📈 Lap Time Progression</div>
+          <div class="line-chart">
+              <canvas id="lap-chart" class="chart-canvas"></canvas>
+            </div>
+          <div id="chart-legend" class="legend"></div>
+        </div>
 
-        <div class="comparison-container">
-            <div class="chart-title">🔄 Compare Sessions</div>
-            <div class="comparison-input">
-                <input type="text" id="compare-id"
-          placeholder="Enter session ID(s) to compare, separated by commas (e.g., uuid1, uuid2)">
-                <button onclick="compareSession()">Compare</button>
-                <button onclick="clearComparison()" style="background: #666;">Clear</button>
-              </div>
-            <div id="comparison-results" class="comparison-grid"></div>
-          </div>
+      <div class="comparison-container">
+          <div class="chart-title">🔄 Compare Sessions</div>
+          <div class="comparison-input">
+              <input type="text" id="compare-id"
+        placeholder="Enter session ID(s) to compare, separated by commas (e.g., uuid1, uuid2)">
+              <button onclick="compareSession()">Compare</button>
+              <button onclick="clearComparison()" style="background: #666;">Clear</button>
+            </div>
+          <div id="comparison-results" class="comparison-grid"></div>
+        </div>
 
-        <div class="socials">
-            <strong>Follow:</strong>
-            <a id="ig" target="_blank">Instagram</a>
-            <a id="fb" target="_blank">Facebook</a>
-            <a id="web" target="_blank">Website</a>
-          </div>
-      </div>
+      <div class="socials">
+          <strong>Follow:</strong>
+          <a id="ig" target="_blank">Instagram</a>
+          <a id="fb" target="_blank">Facebook</a>
+          <a id="web" target="_blank">Website</a>
+        </div>
+    </div>
 
     <div id="chart-tooltip" class="tooltip"></div>
 
