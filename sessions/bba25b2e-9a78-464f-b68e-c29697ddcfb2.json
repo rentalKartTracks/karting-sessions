@@ -1,0 +1,144 @@
+{
+  "session_id": "bba25b2e-9a78-464f-b68e-c29697ddcfb2",
+  "driver": "Kęstas Č.",
+  "fastest_lap": "00:26.124",
+  "track": {
+    "name": "Kartlandas Kaunas",
+    "configuration": "2025",
+    "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
+  },
+  "kart": "9 Ag",
+  "session_date": "2025-10-11",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "00:30.747"
+    },
+    {
+      "lap": 2,
+      "time": "00:29.209"
+    },
+    {
+      "lap": 3,
+      "time": "00:27.848"
+    },
+    {
+      "lap": 4,
+      "time": "00:27.812"
+    },
+    {
+      "lap": 5,
+      "time": "00:34.845"
+    },
+    {
+      "lap": 6,
+      "time": "00:28.240"
+    },
+    {
+      "lap": 7,
+      "time": "00:27.097"
+    },
+    {
+      "lap": 8,
+      "time": "00:30.325"
+    },
+    {
+      "lap": 9,
+      "time": "00:27.801"
+    },
+    {
+      "lap": 10,
+      "time": "00:28.103"
+    },
+    {
+      "lap": 11,
+      "time": "00: 30.058"
+    },
+    {
+      "lap": 12,
+      "time": "00:26.502"
+    },
+    {
+      "lap": 13,
+      "time": "00:28.501"
+    },
+    {
+      "lap": 14,
+      "time": "00:26.452"
+    },
+    {
+      "lap": 15,
+      "time": "00:26.256"
+    },
+    {
+      "lap": 16,
+      "time": "00:28.590"
+    },
+    {
+      "lap": 17,
+      "time": "00:26.628"
+    },
+    {
+      "lap": 18,
+      "time": "00:30.847"
+    },
+    {
+      "lap": 19,
+      "time": "00:27.103"
+    },
+    {
+      "lap": 20,
+      "time": "00:30.032"
+    },
+    {
+      "lap": 21,
+      "time": "00:27.570"
+    },
+    {
+      "lap": 22,
+      "time": "00: 26.469"
+    },
+    {
+      "lap": 23,
+      "time": "00:27.180"
+    },
+    {
+      "lap": 24,
+      "time": "00:26.352"
+    },
+    {
+      "lap": 25,
+      "time": "00: 29.991"
+    },
+    {
+      "lap": 26,
+      "time": "00:26.161"
+    },
+    {
+      "lap": 27,
+      "time": "00:26.124",
+      "best": true
+    },
+    {
+      "lap": 28,
+      "time": "00: 31.251"
+    },
+    {
+      "lap": 29,
+      "time": "00:26.494"
+    },
+    {
+      "lap": 30,
+      "time": "00:27.353"
+    },
+    {
+      "lap": null,
+      "note": "Return to Pit Box — Close"
+    }
+  ],
+  "socials": {
+    "instagram": "https://instagram.com/helmet.cam.heroes",
+    "facebook": "https://facebook.com/helmet.cam.heroes",
+    "website": "http://www.rental-kart-tracks.com/"
+  }
+}

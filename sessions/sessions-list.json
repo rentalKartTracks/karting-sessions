@@ -1,16 +1,16 @@
 {
   "sessions": [
     {
-      "id": "example-session",
-      "driver": "Povilas L.",
+      "id": "bba25b2e-9a78-464f-b68e-c29697ddcfb2",
+      "driver": "Kęstas Č.",
       "track": {
-        "name": "Plytinės Kartodromas",
-        "configuration": "Summer"
+        "name": "Kartlandas Kaunass",
+        "configuration": "2025"
       },
-      "session_date": "2025-07-17",
-      "fastest_lap": "00:44.030",
+      "session_date": "2025-10-11",
+      "fastest_lap": "00:26.124",
       "kart": "9 Ag",
-      "laps_count": 7,
+      "laps_count": 30,
       "average_lap": "00:44.67"
     },
      {
