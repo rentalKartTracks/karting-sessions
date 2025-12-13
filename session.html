@@ -40,7 +40,42 @@
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
-    /* --- FIX: Forcing 6 equal columns for single-line display --- */
+    /* --- NEW VIDEO STYLES --- */
+    .video-container {
+      background: #1e1e1e;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      overflow: hidden;
+      /* Maintain a 16:9 aspect ratio */
+      position: relative;
+      padding-bottom: 56.25%;
+      /* 16:9 ratio (9/16 = 0.5625) */
+      height: 0;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .video-container iframe,
+    .video-placeholder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .video-placeholder {
+      background: #3d3d3d;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.2em;
+      color: #999;
+    }
+
+    /* ------------------------ */
+
     .stats-grid {
       display: grid;
       /* Forces 6 equal columns */
@@ -65,7 +100,7 @@
       }
     }
 
-    /* Additional Mobile Optimizations for Header and Comparison */
+    /* Additional Mobile Optimizations for Header and Comparison (NEW) */
     @media (max-width: 600px) {
 
       /* Reduce driver name size on small screens */
@@ -471,6 +506,14 @@
       </div>
     </div>
 
+    <div id="video-container" class="video-container" style="display: none;">
+      <iframe id="youtube-player" src="" frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe>
+      <div id="video-placeholder" class="video-placeholder" style="display: none;">
+        <p>Video processing... Check back later!</p>
+      </div>
+    </div>
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-label">Fastest Lap</div>
@@ -552,9 +595,6 @@
     let dragStartX = 0;
 
 
-    const params = new URLSearchParams(window.location.search);
-    const sessionId = params.get("id") || "example-session";
-
     const comparisonColors = [
       { line: '#4caf50', point: '#8bc34a' }, // Green
       { line: '#2196f3', point: '#64b5f6' }, // Blue
@@ -566,22 +606,71 @@
       { line: '#e91e63', point: '#f06292' }  // Pink
     ];
 
-    // --- Data Loading ---
+    // --- NEW VIDEO LOGIC ---
+
+    // Function to extract YouTube ID from various URL formats
+    function getYouTubeId(url) {
+      if (!url) return null;
+      const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      const match = url.match(regExp);
+      return (match && match[2].length === 11) ? match[2] : null;
+    }
+
+    function embedVideo(videoUrl) {
+      const container = document.getElementById('video-container');
+      const iframe = document.getElementById('youtube-player');
+      const placeholder = document.getElementById('video-placeholder');
+      const videoId = getYouTubeId(videoUrl);
+
+      if (videoId) {
+        // Video URL is present and valid: Embed the video
+        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0`;
+        iframe.style.display = 'block';
+        placeholder.style.display = 'none';
+        container.style.display = 'block';
+
+      } else if (videoUrl === 'pending') {
+        // Video is marked as "pending": Show the placeholder message
+        iframe.style.display = 'none';
+        placeholder.style.display = 'flex'; // Use flex to center content
+        placeholder.innerHTML = '<h3>Video processing... Check back later!</h3><p style="margin-top: 10px;">This session video will be available soon.</p>';
+        container.style.display = 'block';
+      } else {
+        // Video URL is missing or invalid: Hide the entire container
+        container.style.display = 'none';
+      }
+    }
+    // --- END NEW VIDEO LOGIC ---
+
+
+    // --- Data Loading (Updated for Dynamic Default ID) ---
     // 1. Load the list of all sessions
     fetch('sessions-list.json')
       .then(r => r.json())
       .then(data => {
         allSessionsList = data.sessions || [];
         setupAutocomplete();
-      })
-      .catch(err => {
-        console.warn("Could not load sessions-list.json for autocomplete.");
-      });
 
-    // 2. Load the main session
-    fetch(`sessions/${sessionId}.json`)
+        const params = new URLSearchParams(window.location.search);
+        let sessionId = params.get("id");
+
+        // If no ID is in the URL, use the ID of the first session from the list as the default
+        if (!sessionId && allSessionsList.length > 0) {
+          sessionId = allSessionsList[0].id;
+        } else if (!sessionId) {
+          // Fallback if list is empty or fails to provide an ID
+          console.error("No session ID in URL and sessions-list is empty. Cannot load session.");
+          document.body.innerHTML = '<div style="text-align:center; padding: 50px; color: #f44336;"><h1>❌ No Sessions Available</h1></div>';
+          // Return a non-fetch promise to break the chain gracefully
+          return Promise.reject('No ID to fetch');
+        }
+
+        // 2. Load the main session using the determined ID
+        return fetch(`sessions/${sessionId}.json`);
+      })
       .then(r => {
-        if (!r.ok) throw new Error('Main session not found');
+        // Check if r exists (i.e., not broken by the reject above)
+        if (r && !r.ok) throw new Error('Main session not found');
         return r.json();
       })
       .then(data => {
@@ -591,7 +680,11 @@
         compareSession();
       })
       .catch(err => {
-        document.body.innerHTML = '<div style="text-align:center; padding: 50px; color: #f44336;"><h1>❌ Session not found</h1></div>';
+        // Only show 'Session not found' if the error is from the fetch, 
+        // not the initial 'No ID to fetch'
+        if (err.message !== 'No ID to fetch') {
+          document.body.innerHTML = '<div style="text-align:center; padding: 50px; color: #f44336;"><h1>❌ Session not found</h1></div>';
+        }
       });
 
     // --- Autocomplete Logic ---
@@ -662,7 +755,9 @@
         items.forEach((item, index) => {
           item.classList.toggle('selected', index === selectedIndex);
           if (index === selectedIndex) {
-            item.scrollIntoView({ block: 'nearest' });
+            item.scrollIntoView({
+              block: 'nearest'
+            });
           }
         });
       });
@@ -703,10 +798,22 @@
     }
 
     function getConsistencyRating(stdDev) {
-      if (stdDev < 0.3) return { text: 'Excellent', class: 'consistency-excellent' };
-      if (stdDev < 0.6) return { text: 'Good', class: 'consistency-good' };
-      if (stdDev < 1.0) return { text: 'Fair', class: 'consistency-fair' };
-      return { text: 'Variable', class: 'consistency-poor' };
+      if (stdDev < 0.3) return {
+        text: 'Excellent',
+        class: 'consistency-excellent'
+      };
+      if (stdDev < 0.6) return {
+        text: 'Good',
+        class: 'consistency-good'
+      };
+      if (stdDev < 1.0) return {
+        text: 'Fair',
+        class: 'consistency-fair'
+      };
+      return {
+        text: 'Variable',
+        class: 'consistency-poor'
+      };
     }
 
     // --- Chart & Tooltip Interaction ---
@@ -749,7 +856,9 @@
 
       canvas.addEventListener('mousemove', canvas.currentMouseMoveHandler);
       canvas.addEventListener('mouseleave', canvas.currentMouseLeaveHandler);
-      canvas.addEventListener('touchmove', canvas.currentTouchMoveHandler, { passive: false });
+      canvas.addEventListener('touchmove', canvas.currentTouchMoveHandler, {
+        passive: false
+      });
       canvas.addEventListener('touchend', canvas.currentTouchEndHandler);
 
       function handleInteraction(clientX, clientY) {
@@ -774,7 +883,10 @@
           const pointIdentifier = `${closestPoint.lapNumber}-${closestPoint.isComparison}-${closestPoint.sessionIndex}`;
 
           if (!activePoint || activePoint.identifier !== pointIdentifier) {
-            activePoint = { ...closestPoint, identifier: pointIdentifier };
+            activePoint = {
+              ...closestPoint,
+              identifier: pointIdentifier
+            };
             showTooltip(activePoint, clientX, clientY);
           }
         } else {
@@ -915,7 +1027,10 @@
       function getCoords(i, lapTime) {
         const x = padding + (chartWidth / (maxLapsCount - 1 || 1)) * i;
         const y = padding + chartHeight - ((lapTime - minTime) / timeRange) * chartHeight;
-        return { x, y };
+        return {
+          x,
+          y
+        };
       }
 
       // Y-axis grid lines (Time)
@@ -941,7 +1056,9 @@
 
       // --- Fastest Lap Baseline Line (Delta to Fastest Lap) ---
       if (overallFastestTime) {
-        const { y: baselineY } = getCoords(0, overallFastestTime);
+        const {
+          y: baselineY
+        } = getCoords(0, overallFastestTime);
         ctx.strokeStyle = '#ffd700'; // Gold line for the baseline
         ctx.lineWidth = 1.5;
         ctx.setLineDash([5, 5]); // Dashed line
@@ -969,7 +1086,10 @@
           const lapTime = parseTime(lap.time);
           if (isNaN(lapTime)) return; // Skip invalid laps
 
-          const { x, y } = getCoords(i, lapTime);
+          const {
+            x,
+            y
+          } = getCoords(i, lapTime);
 
           if (i === 0) {
             ctx.moveTo(x, y);
@@ -978,7 +1098,8 @@
           }
 
           chartPoints.push({
-            x, y,
+            x,
+            y,
             lap: lap,
             lapNumber: lap.lap,
             isComparison: isComparison,
@@ -991,7 +1112,10 @@
           const lapTime = parseTime(lap.time);
           if (isNaN(lapTime)) return;
 
-          const { x, y } = getCoords(i, lapTime);
+          const {
+            x,
+            y
+          } = getCoords(i, lapTime);
 
           // Transparent hit area for mouse/touch
           ctx.fillStyle = 'rgba(255, 255, 255, 0.0)';
@@ -1017,7 +1141,10 @@
           const lapTime = parseTime(laps[bestLapIndex].time);
           if (isNaN(lapTime)) return;
 
-          const { x, y } = getCoords(bestLapIndex, lapTime);
+          const {
+            x,
+            y
+          } = getCoords(bestLapIndex, lapTime);
 
           ctx.fillStyle = '#ffd700';
           ctx.beginPath();
@@ -1118,10 +1245,15 @@
       document.getElementById('track-link').href = data.track.maps_link;
       document.getElementById('kart').textContent = data.kart;
       document.getElementById('session-date').textContent = new Date(data.session_date).toLocaleDateString('en-US', {
-        year: 'numeric', month: 'long', day: 'numeric'
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
       });
 
       document.getElementById('total-laps').textContent = validLaps.length;
+
+      // New: Check and embed video
+      embedVideo(data.video_url);
 
       const avgTime = lapTimes.length > 0 ? lapTimes.reduce((a, b) => a + b, 0) / lapTimes.length : 0;
 
@@ -1141,7 +1273,7 @@
     async function compareSession() {
       const compareIdsInput = document.getElementById('compare-id-input').value.trim();
       // Filter out the current session ID if it's accidentally entered
-      let sessionIds = compareIdsInput.split(',').map(id => id.trim()).filter(id => id.length > 0 && id !== sessionId);
+      let sessionIds = compareIdsInput.split(',').map(id => id.trim()).filter(id => id.length > 0 && id !== currentSessionData.id);
 
       // Deduplicate IDs
       sessionIds = Array.from(new Set(sessionIds));
@@ -1167,7 +1299,9 @@
       const fetchPromises = sessionIds.map(id =>
         fetch(`sessions/${id}.json`)
           .then(r => r.ok ? r.json() : Promise.reject(`Session ${id} not found`))
-          .catch(err => ({ error: err }))
+          .catch(err => ({
+            error: err
+          }))
       );
 
       const results = await Promise.all(fetchPromises);
@@ -1211,7 +1345,11 @@
 
       if (comparisonSessions.length > 0) {
         const allFastestTimes = [
-          { time: currentFastest, driver: currentSessionData.driver, color: '#f44336' },
+          {
+            time: currentFastest,
+            driver: currentSessionData.driver,
+            color: '#f44336'
+          },
           ...comparisonSessions.map((s, i) => ({
             time: Math.min(...comparisonDatasets[i].map(l => parseTime(l.time))),
             driver: s.driver,
