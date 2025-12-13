@@ -65,6 +65,48 @@
       }
     }
 
+    /* Additional Mobile Optimizations for Header and Comparison */
+    @media (max-width: 600px) {
+
+      /* Reduce driver name size on small screens */
+      .driver-name {
+        font-size: 2em;
+      }
+
+      /* Stack header elements vertically */
+      .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      /* Make the Home button full width */
+      .home-button {
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin-top: 20px;
+        /* Add space below session info */
+      }
+
+      /* Stack comparison input and buttons vertically */
+      .comparison-input {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      /* Make input and buttons full width */
+      .comparison-input input,
+      .comparison-input button {
+        width: 100%;
+      }
+
+      /* Adjust autocomplete list to span the full width of the container now that buttons are stacked */
+      .autocomplete-list {
+        left: 0;
+        right: 0;
+      }
+    }
+
     /* ----------------------------------------------------------- */
 
     .stat-card {
