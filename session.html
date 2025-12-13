@@ -40,12 +40,32 @@
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
+    /* --- FIX: Forcing 6 equal columns for single-line display --- */
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      /* Forces 6 equal columns */
+      grid-template-columns: repeat(6, 1fr);
       gap: 20px;
       margin-bottom: 30px;
     }
+
+    /* Responsive adjustment for screens smaller than 1200px (to prevent tiny cards) */
+    @media (max-width: 1200px) {
+      .stats-grid {
+        /* Revert to 3 columns if screen is too narrow */
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* Responsive adjustment for mobile screens */
+    @media (max-width: 768px) {
+      .stats-grid {
+        /* Stack cards on mobile */
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ----------------------------------------------------------- */
 
     .stat-card {
       background: #2d2d2d;
@@ -221,7 +241,6 @@
 
     .comparison-grid {
       display: grid;
-      /* Allow up to 4 columns for comparison cards */
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 20px;
     }
@@ -231,7 +250,6 @@
       padding: 20px;
       border-radius: 8px;
       border-top: 4px solid #f44336;
-      /* Default color for main session */
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     }
 
@@ -302,7 +320,6 @@
     .tooltip-driver {
       font-weight: bold;
       color: #4caf50;
-      /* Color for comparison driver in tooltip */
     }
 
     .tooltip-lap {
@@ -405,6 +422,7 @@
         <div class="stat-value" id="total-laps"></div>
       </div>
     </div>
+
     <div class="chart-container">
       <div class="chart-title">📈 Lap Time Progression</div>
       <div class="line-chart">
@@ -437,18 +455,14 @@
 
   <script>
     let currentSessionData = null;
-    // Holds ALL comparison session data objects (driver, laps, etc.)
     let comparisonSessions = [];
     let chartPoints = [];
-    // Current session's valid lap data (parsed)
     let currentDataset = [];
-    // Array of valid lap data arrays for comparison sessions
     let comparisonDatasets = [];
     let activePoint = null;
     const params = new URLSearchParams(window.location.search);
     const sessionId = params.get("id") || "example-session";
 
-    // Color palette for multiple comparisons
     const comparisonColors = [
       { line: '#4caf50', point: '#8bc34a' }, // Green
       { line: '#2196f3', point: '#64b5f6' }, // Blue
@@ -480,13 +494,11 @@
         const seconds = parseFloat(parts[1]);
         return minutes * 60 + seconds;
       }
-      // Assumes the input is already in seconds (as a string or number) if no colon is found
       return parseFloat(timeStr);
     }
 
     function formatTime(seconds) {
       const mins = Math.floor(seconds / 60);
-      // Ensure seconds are formatted with 3 decimal places
       const secs = (seconds % 60).toFixed(3);
       return mins > 0 ? `${mins}:${secs.padStart(6, '0')}` : `${secs}s`;
     }
@@ -509,7 +521,6 @@
       const canvas = document.getElementById('lap-chart');
       const tooltip = document.getElementById('chart-tooltip');
 
-      // Clear previous handlers to prevent memory leaks/duplicate listeners
       canvas.removeEventListener('mousemove', canvas.currentMouseMoveHandler);
       canvas.removeEventListener('mouseleave', canvas.currentMouseLeaveHandler);
 
@@ -530,7 +541,6 @@
         });
 
         if (closestPoint) {
-          // A unique identifier for the point (lapNumber, driver/session)
           const pointIdentifier = `${closestPoint.lapNumber}-${closestPoint.isComparison}-${closestPoint.sessionIndex}`;
 
           if (!activePoint || activePoint.identifier !== pointIdentifier) {
@@ -561,13 +571,12 @@
       let dataset = currentDataset;
       let fastestTime = Math.min(...dataset.map(l => parseTime(l.time)));
       let driverLabel = '';
-      let lineColor = '#f44336'; // Default for main session
+      let lineColor = '#f44336';
 
       if (point.isComparison && point.sessionIndex !== undefined) {
         session = comparisonSessions[point.sessionIndex];
         dataset = comparisonDatasets[point.sessionIndex];
         fastestTime = Math.min(...dataset.map(l => parseTime(l.time)));
-        // Get the line color for the comparison session
         lineColor = comparisonColors[point.sessionIndex % comparisonColors.length].line;
         driverLabel = `<span class="tooltip-driver" style="color: ${lineColor};">${session.driver}</span>`;
       }
@@ -612,9 +621,7 @@
         left = scrollX + window.innerWidth - tooltipWidth - 20;
       }
 
-      // Adjust arrow direction based on vertical position
       const arrow = tooltip.querySelector('.tooltip-arrow');
-      // Update arrow border color to match the line color
       arrow.style.borderTopColor = lineColor;
       arrow.style.borderBottomColor = lineColor;
 
@@ -654,14 +661,12 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       chartPoints = [];
       currentDataset = mainLaps;
-      comparisonDatasets = compareLapsArray; // Update the global variable
+      comparisonDatasets = compareLapsArray;
 
-      // Collect all laps to determine the min/max time and max lap count
       const allDatasets = [mainLaps, ...compareLapsArray];
       const allLaps = allDatasets.flat();
       const lapTimes = allLaps.map(lap => parseTime(lap.time));
 
-      // Handle edge case of no laps
       if (lapTimes.length === 0) {
         ctx.fillStyle = '#999';
         ctx.textAlign = 'center';
@@ -695,7 +700,6 @@
         ctx.stroke();
       }
 
-      // Function to draw a single lap line
       function drawLapLine(laps, color, pointColor, isComparison = false, sessionIndex = -1) {
         if (laps.length === 0) return;
 
@@ -729,13 +733,11 @@
           const lapTime = parseTime(lap.time);
           const y = padding + chartHeight - ((lapTime - minTime) / timeRange) * chartHeight;
 
-          // Draw hover circle area
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.0)'; // Transparent area to check hit
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.0)';
           ctx.beginPath();
           ctx.arc(x, y, 15, 0, Math.PI * 2);
           ctx.fill();
 
-          // Draw point
           ctx.fillStyle = pointColor;
           ctx.beginPath();
           ctx.arc(x, y, 6, 0, Math.PI * 2);
@@ -750,12 +752,10 @@
       function drawBestLapMarkers(laps) {
         const bestLapIndex = laps.findIndex(lap => lap.best);
         if (bestLapIndex !== -1) {
-          // Use maxLapsCount for consistent marker positioning
           const x = padding + (chartWidth / (maxLapsCount - 1 || 1)) * bestLapIndex;
           const lapTime = parseTime(laps[bestLapIndex].time);
           const y = padding + chartHeight - ((lapTime - minTime) / timeRange) * chartHeight;
 
-          // Draw a star marker for the best lap
           ctx.fillStyle = '#ffd700';
           ctx.beginPath();
           ctx.moveTo(x, y - 10);
@@ -772,16 +772,13 @@
         }
       }
 
-      // 1. Draw all comparison lines
       compareLapsArray.forEach((laps, index) => {
         const colors = comparisonColors[index % comparisonColors.length];
         drawLapLine(laps, colors.line, colors.point, true, index);
       });
 
-      // 2. Draw the main session line (Always Red)
       drawLapLine(mainLaps, '#f44336', '#ff5252', false, -1);
 
-      // 3. Draw Best Lap Markers for all sessions
       allDatasets.forEach(laps => drawBestLapMarkers(laps));
 
       // X-axis labels (Laps)
@@ -790,7 +787,6 @@
       ctx.textAlign = 'center';
       for (let i = 0; i < maxLapsCount; i++) {
         const x = padding + (chartWidth / (maxLapsCount - 1 || 1)) * i;
-        // Only label every X lap to avoid clutter
         if (i % Math.ceil(maxLapsCount / 10) === 0 || i === maxLapsCount - 1) {
           ctx.fillText(`L${i + 1}`, x, canvas.height - 20);
         }
@@ -880,7 +876,6 @@
       const compareIdsInput = document.getElementById('compare-id').value.trim();
       const sessionIds = compareIdsInput.split(',').map(id => id.trim()).filter(id => id.length > 0);
 
-      // Clear previous comparison data
       comparisonSessions = [];
       comparisonDatasets = [];
       const currentLaps = currentSessionData.laps.filter(l => l.lap !== null);
@@ -888,7 +883,6 @@
       if (sessionIds.length === 0) {
         drawLineChart(currentLaps, []);
         document.getElementById('comparison-results').innerHTML = '';
-        // Regenerate the main card, as it might have been cleared previously
         const currentTimes = currentLaps.map(l => parseTime(l.time));
         const currentFastest = currentTimes.length > 0 ? Math.min(...currentTimes) : 0;
         const currentAvg = currentTimes.length > 0 ? currentTimes.reduce((sum, t) => sum + t, 0) / currentTimes.length : 0;
@@ -896,11 +890,10 @@
         return;
       }
 
-      // Fetch all comparison sessions concurrently
       const fetchPromises = sessionIds.map(id =>
         fetch(`sessions/${id}.json`)
           .then(r => r.ok ? r.json() : Promise.reject(`Session ${id} not found`))
-          .catch(err => ({ error: err })) // Catch error and return an object with error info
+          .catch(err => ({ error: err }))
       );
 
       const results = await Promise.all(fetchPromises);
@@ -920,23 +913,18 @@
         comparisonDatasets.push(compareLaps);
       });
 
-      // Recalculate main session's best lap status to ensure it's marked correctly
       const currentTimes = currentLaps.map(l => parseTime(l.time));
       const currentFastest = currentTimes.length > 0 ? Math.min(...currentTimes) : 0;
       const currentFastestIdx = currentTimes.indexOf(currentFastest);
       currentLaps.forEach((lap, i) => lap.best = (i === currentFastestIdx));
 
-      // Draw the chart with all successful comparison sessions
       drawLineChart(currentLaps, comparisonDatasets);
 
-      // Generate Comparison Results HTML
       let resultHTML = '';
 
-      // 1. Current Session Card
       const currentAvg = currentTimes.length > 0 ? currentTimes.reduce((sum, t) => sum + t, 0) / currentTimes.length : 0;
       resultHTML += createComparisonCard(currentSessionData, currentFastest, currentAvg, currentLaps.length, '#f44336');
 
-      // 2. Comparison Session Cards
       comparisonSessions.forEach((session, index) => {
         const laps = comparisonDatasets[index];
         const times = laps.map(l => parseTime(l.time));
@@ -946,7 +934,6 @@
         resultHTML += createComparisonCard(session, fastest, avg, laps.length, color);
       });
 
-      // 3. Overall Best Card (if there's more than one session)
       if (comparisonSessions.length > 0) {
         const allFastestTimes = [
           { time: currentFastest, driver: currentSessionData.driver, color: '#f44336' },
@@ -969,7 +956,6 @@
                 `;
       }
 
-      // 4. Error Messages
       errorSessions.forEach(err => {
         resultHTML += `<div class="error-message">${err.error}</div>`;
       });
@@ -997,9 +983,7 @@
 
       if (currentSessionData) {
         const validLaps = currentSessionData.laps.filter(lap => lap.lap !== null);
-        // Pass an empty array to drawLineChart to clear comparisons
         drawLineChart(validLaps, []);
-        // Ensure the main session card reappears after clearing
         const currentTimes = validLaps.map(l => parseTime(l.time));
         const currentFastest = currentTimes.length > 0 ? Math.min(...currentTimes) : 0;
         const currentAvg = currentTimes.length > 0 ? currentTimes.reduce((sum, t) => sum + t, 0) / currentTimes.length : 0;
