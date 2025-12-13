@@ -40,7 +40,7 @@
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
-    /* --- NEW VIDEO STYLES --- */
+    /* --- VIDEO STYLES --- */
     .video-container {
       background: #1e1e1e;
       border-radius: 12px;
@@ -100,7 +100,7 @@
       }
     }
 
-    /* Additional Mobile Optimizations for Header and Comparison (NEW) */
+    /* Additional Mobile Optimizations for Header and Comparison */
     @media (max-width: 600px) {
 
       /* Reduce driver name size on small screens */
@@ -215,7 +215,6 @@
     .chart-canvas {
       width: 100%;
       height: 100%;
-      /* Removed cursor: pointer; for better touch interaction, relying on tooltip */
     }
 
     .home-button {
@@ -253,7 +252,6 @@
       border-radius: 12px;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
       text-align: center;
-      /* Center the hardcoded links */
     }
 
     .socials a {
@@ -305,7 +303,7 @@
       font-size: 1em;
     }
 
-    /* New Autocomplete Styling */
+    /* Autocomplete Styling */
     .autocomplete-list {
       position: absolute;
       top: 100%;
@@ -485,7 +483,6 @@
       left: 50%;
       transform: translateX(-50%);
       z-index: 1001;
-      /* Ensure arrow is above background */
     }
 
     .point-hover {
@@ -606,7 +603,7 @@
       { line: '#e91e63', point: '#f06292' }  // Pink
     ];
 
-    // --- NEW VIDEO LOGIC ---
+    // --- VIDEO LOGIC ---
 
     // Function to extract YouTube ID from various URL formats
     function getYouTubeId(url) {
@@ -640,11 +637,11 @@
         container.style.display = 'none';
       }
     }
-    // --- END NEW VIDEO LOGIC ---
+    // --- END VIDEO LOGIC ---
 
 
-    // --- Data Loading (Updated for Dynamic Default ID) ---
-    // 1. Load the list of all sessions
+    // --- Data Loading (Dynamic Default ID & Compare URL Parameter) ---
+    // 1. Load the list of all sessions (needed for autocomplete setup)
     fetch('sessions-list.json')
       .then(r => r.json())
       .then(data => {
@@ -654,13 +651,10 @@
         const params = new URLSearchParams(window.location.search);
         let sessionId = params.get("id");
 
-        // If no ID is in the URL, use the ID of the first session from the list as the default
-        if (!sessionId && allSessionsList.length > 0) {
-          sessionId = allSessionsList[0].id;
-        } else if (!sessionId) {
-          // Fallback if list is empty or fails to provide an ID
-          console.error("No session ID in URL and sessions-list is empty. Cannot load session.");
-          document.body.innerHTML = '<div style="text-align:center; padding: 50px; color: #f44336;"><h1>❌ No Sessions Available</h1></div>';
+        // --- MODIFIED LOGIC: No default ID, require it in the URL ---
+        if (!sessionId) {
+          console.error("No session ID in URL. Cannot load session.");
+          document.body.innerHTML = '<div style="text-align:center; padding: 50px; color: #f44336;"><h1>❌ Session not found</h1><p>Please provide a valid session ID in the URL, e.g., <code>session.html?id=...</code></p></div>';
           // Return a non-fetch promise to break the chain gracefully
           return Promise.reject('No ID to fetch');
         }
@@ -676,14 +670,25 @@
       .then(data => {
         currentSessionData = data;
         renderSession(data);
-        // Initial run of comparison to display the main session card
+
+        // Handle the 'compare' parameter: populate input field
+        const params = new URLSearchParams(window.location.search);
+        const compareIds = params.get("compare");
+        const compareInput = document.getElementById('compare-id-input');
+
+        if (compareIds) {
+          // Populate the comparison input field with the list of comparison IDs from the URL
+          compareInput.value = compareIds;
+        }
+
+        // Initial run of comparison. It will use the value in the input field.
         compareSession();
       })
       .catch(err => {
         // Only show 'Session not found' if the error is from the fetch, 
         // not the initial 'No ID to fetch'
         if (err.message !== 'No ID to fetch') {
-          document.body.innerHTML = '<div style="text-align:center; padding: 50px; color: #f44336;"><h1>❌ Session not found</h1></div>';
+          document.body.innerHTML = '<div style="text-align:center; padding: 50px; color: #f44336;"><h1>❌ Session not found</h1><p>The session with the provided ID could not be loaded.</p></div>';
         }
       });
 
@@ -1252,7 +1257,7 @@
 
       document.getElementById('total-laps').textContent = validLaps.length;
 
-      // New: Check and embed video
+      // Check and embed video
       embedVideo(data.video_url);
 
       const avgTime = lapTimes.length > 0 ? lapTimes.reduce((a, b) => a + b, 0) / lapTimes.length : 0;
@@ -1264,10 +1269,6 @@
       const consistencyEl = document.getElementById('consistency');
       consistencyEl.textContent = `${consistency.text} (±${stdDev.toFixed(3)}s)`;
       consistencyEl.className = `stat-value small ${consistency.class}`;
-
-      drawLineChart(validLaps);
-
-      // NOTE: Social links are now hardcoded in the HTML structure.
     }
 
     async function compareSession() {
