@@ -555,6 +555,15 @@
     const params = new URLSearchParams(window.location.search);
     const sessionId = params.get("id") || "example-session";
 
+    // START OF ADDED CODE: Read 'compare_id' from URL and pre-fill input
+    const compareId = params.get("compare_id");
+    const compareInput = document.getElementById('compare-id-input');
+    if (compareId) {
+      // Set the input value to the compare_id found in the URL
+      compareInput.value = compareId;
+    }
+    // END OF ADDED CODE
+
     const comparisonColors = [
       { line: '#4caf50', point: '#8bc34a' }, // Green
       { line: '#2196f3', point: '#64b5f6' }, // Blue
