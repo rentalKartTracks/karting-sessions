@@ -105,6 +105,27 @@
       cursor: pointer;
     }
 
+    .home-button {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 12px 24px;
+      background: #f44336;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 0 4px 16px rgba(244, 67, 54, 0.3);
+      transition: all 0.3s;
+      z-index: 1000;
+    }
+
+    .home-button:hover {
+      background: #d32f2f;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+    }
+
     .socials {
       background: #2d2d2d;
       padding: 20px;
@@ -207,7 +228,6 @@
       border-radius: 4px;
     }
 
-    /* Tooltip Styles */
     .tooltip {
       position: absolute;
       background: rgba(30, 30, 30, 0.95);
@@ -287,13 +307,14 @@
       transform: translateX(-50%);
     }
 
-    /* Hover effect for points */
     .point-hover {
       cursor: pointer;
     }
   </style>
 </head>
 <body>
+  <a href="index.html" class="home-button">🏠 Home</a>
+
   <div class="container">
     <div class="header">
       <div class="driver-name" id="driver"></div>
@@ -355,13 +376,12 @@
     </div>
   </div>
 
-  <!-- Tooltip element -->
   <div id="chart-tooltip" class="tooltip"></div>
 
   <script>
     let currentSessionData = null;
     let comparisonSessionData = null;
-    let chartPoints = []; // Store point positions for hover detection
+    let chartPoints = [];
     let currentDataset = [];
     let comparisonDataset = [];
     let activePoint = null;
@@ -420,10 +440,8 @@
         let closestPoint = null;
         let minDistance = Infinity;
         
-        // Find the closest point to the cursor
         chartPoints.forEach(point => {
           const distance = Math.sqrt(Math.pow(x - point.x, 2) + Math.pow(y - point.y, 2));
-          // Only show tooltip when very close to a point (within 15px)
           if (distance < 15 && distance < minDistance) {
             minDistance = distance;
             closestPoint = point;
@@ -449,15 +467,12 @@
     
     function showTooltip(point, mouseX, mouseY) {
       const tooltip = document.getElementById('chart-tooltip');
-      const chartContainer = document.querySelector('.chart-container');
-      const chartRect = chartContainer.getBoundingClientRect();
       const canvas = document.getElementById('lap-chart');
       const canvasRect = canvas.getBoundingClientRect();
       
       let tooltipHTML = '';
       
       if (point.isComparison && comparisonSessionData) {
-        // Comparison session tooltip
         tooltipHTML = `
           <div class="tooltip-header">
             <span class="tooltip-driver">${comparisonSessionData.driver}</span>
@@ -471,7 +486,6 @@
           </div>
         `;
       } else {
-        // Current session tooltip
         const currentFastest = Math.min(...currentDataset.map(l => parseTime(l.time)));
         const currentTime = parseTime(point.lap.time);
         const delta = currentTime - currentFastest;
@@ -494,36 +508,32 @@
       tooltip.innerHTML = tooltipHTML + '<div class="tooltip-arrow"></div>';
       tooltip.classList.add('tooltip-visible');
       
-      // Position tooltip above the point, centered horizontally
       const tooltipWidth = tooltip.offsetWidth;
       const tooltipHeight = tooltip.offsetHeight;
       
-      // Convert canvas coordinates to page coordinates
-      const pointX = point.x + canvasRect.left - chartRect.left;
-      const pointY = point.y + canvasRect.top - chartRect.top;
+      const pointPageX = canvasRect.left + point.x;
+      const pointPageY = canvasRect.top + point.y;
       
-      // Position above the point
-      let left = pointX - tooltipWidth / 2;
-      let top = pointY - tooltipHeight - 20; // 20px above the point
+      let left = pointPageX - tooltipWidth / 2;
+      let top = pointPageY - tooltipHeight - 20;
       
-      // Adjust if tooltip goes beyond container boundaries
-      if (left < 20) {
-        left = 20;
+      const scrollX = window.scrollX || window.pageXOffset;
+      const scrollY = window.scrollY || window.pageYOffset;
+      
+      if (left < scrollX + 20) {
+        left = scrollX + 20;
       }
-      if (left + tooltipWidth > chartRect.width - 20) {
-        left = chartRect.width - tooltipWidth - 20;
+      if (left + tooltipWidth > scrollX + window.innerWidth - 20) {
+        left = scrollX + window.innerWidth - tooltipWidth - 20;
       }
       
-      // If tooltip would go above container, show below the point
-      if (top < 20) {
-        top = pointY + 30; // 30px below the point
-        // Flip arrow to top
+      if (top < scrollY + 20) {
+        top = pointPageY + 30;
         tooltip.querySelector('.tooltip-arrow').style.borderTop = 'none';
         tooltip.querySelector('.tooltip-arrow').style.borderBottom = '8px solid #f44336';
         tooltip.querySelector('.tooltip-arrow').style.top = '-8px';
         tooltip.querySelector('.tooltip-arrow').style.bottom = 'auto';
       } else {
-        // Reset arrow to default (pointing down)
         tooltip.querySelector('.tooltip-arrow').style.borderTop = '8px solid #f44336';
         tooltip.querySelector('.tooltip-arrow').style.borderBottom = 'none';
         tooltip.querySelector('.tooltip-arrow').style.bottom = '-8px';
@@ -550,20 +560,17 @@
       const chartWidth = canvas.width - padding * 2;
       const chartHeight = canvas.height - padding * 2;
 
-      // Clear canvas and reset points
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       chartPoints = [];
       currentDataset = mainLaps;
       comparisonDataset = compareLaps || [];
 
-      // Determine time range for scaling
       const allLaps = compareLaps ? [...mainLaps, ...compareLaps] : mainLaps;
       const lapTimes = allLaps.map(lap => parseTime(lap.time));
       const minTime = Math.min(...lapTimes);
       const maxTime = Math.max(...lapTimes);
       const timeRange = maxTime - minTime || 1;
 
-      // Draw grid
       ctx.strokeStyle = '#3d3d3d';
       ctx.lineWidth = 1;
       for (let i = 0; i <= 5; i++) {
@@ -574,7 +581,6 @@
         ctx.stroke();
       }
 
-      // Draw vertical grid lines (lap markers)
       const totalLaps = Math.max(mainLaps.length, compareLaps ? compareLaps.length : 0);
       for (let i = 0; i < totalLaps; i++) {
         const x = padding + (chartWidth / (totalLaps - 1 || 1)) * i;
@@ -585,7 +591,6 @@
         ctx.stroke();
       }
 
-      // Function to draw a single lap line and store point positions
       function drawLapLine(laps, color, pointColor, isComparison = false) {
         ctx.strokeStyle = color;
         ctx.lineWidth = 3;
@@ -602,7 +607,6 @@
             ctx.lineTo(x, y);
           }
           
-          // Store point position for hover detection
           chartPoints.push({
             x, y,
             lap: lap,
@@ -612,40 +616,33 @@
         });
         ctx.stroke();
 
-        // Draw points with larger hover area
         laps.forEach((lap, i) => {
           const x = padding + (chartWidth / (laps.length - 1 || 1)) * i;
           const lapTime = parseTime(lap.time);
           const y = padding + chartHeight - ((lapTime - minTime) / timeRange) * chartHeight;
 
-          // Draw hover area (invisible but interactive)
           ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
           ctx.beginPath();
           ctx.arc(x, y, 15, 0, Math.PI * 2);
           ctx.fill();
           
-          // Draw actual point
           ctx.fillStyle = pointColor;
           ctx.beginPath();
           ctx.arc(x, y, 6, 0, Math.PI * 2);
           ctx.fill();
           
-          // Add a white border to points for better visibility
           ctx.strokeStyle = '#fff';
           ctx.lineWidth = 1;
           ctx.stroke();
         });
       }
 
-      // Draw comparison line first (behind)
       if (compareLaps) {
         drawLapLine(compareLaps, '#4caf50', '#8bc34a', true);
       }
 
-      // Draw main line (on top)
       drawLapLine(mainLaps, '#f44336', '#ff5252', false);
 
-      // Draw best lap markers
       function drawBestLapMarkers(laps, color) {
         const bestLapIndex = laps.findIndex(lap => lap.best);
         if (bestLapIndex !== -1) {
@@ -653,7 +650,6 @@
           const lapTime = parseTime(laps[bestLapIndex].time);
           const y = padding + chartHeight - ((lapTime - minTime) / timeRange) * chartHeight;
 
-          // Draw a star for best lap
           ctx.fillStyle = '#ffd700';
           ctx.beginPath();
           ctx.moveTo(x, y - 10);
@@ -675,7 +671,6 @@
         drawBestLapMarkers(compareLaps, '#ffd700');
       }
 
-      // Draw X-axis labels (lap numbers)
       ctx.fillStyle = '#999';
       ctx.font = '12px Arial';
       ctx.textAlign = 'center';
@@ -686,7 +681,6 @@
         }
       }
 
-      // Draw Y-axis labels (times)
       ctx.textAlign = 'right';
       ctx.textBaseline = 'middle';
       for (let i = 0; i <= 5; i++) {
@@ -695,7 +689,6 @@
         ctx.fillText(formatTime(time), padding - 10, y);
       }
 
-      // Update legend
       const legend = document.getElementById('chart-legend');
       if (compareLaps) {
         legend.innerHTML = `
@@ -724,13 +717,23 @@
         `;
       }
 
-      // Setup tooltip interactions
       setupTooltipInteractions();
     }
 
     function renderSession(data) {
       document.getElementById('driver').textContent = data.driver;
-      document.getElementById('fastest').textContent = data.fastest_lap;
+      
+      const validLaps = data.laps.filter(lap => lap.lap !== null);
+      const lapTimes = validLaps.map(lap => parseTime(lap.time));
+      const fastestTime = Math.min(...lapTimes);
+      const fastestLapIndex = lapTimes.indexOf(fastestTime);
+      
+      validLaps.forEach((lap, i) => {
+        lap.best = (i === fastestLapIndex);
+      });
+      
+      document.getElementById('fastest').textContent = formatTime(fastestTime);
+      
       document.getElementById('track-link').textContent = data.track.name;
       document.getElementById('track-link').href = data.track.maps_link;
       document.getElementById('kart').textContent = data.kart;
@@ -738,10 +741,8 @@
         year: 'numeric', month: 'long', day: 'numeric' 
       });
 
-      const validLaps = data.laps.filter(lap => lap.lap !== null);
       document.getElementById('total-laps').textContent = validLaps.length;
 
-      const lapTimes = validLaps.map(lap => parseTime(lap.time));
       const avgTime = lapTimes.reduce((a, b) => a + b, 0) / lapTimes.length;
       
       document.getElementById('average').textContent = formatTime(avgTime);
@@ -752,7 +753,6 @@
       consistencyEl.textContent = `${consistency.text} (±${stdDev.toFixed(3)}s)`;
       consistencyEl.className = `stat-value small ${consistency.class}`;
 
-      // Draw chart with all laps
       drawLineChart(validLaps);
 
       document.getElementById('ig').href = data.socials.instagram;
@@ -771,12 +771,21 @@
         const currentLaps = currentSessionData.laps.filter(l => l.lap !== null);
         const compareLaps = comparisonSessionData.laps.filter(l => l.lap !== null);
         
-        const currentFastest = Math.min(...currentLaps.map(l => parseTime(l.time)));
-        const compareFastest = Math.min(...compareLaps.map(l => parseTime(l.time)));
-        const currentAvg = currentLaps.reduce((sum, l) => sum + parseTime(l.time), 0) / currentLaps.length;
-        const compareAvg = compareLaps.reduce((sum, l) => sum + parseTime(l.time), 0) / compareLaps.length;
+        const currentTimes = currentLaps.map(l => parseTime(l.time));
+        const compareTimes = compareLaps.map(l => parseTime(l.time));
+        
+        const currentFastest = Math.min(...currentTimes);
+        const compareFastest = Math.min(...compareTimes);
+        
+        const currentFastestIdx = currentTimes.indexOf(currentFastest);
+        const compareFastestIdx = compareTimes.indexOf(compareFastest);
+        
+        currentLaps.forEach((lap, i) => lap.best = (i === currentFastestIdx));
+        compareLaps.forEach((lap, i) => lap.best = (i === compareFastestIdx));
+        
+        const currentAvg = currentTimes.reduce((sum, t) => sum + t, 0) / currentTimes.length;
+        const compareAvg = compareTimes.reduce((sum, t) => sum + t, 0) / compareTimes.length;
 
-        // Draw comparison chart
         drawLineChart(currentLaps, compareLaps);
 
         const resultHTML = `
@@ -814,7 +823,6 @@
       document.getElementById('compare-id').value = '';
       document.getElementById('comparison-results').innerHTML = '';
       
-      // Redraw chart without comparison
       if (currentSessionData) {
         const validLaps = currentSessionData.laps.filter(lap => lap.lap !== null);
         drawLineChart(validLaps);
