@@ -3,10 +3,9 @@
 
 <head>
   <meta charset="UTF-8">
-   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karting Session Viewer</title>
-    <style>
+  <title>Karting Session Viewer</title>
+  <style>
     * {
       margin: 0;
       padding: 0;
@@ -45,7 +44,6 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 20px;
-      /* This is the correct property for spacing */
       margin-bottom: 30px;
     }
 
@@ -363,82 +361,80 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="header-content">
-                <div class="header-info">
-                    <div class="driver-name" id="driver"></div>
-                    <div id="session-date"></div>
-                  </div>
-                <a href="index.html" class="home-button">🏠 Home</a>
-              </div>
-          </div>
+  <div class="container">
+    <div class="header">
+      <div class="header-content">
+        <div class="header-info">
+          <div class="driver-name" id="driver"></div>
+          <div id="session-date"></div>
+        </div>
+        <a href="index.html" class="home-button">🏠 Home</a>
+      </div>
+    </div>
 
     <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-label">Fastest Lap</div>
-                <div class="stat-value fastest-time" id="fastest">00:44.030</div>
-              </div>
-                  <div class="stat-card">
-                <div class="stat-label">Total Laps</div>
-                <div class="stat-value" id="total-laps">13</div>
-              </div>
+      <div class="stat-card">
+        <div class="stat-label">Fastest Lap</div>
+        <div class="stat-value fastest-time" id="fastest"></div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Average Lap</div>
+        <div class="stat-value small" id="average"></div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Consistency</div>
+        <div class="stat-value small" id="consistency"></div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Track</div>
+        <div class="stat-value" style="font-size: 1.3em;">
+          <a class="track-link" id="track-link" target="_blank"></a>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Kart</div>
+        <div class="stat-value" id="kart"></div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Total Laps</div>
+        <div class="stat-value" id="total-laps"></div>
+      </div>
     </div>
-          <div class="stat-card">
-              <div class="stat-label">Average Lap</div>
-              <div class="stat-value small" id="average"></div>
-            </div>
-          <div class="stat-card">
-              <div class="stat-label">Consistency</div>
-              <div class="stat-value small" id="consistency"></div>
-            </div>
-          <div class="stat-card">
-              <div class="stat-label">Track</div>
-              <div class="stat-value" style="font-size: 1.3em;">
-                  <a class="track-link" id="track-link" target="_blank"></a>
-                </div>
-            </div>
-          <div class="stat-card">
-              <div class="stat-label">Kart</div>
-              <div class="stat-value" id="kart"></div>
-            </div>
-          <div class="stat-card">
-              <div class="stat-label">Total Laps</div>
-              <div class="stat-value" id="total-laps"></div>
-            </div>
-       
+    <div class="chart-container">
+      <div class="chart-title">📈 Lap Time Progression</div>
+      <div class="line-chart">
+        <canvas id="lap-chart" class="chart-canvas"></canvas>
+      </div>
+      <div id="chart-legend" class="legend"></div>
+    </div>
+
+    <div class="comparison-container">
+      <div class="chart-title">🔄 Compare Sessions</div>
+      <div class="comparison-input">
+        <input type="text" id="compare-id"
+          placeholder="Enter session ID(s) to compare, separated by commas (e.g., uuid1, uuid2)">
+        <button onclick="compareSession()">Compare</button>
+        <button onclick="clearComparison()" style="background: #666;">Clear</button>
+      </div>
+      <div id="comparison-results" class="comparison-grid"></div>
+    </div>
+
+    <div class="socials">
+      <strong>Follow:</strong>
+      <a id="ig" target="_blank">Instagram</a>
+      <a id="fb" target="_blank">Facebook</a>
+      <a id="web" target="_blank">Website</a>
+    </div>
   </div>
 
-      <div class="chart-container">
-          <div class="chart-title">📈 Lap Time Progression</div>
-          <div class="line-chart">
-              <canvas id="lap-chart" class="chart-canvas"></canvas>
-            </div>
-          <div id="chart-legend" class="legend"></div>
-        </div>
+  <div id="chart-tooltip" class="tooltip"></div>
 
-      <div class="comparison-container">
-          <div class="chart-title">🔄 Compare Sessions</div>
-          <div class="comparison-input">
-              <input type="text" id="compare-id"
-        placeholder="Enter session ID(s) to compare, separated by commas (e.g., uuid1, uuid2)">
-              <button onclick="compareSession()">Compare</button>
-              <button onclick="clearComparison()" style="background: #666;">Clear</button>
-            </div>
-          <div id="comparison-results" class="comparison-grid"></div>
-        </div>
 
-      <div class="socials">
-          <strong>Follow:</strong>
-          <a id="ig" target="_blank">Instagram</a>
-          <a id="fb" target="_blank">Facebook</a>
-          <a id="web" target="_blank">Website</a>
-        </div>
-    </div>
-
-    <div id="chart-tooltip" class="tooltip"></div>
-
-   
   <script>
     let currentSessionData = null;
     // Holds ALL comparison session data objects (driver, laps, etc.)
@@ -484,6 +480,7 @@
         const seconds = parseFloat(parts[1]);
         return minutes * 60 + seconds;
       }
+      // Assumes the input is already in seconds (as a string or number) if no colon is found
       return parseFloat(timeStr);
     }
 
@@ -580,18 +577,18 @@
       const deltaStr = delta === 0 ? 'Fastest Lap' : (delta > 0 ? `+${delta.toFixed(3)}s` : `${delta.toFixed(3)}s`);
 
       const tooltipHTML = `
-        <div class="tooltip-header">
-          ${driverLabel}
-          <span class="tooltip-lap">Lap ${point.lapNumber}</span>
-        </div>
-        <div class="tooltip-time">${point.lap.time}</div>
-        ${point.lap.best ? '<div class="tooltip-best">★ Best Lap</div>' : ''}
-        <div class="tooltip-delta">${deltaStr}</div>
-        <div class="tooltip-footer">
-          Session: ${new Date(session.session_date).toLocaleDateString()}<br>
-          Kart: ${session.kart}
-        </div>
-      `;
+                <div class="tooltip-header">
+                    ${driverLabel}
+                    <span class="tooltip-lap">Lap ${point.lapNumber}</span>
+                </div>
+                <div class="tooltip-time">${point.lap.time}</div>
+                ${point.lap.best ? '<div class="tooltip-best">★ Best Lap</div>' : ''}
+                <div class="tooltip-delta">${deltaStr}</div>
+                <div class="tooltip-footer">
+                    Session: ${new Date(session.session_date).toLocaleDateString()}<br>
+                    Kart: ${session.kart}
+                </div>
+            `;
 
       tooltip.innerHTML = tooltipHTML + '<div class="tooltip-arrow"></div>';
       tooltip.classList.add('tooltip-visible');
@@ -733,7 +730,7 @@
           const y = padding + chartHeight - ((lapTime - minTime) / timeRange) * chartHeight;
 
           // Draw hover circle area
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.0)'; // Transparent area to check hit
           ctx.beginPath();
           ctx.arc(x, y, 15, 0, Math.PI * 2);
           ctx.fill();
@@ -811,28 +808,28 @@
       // Build Legend
       const legend = document.getElementById('chart-legend');
       let legendHTML = `
-        <div class="legend-item">
-          <div class="legend-color" style="background: #f44336;"></div>
-          <span>${currentSessionData.driver} (${mainLaps.length} laps)</span>
-        </div>
-      `;
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f44336;"></div>
+                    <span>${currentSessionData.driver} (${mainLaps.length} laps)</span>
+                </div>
+            `;
 
       comparisonSessions.forEach((session, index) => {
         const colors = comparisonColors[index % comparisonColors.length];
         legendHTML += `
-          <div class="legend-item">
-            <div class="legend-color" style="background: ${colors.line};"></div>
-            <span>${session.driver} (${comparisonDatasets[index].length} laps)</span>
-          </div>
-        `;
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: ${colors.line};"></div>
+                        <span>${session.driver} (${comparisonDatasets[index].length} laps)</span>
+                    </div>
+                `;
       });
 
       legendHTML += `
-        <div class="legend-item">
-          <div class="legend-color" style="background: #ffd700;"></div>
-          <span>★ Best Lap</span>
-        </div>
-      `;
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ffd700;"></div>
+                    <span>★ Best Lap</span>
+                </div>
+            `;
 
       legend.innerHTML = legendHTML;
 
@@ -891,6 +888,11 @@
       if (sessionIds.length === 0) {
         drawLineChart(currentLaps, []);
         document.getElementById('comparison-results').innerHTML = '';
+        // Regenerate the main card, as it might have been cleared previously
+        const currentTimes = currentLaps.map(l => parseTime(l.time));
+        const currentFastest = currentTimes.length > 0 ? Math.min(...currentTimes) : 0;
+        const currentAvg = currentTimes.length > 0 ? currentTimes.reduce((sum, t) => sum + t, 0) / currentTimes.length : 0;
+        document.getElementById('comparison-results').innerHTML = createComparisonCard(currentSessionData, currentFastest, currentAvg, currentLaps.length, '#f44336');
         return;
       }
 
@@ -958,13 +960,13 @@
         const overallBest = allFastestTimes.reduce((best, current) => current.time < best.time ? current : best, allFastestTimes[0]);
 
         resultHTML += `
-          <div class="comparison-card">
-            <h3>🏆 Overall Fastest Lap</h3>
-            <p><strong>Time:</strong> <strong class="fastest-time" style="font-size: 1.8em; color: ${overallBest.color};">${formatTime(overallBest.time)}</strong></p>
-            <p><strong>Driver:</strong> <strong style="color: ${overallBest.color};">${overallBest.driver}</strong></p>
-            <p><strong>Session:</strong> ${overallBest.driver === currentSessionData.driver ? new Date(currentSessionData.session_date).toLocaleDateString() : new Date(comparisonSessions.find(s => s.driver === overallBest.driver)?.session_date || 'Unknown').toLocaleDateString()}</p>
-          </div>
-        `;
+                    <div class="comparison-card">
+                        <h3>🏆 Overall Fastest Lap</h3>
+                        <p><strong>Time:</strong> <strong class="fastest-time" style="font-size: 1.8em; color: ${overallBest.color};">${formatTime(overallBest.time)}</strong></p>
+                        <p><strong>Driver:</strong> <strong style="color: ${overallBest.color};">${overallBest.driver}</strong></p>
+                        <p><strong>Session:</strong> ${overallBest.driver === currentSessionData.driver ? new Date(currentSessionData.session_date).toLocaleDateString() : new Date(comparisonSessions.find(s => s.driver === overallBest.driver)?.session_date || 'Unknown').toLocaleDateString()}</p>
+                    </div>
+                `;
       }
 
       // 4. Error Messages
@@ -977,14 +979,14 @@
 
     function createComparisonCard(data, fastest, average, lapCount, color) {
       return `
-        <div class="comparison-card" style="border-top-color: ${color};">
-          <h3>${data.driver} - ${new Date(data.session_date).toLocaleDateString()}</h3>
-          <p><strong>Fastest:</strong> <span style="font-weight: bold; color: ${color === '#f44336' ? '#ffd700' : color};">${formatTime(fastest)}</span></p>
-          <p><strong>Average:</strong> ${formatTime(average)}</p>
-          <p><strong>Laps:</strong> ${lapCount}</p>
-          <p><strong>Kart:</strong> ${data.kart}</p>
-        </div>
-      `;
+                <div class="comparison-card" style="border-top-color: ${color};">
+                    <h3>${data.driver} - ${new Date(data.session_date).toLocaleDateString()}</h3>
+                    <p><strong>Fastest:</strong> <span style="font-weight: bold; color: ${color === '#f44336' ? '#ffd700' : color};">${formatTime(fastest)}</span></p>
+                    <p><strong>Average:</strong> ${formatTime(average)}</p>
+                    <p><strong>Laps:</strong> ${lapCount}</p>
+                    <p><strong>Kart:</strong> ${data.kart}</p>
+                </div>
+            `;
     }
 
     function clearComparison() {
@@ -997,6 +999,11 @@
         const validLaps = currentSessionData.laps.filter(lap => lap.lap !== null);
         // Pass an empty array to drawLineChart to clear comparisons
         drawLineChart(validLaps, []);
+        // Ensure the main session card reappears after clearing
+        const currentTimes = validLaps.map(l => parseTime(l.time));
+        const currentFastest = currentTimes.length > 0 ? Math.min(...currentTimes) : 0;
+        const currentAvg = currentTimes.length > 0 ? currentTimes.reduce((sum, t) => sum + t, 0) / currentTimes.length : 0;
+        document.getElementById('comparison-results').innerHTML = createComparisonCard(currentSessionData, currentFastest, currentAvg, validLaps.length, '#f44336');
       }
     }
   </script>
