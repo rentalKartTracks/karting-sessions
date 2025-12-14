@@ -445,6 +445,7 @@
       height: 0;
       border-left: 8px solid transparent;
       border-right: 8px solid transparent;
+      /* Default: Arrow pointing down (border-top is the color) */
       border-top: 8px solid #f44336;
       bottom: -8px;
       left: 50%;
@@ -933,8 +934,9 @@
 
       // Boundary checks (Y-axis - Flip arrow if near top)
       const arrow = tooltip.querySelector('.tooltip-arrow');
-      arrow.style.borderTopColor = lineColor; // Set line color for the arrow border
-      arrow.style.borderBottomColor = lineColor;
+
+      // Removed previous incorrect arrow color setting. 
+      // Arrow styling is now fully set in the if/else for clear flipping control.
 
       if (top < scrollY + 20) {
         top = pointPageY + 30; // Move tooltip below the point
@@ -942,13 +944,24 @@
         arrow.style.borderBottom = `8px solid ${lineColor}`;
         arrow.style.top = '-8px';
         arrow.style.bottom = 'auto';
+        arrow.style.marginLeft = '0'; // Reset for arrow positioning
       } else {
         // Tooltip above the point
         arrow.style.borderTop = `8px solid ${lineColor}`;
         arrow.style.borderBottom = 'none';
         arrow.style.bottom = '-8px';
         arrow.style.top = 'auto';
+        arrow.style.marginLeft = '0'; // Reset for arrow positioning
       }
+
+      // Adjust arrow position based on X-axis clamping
+      // The arrow is positioned at 50% relative to the tooltip.
+      // If the tooltip was moved due to X-axis clamping, we need to move the arrow back
+      // to align with the data point (pointPageX).
+      const tooltipMidpointOnPage = left + tooltipWidth / 2;
+      const arrowOffsetX = pointPageX - tooltipMidpointOnPage; // How far the point is from the tooltip's center
+      arrow.style.marginLeft = `${arrowOffsetX}px`;
+
 
       tooltip.style.left = left + 'px';
       tooltip.style.top = top + 'px';
@@ -1327,10 +1340,12 @@
     function createComparisonCard(data, fastest, average, lapCount, color) {
       const stdDev = calculateConsistency(data.laps.filter(l => l.lap !== null).map(l => parseTime(l.time)));
       const consistency = getConsistencyRating(stdDev);
+      const sessionDate = new Date(data.session_date).toLocaleDateString();
 
       return `
                 <div class="comparison-card" style="border-top-color: ${color};">
-                    <h3>${data.driver} - ${new Date(data.session_date).toLocaleDateString()}</h3>
+                    <h3>${data.driver} - ${sessionDate}</h3>
+                    <p><strong>Session ID:</strong> <code>${data.id}</code></p>
                     <p><strong>Track:</strong> ${data.track.name}</p>
                     <p><strong>Fastest:</strong> <span style="font-weight: bold; color: ${color === '#f44336' ? '#ffd700' : color};">${formatTime(fastest)}</span></p>
                     <p><strong>Average:</strong> ${formatTime(average)}</p>
@@ -1358,3 +1373,4 @@
 </body>
 
 </html>
+<!DOCTYPE html>
