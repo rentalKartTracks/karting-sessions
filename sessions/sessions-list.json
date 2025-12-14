@@ -57,6 +57,20 @@
             "average_lap": "00:28.265"
         },
         {
+            "id": "c74839e7-1346-4027-ad80-dd3bc2a631dd",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Vilko Kartodromas",
+                "configuration": "wolf 2025",
+                "maps_link": "https://maps.app.goo.gl/9erykKE9f58EYZ9TA"
+            },
+            "session_date": "2025-10-11",
+            "kart": "9 Ag",
+            "fastest_lap": "00:18.050",
+            "laps_count": 45,
+            "average_lap": "00:19.246"
+        },
+        {
             "id": "e61ac480-7e9f-4170-977d-f0bc1694bb98",
             "driver": "Povilas L.",
             "track": {
