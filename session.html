@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Karting Session Viewer</title>
+  <script src="https://www.youtube.com/iframe_api"></script>
   <style>
     * {
       margin: 0;
@@ -468,6 +469,16 @@
       background-color: #1e1e1e;
     }
 
+    /* Using an ID for the video player container for YT API */
+    #youtube-player-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
     .video-responsive iframe {
       position: absolute;
       top: 0;
@@ -535,6 +546,19 @@
         <canvas id="lap-chart" class="chart-canvas"></canvas>
       </div>
       <div id="chart-legend" class="legend"></div>
+      <div id="video-sync-controls"
+        style="display:none; margin-top: 20px; padding: 20px; background: #1e1e1e; border-radius: 8px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <span style="color: #f44336; font-weight: bold;">🎬 Video Sync</span>
+          <span id="current-lap-display" style="color: #ffd700; font-weight: bold;">Lap 1</span>
+        </div>
+        <input type="range" id="lap-slider" min="1" max="13" value="1" step="1"
+          style="width: 100%; height: 8px; background: #3d3d3d; border-radius: 4px; outline: none; cursor: pointer;">
+        <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 0.85em; color: #999;">
+          <span>Lap 1</span>
+          <span id="max-lap-label">Lap 13</span>
+        </div>
+      </div>
     </div>
 
     <div class="comparison-container">
@@ -568,6 +592,13 @@
     let comparisonDatasets = [];
     let activePoint = null;
     let allSessionsList = []; // Global list of all sessions for comparison/autocomplete
+
+    // --- VIDEO SYNC GLOBAL VARIABLES ---
+    let player; // YouTube Player object
+    let lapStartTimesInVideo = []; // Array of video seconds for the start of each lap
+    const lapSlider = document.getElementById('lap-slider');
+    // --- END VIDEO SYNC GLOBAL VARIABLES ---
+
 
     // Zoom/Pan State (Framework maintained but not fully implemented)
     let chartScale = 1.0;
@@ -711,20 +742,28 @@
     // --- Utility Functions ---
 
     function parseTime(timeStr) {
-      const parts = timeStr.split(':');
+      if (!timeStr) return 0;
+      const parts = timeStr.toString().split(':');
       if (parts.length === 2) {
-        const minutes = parseInt(parts[0]);
-        const seconds = parseFloat(parts[1]);
+        const minutes = parseInt(parts[0]) || 0;
+        const seconds = parseFloat(parts[1]) || 0;
         return minutes * 60 + seconds;
       }
-      return parseFloat(timeStr);
+      return parseFloat(timeStr) || 0;
     }
 
     function formatTime(seconds) {
       if (seconds === null || seconds === undefined) return 'N/A';
-      const mins = Math.floor(seconds / 60);
-      const secs = (seconds % 60).toFixed(3);
-      return mins > 0 ? `${mins}:${secs.padStart(6, '0')}` : `${secs}s`;
+      if (typeof seconds !== 'number' || isNaN(seconds)) return 'N/A';
+
+      const totalSeconds = Math.max(0, seconds); // Ensure non-negative
+      const mins = Math.floor(totalSeconds / 60);
+      const secs = (totalSeconds % 60).toFixed(3);
+
+      // If secs is 60.000, it should be 1:00.000. Use standard formatting to handle this.
+      const formattedSecs = secs.padStart(6, '0');
+
+      return mins > 0 ? `${mins}:${formattedSecs}` : `${parseFloat(secs).toFixed(3)}s`;
     }
 
     function calculateConsistency(lapTimes) {
@@ -742,21 +781,22 @@
       return { text: 'Variable', class: 'consistency-poor' };
     }
 
-    // --- NEW: Video Player Functions ---
+    // --- Video Player Functions ---
     function extractYouTubeId(url) {
-      // Regex to extract video ID from various YouTube URL formats
       const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
       const match = url.match(regex);
       return match ? match[1] : null;
     }
 
-    function renderVideoPlayer(videoUrl) {
+    function renderVideoPlayer(videoUrl, videoStartTime) {
       const videoContainer = document.getElementById('video-display-container');
-      videoContainer.style.display = 'none'; // Hide by default
-      videoContainer.innerHTML = ''; // Clear previous content
+      const syncControls = document.getElementById('video-sync-controls');
+      videoContainer.style.display = 'none';
+      syncControls.style.display = 'none';
+      videoContainer.innerHTML = '';
 
       if (!videoUrl || videoUrl.trim() === '') {
-        return; // Do nothing if no URL is provided
+        return;
       }
 
       if (videoUrl.toLowerCase() === 'pending') {
@@ -777,23 +817,99 @@
         videoContainer.innerHTML = `
             <div class="chart-title">🎥 Session Video</div>
             <div class="video-responsive">
-                <iframe 
-                    src="https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-                </iframe>
+                <div id="youtube-player-container"></div>
             </div>
         `;
+
+        // Only show controls if we have a video and a start time
+        if (videoStartTime !== null && videoStartTime !== undefined) {
+          syncControls.style.display = 'block';
+        }
+
+        // Use the global window function that the API calls when ready
+        window.onYouTubeIframeAPIReady = function () {
+          // Convert MM:SS start time string to seconds
+          const startTimeSeconds = parseTime(videoStartTime);
+
+          player = new YT.Player('youtube-player-container', {
+            videoId: videoId,
+            playerVars: {
+              // Set the start time in the URL, seeking will happen on load/ready
+              start: startTimeSeconds,
+              autoplay: 0,
+              rel: 0,
+              modestbranding: 1
+            },
+            events: {
+              'onReady': onPlayerReady
+            }
+          });
+        }
       }
-      // If URL exists but no ID is found, the container remains hidden and empty.
     }
-    // --- END NEW: Video Player Functions ---
+
+    // Function called by the YouTube API once the player is ready
+    function onPlayerReady(event) {
+      // You can set the initial lap here if needed, but the slider handles the sync
+      syncVideoToLap(parseInt(lapSlider.value));
+    }
+
+    function calculateLapStartTimes(laps, videoStartTimeStr) {
+      // Filter out invalid laps and map to only their durations
+      const lapDurations = laps
+        .filter(lap => lap.lap !== null && lap.time !== null)
+        .map(lap => parseTime(lap.time));
+
+      const videoStartTime = parseTime(videoStartTimeStr || "0:00"); // Convert start time to seconds
+
+      lapStartTimesInVideo = [];
+      let cumulativeTime = videoStartTime;
+
+      // Lap 1 starts at videoStartTime
+      lapStartTimesInVideo.push(cumulativeTime);
+
+      // Calculate the start time for the next lap by adding the duration of the current lap
+      for (let i = 0; i < lapDurations.length - 1; i++) {
+        cumulativeTime += lapDurations[i];
+        lapStartTimesInVideo.push(cumulativeTime);
+      }
+
+      // Update slider max value and labels
+      const totalLaps = lapDurations.length;
+      lapSlider.min = 1;
+      lapSlider.max = totalLaps;
+      lapSlider.value = 1; // Reset to Lap 1
+      document.getElementById('max-lap-label').textContent = `Lap ${totalLaps}`;
+    }
+
+    function syncVideoToLap(lapNumber) {
+      const lapIndex = lapNumber - 1; // 1-based lap number to 0-based array index
+      const lapDisplay = document.getElementById('current-lap-display');
+
+      if (lapIndex >= 0 && lapIndex < lapStartTimesInVideo.length) {
+        const seekTime = lapStartTimesInVideo[lapIndex];
+        lapDisplay.textContent = `Lap ${lapNumber} (${formatTime(seekTime)} video time)`;
+
+        if (player && player.seekTo) {
+          // Seek to the start of the selected lap
+          player.seekTo(seekTime, true);
+          player.playVideo();
+        }
+      }
+    }
+
+    // Attach event listener to the slider after it's defined
+    lapSlider.addEventListener('input', (e) => {
+      syncVideoToLap(parseInt(e.target.value));
+    });
+
+    // --- End Video Player Functions ---
 
 
     // --- Chart & Tooltip Interaction ---
 
     function setupTooltipInteractions() {
+      // ... (Tooltip logic remains the same as previous step)
       const canvas = document.getElementById('lap-chart');
 
       // Cleanup existing listeners
@@ -1226,9 +1342,15 @@
       consistencyEl.textContent = `${consistency.text} (±${stdDev.toFixed(3)}s)`;
       consistencyEl.className = `stat-value small ${consistency.class}`;
 
-      // --- NEW CALL ---
-      renderVideoPlayer(data.video_url);
-      // --- END NEW CALL ---
+      // --- VIDEO SYNC SETUP ---
+      // 2. Pass video_start_time from data to the player
+      renderVideoPlayer(data.video_url, data.video_start_time);
+
+      // 3. Calculate lap start times in video and configure the slider
+      if (data.video_url && data.video_url.trim() !== '' && data.video_start_time) {
+        calculateLapStartTimes(validLaps, data.video_start_time);
+      }
+      // --- END VIDEO SYNC SETUP ---
 
       drawLineChart(validLaps);
 
