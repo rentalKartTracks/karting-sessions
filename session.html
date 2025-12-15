@@ -535,6 +535,19 @@
         <canvas id="lap-chart" class="chart-canvas"></canvas>
       </div>
       <div id="chart-legend" class="legend"></div>
+      <div id="video-sync-controls"
+        style="display:none; margin-top: 20px; padding: 20px; background: #1e1e1e; border-radius: 8px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <span style="color: #f44336; font-weight: bold;">🎬 Video Sync</span>
+          <span id="current-lap-display" style="color: #ffd700; font-weight: bold;">Lap 1</span>
+        </div>
+        <input type="range" id="lap-slider" min="1" max="13" value="1" step="1"
+          style="width: 100%; height: 8px; background: #3d3d3d; border-radius: 4px; outline: none; cursor: pointer;">
+        <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 0.85em; color: #999;">
+          <span>Lap 1</span>
+          <span id="max-lap-label">Lap 13</span>
+        </div>
+      </div>
     </div>
 
     <div class="comparison-container">
