@@ -632,7 +632,7 @@
 
     // --- Data Loading ---
     // 1. Load the list of all sessions
-    fetch('sessions-list.json')
+    fetch('sessions/sessions-list.json')
       .then(r => r.json())
       .then(data => {
         allSessionsList = data.sessions || [];
