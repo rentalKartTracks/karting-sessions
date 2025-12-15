@@ -782,6 +782,38 @@
     }
 
     // --- Video Player Functions ---
+
+    // 1. Define global config and callback ONCE
+    let pendingVideoConfig = null;
+
+    // This function is called automatically by the YouTube API when it loads.
+    // We also call it manually if the API is already loaded when we get our data.
+    window.onYouTubeIframeAPIReady = function () {
+      // If we don't have video details yet, do nothing.
+      if (!pendingVideoConfig) return;
+
+      const { videoId, startTimeSeconds } = pendingVideoConfig;
+
+      // Safety check: ensure the container exists in the DOM
+      if (!document.getElementById('youtube-player-container')) return;
+
+      player = new YT.Player('youtube-player-container', {
+        videoId: videoId,
+        playerVars: {
+          start: startTimeSeconds,
+          autoplay: 0,
+          rel: 0,
+          modestbranding: 1,
+          // Optimization: Helps prevent some "origin" errors in console
+          origin: window.location.origin,
+          enablejsapi: 1
+        },
+        events: {
+          'onReady': onPlayerReady
+        }
+      });
+    };
+
     function extractYouTubeId(url) {
       const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
       const match = url.match(regex);
@@ -791,6 +823,8 @@
     function renderVideoPlayer(videoUrl, videoStartTime) {
       const videoContainer = document.getElementById('video-display-container');
       const syncControls = document.getElementById('video-sync-controls');
+
+      // Reset UI
       videoContainer.style.display = 'none';
       syncControls.style.display = 'none';
       videoContainer.innerHTML = '';
@@ -799,6 +833,7 @@
         return;
       }
 
+      // Handle "Pending" status
       if (videoUrl.toLowerCase() === 'pending') {
         videoContainer.style.display = 'block';
         videoContainer.innerHTML = `
@@ -813,6 +848,7 @@
       const videoId = extractYouTubeId(videoUrl);
 
       if (videoId) {
+        // Show container
         videoContainer.style.display = 'block';
         videoContainer.innerHTML = `
             <div class="chart-title">🎥 Session Video</div>
@@ -821,36 +857,27 @@
             </div>
         `;
 
-        // Only show controls if we have a video and a start time
         if (videoStartTime !== null && videoStartTime !== undefined) {
           syncControls.style.display = 'block';
         }
 
-        // Use the global window function that the API calls when ready
-        window.onYouTubeIframeAPIReady = function () {
-          // Convert MM:SS start time string to seconds
-          const startTimeSeconds = parseTime(videoStartTime);
+        // 2. Set the config for the global handler to find
+        pendingVideoConfig = {
+          videoId: videoId,
+          startTimeSeconds: parseTime(videoStartTime)
+        };
 
-          player = new YT.Player('youtube-player-container', {
-            videoId: videoId,
-            playerVars: {
-              // Set the start time in the URL, seeking will happen on load/ready
-              start: startTimeSeconds,
-              autoplay: 0,
-              rel: 0,
-              modestbranding: 1
-            },
-            events: {
-              'onReady': onPlayerReady
-            }
-          });
+        // 3. Check if API is already ready. 
+        // If YT is undefined, the script is still loading; onYouTubeIframeAPIReady will fire later.
+        // If YT exists, the event already fired (or won't fire again), so we call the handler manually.
+        if (window.YT && window.YT.Player) {
+          window.onYouTubeIframeAPIReady();
         }
       }
     }
 
-    // Function called by the YouTube API once the player is ready
+    // Function called by the YouTube player instance once it's fully ready
     function onPlayerReady(event) {
-      // You can set the initial lap here if needed, but the slider handles the sync
       syncVideoToLap(parseInt(lapSlider.value));
     }
 
