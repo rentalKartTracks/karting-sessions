@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Karting Session Viewer</title>
+  <script src="https://www.youtube.com/iframe_api"></script>
   <style>
     * {
       margin: 0;
@@ -468,6 +469,16 @@
       background-color: #1e1e1e;
     }
 
+    /* Using an ID for the video player container for YT API */
+    #youtube-player-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
     .video-responsive iframe {
       position: absolute;
       top: 0;
@@ -477,38 +488,7 @@
       border: 0;
     }
 
-    /* Custom style for the range slider */
-    #lap-selector-slider {
-      -webkit-appearance: none;
-      appearance: none;
-      background: transparent;
-      cursor: pointer;
-      width: 100%;
-      height: 8px;
-      border-radius: 4px;
-      background: #3d3d3d;
-    }
-
-    /* Thumb (handle) styling */
-    #lap-selector-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: #f44336;
-      border: 2px solid #fff;
-      box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
-    }
-
-    #lap-selector-slider::-moz-range-thumb {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: #f44336;
-      border: 2px solid #fff;
-      box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
-    }
+    /* --- END NEW CSS --- */
   </style>
 </head>
 
@@ -560,23 +540,25 @@
 
     <div id="video-display-container" class="chart-container" style="display:none;">
     </div>
-
     <div class="chart-container">
       <div class="chart-title">📈 Lap Time Progression</div>
-
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px;">
-        <span id="current-lap-display"
-          style="font-weight: bold; color: #ffd700; font-size: 1.1em; min-width: 150px;">Current Lap: N/A</span>
-        <input type="range" id="lap-selector-slider" min="1" max="1" value="1" step="1"
-          style="flex-grow: 1; margin: 0 20px;">
-        <button onclick="seekToLap(parseInt(document.getElementById('lap-selector-slider').value) + 1)"
-          style="padding: 8px 15px; background: #555; border: none; color: white; border-radius: 4px; cursor: pointer;">Next
-          Lap</button>
-      </div>
       <div class="line-chart">
         <canvas id="lap-chart" class="chart-canvas"></canvas>
       </div>
       <div id="chart-legend" class="legend"></div>
+      <div id="video-sync-controls"
+        style="display:none; margin-top: 20px; padding: 20px; background: #1e1e1e; border-radius: 8px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <span style="color: #f44336; font-weight: bold;">🎬 Video Sync</span>
+          <span id="current-lap-display" style="color: #ffd700; font-weight: bold;">Lap 1</span>
+        </div>
+        <input type="range" id="lap-slider" min="1" max="13" value="1" step="1"
+          style="width: 100%; height: 8px; background: #3d3d3d; border-radius: 4px; outline: none; cursor: pointer;">
+        <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 0.85em; color: #999;">
+          <span>Lap 1</span>
+          <span id="max-lap-label">Lap 13</span>
+        </div>
+      </div>
     </div>
 
     <div class="comparison-container">
@@ -611,43 +593,18 @@
     let activePoint = null;
     let allSessionsList = []; // Global list of all sessions for comparison/autocomplete
 
+    // --- VIDEO SYNC GLOBAL VARIABLES ---
+    let player; // YouTube Player object
+    let lapStartTimesInVideo = []; // Array of video seconds for the start of each lap
+    const lapSlider = document.getElementById('lap-slider');
+    // --- END VIDEO SYNC GLOBAL VARIABLES ---
+
+
     // Zoom/Pan State (Framework maintained but not fully implemented)
     let chartScale = 1.0;
     let chartOffsetX = 0;
     let isDragging = false;
     let dragStartX = 0;
-
-    // --- Global Video Player Reference & Sync State ---
-    let player;
-    let currentLapMarker = { lapNumber: -1, x: -1 };
-    let updateChartInterval;
-    let lapStartTimes = [];
-    // --- END Global Video Player Reference & Sync State ---
-
-    // --- Load the IFrame Player API asynchronously ---
-    var tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-    // 2. This function is called by the API to initialize the player
-    function onYouTubeIframeAPIReady() {
-      // Player is initialized in renderVideoPlayer() when session data is loaded
-    }
-
-    // 3. New state functions for the player
-    function onPlayerReady(event) {
-      startChartUpdateInterval();
-    }
-
-    function onPlayerStateChange(event) {
-      if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
-        clearInterval(updateChartInterval);
-      } else if (event.data === YT.PlayerState.PLAYING) {
-        startChartUpdateInterval();
-      }
-    }
-    // --- END YouTube API Functions ---
 
 
     const params = new URLSearchParams(window.location.search);
@@ -785,22 +742,28 @@
     // --- Utility Functions ---
 
     function parseTime(timeStr) {
-      if (!timeStr) return NaN;
-      const cleanStr = timeStr.trim();
-      const parts = cleanStr.split(':');
+      if (!timeStr) return 0;
+      const parts = timeStr.toString().split(':');
       if (parts.length === 2) {
-        const minutes = parseInt(parts[0]);
-        const seconds = parseFloat(parts[1]);
+        const minutes = parseInt(parts[0]) || 0;
+        const seconds = parseFloat(parts[1]) || 0;
         return minutes * 60 + seconds;
       }
-      return parseFloat(cleanStr);
+      return parseFloat(timeStr) || 0;
     }
 
     function formatTime(seconds) {
-      if (seconds === null || seconds === undefined || isNaN(seconds)) return 'N/A';
-      const mins = Math.floor(seconds / 60);
-      const secs = (seconds % 60).toFixed(3);
-      return mins > 0 ? `${mins}:${secs.padStart(6, '0')}` : `${secs}s`;
+      if (seconds === null || seconds === undefined) return 'N/A';
+      if (typeof seconds !== 'number' || isNaN(seconds)) return 'N/A';
+
+      const totalSeconds = Math.max(0, seconds); // Ensure non-negative
+      const mins = Math.floor(totalSeconds / 60);
+      const secs = (totalSeconds % 60).toFixed(3);
+
+      // If secs is 60.000, it should be 1:00.000. Use standard formatting to handle this.
+      const formattedSecs = secs.padStart(6, '0');
+
+      return mins > 0 ? `${mins}:${formattedSecs}` : `${parseFloat(secs).toFixed(3)}s`;
     }
 
     function calculateConsistency(lapTimes) {
@@ -818,116 +781,19 @@
       return { text: 'Variable', class: 'consistency-poor' };
     }
 
-    // --- Lap Synchronization Logic ---
-
-    function calculateLapStartTimes(laps, videoStartTimeStr) {
-      if (!laps || laps.length === 0) return [];
-
-      // Video start time (e.g., "00:07" -> 7 seconds)
-      const videoStartSec = parseTime(videoStartTimeStr || "00:00");
-
-      const lapStartTimes = [];
-      let cumulativeTime = videoStartSec;
-
-      laps.forEach(lap => {
-        const lapDuration = parseTime(lap.time);
-        if (lap.lap !== null && !isNaN(lapDuration)) {
-          lapStartTimes.push({
-            lapNumber: lap.lap,
-            videoTime: cumulativeTime
-          });
-          cumulativeTime += lapDuration;
-        }
-      });
-
-      return lapStartTimes;
-    }
-
-    function getCurrentLapNumber(videoTime) {
-      if (lapStartTimes.length === 0) return -1;
-
-      // Find the largest lap start time that is less than or equal to the current video time
-      let currentLap = -1;
-      for (let i = lapStartTimes.length - 1; i >= 0; i--) {
-        if (videoTime >= lapStartTimes[i].videoTime) {
-          currentLap = lapStartTimes[i].lapNumber;
-          break;
-        }
-      }
-      return currentLap;
-    }
-
-    // --- NEW: Universal Seek Function for Slider and Chart Clicks ---
-    function seekToLap(lapNumber) {
-      // Ensure lapNumber is within bounds
-      const maxLap = document.getElementById('lap-selector-slider').max;
-      if (lapNumber < 1 || lapNumber > maxLap) {
-        lapNumber = 1; // Default to first lap
-      }
-
-      const lapStartTimeObj = lapStartTimes.find(l => l.lapNumber === lapNumber);
-
-      if (lapStartTimeObj && player && typeof player.seekTo === 'function') {
-        player.seekTo(lapStartTimeObj.videoTime, true);
-      } else if (!player) {
-        console.warn("YouTube player not ready or not loaded.");
-      }
-
-      // Update the marker instantly and display
-      currentLapMarker.lapNumber = lapNumber;
-      const slider = document.getElementById('lap-selector-slider');
-      if (slider) slider.value = lapNumber;
-      document.getElementById('current-lap-display').textContent = `Current Lap: ${lapNumber}`;
-
-      // Redraw chart to move the marker
-      if (currentSessionData) {
-        const currentLaps = currentSessionData.laps.filter(l => l.lap !== null && parseTime(l.time) !== null);
-        const existingComparisonDatasets = comparisonDatasets.length > 0 ? comparisonDatasets : [];
-        drawLineChart(currentLaps, existingComparisonDatasets);
-      }
-    }
-    // --- END NEW ---
-
-    function startChartUpdateInterval() {
-      clearInterval(updateChartInterval);
-
-      updateChartInterval = setInterval(() => {
-        if (player && typeof player.getCurrentTime === 'function') {
-          const videoTime = player.getCurrentTime();
-          const newLapNumber = getCurrentLapNumber(videoTime);
-
-          if (newLapNumber !== currentLapMarker.lapNumber && newLapNumber !== -1) {
-            currentLapMarker.lapNumber = newLapNumber;
-
-            // --- SLIDER/DISPLAY SYNC ---
-            const slider = document.getElementById('lap-selector-slider');
-            if (slider) slider.value = newLapNumber;
-            document.getElementById('current-lap-display').textContent = `Current Lap: ${newLapNumber}`;
-            // --- END SLIDER/DISPLAY SYNC ---
-
-            // Redraw the chart to move the marker
-            if (currentSessionData) {
-              const currentLaps = currentSessionData.laps.filter(l => l.lap !== null && parseTime(l.time) !== null);
-              const existingComparisonDatasets = comparisonDatasets.length > 0 ? comparisonDatasets : [];
-              drawLineChart(currentLaps, existingComparisonDatasets);
-            }
-          }
-        }
-      }, 250); // Update 4 times per second
-    }
-    // --- END Lap Synchronization Logic ---
-
-    // --- Video Player Functions (Updated for YouTube API) ---
+    // --- Video Player Functions ---
     function extractYouTubeId(url) {
       const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
       const match = url.match(regex);
       return match ? match[1] : null;
     }
 
-    function renderVideoPlayer(videoUrl, videoStartTimeStr) {
+    function renderVideoPlayer(videoUrl, videoStartTime) {
       const videoContainer = document.getElementById('video-display-container');
-      videoContainer.style.display = 'none'; // Hide by default
-      videoContainer.innerHTML = ''; // Clear previous content
+      const syncControls = document.getElementById('video-sync-controls');
+      videoContainer.style.display = 'none';
+      syncControls.style.display = 'none';
+      videoContainer.innerHTML = '';
 
       if (!videoUrl || videoUrl.trim() === '') {
         return;
@@ -946,52 +812,104 @@
 
       const videoId = extractYouTubeId(videoUrl);
 
-      if (videoId && window.YT) { // Check if YT API is loaded
+      if (videoId) {
         videoContainer.style.display = 'block';
         videoContainer.innerHTML = `
             <div class="chart-title">🎥 Session Video</div>
             <div class="video-responsive">
-                <div id="youtube-player"></div> 
+                <div id="youtube-player-container"></div>
             </div>
         `;
 
-        const startSeconds = parseTime(videoStartTimeStr || "00:00");
+        // Only show controls if we have a video and a start time
+        if (videoStartTime !== null && videoStartTime !== undefined) {
+          syncControls.style.display = 'block';
+        }
 
-        player = new YT.Player('youtube-player', {
-          videoId: videoId,
-          playerVars: {
-            'autoplay': 0,
-            'rel': 0,
-            'start': startSeconds
-          },
-          events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange
-          }
-        });
+        // Use the global window function that the API calls when ready
+        window.onYouTubeIframeAPIReady = function () {
+          // Convert MM:SS start time string to seconds
+          const startTimeSeconds = parseTime(videoStartTime);
 
-      } else if (videoId) {
-        // Fallback if API hasn't loaded yet 
-        videoContainer.style.display = 'block';
-        videoContainer.innerHTML = `
-            <div class="chart-title">🎥 Session Video (Click to start at ${videoStartTimeStr})</div>
-            <div class="video-responsive">
-                <iframe 
-                    src="https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0&start=${parseTime(videoStartTimeStr || "00:00")}" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-                </iframe>
-            </div>
-        `;
+          player = new YT.Player('youtube-player-container', {
+            videoId: videoId,
+            playerVars: {
+              // Set the start time in the URL, seeking will happen on load/ready
+              start: startTimeSeconds,
+              autoplay: 0,
+              rel: 0,
+              modestbranding: 1
+            },
+            events: {
+              'onReady': onPlayerReady
+            }
+          });
+        }
       }
     }
-    // --- END Video Player Functions ---
+
+    // Function called by the YouTube API once the player is ready
+    function onPlayerReady(event) {
+      // You can set the initial lap here if needed, but the slider handles the sync
+      syncVideoToLap(parseInt(lapSlider.value));
+    }
+
+    function calculateLapStartTimes(laps, videoStartTimeStr) {
+      // Filter out invalid laps and map to only their durations
+      const lapDurations = laps
+        .filter(lap => lap.lap !== null && lap.time !== null)
+        .map(lap => parseTime(lap.time));
+
+      const videoStartTime = parseTime(videoStartTimeStr || "0:00"); // Convert start time to seconds
+
+      lapStartTimesInVideo = [];
+      let cumulativeTime = videoStartTime;
+
+      // Lap 1 starts at videoStartTime
+      lapStartTimesInVideo.push(cumulativeTime);
+
+      // Calculate the start time for the next lap by adding the duration of the current lap
+      for (let i = 0; i < lapDurations.length - 1; i++) {
+        cumulativeTime += lapDurations[i];
+        lapStartTimesInVideo.push(cumulativeTime);
+      }
+
+      // Update slider max value and labels
+      const totalLaps = lapDurations.length;
+      lapSlider.min = 1;
+      lapSlider.max = totalLaps;
+      lapSlider.value = 1; // Reset to Lap 1
+      document.getElementById('max-lap-label').textContent = `Lap ${totalLaps}`;
+    }
+
+    function syncVideoToLap(lapNumber) {
+      const lapIndex = lapNumber - 1; // 1-based lap number to 0-based array index
+      const lapDisplay = document.getElementById('current-lap-display');
+
+      if (lapIndex >= 0 && lapIndex < lapStartTimesInVideo.length) {
+        const seekTime = lapStartTimesInVideo[lapIndex];
+        lapDisplay.textContent = `Lap ${lapNumber} (${formatTime(seekTime)} video time)`;
+
+        if (player && player.seekTo) {
+          // Seek to the start of the selected lap
+          player.seekTo(seekTime, true);
+          player.playVideo();
+        }
+      }
+    }
+
+    // Attach event listener to the slider after it's defined
+    lapSlider.addEventListener('input', (e) => {
+      syncVideoToLap(parseInt(e.target.value));
+    });
+
+    // --- End Video Player Functions ---
 
 
     // --- Chart & Tooltip Interaction ---
 
     function setupTooltipInteractions() {
+      // ... (Tooltip logic remains the same as previous step)
       const canvas = document.getElementById('lap-chart');
 
       // Cleanup existing listeners
@@ -1032,30 +950,6 @@
       canvas.addEventListener('touchmove', canvas.currentTouchMoveHandler, { passive: false });
       canvas.addEventListener('touchend', canvas.currentTouchEndHandler);
 
-      // NEW: Click listener to seek video on lap click
-      canvas.addEventListener('click', (e) => {
-        const rect = canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        let closestPoint = null;
-        let minDistance = Infinity;
-
-        chartPoints.forEach(point => {
-          const hitRadius = 15;
-          const distance = Math.sqrt(Math.pow(x - point.x, 2) + Math.pow(y - point.y, 2));
-          if (distance < hitRadius && distance < minDistance && !point.isComparison) { // Only allow seeking on the main session's data points
-            minDistance = distance;
-            closestPoint = point;
-          }
-        });
-
-        if (closestPoint) {
-          seekToLap(closestPoint.lapNumber);
-        }
-      });
-      // END NEW
-
       function handleInteraction(clientX, clientY) {
         const rect = canvas.getBoundingClientRect();
         const x = clientX - rect.left;
@@ -1095,14 +989,14 @@
 
       let session = currentSessionData;
       let dataset = currentDataset;
-      let fastestTime = Math.min(...dataset.map(l => parseTime(l.time)).filter(t => !isNaN(t)));
+      let fastestTime = Math.min(...dataset.map(l => parseTime(l.time)));
       let driverLabel = '';
       let lineColor = '#f44336';
 
       if (point.isComparison && point.sessionIndex !== undefined) {
         session = comparisonSessions[point.sessionIndex];
         dataset = comparisonDatasets[point.sessionIndex];
-        fastestTime = Math.min(...dataset.map(l => parseTime(l.time)).filter(t => !isNaN(t)));
+        fastestTime = Math.min(...dataset.map(l => parseTime(l.time)));
         lineColor = comparisonColors[point.sessionIndex % comparisonColors.length].line;
         driverLabel = `<span class="tooltip-driver" style="color: ${lineColor};">${session.driver}</span>`;
       } else if (point.isComparison === false) {
@@ -1363,37 +1257,6 @@
       // Draw Best Lap Markers for all datasets
       allDatasets.forEach(laps => drawBestLapMarkers(laps));
 
-      // --- Draw Current Lap Marker ---
-      const currentLapIndex = mainLaps.findIndex(lap => lap.lap === currentLapMarker.lapNumber);
-
-      if (currentLapIndex !== -1) {
-        const lapTime = parseTime(mainLaps[currentLapIndex].time);
-        if (!isNaN(lapTime)) {
-          // Get the coordinates for the current lap's data point
-          const { x: markerX } = getCoords(currentLapIndex, lapTime);
-
-          // Draw a dashed vertical line from top to bottom
-          ctx.strokeStyle = '#2196f3'; // Blue for a clear indicator
-          ctx.lineWidth = 2;
-          ctx.setLineDash([10, 5]);
-          ctx.beginPath();
-          ctx.moveTo(markerX, padding);
-          ctx.lineTo(markerX, canvas.height - padding);
-          ctx.stroke();
-          ctx.setLineDash([]); // Reset line style
-
-          // Draw a circle or indicator at the top
-          ctx.fillStyle = '#2196f3';
-          ctx.beginPath();
-          ctx.arc(markerX, padding, 8, 0, Math.PI * 2);
-          ctx.fill();
-
-          // Store the x-coordinate 
-          currentLapMarker.x = markerX;
-        }
-      }
-      // --- END Current Lap Marker ---
-
       // X-axis labels (Laps)
       ctx.fillStyle = '#999';
       ctx.font = '12px Arial';
@@ -1479,25 +1342,19 @@
       consistencyEl.textContent = `${consistency.text} (±${stdDev.toFixed(3)}s)`;
       consistencyEl.className = `stat-value small ${consistency.class}`;
 
-      // Calculate lap start times for video sync
-      lapStartTimes = calculateLapStartTimes(data.laps, data.video_start_time);
-
-      // --- NEW: Configure Slider ---
-      const slider = document.getElementById('lap-selector-slider');
-      slider.max = validLaps.length;
-      slider.min = 1;
-      slider.value = 1; // Start at lap 1
-
-      // Add event listener to the slider to seek video
-      slider.oninput = function () {
-        seekToLap(parseInt(this.value));
-      };
-      document.getElementById('current-lap-display').textContent = `Current Lap: 1`;
-      // --- END NEW ---
-
+      // --- VIDEO SYNC SETUP ---
+      // 2. Pass video_start_time from data to the player
       renderVideoPlayer(data.video_url, data.video_start_time);
 
+      // 3. Calculate lap start times in video and configure the slider
+      if (data.video_url && data.video_url.trim() !== '' && data.video_start_time) {
+        calculateLapStartTimes(validLaps, data.video_start_time);
+      }
+      // --- END VIDEO SYNC SETUP ---
+
       drawLineChart(validLaps);
+
+      // NOTE: Social links are now hardcoded in the HTML structure.
     }
 
     async function compareSession() {
