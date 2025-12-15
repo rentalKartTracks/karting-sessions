@@ -477,7 +477,38 @@
       border: 0;
     }
 
-    /* --- END NEW CSS --- */
+    /* Custom style for the range slider */
+    #lap-selector-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: #3d3d3d;
+    }
+
+    /* Thumb (handle) styling */
+    #lap-selector-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #f44336;
+      border: 2px solid #fff;
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+    }
+
+    #lap-selector-slider::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #f44336;
+      border: 2px solid #fff;
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+    }
   </style>
 </head>
 
@@ -529,8 +560,19 @@
 
     <div id="video-display-container" class="chart-container" style="display:none;">
     </div>
+
     <div class="chart-container">
       <div class="chart-title">📈 Lap Time Progression</div>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px;">
+        <span id="current-lap-display"
+          style="font-weight: bold; color: #ffd700; font-size: 1.1em; min-width: 150px;">Current Lap: N/A</span>
+        <input type="range" id="lap-selector-slider" min="1" max="1" value="1" step="1"
+          style="flex-grow: 1; margin: 0 20px;">
+        <button onclick="seekToLap(parseInt(document.getElementById('lap-selector-slider').value) + 1)"
+          style="padding: 8px 15px; background: #555; border: none; color: white; border-radius: 4px; cursor: pointer;">Next
+          Lap</button>
+      </div>
       <div class="line-chart">
         <canvas id="lap-chart" class="chart-canvas"></canvas>
       </div>
@@ -575,14 +617,14 @@
     let isDragging = false;
     let dragStartX = 0;
 
-    // --- NEW: Global Video Player Reference & Sync State ---
+    // --- Global Video Player Reference & Sync State ---
     let player;
     let currentLapMarker = { lapNumber: -1, x: -1 };
     let updateChartInterval;
     let lapStartTimes = [];
-    // --- END NEW ---
+    // --- END Global Video Player Reference & Sync State ---
 
-    // --- NEW: Load the IFrame Player API asynchronously ---
+    // --- Load the IFrame Player API asynchronously ---
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -605,7 +647,7 @@
         startChartUpdateInterval();
       }
     }
-    // --- END NEW ---
+    // --- END YouTube API Functions ---
 
 
     const params = new URLSearchParams(window.location.search);
@@ -776,7 +818,7 @@
       return { text: 'Variable', class: 'consistency-poor' };
     }
 
-    // --- NEW: Lap Synchronization Logic ---
+    // --- Lap Synchronization Logic ---
 
     function calculateLapStartTimes(laps, videoStartTimeStr) {
       if (!laps || laps.length === 0) return [];
@@ -815,16 +857,54 @@
       return currentLap;
     }
 
+    // --- NEW: Universal Seek Function for Slider and Chart Clicks ---
+    function seekToLap(lapNumber) {
+      // Ensure lapNumber is within bounds
+      const maxLap = document.getElementById('lap-selector-slider').max;
+      if (lapNumber < 1 || lapNumber > maxLap) {
+        lapNumber = 1; // Default to first lap
+      }
+
+      const lapStartTimeObj = lapStartTimes.find(l => l.lapNumber === lapNumber);
+
+      if (lapStartTimeObj && player && typeof player.seekTo === 'function') {
+        player.seekTo(lapStartTimeObj.videoTime, true);
+      } else if (!player) {
+        console.warn("YouTube player not ready or not loaded.");
+      }
+
+      // Update the marker instantly and display
+      currentLapMarker.lapNumber = lapNumber;
+      const slider = document.getElementById('lap-selector-slider');
+      if (slider) slider.value = lapNumber;
+      document.getElementById('current-lap-display').textContent = `Current Lap: ${lapNumber}`;
+
+      // Redraw chart to move the marker
+      if (currentSessionData) {
+        const currentLaps = currentSessionData.laps.filter(l => l.lap !== null && parseTime(l.time) !== null);
+        const existingComparisonDatasets = comparisonDatasets.length > 0 ? comparisonDatasets : [];
+        drawLineChart(currentLaps, existingComparisonDatasets);
+      }
+    }
+    // --- END NEW ---
+
     function startChartUpdateInterval() {
       clearInterval(updateChartInterval);
 
       updateChartInterval = setInterval(() => {
-        if (player && typeof player.getCurrentTime === 'function' && currentLapMarker.lapNumber !== -1) {
+        if (player && typeof player.getCurrentTime === 'function') {
           const videoTime = player.getCurrentTime();
           const newLapNumber = getCurrentLapNumber(videoTime);
 
-          if (newLapNumber !== currentLapMarker.lapNumber) {
+          if (newLapNumber !== currentLapMarker.lapNumber && newLapNumber !== -1) {
             currentLapMarker.lapNumber = newLapNumber;
+
+            // --- SLIDER/DISPLAY SYNC ---
+            const slider = document.getElementById('lap-selector-slider');
+            if (slider) slider.value = newLapNumber;
+            document.getElementById('current-lap-display').textContent = `Current Lap: ${newLapNumber}`;
+            // --- END SLIDER/DISPLAY SYNC ---
+
             // Redraw the chart to move the marker
             if (currentSessionData) {
               const currentLaps = currentSessionData.laps.filter(l => l.lap !== null && parseTime(l.time) !== null);
@@ -835,9 +915,9 @@
         }
       }, 250); // Update 4 times per second
     }
-    // --- END NEW ---
+    // --- END Lap Synchronization Logic ---
 
-    // --- NEW: Video Player Functions (Updated for YouTube API) ---
+    // --- Video Player Functions (Updated for YouTube API) ---
     function extractYouTubeId(url) {
       const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
       const match = url.match(regex);
@@ -891,7 +971,7 @@
         });
 
       } else if (videoId) {
-        // Fallback if API hasn't loaded yet (or no YT object, e.g., on a local file system)
+        // Fallback if API hasn't loaded yet 
         videoContainer.style.display = 'block';
         videoContainer.innerHTML = `
             <div class="chart-title">🎥 Session Video (Click to start at ${videoStartTimeStr})</div>
@@ -906,7 +986,7 @@
         `;
       }
     }
-    // --- END NEW: Video Player Functions ---
+    // --- END Video Player Functions ---
 
 
     // --- Chart & Tooltip Interaction ---
@@ -970,19 +1050,8 @@
           }
         });
 
-        if (closestPoint && player && typeof player.seekTo === 'function') {
-          const lapNumber = closestPoint.lapNumber;
-          const lapStartTimeObj = lapStartTimes.find(l => l.lapNumber === lapNumber);
-
-          if (lapStartTimeObj) {
-            // Seek to the start of the lap
-            player.seekTo(lapStartTimeObj.videoTime, true);
-            // Manually trigger marker update for instant feedback
-            currentLapMarker.lapNumber = lapNumber;
-            const currentLaps = currentSessionData.laps.filter(l => l.lap !== null && parseTime(l.time) !== null);
-            const existingComparisonDatasets = comparisonDatasets.length > 0 ? comparisonDatasets : [];
-            drawLineChart(currentLaps, existingComparisonDatasets);
-          }
+        if (closestPoint) {
+          seekToLap(closestPoint.lapNumber);
         }
       });
       // END NEW
@@ -1294,7 +1363,7 @@
       // Draw Best Lap Markers for all datasets
       allDatasets.forEach(laps => drawBestLapMarkers(laps));
 
-      // --- NEW: Draw Current Lap Marker ---
+      // --- Draw Current Lap Marker ---
       const currentLapIndex = mainLaps.findIndex(lap => lap.lap === currentLapMarker.lapNumber);
 
       if (currentLapIndex !== -1) {
@@ -1323,7 +1392,7 @@
           currentLapMarker.x = markerX;
         }
       }
-      // --- END NEW ---
+      // --- END Current Lap Marker ---
 
       // X-axis labels (Laps)
       ctx.fillStyle = '#999';
@@ -1410,17 +1479,25 @@
       consistencyEl.textContent = `${consistency.text} (±${stdDev.toFixed(3)}s)`;
       consistencyEl.className = `stat-value small ${consistency.class}`;
 
-      // --- NEW: Calculate lap start times for video sync ---
+      // Calculate lap start times for video sync
       lapStartTimes = calculateLapStartTimes(data.laps, data.video_start_time);
+
+      // --- NEW: Configure Slider ---
+      const slider = document.getElementById('lap-selector-slider');
+      slider.max = validLaps.length;
+      slider.min = 1;
+      slider.value = 1; // Start at lap 1
+
+      // Add event listener to the slider to seek video
+      slider.oninput = function () {
+        seekToLap(parseInt(this.value));
+      };
+      document.getElementById('current-lap-display').textContent = `Current Lap: 1`;
       // --- END NEW ---
 
-      // --- NEW CALL: Pass video_start_time ---
       renderVideoPlayer(data.video_url, data.video_start_time);
-      // --- END NEW CALL ---
 
       drawLineChart(validLaps);
-
-      // NOTE: Social links are now hardcoded in the HTML structure.
     }
 
     async function compareSession() {
