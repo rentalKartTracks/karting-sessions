@@ -403,17 +403,13 @@
      * Converts time string (MM:SS.mmm or SS.mmm) to seconds float for calculations.
      */
     function parseTime(timeStr) {
-      if (!timeStr) return Infinity;
-      timeStr = String(timeStr).trim();
-      const parts = timeStr.split(':');
+      if (timeStr === null || timeStr === undefined || timeStr === "") return 0;
+      if (typeof timeStr === 'number') return timeStr;
+      const parts = timeStr.toString().split(':');
       if (parts.length === 2) {
-        const minutes = parseInt(parts[0]);
-        const seconds = parseFloat(parts[1]);
-        return minutes * 60 + seconds;
+        return (parseInt(parts[0]) || 0) * 60 + (parseFloat(parts[1]) || 0);
       }
-      // Handle raw seconds string (e.g., "55.300s")
-      const seconds = parseFloat(timeStr.replace('s', ''));
-      return isNaN(seconds) ? Infinity : seconds;
+      return parseFloat(timeStr) || 0;
     }
 
     /**
@@ -532,15 +528,26 @@
       window.location.href = `session.html?id=${sessionId}`;
     }
 
-    function sortSessions(sortType) {
-      currentSort = sortType;
+    function sortSessions(criteria) {
+      currentSort = criteria;
+      filteredSessions.sort((a, b) => {
+        let diff = 0;
+        if (criteria === 'date') {
+          diff = new Date(b.session_date) - new Date(a.session_date);
+        } else {
+          // Use numeric pre-computed field if available, fallback to parseTime
+          const timeA = a.fastest_lap_s || parseTime(a.fastest_lap);
+          const timeB = b.fastest_lap_s || parseTime(b.fastest_lap);
+          diff = timeA - timeB;
+        }
+        // Secondary sort: if diff is 0, sort by the other criteria
+        return diff || (new Date(b.session_date) - new Date(a.session_date));
+      });
 
-      if (sortType === 'date') {
-        filteredSessions.sort((a, b) => new Date(b.session_date) - new Date(a.session_date));
-      } else if (sortType === 'fastest') {
-        // Sorting uses the parsed fastest_lap string from the list
-        filteredSessions.sort((a, b) => parseTime(a.fastest_lap) - parseTime(b.fastest_lap));
-      }
+      // UX fix: Update button active states
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.sort === currentSort);
+      });
 
       renderSessions();
     }

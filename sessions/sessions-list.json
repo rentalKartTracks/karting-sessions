@@ -11,8 +11,10 @@
             "session_date": "2025-12-07",
             "kart": "9 Ag",
             "fastest_lap": "00:43.997",
-            "laps_count": 13,
-            "average_lap": "00:45.478"
+            "average_lap": "00:45.478",
+            "fastest_lap_s": 43.997,
+            "average_lap_s": 45.478153846153845,
+            "laps_count": 13
         },
         {
             "id": "4a326eb4-ced0-490b-a4e8-edc211b65437",
@@ -25,8 +27,10 @@
             "session_date": "2025-10-11",
             "kart": "9 Ag",
             "fastest_lap": "00:18.534",
-            "laps_count": 45,
-            "average_lap": "00:19.400"
+            "average_lap": "00:19.400",
+            "fastest_lap_s": 18.534,
+            "average_lap_s": 19.399866666666668,
+            "laps_count": 45
         },
         {
             "id": "9da53414-8e0c-4434-9651-63fe6e46edac",
@@ -39,8 +43,10 @@
             "session_date": "2025-10-11",
             "kart": "9 Ag",
             "fastest_lap": "00:27.118",
-            "laps_count": 29,
-            "average_lap": "00:30.136"
+            "average_lap": "00:30.136",
+            "fastest_lap_s": 27.118,
+            "average_lap_s": 30.136068965517243,
+            "laps_count": 29
         },
         {
             "id": "bba25b2e-9a78-464f-b68e-c29697ddcfb2",
@@ -53,8 +59,10 @@
             "session_date": "2025-10-11",
             "kart": "9 Ag",
             "fastest_lap": "00:26.124",
-            "laps_count": 30,
-            "average_lap": "00:28.265"
+            "average_lap": "00:28.265",
+            "fastest_lap_s": 26.124,
+            "average_lap_s": 28.2647,
+            "laps_count": 30
         },
         {
             "id": "c74839e7-1346-4027-ad80-dd3bc2a631dd",
@@ -67,8 +75,10 @@
             "session_date": "2025-10-11",
             "kart": "9 Ag",
             "fastest_lap": "00:18.050",
-            "laps_count": 45,
-            "average_lap": "00:19.246"
+            "average_lap": "00:19.246",
+            "fastest_lap_s": 18.05,
+            "average_lap_s": 19.246488888888887,
+            "laps_count": 45
         },
         {
             "id": "e61ac480-7e9f-4170-977d-f0bc1694bb98",
@@ -81,8 +91,10 @@
             "session_date": "2025-12-08",
             "kart": "9 Ag",
             "fastest_lap": "00:44.563",
-            "laps_count": 12,
-            "average_lap": "00:45.453"
+            "average_lap": "00:45.453",
+            "fastest_lap_s": 44.563,
+            "average_lap_s": 45.45249999999999,
+            "laps_count": 12
         }
     ]
 }

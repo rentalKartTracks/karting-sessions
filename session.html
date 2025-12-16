@@ -723,12 +723,11 @@
 
     // --- Utility Functions ---
     function parseTime(timeStr) {
-      if (!timeStr) return 0;
+      if (timeStr === null || timeStr === undefined || timeStr === "") return 0;
+      if (typeof timeStr === 'number') return timeStr;
       const parts = timeStr.toString().split(':');
       if (parts.length === 2) {
-        const minutes = parseInt(parts[0]) || 0;
-        const seconds = parseFloat(parts[1]) || 0;
-        return minutes * 60 + seconds;
+        return (parseInt(parts[0]) || 0) * 60 + (parseFloat(parts[1]) || 0);
       }
       return parseFloat(timeStr) || 0;
     }
