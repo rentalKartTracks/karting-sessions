@@ -744,17 +744,34 @@
     }
 
     function calculateConsistency(lapTimes) {
-      if (lapTimes.length < 2) return 0;
-      const avg = lapTimes.reduce((a, b) => a + b, 0) / lapTimes.length;
-      const variance = lapTimes.reduce((sum, time) => sum + Math.pow(time - avg, 2), 0) / lapTimes.length;
+      if (lapTimes.length < 3) return 0;
+
+      // Sort times
+      const sorted = [...lapTimes].sort((a, b) => a - b);
+
+      // Median
+      const mid = Math.floor(sorted.length / 2);
+      const median = sorted.length % 2
+        ? sorted[mid]
+        : (sorted[mid - 1] + sorted[mid]) / 2;
+
+      // Remove traffic laps (slower than +3%)
+      const filtered = lapTimes.filter(t => t <= median * 1.03);
+
+      if (filtered.length < 2) return 0;
+
+      // Standard deviation on filtered laps
+      const avg = filtered.reduce((a, b) => a + b, 0) / filtered.length;
+      const variance = filtered.reduce((sum, t) =>
+        sum + Math.pow(t - avg, 2), 0) / filtered.length;
+
       return Math.sqrt(variance);
     }
-
     function getConsistencyRating(stdDev) {
-      if (stdDev < 0.3) return { text: 'Excellent', class: 'consistency-excellent' };
-      if (stdDev < 0.6) return { text: 'Good', class: 'consistency-good' };
-      if (stdDev < 1.0) return { text: 'Fair', class: 'consistency-fair' };
-      return { text: 'Variable', class: 'consistency-poor' };
+      if (stdDev < 0.5) return { text: 'Excellent', class: 'consistency-excellent' };
+      if (stdDev < 0.9) return { text: 'Good', class: 'consistency-good' };
+      if (stdDev < 1.4) return { text: 'Fair', class: 'consistency-fair' };
+      return { text: 'Traffic Affected', class: 'consistency-poor' };
     }
 
     // --- Video Player Functions ---
