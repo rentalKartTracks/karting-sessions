@@ -7,7 +7,6 @@
   <title>Karting Session Viewer</title>
   <script src="https://www.youtube.com/iframe_api"></script>
   <style>
-    /* Styling consistent with your dashboard theme */
     * {
       margin: 0;
       padding: 0;
@@ -125,8 +124,9 @@
 
     .line-chart {
       position: relative;
-      height: 300px;
+      height: 350px;
       margin-bottom: 10px;
+      width: 100%;
     }
 
     .chart-canvas {
@@ -134,28 +134,39 @@
       height: 100%;
     }
 
-    .home-button {
-      display: inline-block;
-      padding: 10px 20px;
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      text-decoration: none;
+    .video-responsive {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
       border-radius: 8px;
-      font-weight: bold;
-      transition: all 0.3s;
-      border: 2px solid rgba(255, 255, 255, 0.3);
     }
 
-    .home-button:hover {
-      background: rgba(255, 255, 255, 0.3);
-      border-color: rgba(255, 255, 255, 0.5);
-      transform: translateY(-2px);
+    #youtube-player-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
     }
 
-    .track-link {
-      color: #f44336;
-      text-decoration: none;
-      font-weight: 600;
+    #lap-selector-slider {
+      -webkit-appearance: none;
+      height: 8px;
+      background: #3d3d3d;
+      border-radius: 4px;
+      outline: none;
+      cursor: pointer;
+      flex-grow: 1;
+    }
+
+    #lap-selector-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #f44336;
+      border: 2px solid #fff;
     }
 
     .comparison-container {
@@ -174,16 +185,15 @@
 
     .comparison-input input {
       flex: 1;
-      padding: 10px;
+      padding: 12px;
       background: #1e1e1e;
       border: 2px solid #3d3d3d;
-      color: #e0e0e0;
+      color: #fff;
       border-radius: 8px;
-      font-size: 1em;
     }
 
     .comparison-input button {
-      padding: 10px 20px;
+      padding: 10px 25px;
       background: #f44336;
       color: white;
       border: none;
@@ -192,60 +202,32 @@
       font-weight: bold;
     }
 
-    .autocomplete-list {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 170px;
-      max-height: 200px;
-      overflow-y: auto;
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .comparison-card {
       background: #1e1e1e;
-      border: 2px solid #f44336;
-      border-radius: 0 0 8px 8px;
-      z-index: 10;
+      padding: 20px;
+      border-radius: 8px;
+      border-top: 4px solid #f44336;
+      line-height: 1.6;
     }
 
-    .autocomplete-item {
-      padding: 10px;
-      cursor: pointer;
-      border-bottom: 1px solid #3d3d3d;
-    }
-
-    .autocomplete-item:hover {
-      background: #f44336;
+    .home-button {
+      text-decoration: none;
       color: white;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
     }
 
-    .video-responsive {
-      position: relative;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-    }
-
-    #youtube-player-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    #lap-selector-slider {
-      -webkit-appearance: none;
-      height: 8px;
-      background: #3d3d3d;
-      border-radius: 4px;
-      outline: none;
-      cursor: pointer;
-    }
-
-    #lap-selector-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: #f44336;
+    .track-link {
+      color: #f44336;
+      text-decoration: none;
     }
   </style>
 </head>
@@ -255,7 +237,7 @@
     <div class="header">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <div>
-          <div class="driver-name" id="driver"></div>
+          <div class="driver-name" id="driver">Loading...</div>
           <div id="session-date"></div>
         </div>
         <a href="index.html" class="home-button">🏠 Home</a>
@@ -265,29 +247,28 @@
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-label">Fastest Lap</div>
-        <div class="stat-value fastest-time" id="fastest"></div>
+        <div class="stat-value fastest-time" id="fastest">-</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Average Lap</div>
-        <div class="stat-value small" id="average"></div>
+        <div class="stat-value small" id="average">-</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Consistency</div>
-        <div class="stat-value small" id="consistency"></div>
+        <div class="stat-value small" id="consistency">-</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Track</div>
-        <div class="stat-value" style="font-size: 1.3em;">
-          <a class="track-link" id="track-link" target="_blank"></a>
+        <div class="stat-value" style="font-size: 1.2em;"><a class="track-link" id="track-link" target="_blank">-</a>
         </div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Kart</div>
-        <div class="stat-value" id="kart"></div>
+        <div class="stat-value" id="kart">-</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Total Laps</div>
-        <div class="stat-value" id="total-laps"></div>
+        <div class="stat-label">Laps</div>
+        <div class="stat-value" id="total-laps">-</div>
       </div>
     </div>
 
@@ -295,25 +276,28 @@
 
     <div class="chart-container">
       <div class="chart-title">📈 Lap Time Progression</div>
+
       <div
-        style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
+        style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; gap: 20px;">
         <span id="current-lap-display"
-          style="font-weight: bold; color: #ffd700; font-size: 1.1em; min-width: 130px;">Current Lap: 1</span>
-        <input type="range" id="lap-selector-slider" min="1" max="1" value="1" step="1"
-          style="flex-grow: 1; margin: 0 20px;">
-        <button onclick="seekToLap(parseInt(document.getElementById('lap-selector-slider').value) + 1)"
+          style="font-weight: bold; color: #ffd700; font-size: 1.1em; white-space: nowrap;">Lap: 1</span>
+        <input type="range" id="lap-selector-slider" min="1" value="1" step="1" oninput="handleSliderInput(this.value)">
+        <button onclick="handleSliderInput(parseInt(document.getElementById('lap-selector-slider').value) + 1)"
           style="padding: 8px 15px; background: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Next
           Lap</button>
       </div>
-      <div class="line-chart"><canvas id="lap-chart" class="chart-canvas"></canvas></div>
+
+      <div class="line-chart">
+        <canvas id="lap-chart" class="chart-canvas"></canvas>
+      </div>
     </div>
 
     <div class="comparison-container">
-      <div class="chart-title">🔄 Compare Sessions</div>
+      <div class="chart-title">🔄 Compare with Other Session</div>
       <div class="comparison-input">
-        <input type="text" id="compare-id-input" placeholder="Search for session ID or Driver to compare">
-        <div id="autocomplete-results" class="autocomplete-list" style="display:none;"></div>
-        <button onclick="compareSession()">Compare</button>
+        <input type="text" id="compare-id-input" placeholder="Paste Session ID here (e.g. 4a326eb4...)">
+        <button onclick="addComparison()">Compare</button>
+        <button onclick="location.reload()" style="background: #444;">Reset</button>
       </div>
       <div id="comparison-results" class="comparison-grid"></div>
     </div>
@@ -323,11 +307,14 @@
     let currentSessionData = null;
     let lapStartTimes = [];
     let player;
-    let pendingVideoConfig = null;
+    let updateInterval;
+    let comparisonDatasets = [];
+    const colors = ['#f44336', '#4caf50', '#2196f3', '#ffeb3b', '#9c27b0'];
 
     const params = new URLSearchParams(window.location.search);
     const sessionId = params.get("id");
 
+    // Load Main Session
     fetch(`sessions/${sessionId}.json`)
       .then(r => r.json())
       .then(data => {
@@ -337,32 +324,29 @@
 
     function parseTime(timeStr) {
       if (!timeStr) return 0;
-      const parts = timeStr.toString().split(':');
+      const parts = timeStr.trim().split(':');
       if (parts.length === 2) return parseInt(parts[0]) * 60 + parseFloat(parts[1]);
       return parseFloat(timeStr) || 0;
     }
 
-    function formatTime(seconds) {
-      if (!seconds) return 'N/A';
-      const mins = Math.floor(seconds / 60);
-      const secs = (seconds % 60).toFixed(3);
+    function formatTime(s) {
+      const mins = Math.floor(s / 60);
+      const secs = (s % 60).toFixed(3);
       return mins > 0 ? `${mins}:${secs.padStart(6, '0')}` : `${secs}s`;
     }
 
-    // UPDATED: Traffic-aware consistency logic
+    // Traffic-aware logic
     function calculateConsistency(lapTimes) {
-      if (lapTimes.length < 4) return 0;
-      // Sort and trim slowest 20% (traffic) and the single fastest lap
+      if (lapTimes.length < 3) return 0;
       const sorted = [...lapTimes].sort((a, b) => a - b);
-      const trimmed = sorted.slice(1, Math.floor(sorted.length * 0.8));
+      // Remove top 20% (traffic) and the absolute fastest (outlier)
+      const trimmed = sorted.slice(1, Math.floor(sorted.length * 0.85));
       if (trimmed.length < 2) return 0;
       const avg = trimmed.reduce((a, b) => a + b, 0) / trimmed.length;
-      const variance = trimmed.reduce((sum, t) => sum + Math.pow(t - avg, 2), 0) / trimmed.length;
-      return Math.sqrt(variance);
+      return Math.sqrt(trimmed.reduce((s, t) => s + Math.pow(t - avg, 2), 0) / trimmed.length);
     }
 
-    // UPDATED: Thresholds < 0.5s, < 0.8s, < 1.2s
-    function getConsistencyRating(stdDev) {
+    function getRating(stdDev) {
       if (stdDev < 0.5) return { text: 'Excellent', class: 'consistency-excellent' };
       if (stdDev < 0.8) return { text: 'Good', class: 'consistency-good' };
       if (stdDev < 1.2) return { text: 'Fair', class: 'consistency-fair' };
@@ -372,81 +356,158 @@
     function renderSession(data) {
       const validLaps = data.laps.map(l => parseTime(l.time)).filter(t => t > 0);
       const fastest = Math.min(...validLaps);
-      const average = validLaps.reduce((a, b) => a + b, 0) / validLaps.length;
+      const avg = validLaps.reduce((a, b) => a + b, 0) / validLaps.length;
       const stdDev = calculateConsistency(validLaps);
-      const rating = getConsistencyRating(stdDev);
+      const rating = getRating(stdDev);
 
       document.getElementById('driver').textContent = data.driver;
-      document.getElementById('session-date').textContent = new Date(data.session_date).toLocaleDateString();
+      document.getElementById('session-date').textContent = data.session_date;
       document.getElementById('fastest').textContent = formatTime(fastest);
-      document.getElementById('average').textContent = formatTime(average);
+      document.getElementById('average').textContent = formatTime(avg);
       document.getElementById('consistency').innerHTML = `<span class="${rating.class}">${rating.text} (±${stdDev.toFixed(3)}s)</span>`;
       document.getElementById('kart').textContent = data.kart;
       document.getElementById('total-laps').textContent = data.laps.length;
-
-      const trackLink = document.getElementById('track-link');
-      trackLink.textContent = data.track.name;
-      trackLink.href = data.track.maps_link;
+      document.getElementById('track-link').textContent = data.track.name;
+      document.getElementById('track-link').href = data.track.maps_link;
 
       const slider = document.getElementById('lap-selector-slider');
       slider.max = data.laps.length;
 
-      // Prepare video sync
-      let startTime = parseTime(data.video_start_time || "00:00");
+      // Video Setup
+      let currentTime = parseTime(data.video_start_time || "00:00");
       lapStartTimes = data.laps.map(l => {
-        const start = startTime;
-        startTime += parseTime(l.time);
+        const start = currentTime;
+        currentTime += parseTime(l.time);
         return { lap: l.lap, videoTime: start };
       });
 
-      renderVideoPlayer(data.video_url, data.video_start_time);
-      drawLineChart(data.laps);
+      if (data.video_url && data.video_url !== 'pending') {
+        initVideo(data.video_url, parseTime(data.video_start_time));
+      }
+
+      drawChart();
     }
 
-    function renderVideoPlayer(url, start) {
+    function initVideo(url, start) {
       const container = document.getElementById('video-display-container');
-      if (!url || url === 'pending') return;
-      const videoId = url.includes('v=') ? url.split('v=')[1] : url.split('/').pop();
       container.style.display = 'block';
+      const vId = url.split('v=')[1] || url.split('/').pop();
       container.innerHTML = `<div class="chart-title">🎥 Session Video</div><div class="video-responsive"><div id="youtube-player-container"></div></div>`;
-      pendingVideoConfig = { videoId, startTime: parseTime(start) };
+
+      window.onYouTubeIframeAPIReady = () => {
+        player = new YT.Player('youtube-player-container', {
+          videoId: vId,
+          playerVars: { start: Math.floor(start), autoplay: 0 },
+          events: { 'onStateChange': onPlayerStateChange }
+        });
+      };
       if (window.YT) onYouTubeIframeAPIReady();
     }
 
-    window.onYouTubeIframeAPIReady = () => {
-      if (!pendingVideoConfig) return;
-      player = new YT.Player('youtube-player-container', {
-        videoId: pendingVideoConfig.videoId,
-        playerVars: { start: pendingVideoConfig.startTime, autoplay: 0 }
-      });
-    };
-
-    function seekToLap(num) {
-      const lap = lapStartTimes.find(l => l.lap === num);
-      if (lap && player) player.seekTo(lap.videoTime, true);
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.PLAYING) {
+        updateInterval = setInterval(() => {
+          const time = player.getCurrentTime();
+          const currentLap = [...lapStartTimes].reverse().find(l => time >= l.videoTime);
+          if (currentLap) {
+            document.getElementById('lap-selector-slider').value = currentLap.lap;
+            document.getElementById('current-lap-display').textContent = `Lap: ${currentLap.lap}`;
+            drawChart();
+          }
+        }, 500);
+      } else clearInterval(updateInterval);
     }
 
-    function drawLineChart(laps) {
+    function handleSliderInput(val) {
+      const lapNum = parseInt(val);
+      if (lapNum > lapStartTimes.length) return;
+      document.getElementById('lap-selector-slider').value = lapNum;
+      document.getElementById('current-lap-display').textContent = `Lap: ${lapNum}`;
+      if (player) {
+        const lapData = lapStartTimes.find(l => l.lap === lapNum);
+        player.seekTo(lapData.videoTime, true);
+      }
+      drawChart();
+    }
+
+    function drawChart() {
       const canvas = document.getElementById('lap-chart');
       const ctx = canvas.getContext('2d');
-      const rect = canvas.parentNode.getBoundingClientRect();
-      canvas.width = rect.width;
-      canvas.height = rect.height;
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
 
-      const times = laps.map(l => parseTime(l.time)).filter(t => t > 0);
-      const min = Math.min(...times) * 0.98;
-      const max = Math.max(...times) * 1.02;
+      const allData = [currentSessionData.laps, ...comparisonDatasets];
+      const allTimes = allData.flat().map(l => parseTime(l.time)).filter(t => t > 0);
+      const min = Math.min(...allTimes) * 0.98;
+      const max = Math.max(...allTimes) * 1.02;
+      const maxLaps = Math.max(...allData.map(d => d.length));
 
-      ctx.beginPath();
-      ctx.strokeStyle = '#f44336';
-      ctx.lineWidth = 3;
-      laps.forEach((l, i) => {
-        const x = (i / (laps.length - 1)) * canvas.width;
-        const y = canvas.height - ((parseTime(l.time) - min) / (max - min)) * canvas.height;
-        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      function getX(i) { return (i / (maxLaps - 1)) * rect.width; }
+      function getY(t) { return rect.height - ((parseTime(t) - min) / (max - min)) * rect.height; }
+
+      ctx.clearRect(0, 0, rect.width, rect.height);
+
+      // Grid Lines
+      ctx.strokeStyle = '#444';
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 4; i++) {
+        const y = (rect.height / 4) * i;
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(rect.width, y); ctx.stroke();
+      }
+
+      // Draw Datasets
+      allData.forEach((laps, idx) => {
+        ctx.beginPath();
+        ctx.strokeStyle = colors[idx % colors.length];
+        ctx.lineWidth = idx === 0 ? 4 : 2;
+        laps.forEach((l, i) => {
+          if (i === 0) ctx.moveTo(getX(i), getY(l.time));
+          else ctx.lineTo(getX(i), getY(l.time));
+        });
+        ctx.stroke();
       });
-      ctx.stroke();
+
+      // Current Lap Marker
+      const currentLapIdx = parseInt(document.getElementById('lap-selector-slider').value) - 1;
+      const currentLapTime = currentSessionData.laps[currentLapIdx].time;
+      ctx.fillStyle = '#ffd700';
+      ctx.shadowBlur = 10; ctx.shadowColor = '#ffd700';
+      ctx.beginPath();
+      ctx.arc(getX(currentLapIdx), getY(currentLapTime), 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
     }
+
+    async function addComparison() {
+      const id = document.getElementById('compare-id-input').value.trim();
+      if (!id) return;
+      try {
+        const r = await fetch(`sessions/${id}.json`);
+        const data = await r.json();
+        comparisonDatasets.push(data.laps);
+
+        const validLaps = data.laps.map(l => parseTime(l.time)).filter(t => t > 0);
+        const stdDev = calculateConsistency(validLaps);
+        const rating = getRating(stdDev);
+
+        const card = document.createElement('div');
+        card.className = 'comparison-card';
+        card.style.borderTopColor = colors[comparisonDatasets.length % colors.length];
+        card.innerHTML = `
+          <strong>${data.driver}</strong><br>
+          <small>${data.session_date} | Kart: ${data.kart}</small><hr style="margin:10px 0; border:0; border-top:1px solid #333;">
+          Fastest: ${formatTime(Math.min(...validLaps))}<br>
+          Consistency: <span class="${rating.class}">${rating.text}</span>
+        `;
+        document.getElementById('comparison-results').appendChild(card);
+        drawChart();
+      } catch (e) { alert("Session ID not found"); }
+    }
+
+    window.addEventListener('resize', drawChart);
   </script>
 </body>
 
