@@ -584,6 +584,10 @@
     let activePoint = null;
     let allSessionsList = [];
 
+    if (window.Chart) {
+      Chart.defaults.font.family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+    }
+
     // --- VIDEO SYNC GLOBAL VARIABLES ---
     let player; // YouTube Player object
     let pendingVideoConfig = null;
