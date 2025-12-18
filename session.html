@@ -5,7 +5,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Karting Session Viewer</title>
-  <script src="https://www.youtube.com/iframe_api"></script>
   <style>
     * {
       margin: 0;
@@ -589,6 +588,15 @@
     let player; // YouTube Player object
     let pendingVideoConfig = null;
 
+    function loadYouTubeAPI() {
+      if (window.YT && window.YT.Player) return;
+
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      tag.async = true;
+      document.body.appendChild(tag);
+    }
+
     // NEW: Variable to hold lap start objects {lapNumber, videoTime}
     let lapStartTimes = [];
 
@@ -830,7 +838,26 @@
                 <div id="youtube-player-container"></div>
             </div>
         `;
+        if (videoId) {
+          loadYouTubeAPI();
 
+          videoContainer.style.display = 'block';
+          videoContainer.innerHTML = `
+    <div class="chart-title">🎥 Session Video</div>
+    <div class="video-responsive">
+      <div id="youtube-player-container"></div>
+    </div>
+  `;
+
+          pendingVideoConfig = {
+            videoId: videoId,
+            startTimeSeconds: parseTime(videoStartTime)
+          };
+
+          if (window.YT && window.YT.Player) {
+            window.onYouTubeIframeAPIReady();
+          }
+        }
         pendingVideoConfig = {
           videoId: videoId,
           startTimeSeconds: parseTime(videoStartTime)
