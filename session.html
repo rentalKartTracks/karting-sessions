@@ -635,6 +635,7 @@
         return r.json();
       })
       .then(data => {
+        data.id = sessionId;
         currentSessionData = data;
         renderSession(data);
         compareSession();
