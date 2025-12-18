@@ -561,9 +561,12 @@
           style="font-weight: bold; color: #ffd700; font-size: 1.1em; min-width: 130px;">Current Lap: 1</span>
         <input type="range" id="lap-selector-slider" min="1" max="1" value="1" step="1"
           style="flex-grow: 1; margin: 0 20px;">
-        <button onclick="seekToLap(parseInt(document.getElementById('lap-selector-slider').value) + 1)"
-          style="padding: 8px 15px; background: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Next
-          Lap</button>
+        <button onclick="nextLap()"
+          style="padding: 8px 15px; background: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+          Next Lap
+        </button> style="padding: 8px 15px; background: #f44336; color: white; border: none; border-radius: 4px; cursor:
+        pointer; font-weight: bold;">Next
+        Lap</button>
       </div>
       <div class="line-chart">
         <canvas id="lap-chart" class="chart-canvas"></canvas>
@@ -774,6 +777,7 @@
     }
 
     function calculateConsistency(lapTimes) {
+      const validTimes = lapTimes.filter(t => t > 0 && t < 300); // Ignore 0 or > 5min
       if (lapTimes.length < 3) return 0;
 
       // Sort times
@@ -891,10 +895,19 @@
       }
     }
 
+    function nextLap() {
+      const slider = document.getElementById('lap-selector-slider');
+      const nextVal = parseInt(slider.value) + 1;
+      if (nextVal <= parseInt(slider.max)) {
+        seekToLap(nextVal);
+      }
+    }
+
     function onPlayerReady(event) {
       // Initial sync
       seekToLap(1);
     }
+
 
     function onPlayerStateChange(event) {
       if (event.data === YT.PlayerState.PLAYING) {
