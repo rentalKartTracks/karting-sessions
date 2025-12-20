@@ -530,6 +530,32 @@
             }
         }
 
+        function handleQuickSeek(seconds) {
+            const newTime = currentTime + seconds;
+            const clampedTime = Math.max(0, Math.min(newTime, currentDuration));
+
+            // Update UI immediately for better feedback
+            currentTime = clampedTime;
+            document.getElementById('current-time').textContent = formatTime(currentTime);
+
+            // Update seek bar position
+            const percentage = currentDuration > 0 ? (currentTime / currentDuration) * 100 : 0;
+            const thumb = document.getElementById('seek-thumb');
+            const progress = document.getElementById('seek-progress');
+
+            if (thumb) thumb.style.left = `${percentage}%`;
+            if (progress) progress.style.width = `${percentage}%`;
+
+            // Send the command
+            sendCommand('SEEK', clampedTime);
+
+            // Set isSeeking flag to prevent automatic updates from host for a moment
+            isSeeking = true;
+            setTimeout(() => {
+                isSeeking = false;
+            }, 500);
+        }
+
         function formatTime(seconds) {
             if (!seconds || isNaN(seconds)) return '0:00';
             const mins = Math.floor(seconds / 60);
@@ -591,10 +617,10 @@
                     </div>
                     
                     <div class="quick-actions">
-                        <button class="quick-btn" onclick="sendCommand('SEEK', ${currentTime - 10})">
+                        <button class="quick-btn" onclick="handleQuickSeek(-10)">
                             ⏪ -10s
                         </button>
-                        <button class="quick-btn" onclick="sendCommand('SEEK', ${currentTime + 10})">
+                        <button class="quick-btn" onclick="handleQuickSeek(10)">
                             +10s ⏩
                         </button>
                     </div>
@@ -642,7 +668,7 @@
                 thumb.style.left = `${percentage * 100}%`;
                 progress.style.width = `${percentage * 100}%`;
 
-                currentTime = percentage * currentDuration;
+                currentTime = Math.max(0, Math.min(percentage * currentDuration, currentDuration));
                 document.getElementById('current-time').textContent = formatTime(currentTime);
             }
 
