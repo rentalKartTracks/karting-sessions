@@ -881,7 +881,6 @@
 
     function startStatsSync() {
       if (statsInterval) return;
-
       statsInterval = setInterval(() => {
         if (connections.length === 0) return;
 
@@ -890,9 +889,15 @@
         const currentTime = player && typeof player.getCurrentTime === 'function' ? player.getCurrentTime() : 0;
         const duration = player && typeof player.getDuration === 'function' ? player.getDuration() : 0;
 
+        // Grab current UI values to send back to the phone
+        const totalLaps = currentSessionData?.laps.length || 0;
+        const fastestLap = document.getElementById('fastest')?.textContent || '--:--';
+
         const stats = {
           type: 'STATS',
           lap: currentLap,
+          totalLaps: totalLaps,
+          fastestLap: fastestLap,
           time: currentLapData?.time || '--:--',
           currentTime: currentTime,
           duration: duration
@@ -903,7 +908,7 @@
             conn.send(stats);
           }
         });
-      }, 500); // Send stats every 500ms
+      }, 500);
     }
 
     function stopStatsSync() {
