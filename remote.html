@@ -9,11 +9,13 @@
     <style>
         :root {
             --primary: #f44336;
+            --secondary: #2196f3;
             --bg: #121212;
             --card-bg: #1e1e1e;
             --text: #ffffff;
             --text-dim: #888888;
             --accent: #ffd700;
+            --success: #4caf50;
         }
 
         * {
@@ -30,189 +32,315 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            padding: 15px;
+            padding: 12px;
             overflow-x: hidden;
             touch-action: manipulation;
         }
 
-        /* Wi-Fi Info Message */
-        .wifi-banner {
-            background: rgba(255, 193, 7, 0.15);
-            border: 1px solid #ffc107;
-            border-radius: 8px;
-            padding: 12px;
-            font-size: 0.85em;
-            text-align: center;
+        /* Connection Status Banner */
+        .connection-banner {
+            background: rgba(33, 150, 243, 0.15);
+            border: 1px solid var(--secondary);
+            border-radius: 12px;
+            padding: 14px;
             margin-bottom: 15px;
-            color: #ffc107;
-            line-height: 1.4;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
         }
 
+        .connection-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .connection-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary);
+            animation: pulse 2s infinite;
+        }
+
+        .connected .connection-dot {
+            background: var(--success);
+            animation: none;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .connection-text {
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .connection-text strong {
+            color: var(--secondary);
+        }
+
+        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            padding: 0 5px;
         }
 
-        .status-badge {
+        .header h1 {
+            font-size: 1.6em;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .status-indicator {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             background: rgba(0, 0, 0, 0.3);
-            padding: 6px 12px;
+            padding: 8px 16px;
             border-radius: 20px;
-            font-size: 0.8em;
+            font-size: 0.85em;
             font-weight: 600;
         }
 
         .status-dot {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background: var(--primary);
         }
 
         .connected .status-dot {
-            background: #4caf50;
+            background: var(--success);
         }
 
-        /* Stats Grid */
+        /* Stats Grid - Mobile Optimized */
         .stats-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(2, 1fr);
             gap: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 380px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .stat-card {
             background: var(--card-bg);
-            padding: 15px;
-            border-radius: 12px;
-            border-bottom: 3px solid var(--primary);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            padding: 18px 15px;
+            border-radius: 14px;
+            border-left: 4px solid var(--primary);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:active {
+            transform: scale(0.98);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
         }
 
         .stat-label {
-            font-size: 0.7em;
+            font-size: 0.75em;
             color: var(--text-dim);
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            font-weight: 600;
         }
 
         .stat-value {
-            font-size: 1.4em;
+            font-size: 1.6em;
             font-weight: 800;
-            margin-top: 4px;
+            line-height: 1.2;
+        }
+
+        .stat-value.accent {
+            color: var(--accent);
         }
 
         /* Control Sections */
-        .control-group {
+        .control-section {
             background: var(--card-bg);
-            padding: 20px;
-            border-radius: 16px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            padding: 22px 18px;
+            border-radius: 18px;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
         }
 
         .section-title {
-            font-size: 0.8em;
+            font-size: 0.85em;
             color: var(--text-dim);
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             text-transform: uppercase;
+            letter-spacing: 1px;
             text-align: center;
+            font-weight: 600;
         }
 
-        .nav-buttons {
+        /* Playback Controls - Better for Thumbs */
+        .playback-controls {
             display: flex;
-            gap: 12px;
+            gap: 15px;
             justify-content: center;
+            margin-bottom: 5px;
         }
 
-        .btn {
-            background: #333;
+        .control-btn {
+            background: #2a2a2a;
             border: none;
             color: white;
-            padding: 18px;
-            border-radius: 12px;
-            font-size: 1em;
+            padding: 22px;
+            border-radius: 16px;
+            font-size: 1.1em;
             font-weight: bold;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            transition: transform 0.1s, background 0.2s;
+            transition: all 0.15s;
             flex: 1;
+            min-height: 80px;
+            touch-action: manipulation;
         }
 
-        .btn:active {
-            transform: scale(0.95);
-            background: #444;
+        .control-btn:active {
+            transform: scale(0.92);
+            background: #3a3a3a;
         }
 
-        .btn-primary {
+        .control-btn.primary {
             background: var(--primary);
-            flex: 1.5;
+            flex: 1.8;
         }
 
-        .btn-primary:active {
+        .control-btn.primary:active {
             background: #d32f2f;
         }
 
+        .control-btn.secondary {
+            background: #2a2a2a;
+            flex: 1;
+        }
+
         .btn-icon {
-            font-size: 1.4em;
+            font-size: 1.8em;
+            line-height: 1;
         }
 
-        /* Slider */
-        .slider-box {
-            margin-top: 5px;
+        .btn-label {
+            font-size: 0.8em;
+            opacity: 0.9;
+            font-weight: 500;
         }
 
-        input[type=range] {
-            width: 100%;
-            height: 44px;
-            /* Large touch area */
-            background: transparent;
-            -webkit-appearance: none;
-        }
-
-        input[type=range]::-webkit-slider-runnable-track {
-            height: 8px;
-            background: #3d3d3d;
-            border-radius: 4px;
-        }
-
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 30px;
-            width: 30px;
-            border-radius: 50%;
-            background: var(--primary);
-            margin-top: -11px;
-            box-shadow: 0 0 10px rgba(244, 67, 54, 0.4);
+        /* Seek Slider - Better for Thumbs */
+        .seek-control {
+            margin-top: 10px;
         }
 
         .time-display {
-            text-align: center;
-            font-weight: bold;
-            font-size: 1.1em;
-            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 0 5px;
         }
 
+        .current-time,
+        .total-time {
+            font-size: 1.1em;
+            font-weight: 700;
+            min-width: 60px;
+        }
+
+        .current-time {
+            color: var(--primary);
+        }
+
+        .total-time {
+            color: var(--text-dim);
+            text-align: right;
+        }
+
+        .seek-bar-container {
+            position: relative;
+            padding: 15px 0;
+        }
+
+        .seek-track {
+            width: 100%;
+            height: 8px;
+            background: #3d3d3d;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .seek-progress {
+            position: absolute;
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .seek-thumb {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 36px;
+            height: 36px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.4);
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.15s;
+        }
+
+        .seek-thumb:active {
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+
+        /* Loading Screen */
         .loading-screen {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 20px;
+            gap: 25px;
+            padding: 40px 20px;
+            text-align: center;
         }
 
         .spinner {
-            width: 45px;
-            height: 45px;
-            border: 4px solid #333;
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
             border-top-color: var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
@@ -223,60 +351,209 @@
                 transform: rotate(360deg);
             }
         }
+
+        .loading-text {
+            font-size: 1.1em;
+            color: var(--text-dim);
+            font-weight: 500;
+        }
+
+        /* Bottom Safe Area for Notches */
+        .bottom-safe-area {
+            height: env(safe-area-inset-bottom, 20px);
+            min-height: 20px;
+        }
+
+        /* Error State */
+        .error-state {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+            gap: 20px;
+        }
+
+        .error-icon {
+            font-size: 3em;
+            color: var(--primary);
+        }
+
+        .error-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .error-message {
+            font-size: 1em;
+            color: var(--text-dim);
+            line-height: 1.4;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .quick-btn {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 0.9em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.15s;
+        }
+
+        .quick-btn:active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(0.96);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-height: 700px) {
+            .stats-grid {
+                margin-bottom: 15px;
+            }
+
+            .control-section {
+                padding: 18px 15px;
+                margin-bottom: 15px;
+            }
+
+            .control-btn {
+                padding: 18px;
+                min-height: 70px;
+            }
+
+            .btn-icon {
+                font-size: 1.6em;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 15px 12px;
+            }
+
+            .stat-value {
+                font-size: 1.4em;
+            }
+        }
     </style>
 </head>
 
 <body id="body">
-    <div class="wifi-banner">
-        ⚠️ <strong>Same Wi-Fi Required</strong><br>
-        Ensure this phone and the TV are on the same Wi-Fi network for a direct connection.
-    </div>
-
-    <div class="header">
-        <h2 style="font-size: 1.4em;">Kart Remote</h2>
-        <div class="status-badge">
-            <div class="status-dot"></div>
-            <span id="status">Connecting...</span>
+    <!-- Connection Banner -->
+    <div class="connection-banner" id="connection-banner">
+        <div class="connection-info">
+            <div class="connection-dot" id="connection-dot"></div>
+            <div class="connection-text">
+                <strong>Same Wi-Fi Required</strong><br>
+                Phone & TV must be on the same network
+            </div>
         </div>
     </div>
 
+    <!-- Main Content -->
     <div id="content-area">
         <div class="loading-screen">
             <div class="spinner"></div>
-            <p>Linking to TV Session...</p>
+            <p class="loading-text">Connecting to Session...</p>
         </div>
     </div>
+
+    <!-- Bottom Safe Area -->
+    <div class="bottom-safe-area"></div>
 
     <script>
         const params = new URLSearchParams(window.location.search);
         const hostId = params.get('host');
         let peer = null;
         let conn = null;
-        let isTouching = false;
+        let isSeeking = false;
         let currentDuration = 0;
+        let currentTime = 0;
+        let seekProgress = 0;
+
+        // Initialize
+        function init() {
+            if (!hostId) {
+                showError('No Connection ID', 'Please scan the QR code again to connect.');
+                return;
+            }
+
+            setupPeerConnection();
+            setupTouchEvents();
+        }
+
+        function showError(title, message) {
+            document.getElementById('content-area').innerHTML = `
+                <div class="error-state">
+                    <div class="error-icon">⚠️</div>
+                    <div class="error-title">${title}</div>
+                    <div class="error-message">${message}</div>
+                    <button class="quick-btn" onclick="location.reload()">
+                        🔄 Retry
+                    </button>
+                </div>
+            `;
+        }
 
         function hapticFeedback() {
-            if (navigator.vibrate) navigator.vibrate(15);
+            if (navigator.vibrate) {
+                navigator.vibrate([10, 5, 10]);
+            }
         }
 
         function sendCommand(type, value = null) {
             hapticFeedback();
             if (conn && conn.open) {
                 conn.send({ type, value });
+                console.log(`Sent: ${type}`, value);
             }
         }
 
         function formatTime(seconds) {
             if (!seconds || isNaN(seconds)) return '0:00';
-            const m = Math.floor(seconds / 60);
-            const s = Math.floor(seconds % 60);
-            return `${m}:${s.toString().padStart(2, '0')}`;
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
         }
 
-        function showConnected() {
+        function showConnectedUI() {
             document.getElementById('body').classList.add('connected');
-            document.getElementById('status').textContent = 'Live Sync';
+            document.getElementById('connection-banner').classList.add('connected');
+            document.getElementById('connection-dot').style.background = '#4caf50';
+
+            const connectionText = document.querySelector('.connection-text');
+            connectionText.innerHTML = `<strong>Connected</strong><br>Controlling session playback`;
+
             document.getElementById('content-area').innerHTML = `
+                <div class="header">
+                    <h1>Kart Remote</h1>
+                    <div class="status-indicator">
+                        <div class="status-dot"></div>
+                        <span>Live</span>
+                    </div>
+                </div>
+
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-label">Current Lap</div>
@@ -292,122 +569,223 @@
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Fastest</div>
-                        <div id="fastest-lap-time" class="stat-value" style="color:var(--accent)">--:--</div>
+                        <div id="fastest-lap-time" class="stat-value accent">--:--</div>
                     </div>
                 </div>
 
-                <div class="control-group">
+                <div class="control-section">
                     <div class="section-title">Playback Control</div>
-                    <div class="nav-buttons">
-                        <button class="btn" onclick="sendCommand('PREV_LAP')">
+                    <div class="playback-controls">
+                        <button class="control-btn secondary" onclick="sendCommand('PREV_LAP')">
                             <span class="btn-icon">⏮️</span>
+                            <span class="btn-label">Prev Lap</span>
                         </button>
-                        <button id="play-pause-btn" class="btn btn-primary" onclick="sendCommand('PLAY_PAUSE')">
+                        <button id="play-pause-btn" class="control-btn primary" onclick="sendCommand('PLAY_PAUSE')">
                             <span class="btn-icon" id="play-icon">⏸️</span>
+                            <span class="btn-label" id="play-label">Pause</span>
                         </button>
-                        <button class="btn" onclick="sendCommand('NEXT_LAP')">
+                        <button class="control-btn secondary" onclick="sendCommand('NEXT_LAP')">
                             <span class="btn-icon">⏭️</span>
+                            <span class="btn-label">Next Lap</span>
+                        </button>
+                    </div>
+                    
+                    <div class="quick-actions">
+                        <button class="quick-btn" onclick="sendCommand('SEEK', ${currentTime - 10})">
+                            ⏪ -10s
+                        </button>
+                        <button class="quick-btn" onclick="sendCommand('SEEK', ${currentTime + 10})">
+                            +10s ⏩
                         </button>
                     </div>
                 </div>
 
-                <div class="control-group">
-                    <div class="section-title">Seek Position</div>
-                    <div class="slider-box">
-                        <div id="time-display" class="time-display">0:00 / 0:00</div>
-                        <input type="range" id="seek-slider" min="0" max="1000" value="0" 
-                            ontouchstart="isTouching=true" 
-                            ontouchend="isTouching=false; handleSeekEnd()"
-                            oninput="handleSeekInput()">
+                <div class="control-section">
+                    <div class="section-title">Video Position</div>
+                    <div class="seek-control">
+                        <div class="time-display">
+                            <div id="current-time" class="current-time">0:00</div>
+                            <div id="total-time" class="total-time">0:00</div>
+                        </div>
+                        <div class="seek-bar-container" id="seek-container">
+                            <div class="seek-track">
+                                <div class="seek-progress" id="seek-progress"></div>
+                            </div>
+                            <div class="seek-thumb" id="seek-thumb"></div>
+                        </div>
                     </div>
                 </div>
             `;
+
+            setupSeekControls();
         }
 
-        function handleSeekInput() {
-            if (!isTouching) return;
+        function setupSeekControls() {
+            const container = document.getElementById('seek-container');
+            const thumb = document.getElementById('seek-thumb');
+            const progress = document.getElementById('seek-progress');
 
-            const slider = document.getElementById('seek-slider');
-            if (!slider || currentDuration === 0) return;
+            if (!container || !thumb || !progress) return;
 
-            // Update display while dragging
-            const currentTime = (slider.value / 1000) * currentDuration;
-            const timeDisplay = document.getElementById('time-display');
-            if (timeDisplay) {
-                timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(currentDuration)}`;
+            let isDragging = false;
+
+            function updateSeekPosition(clientX) {
+                if (!container || !thumb || !progress || currentDuration === 0) return;
+
+                const rect = container.getBoundingClientRect();
+                let x = clientX - rect.left;
+                x = Math.max(0, Math.min(x, rect.width));
+
+                const percentage = x / rect.width;
+                seekProgress = percentage;
+
+                thumb.style.left = `${percentage * 100}%`;
+                progress.style.width = `${percentage * 100}%`;
+
+                currentTime = percentage * currentDuration;
+                document.getElementById('current-time').textContent = formatTime(currentTime);
             }
-        }
 
-        function handleSeekEnd() {
-            const slider = document.getElementById('seek-slider');
-            if (!slider || currentDuration === 0) return;
+            function endSeek() {
+                if (!isDragging) return;
+                isDragging = false;
+                isSeeking = false;
 
-            // Calculate actual time in seconds
-            const seekTime = (slider.value / 1000) * currentDuration;
-            sendCommand('SEEK', seekTime);
-        }
-
-        function initConnection() {
-            if (!hostId) {
-                document.getElementById('content-area').innerHTML = '<p style="text-align:center; padding:20px;">Error: No Host ID. Please rescan the QR code.</p>';
-                return;
+                // Send seek command
+                sendCommand('SEEK', currentTime);
             }
 
+            // Mouse events
+            container.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                isDragging = true;
+                isSeeking = true;
+                updateSeekPosition(e.clientX);
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                updateSeekPosition(e.clientX);
+            });
+
+            document.addEventListener('mouseup', endSeek);
+
+            // Touch events
+            container.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                isDragging = true;
+                isSeeking = true;
+                updateSeekPosition(e.touches[0].clientX);
+            });
+
+            document.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                updateSeekPosition(e.touches[0].clientX);
+            });
+
+            document.addEventListener('touchend', endSeek);
+        }
+
+        function setupTouchEvents() {
+            // Prevent text selection on long press
+            document.addEventListener('selectstart', (e) => e.preventDefault());
+
+            // Prevent context menu on long press
+            document.addEventListener('contextmenu', (e) => e.preventDefault());
+        }
+
+        function setupPeerConnection() {
             peer = new Peer();
 
             peer.on('open', () => {
-                conn = peer.connect(hostId, { reliable: true });
-                setupConnListeners();
+                console.log('Peer connected, connecting to host:', hostId);
+                conn = peer.connect(hostId, {
+                    reliable: true,
+                    serialization: 'json'
+                });
+
+                setupConnectionListeners();
             });
 
             peer.on('error', (err) => {
-                document.getElementById('status').textContent = 'Error';
                 console.error('Peer error:', err);
+                showError('Connection Error', 'Failed to establish connection. Please try again.');
             });
         }
 
-        function setupConnListeners() {
-            conn.on('open', () => showConnected());
+        function setupConnectionListeners() {
+            conn.on('open', () => {
+                console.log('Connected to host');
+                showConnectedUI();
+            });
 
             conn.on('data', (data) => {
                 if (data.type === 'STATS') {
-                    // Update Stat Values
-                    const curLap = document.getElementById('cur-lap');
-                    const totalLaps = document.getElementById('total-laps');
-                    const lastLap = document.getElementById('last-lap-time');
-                    const fastLap = document.getElementById('fastest-lap-time');
-                    const playIcon = document.getElementById('play-icon');
-
-                    if (curLap) curLap.textContent = data.lap;
-                    if (totalLaps) totalLaps.textContent = data.totalLaps;
-                    if (lastLap) lastLap.textContent = data.time || '--:--';
-                    if (fastLap) fastLap.textContent = data.fastestLap || '--:--';
-
-                    // Update Play/Pause Icon state
-                    if (playIcon) playIcon.textContent = data.isPlaying ? '⏸️' : '▶️';
-
-                    // Update Duration and Slider if user isn't currently dragging it
-                    if (!isTouching) {
-                        const slider = document.getElementById('seek-slider');
-                        const timeDisplay = document.getElementById('time-display');
-                        if (slider && data.duration > 0) {
-                            currentDuration = data.duration;
-                            slider.max = 1000; // Use 0-1000 for better precision
-                            slider.value = (data.currentTime / data.duration) * 1000;
-                            timeDisplay.textContent = `${formatTime(data.currentTime)} / ${formatTime(data.duration)}`;
-                        }
-                    }
+                    updateStats(data);
                 }
             });
 
             conn.on('close', () => {
+                console.log('Connection closed');
                 document.getElementById('body').classList.remove('connected');
-                document.getElementById('status').textContent = 'Disconnected';
-                setTimeout(() => location.reload(), 3000);
+
+                showError('Disconnected', 'Connection to session was lost.');
+
+                setTimeout(() => {
+                    if (!conn || !conn.open) {
+                        location.reload();
+                    }
+                }, 5000);
+            });
+
+            conn.on('error', (err) => {
+                console.error('Connection error:', err);
             });
         }
 
-        initConnection();
+        function updateStats(data) {
+            // Update stat values
+            const curLap = document.getElementById('cur-lap');
+            const totalLaps = document.getElementById('total-laps');
+            const lastLap = document.getElementById('last-lap-time');
+            const fastLap = document.getElementById('fastest-lap-time');
+            const playIcon = document.getElementById('play-icon');
+            const playLabel = document.getElementById('play-label');
+
+            if (curLap) curLap.textContent = data.lap || '--';
+            if (totalLaps) totalLaps.textContent = data.totalLaps || '--';
+            if (lastLap) lastLap.textContent = data.time || '--:--';
+            if (fastLap) fastLap.textContent = data.fastestLap || '--:--';
+
+            // Update play/pause state
+            if (playIcon) {
+                playIcon.textContent = data.isPlaying ? '⏸️' : '▶️';
+            }
+            if (playLabel) {
+                playLabel.textContent = data.isPlaying ? 'Pause' : 'Play';
+            }
+
+            // Update seek controls if not currently seeking
+            if (!isSeeking && data.duration > 0) {
+                currentDuration = data.duration;
+                currentTime = data.currentTime || 0;
+
+                const percentage = currentDuration > 0 ? (currentTime / currentDuration) * 100 : 0;
+                seekProgress = percentage / 100;
+
+                document.getElementById('current-time').textContent = formatTime(currentTime);
+                document.getElementById('total-time').textContent = formatTime(currentDuration);
+
+                const thumb = document.getElementById('seek-thumb');
+                const progress = document.getElementById('seek-progress');
+
+                if (thumb) thumb.style.left = `${percentage}%`;
+                if (progress) progress.style.width = `${percentage}%`;
+            }
+        }
+
+        // Start everything
+        window.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 
