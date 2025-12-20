@@ -253,6 +253,7 @@
         let peer = null;
         let conn = null;
         let isTouching = false;
+        let currentDuration = 0;
 
         function hapticFeedback() {
             if (navigator.vibrate) navigator.vibrate(15);
@@ -314,10 +315,10 @@
                     <div class="section-title">Seek Position</div>
                     <div class="slider-box">
                         <div id="time-display" class="time-display">0:00 / 0:00</div>
-                        <input type="range" id="seek-slider" min="0" max="100" value="0" 
+                        <input type="range" id="seek-slider" min="0" max="1000" value="0" 
                             ontouchstart="isTouching=true" 
-                            ontouchend="isTouching=false; sendCommand('SEEK', this.value)"
-                            onchange="sendCommand('SEEK', this.value)">
+                            ontouchend="isTouching=false; handleSeekEnd()"
+                            oninput="handleSeekInput()">
                     </div>
                 </div>
 
@@ -325,6 +326,29 @@
                     <span class="btn-icon">📺</span> Toggle TV Theater Mode
                 </button>
             `;
+        }
+
+        function handleSeekInput() {
+            if (!isTouching) return;
+
+            const slider = document.getElementById('seek-slider');
+            if (!slider || currentDuration === 0) return;
+
+            // Update display while dragging
+            const currentTime = (slider.value / 1000) * currentDuration;
+            const timeDisplay = document.getElementById('time-display');
+            if (timeDisplay) {
+                timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(currentDuration)}`;
+            }
+        }
+
+        function handleSeekEnd() {
+            const slider = document.getElementById('seek-slider');
+            if (!slider || currentDuration === 0) return;
+
+            // Calculate actual time in seconds
+            const seekTime = (slider.value / 1000) * currentDuration;
+            sendCommand('SEEK', seekTime);
         }
 
         function initConnection() {
@@ -366,13 +390,14 @@
                     // Update Play/Pause Icon state
                     if (playIcon) playIcon.textContent = data.isPlaying ? '⏸️' : '▶️';
 
-                    // Update Slider if user isn't currently dragging it
+                    // Update Duration and Slider if user isn't currently dragging it
                     if (!isTouching) {
                         const slider = document.getElementById('seek-slider');
                         const timeDisplay = document.getElementById('time-display');
-                        if (slider) {
-                            slider.max = data.duration;
-                            slider.value = data.currentTime;
+                        if (slider && data.duration > 0) {
+                            currentDuration = data.duration;
+                            slider.max = 1000; // Use 0-1000 for better precision
+                            slider.value = (data.currentTime / data.duration) * 1000;
                             timeDisplay.textContent = `${formatTime(data.currentTime)} / ${formatTime(data.duration)}`;
                         }
                     }
