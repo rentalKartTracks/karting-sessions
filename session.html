@@ -112,7 +112,56 @@
       padding: 15px !important;
     }
 
-    /* Hide QR in PC mode when not needed */
+    /* TV Mode Specific Elements */
+    body.tv-mode .tv-stat {
+      text-align: center;
+      padding: 30px !important;
+      border-left: 6px solid #f44336 !important;
+    }
+
+    body.tv-mode .tv-big-btn {
+      background: #2d2d2d;
+      border: 3px solid #f44336;
+      color: white;
+      padding: 30px 40px;
+      border-radius: 20px;
+      font-size: 1.5em;
+      cursor: pointer;
+      transition: all 0.3s;
+      min-width: 180px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin: 10px;
+    }
+
+    body.tv-mode .tv-big-btn:active {
+      background: #3d3d3d;
+      transform: scale(0.95);
+    }
+
+    body.tv-mode .tv-big-btn span:first-child {
+      font-size: 2.5em;
+    }
+
+    body.tv-mode .tv-controls {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin: 40px 0;
+      flex-wrap: wrap;
+    }
+
+    /* Hide sections in TV mode */
+    body.tv-mode .comparison-container,
+    body.tv-mode .socials,
+    body.tv-mode .detailed-chart {
+      display: none !important;
+    }
+
+    /* Show QR in PC mode when needed */
     body.pc-mode .qr-panel {
       display: none;
     }
@@ -128,69 +177,82 @@
 
     .header {
       background: linear-gradient(135deg, #d32f2f 0%, #f44336 100%);
-      padding: 30px;
+      padding: 25px 30px;
       border-radius: 12px;
       margin-bottom: 30px;
       box-shadow: 0 8px 32px rgba(211, 47, 47, 0.3);
       position: relative;
     }
 
-    /* Mode Switcher */
-    .mode-switcher {
-      position: absolute;
-      top: 20px;
-      right: 20px;
+    /* Header Actions - Improved Layout */
+    .header-actions {
       display: flex;
-      gap: 10px;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .home-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      text-decoration: none;
+      border-radius: 20px;
+      font-weight: bold;
+      transition: all 0.3s;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      min-width: 44px;
+      height: 44px;
+    }
+
+    .home-button:hover {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .home-button span {
+      font-size: 1.2em;
+    }
+
+    /* Mode Switcher - Compact */
+    .mode-switcher {
+      display: flex;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 4px;
+      border-radius: 20px;
     }
 
     .mode-btn {
-      padding: 8px 16px;
-      background: rgba(255, 255, 255, 0.2);
+      padding: 8px 12px;
+      background: transparent;
       color: white;
       border: none;
-      border-radius: 20px;
+      border-radius: 16px;
       cursor: pointer;
       font-weight: bold;
       transition: all 0.3s;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
+      min-width: 44px;
+      height: 36px;
     }
 
     .mode-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.1);
     }
 
     .mode-btn.active {
-      background: rgba(255, 255, 255, 0.4);
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
-    /* Share Button */
-    .share-btn {
-      position: absolute;
-      top: 20px;
-      right: 200px;
-      padding: 8px 16px;
-      background: #2196f3;
-      color: white;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: all 0.3s;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .share-btn:hover {
-      background: #1976d2;
-    }
-
-    .share-btn.copied {
-      background: #4caf50;
+    .mode-btn span {
+      font-size: 1.1em;
     }
 
     .driver-name {
@@ -218,37 +280,20 @@
         grid-template-columns: 1fr;
       }
 
-      .mode-switcher {
-        position: relative;
-        top: 0;
-        right: 0;
-        justify-content: center;
-        margin-top: 15px;
+      .header-content {
+        flex-direction: column;
+        gap: 15px;
       }
 
-      .share-btn {
-        position: relative;
-        top: 0;
-        right: 0;
-        margin-top: 15px;
+      .header-actions {
+        width: 100%;
+        justify-content: space-between;
       }
     }
 
     @media (max-width: 600px) {
       .driver-name {
         font-size: 2em;
-      }
-
-      .header-content {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .home-button {
-        display: block;
-        width: 100%;
-        text-align: center;
-        margin-top: 20px;
       }
 
       .comparison-input {
@@ -264,6 +309,21 @@
       .autocomplete-list {
         left: 0;
         right: 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .mode-btn span {
+        display: none;
+      }
+
+      .mode-btn {
+        padding: 8px;
+        min-width: 36px;
+      }
+
+      .home-button span {
+        font-size: 1em;
       }
     }
 
@@ -327,6 +387,9 @@
       font-size: 1.5em;
       margin-bottom: 20px;
       color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .line-chart {
@@ -338,24 +401,6 @@
     .chart-canvas {
       width: 100%;
       height: 100%;
-    }
-
-    .home-button {
-      display: inline-block;
-      padding: 10px 20px;
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: bold;
-      transition: all 0.3s;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-    }
-
-    .home-button:hover {
-      background: rgba(255, 255, 255, 0.3);
-      border-color: rgba(255, 255, 255, 0.5);
-      transform: translateY(-2px);
     }
 
     .header-content {
@@ -491,6 +536,32 @@
     .comparison-card p {
       margin: 5px 0;
       font-size: 0.9em;
+    }
+
+    /* Share Button - Moved to comparison section */
+    .share-btn {
+      background: #2196f3;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9em;
+      white-space: nowrap;
+    }
+
+    .share-btn:hover {
+      background: #1976d2;
+      transform: translateY(-2px);
+    }
+
+    .share-btn.copied {
+      background: #4caf50;
     }
 
     .legend {
@@ -784,29 +855,28 @@
 <body>
   <div class="container">
     <div class="header">
-      <div class="mode-switcher">
-        <button class="mode-btn active" id="pc-mode-btn" onclick="switchMode('pc')">
-          <span>💻</span> PC Mode
-        </button>
-        <button class="mode-btn" id="tv-mode-btn" onclick="switchMode('tv')">
-          <span>📺</span> TV Mode
-        </button>
-      </div>
-
-      <button class="share-btn" id="share-btn" onclick="shareCompareLink()">
-        <span>🔗</span> Share Compare
-      </button>
-
       <div class="header-content">
         <div class="header-info">
           <div class="driver-name" id="driver"></div>
           <div id="session-date"></div>
         </div>
-        <a href="index.html" class="home-button">🏠 Home</a>
+        <div class="header-actions">
+          <a href="index.html" class="home-button" title="Return to home">
+            <span>🏠</span>
+          </a>
+          <div class="mode-switcher">
+            <button class="mode-btn active" id="pc-mode-btn" onclick="switchMode('pc')" title="PC Mode">
+              <span>💻</span> PC
+            </button>
+            <button class="mode-btn" id="tv-mode-btn" onclick="switchMode('tv')" title="TV Mode">
+              <span>📺</span> TV
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- QR Code Panel - Initially hidden in PC mode -->
+    <!-- QR Code Panel - Hidden in PC mode by default -->
     <div class="qr-panel" id="qr-panel">
       <h3>
         <span class="status-indicator"></span>
@@ -827,7 +897,8 @@
       </div>
     </div>
 
-    <div class="stats-grid">
+    <!-- Stats Grid - Will be replaced in TV mode -->
+    <div class="stats-grid" id="stats-grid">
       <div class="stat-card">
         <div class="stat-label">Fastest Lap</div>
         <div class="stat-value fastest-time" id="fastest"></div>
@@ -859,7 +930,8 @@
     <div id="video-display-container" class="chart-container" style="display:none;">
     </div>
 
-    <div class="chart-container">
+    <!-- Detailed Lap Chart - Hidden in TV mode -->
+    <div class="chart-container detailed-chart">
       <div class="chart-title">📈 Lap Time Progression</div>
       <div
         style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
@@ -878,8 +950,35 @@
       <div id="chart-legend" class="legend"></div>
     </div>
 
+    <!-- TV Mode Controls (hidden by default) -->
+    <div id="tv-controls" style="display: none;">
+      <div class="chart-container">
+        <div class="chart-title">🎮 Remote Controls</div>
+        <div class="tv-controls">
+          <button class="tv-big-btn" onclick="sendCommandToRemote('PREV_LAP')">
+            <span>⏮️</span>
+            Prev Lap
+          </button>
+          <button class="tv-big-btn" onclick="sendCommandToRemote('PLAY_PAUSE')">
+            <span id="play-icon-tv">⏸️</span>
+            Play/Pause
+          </button>
+          <button class="tv-big-btn" onclick="sendCommandToRemote('NEXT_LAP')">
+            <span>⏭️</span>
+            Next Lap
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison Section - Hidden in TV mode -->
     <div class="comparison-container">
-      <div class="chart-title">🔄 Compare Sessions</div>
+      <div class="chart-title">
+        <span>🔄 Compare Sessions</span>
+        <button class="share-btn" id="share-btn" onclick="shareCompareLink()" title="Copy comparison link to clipboard">
+          <span>🔗</span> Share Compare
+        </button>
+      </div>
       <div class="comparison-input">
         <input type="text" id="compare-id-input"
           placeholder="Search for session ID or Driver to compare (e.g., uuid1, uuid2)">
@@ -985,29 +1084,91 @@
       const url = new URL(window.location);
       url.searchParams.set('mode', mode);
       window.history.replaceState({}, '', url);
-
-      // In TV mode, show QR panel
-      if (mode === 'tv') {
-        document.getElementById('qr-panel').style.display = 'block';
-        // Auto-play video in TV mode
-        if (player && typeof player.playVideo === 'function') {
-          setTimeout(() => player.playVideo(), 1000);
-        }
-      }
     }
 
     function applyMode(mode) {
       document.body.className = mode + '-mode';
+      const tvControls = document.getElementById('tv-controls');
+      const qrPanel = document.getElementById('qr-panel');
+      const comparisonSection = document.querySelector('.comparison-container');
+      const socialSection = document.querySelector('.socials');
+      const detailedChart = document.querySelector('.detailed-chart');
+      const statsGrid = document.getElementById('stats-grid');
 
       if (mode === 'tv') {
-        // Show QR panel in TV mode
-        document.getElementById('qr-panel').style.display = 'block';
-        // Show toast notification
-        showToast('TV Mode: Larger text for distant viewing');
-      } else {
-        // Hide QR panel in PC mode by default
-        document.getElementById('qr-panel').style.display = 'none';
+        // Show TV mode elements
+        if (tvControls) tvControls.style.display = 'block';
+        if (qrPanel) qrPanel.style.display = 'block';
+
+        // Hide complex sections
+        if (comparisonSection) comparisonSection.style.display = 'none';
+        if (socialSection) socialSection.style.display = 'none';
+        if (detailedChart) detailedChart.style.display = 'none';
+
+        // Simplify stats grid for TV mode
+        if (statsGrid && currentSessionData) {
+          const fastestTime = document.getElementById('fastest')?.textContent || '--:--';
+          const currentLap = currentLapMarker.lapNumber;
+          const delta = calculateCurrentDelta();
+
+          statsGrid.innerHTML = `
+            <div class="stat-card tv-stat">
+              <div class="stat-label">Fastest Lap</div>
+              <div class="stat-value fastest-time">${fastestTime}</div>
+            </div>
+            <div class="stat-card tv-stat">
+              <div class="stat-label">Current Lap</div>
+              <div class="stat-value">${currentLap}</div>
+            </div>
+            <div class="stat-card tv-stat">
+              <div class="stat-label">Delta</div>
+              <div class="stat-value" id="tv-delta" style="color:${delta >= 0 ? '#f44336' : '#4caf50'}">
+                ${delta >= 0 ? '+' : ''}${delta.toFixed(3)}s
+              </div>
+            </div>
+          `;
+        }
+
+        // Auto-play video in TV mode
+        if (player && typeof player.playVideo === 'function') {
+          setTimeout(() => player.playVideo(), 1000);
+        }
+
+        showToast('TV Mode: Simplified view for distant viewing');
+
+      } else { // PC Mode
+        // Show PC mode elements
+        if (tvControls) tvControls.style.display = 'none';
+        if (qrPanel) qrPanel.style.display = 'none';
+
+        // Show all sections
+        if (comparisonSection) comparisonSection.style.display = 'block';
+        if (socialSection) socialSection.style.display = 'block';
+        if (detailedChart) detailedChart.style.display = 'block';
+
+        // Restore original stats grid
+        if (statsGrid && currentSessionData) {
+          renderStatsGrid(currentSessionData);
+        }
       }
+
+      updateModeButtons();
+    }
+
+    function calculateCurrentDelta() {
+      if (!currentSessionData || !currentSessionData.laps) return 0;
+
+      const currentLap = currentLapMarker.lapNumber;
+      const currentLapData = currentSessionData.laps[currentLap - 1];
+
+      if (!currentLapData || !currentLapData.time) return 0;
+
+      const validLaps = currentSessionData.laps.filter(l => l.lap !== null && parseTime(l.time) !== null);
+      const lapTimes = validLaps.map(l => parseTime(l.time));
+      const fastestTime = lapTimes.length > 0 ? Math.min(...lapTimes) : 0;
+      const currentTime = parseTime(currentLapData.time);
+
+      return currentTime - fastestTime;
     }
 
     function updateModeButtons() {
@@ -1032,6 +1193,11 @@
         shareUrl += `&compare_id=${encodeURIComponent(compareIds)}`;
       }
 
+      // Add mode parameter if in TV mode
+      if (currentMode === 'tv') {
+        shareUrl += '&mode=tv';
+      }
+
       // Copy to clipboard
       navigator.clipboard.writeText(shareUrl).then(() => {
         const shareBtn = document.getElementById('share-btn');
@@ -1049,6 +1215,39 @@
         showToast('Failed to copy link');
         console.error('Copy failed:', err);
       });
+    }
+
+    function sendCommandToRemote(command) {
+      // Send command to connected remotes
+      connections.forEach(conn => {
+        if (conn.open) {
+          conn.send({ type: command });
+        }
+      });
+
+      // Also execute locally for TV mode
+      switch (command) {
+        case 'PREV_LAP':
+          const slider = document.getElementById('lap-selector-slider');
+          const prevVal = parseInt(slider.value) - 1;
+          if (prevVal >= 1) seekToLap(prevVal);
+          break;
+        case 'NEXT_LAP':
+          nextLap();
+          break;
+        case 'PLAY_PAUSE':
+          if (player && typeof player.getPlayerState === 'function') {
+            const state = player.getPlayerState();
+            if (state === YT.PlayerState.PLAYING) {
+              player.pauseVideo();
+              document.getElementById('play-icon-tv').textContent = '▶️';
+            } else {
+              player.playVideo();
+              document.getElementById('play-icon-tv').textContent = '⏸️';
+            }
+          }
+          break;
+      }
     }
 
     // --- Initialize PeerJS ---
@@ -1086,11 +1285,10 @@
 
           switch (data.type) {
             case 'NEXT_LAP':
-              nextLap(); // Calls your existing function
+              nextLap();
               break;
 
             case 'PREV_LAP':
-              // Logic to go back one lap
               const slider = document.getElementById('lap-selector-slider');
               const prevVal = parseInt(slider.value) - 1;
               if (prevVal >= 1) seekToLap(prevVal);
@@ -1108,7 +1306,6 @@
               break;
 
             case 'SEEK':
-              // Syncs video to the slider position on your phone
               if (player && typeof player.seekTo === 'function') {
                 player.seekTo(parseFloat(data.value), true);
               }
@@ -1195,6 +1392,16 @@
             conn.send(stats);
           }
         });
+
+        // Update TV mode delta display
+        if (currentMode === 'tv') {
+          const delta = calculateCurrentDelta();
+          const deltaEl = document.getElementById('tv-delta');
+          if (deltaEl) {
+            deltaEl.textContent = `${delta >= 0 ? '+' : ''}${delta.toFixed(3)}s`;
+            deltaEl.style.color = delta >= 0 ? '#f44336' : '#4caf50';
+          }
+        }
       }, 500);
     }
 
@@ -1466,8 +1673,16 @@
     function onPlayerStateChange(event) {
       if (event.data === YT.PlayerState.PLAYING) {
         startChartUpdateInterval();
+        // Update TV play icon
+        if (currentMode === 'tv') {
+          document.getElementById('play-icon-tv').textContent = '⏸️';
+        }
       } else {
         if (updateChartInterval) clearInterval(updateChartInterval);
+        // Update TV play icon
+        if (currentMode === 'tv') {
+          document.getElementById('play-icon-tv').textContent = '▶️';
+        }
       }
     }
 
@@ -1863,8 +2078,10 @@
       setupTooltipInteractions();
     }
 
-    function renderSession(data) {
-      document.getElementById('driver').textContent = data.driver;
+    function renderStatsGrid(data) {
+      const statsGrid = document.getElementById('stats-grid');
+      if (!statsGrid) return;
+
       const validLaps = data.laps.filter(lap => lap.lap !== null && parseTime(lap.time) !== null);
       const lapTimes = validLaps.map(lap => parseTime(lap.time)).filter(time => !isNaN(time));
       const fastestTime = lapTimes.length > 0 ? Math.min(...lapTimes) : 0;
@@ -1872,25 +2089,51 @@
 
       validLaps.forEach((lap, i) => { lap.best = (i === fastestLapIndex); });
 
-      document.getElementById('fastest').textContent = formatTime(fastestTime);
-      document.getElementById('track-link').textContent = data.track.name;
-      document.getElementById('track-link').href = data.track.maps_link;
-      document.getElementById('kart').textContent = data.kart;
+      const avgTime = lapTimes.length > 0 ? lapTimes.reduce((a, b) => a + b, 0) / lapTimes.length : 0;
+      const stdDev = calculateConsistency(lapTimes);
+      const consistency = getConsistencyRating(stdDev);
+
+      statsGrid.innerHTML = `
+        <div class="stat-card">
+          <div class="stat-label">Fastest Lap</div>
+          <div class="stat-value fastest-time">${formatTime(fastestTime)}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Average Lap</div>
+          <div class="stat-value small">${formatTime(avgTime)}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Consistency</div>
+          <div class="stat-value small ${consistency.class}">${consistency.text} (±${stdDev.toFixed(3)}s)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Track</div>
+          <div class="stat-value" style="font-size: 1.3em;">
+            <a class="track-link" href="${data.track.maps_link}" target="_blank">${data.track.name}</a>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Kart</div>
+          <div class="stat-value">${data.kart}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Laps</div>
+          <div class="stat-value">${validLaps.length}</div>
+        </div>
+      `;
+    }
+
+    function renderSession(data) {
+      document.getElementById('driver').textContent = data.driver;
       document.getElementById('session-date').textContent = new Date(data.session_date).toLocaleDateString('en-US', {
         year: 'numeric', month: 'long', day: 'numeric'
       });
-      document.getElementById('total-laps').textContent = validLaps.length;
-      const avgTime = lapTimes.length > 0 ? lapTimes.reduce((a, b) => a + b, 0) / lapTimes.length : 0;
-      document.getElementById('average').textContent = formatTime(avgTime);
-      const stdDev = calculateConsistency(lapTimes);
-      const consistency = getConsistencyRating(stdDev);
-      const consistencyEl = document.getElementById('consistency');
-      consistencyEl.textContent = `${consistency.text} (±${stdDev.toFixed(3)}s)`;
-      consistencyEl.className = `stat-value small ${consistency.class}`;
 
+      renderStatsGrid(data);
       renderVideoPlayer(data.video_url, data.video_start_time);
 
       const slider = document.getElementById('lap-selector-slider');
+      const validLaps = data.laps.filter(lap => lap.lap !== null && parseTime(lap.time) !== null);
       slider.max = validLaps.length;
       slider.value = 1;
       slider.oninput = function () { seekToLap(parseInt(this.value)); };
