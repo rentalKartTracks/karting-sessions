@@ -24,6 +24,22 @@
 
   <title>Karting Session Viewer</title>
 
+  <!-- Preconnect for external domains -->
+  <link rel="preconnect" href="https://www.youtube.com">
+  <link rel="preconnect" href="https://s.ytimg.com">
+  <link rel="preconnect" href="https://www.google.com">
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+  <!-- Font display optimization -->
+  <style>
+    @font-face {
+      font-family: 'Segoe UI Fallback';
+      src: local('Arial'), local('Helvetica');
+      font-display: swap;
+    }
+  </style>
+
   <!-- PeerJS for P2P connection -->
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 
@@ -38,7 +54,7 @@
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Segoe UI Fallback';
       background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
       color: #e0e0e0;
       min-height: 100vh;
@@ -1079,7 +1095,7 @@
     let currentVideoQuality = 'auto';
 
     if (window.Chart) {
-      Chart.defaults.font.family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+      Chart.defaults.font.family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Segoe UI Fallback'";
     }
 
     // --- VIDEO SYNC GLOBAL VARIABLES ---
@@ -1130,8 +1146,13 @@
       const params = new URLSearchParams(window.location.search);
       const urlMode = params.get('mode');
 
+      // Check localStorage for previously selected mode
+      const savedMode = localStorage.getItem('kartingViewerMode');
+
       if (urlMode === 'tv' || urlMode === 'pc') {
         currentMode = urlMode;
+      } else if (savedMode && (savedMode === 'tv' || savedMode === 'pc')) {
+        currentMode = savedMode;
       } else {
         // Auto-detect: TV if large screen and likely far viewing
         const isLikelyTV = window.innerWidth >= 1920 && window.innerHeight >= 1080;
@@ -1147,6 +1168,9 @@
       applyMode(mode);
       updateModeButtons();
 
+      // Save to localStorage
+      localStorage.setItem('kartingViewerMode', mode);
+
       // Update URL without reloading
       const url = new URL(window.location);
       url.searchParams.set('mode', mode);
@@ -1161,6 +1185,18 @@
       const socialSection = document.querySelector('.socials');
       const detailedChart = document.querySelector('.detailed-chart');
       const statsGrid = document.getElementById('stats-grid');
+
+      // Reset all display properties first
+      if (tvControls) tvControls.style.display = 'none';
+      if (qrPanel) qrPanel.style.display = 'none';
+      if (comparisonSection) comparisonSection.style.display = 'block';
+      if (socialSection) socialSection.style.display = 'block';
+      if (detailedChart) detailedChart.style.display = 'block';
+
+      // Restore original stats grid if needed
+      if (statsGrid && currentSessionData && mode === 'pc') {
+        renderStatsGrid(currentSessionData);
+      }
 
       if (mode === 'tv') {
         // Show TV mode elements
@@ -1199,21 +1235,6 @@
         // Auto-play video in TV mode
         if (player && typeof player.playVideo === 'function') {
           setTimeout(() => player.playVideo(), 1000);
-        }
-
-      } else { // PC Mode
-        // Show PC mode elements
-        if (tvControls) tvControls.style.display = 'none';
-        if (qrPanel) qrPanel.style.display = 'none';
-
-        // Show all sections
-        if (comparisonSection) comparisonSection.style.display = 'block';
-        if (socialSection) socialSection.style.display = 'block';
-        if (detailedChart) detailedChart.style.display = 'block';
-
-        // Restore original stats grid
-        if (statsGrid && currentSessionData) {
-          renderStatsGrid(currentSessionData);
         }
       }
 
@@ -1447,7 +1468,7 @@
     function startStatsSync() {
       if (statsInterval) return;
       statsInterval = setInterval(() => {
-        if (connections.length === 0) return;
+        if (connections.length === 0 && currentMode !== 'tv') return;
 
         const currentLap = currentLapMarker.lapNumber;
         const currentLapData = currentSessionData?.laps[currentLap - 1];
@@ -1480,13 +1501,19 @@
           }
         });
 
-        // Update TV mode delta display
+        // Update TV mode delta display - ALWAYS update in TV mode
         if (currentMode === 'tv') {
           const delta = calculateCurrentDelta();
           const deltaEl = document.getElementById('tv-delta');
           if (deltaEl) {
             deltaEl.textContent = `${delta >= 0 ? '+' : ''}${delta.toFixed(3)}s`;
             deltaEl.style.color = delta >= 0 ? '#f44336' : '#4caf50';
+          }
+
+          // Also update current lap display in TV mode
+          const currentLapEl = document.querySelector('.tv-stat:nth-child(2) .stat-value');
+          if (currentLapEl) {
+            currentLapEl.textContent = currentLap;
           }
         }
       }, 500);
@@ -2386,6 +2413,68 @@
         compareSession();
       }
     }
+
+    // --- BFCache and Page Visibility Handling ---
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        // Page became visible again (back/forward navigation)
+        if (player && typeof player.playVideo === 'function') {
+          // Resume video playback if it was playing
+          setTimeout(() => {
+            if (currentMode === 'tv') {
+              player.playVideo();
+            }
+          }, 500);
+        }
+
+        // Reinitialize chart if needed
+        if (currentSessionData) {
+          const validLaps = currentSessionData.laps.filter(lap => lap.lap !== null && parseTime(lap.time) !== null);
+          drawLineChart(validLaps, comparisonDatasets);
+        }
+      }
+    });
+
+    // Also add pageshow event for back/forward cache
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted) {
+        // Page was restored from bfcache
+        console.log('Page restored from bfcache');
+
+        // Reinitialize mode
+        detectInitialMode();
+
+        // Reinitialize PeerJS connection
+        if (peer && peer.disconnected) {
+          setTimeout(() => initializePeer(), 1000);
+        }
+      }
+    });
+
+    // Add page hide handler for BFCache
+    window.addEventListener('pagehide', (event) => {
+      // Clean up intervals
+      if (statsInterval) {
+        clearInterval(statsInterval);
+        statsInterval = null;
+      }
+
+      if (updateChartInterval) {
+        clearInterval(updateChartInterval);
+        updateChartInterval = null;
+      }
+
+      // Disconnect PeerJS
+      if (peer) {
+        connections.forEach(conn => conn.close());
+        peer.destroy();
+      }
+
+      // Stop YouTube player
+      if (player && typeof player.stopVideo === 'function') {
+        player.stopVideo();
+      }
+    });
 
     // --- Initialize on load ---
     window.addEventListener('DOMContentLoaded', () => {
