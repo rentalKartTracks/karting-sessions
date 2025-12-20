@@ -4,229 +4,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Karting Remote</title>
+    <title>Karting Remote Control</title>
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
     <style>
+        :root {
+            --primary: #f44336;
+            --bg: #121212;
+            --card-bg: #1e1e1e;
+            --text: #ffffff;
+            --text-dim: #888888;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #121212 0%, #1e1e1e 100%);
-            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
-            padding: 20px;
             display: flex;
             flex-direction: column;
+            padding: 15px;
+            overflow-x: hidden;
             touch-action: manipulation;
         }
 
-        .header {
+        /* Wi-Fi Info Message */
+        .wifi-banner {
+            background: rgba(255, 193, 7, 0.15);
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 0.85em;
             text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: rgba(244, 67, 54, 0.1);
-            border-radius: 12px;
+            margin-bottom: 15px;
+            color: #ffc107;
         }
 
-        .header h1 {
-            font-size: 1.8em;
-            margin-bottom: 10px;
-            color: #f44336;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
-        .status-container {
+        .status-badge {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 10px;
+            gap: 6px;
             background: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            margin-top: 10px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
         }
 
         .status-dot {
-            width: 12px;
-            height: 12px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
-            background: #f44336;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-
-            50% {
-                opacity: 0.6;
-                transform: scale(0.95);
-            }
+            background: var(--primary);
         }
 
         .connected .status-dot {
             background: #4caf50;
-            animation: none;
         }
 
-        #status {
-            font-weight: 600;
-            font-size: 1.1em;
-        }
-
+        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 30px;
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #2d2d2d 0%, #1e1e1e 100%);
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 12px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.7em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 1.4em;
+            font-weight: 800;
+            margin-top: 4px;
+        }
+
+        /* Control Sections */
+        .control-group {
+            background: var(--card-bg);
             padding: 20px;
-            border-radius: 15px;
-            border-left: 4px solid #f44336;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s;
-        }
-
-        .stat-card:active {
-            transform: scale(0.98);
-        }
-
-        .label {
-            color: #888;
-            font-size: 0.75em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-        }
-
-        .value {
-            font-size: 2em;
-            font-weight: bold;
-            margin: 5px 0;
-            color: #fff;
-        }
-
-        .slider-container {
-            background: linear-gradient(135deg, #2d2d2d 0%, #1e1e1e 100%);
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-            margin-top: auto;
-        }
-
-        .slider-label {
-            color: #888;
-            font-size: 0.9em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            border-radius: 16px;
             margin-bottom: 15px;
-            text-align: center;
+        }
+
+        .section-title {
+            font-size: 0.8em;
+            color: var(--text-dim);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .nav-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn {
+            background: #333;
+            border: none;
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.1s, background 0.2s;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+            background: #444;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+        }
+
+        .btn-primary:active {
+            background: #d32f2f;
+        }
+
+        .btn-icon {
+            font-size: 1.5em;
+        }
+
+        /* Slider */
+        .slider-box {
+            margin-top: 10px;
         }
 
         input[type=range] {
-            -webkit-appearance: none;
             width: 100%;
-            height: 12px;
-            border-radius: 6px;
-            background: #3d3d3d;
-            outline: none;
-            margin: 15px 0;
+            height: 40px;
+            /* Bigger touch area */
+            background: transparent;
+            -webkit-appearance: none;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
         }
 
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            appearance: none;
-            width: 30px;
-            height: 30px;
+            height: 28px;
+            width: 28px;
             border-radius: 50%;
-            background: #f44336;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(244, 67, 54, 0.5);
-            transition: all 0.2s;
+            background: var(--primary);
+            margin-top: -10px;
+            box-shadow: 0 0 10px rgba(244, 67, 54, 0.4);
         }
 
-        input[type=range]::-webkit-slider-thumb:active {
-            transform: scale(1.2);
-            box-shadow: 0 4px 16px rgba(244, 67, 54, 0.8);
-        }
-
-        input[type=range]::-moz-range-thumb {
-            width: 30px;
-            height: 30px;
-            border: none;
-            border-radius: 50%;
-            background: #f44336;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(244, 67, 54, 0.5);
-            transition: all 0.2s;
-        }
-
-        input[type=range]::-moz-range-thumb:active {
-            transform: scale(1.2);
-            box-shadow: 0 4px 16px rgba(244, 67, 54, 0.8);
-        }
-
-        .time-display {
+        .time-labels {
             display: flex;
             justify-content: space-between;
-            color: #999;
-            font-size: 0.9em;
-            margin-top: 5px;
+            font-size: 0.8em;
+            color: var(--text-dim);
+            margin-top: 8px;
         }
 
-        .error-message {
-            background: rgba(244, 67, 54, 0.2);
-            border: 2px solid #f44336;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .error-message h2 {
-            color: #f44336;
-            margin-bottom: 10px;
-        }
-
-        .reconnect-btn {
-            background: #f44336;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 15px;
-            transition: all 0.3s;
-        }
-
-        .reconnect-btn:active {
-            transform: scale(0.95);
-            background: #d32f2f;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
+        .loading-screen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
         }
 
         .spinner {
-            width: 50px;
-            height: 50px;
-            margin: 20px auto;
-            border: 4px solid #3d3d3d;
-            border-top-color: #f44336;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #333;
+            border-top-color: var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -240,241 +220,139 @@
 </head>
 
 <body id="body">
+    <div class="wifi-banner">
+        ⚠️ <strong>Same Wi-Fi Required</strong><br>
+        Ensure this phone and the TV are on the same Wi-Fi network.
+    </div>
+
     <div class="header">
-        <h1>🏎️ Karting Remote</h1>
-        <div class="status-container">
-            <span class="status-dot"></span>
+        <h2>Remote</h2>
+        <div class="status-badge">
+            <div class="status-dot"></div>
             <span id="status">Connecting...</span>
         </div>
     </div>
 
     <div id="content-area">
-        <div class="loading">
+        <div class="loading-screen">
             <div class="spinner"></div>
-            <p>Establishing connection...</p>
+            <p>Linking to TV Session...</p>
         </div>
     </div>
 
     <script>
         const params = new URLSearchParams(window.location.search);
         const hostId = params.get('host');
-
         let peer = null;
         let conn = null;
         let isTouching = false;
-        let reconnectAttempts = 0;
-        const maxReconnectAttempts = 5;
 
-        function showError(message, showReconnect = true) {
-            document.getElementById('content-area').innerHTML = `
-                <div class="error-message">
-                    <h2>❌ Connection Error</h2>
-                    <p>${message}</p>
-                    ${showReconnect ? '<button class="reconnect-btn" onclick="location.reload()">Retry Connection</button>' : ''}
-                </div>
-            `;
-            document.getElementById('status').textContent = 'Connection Failed';
+        function hapticFeedback() {
+            if (navigator.vibrate) navigator.vibrate(10);
+        }
+
+        function sendCommand(type, value = null) {
+            hapticFeedback();
+            if (conn && conn.open) {
+                conn.send({ type, value });
+            }
         }
 
         function showConnected() {
             document.getElementById('body').classList.add('connected');
-            document.getElementById('status').textContent = 'Connected to TV';
-
+            document.getElementById('status').textContent = 'Live Sync';
             document.getElementById('content-area').innerHTML = `
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="label">Current Lap</div>
-                        <div id="cur-lap" class="value">--</div>
+                        <div class="stat-label">Current Lap</div>
+                        <div id="cur-lap" class="stat-value">--</div>
                     </div>
                     <div class="stat-card">
-                        <div class="label">Lap Time</div>
-                        <div id="cur-time" class="value">--:--</div>
+                        <div class="stat-label">Fastest</div>
+                        <div id="fastest-lap" class="stat-value" style="color:#ffd700">--:--</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Last Lap</div>
+                        <div id="last-lap" class="stat-value">--:--</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Laps</div>
+                        <div id="total-laps" class="stat-value">--</div>
                     </div>
                 </div>
 
-                <div class="slider-container">
-                    <div class="slider-label">Drag to Seek Video</div>
-                    <input type="range" id="seek-slider" min="0" max="100" value="0">
-                    <div class="time-display">
-                        <span id="current-time">0:00</span>
-                        <span id="duration-time">0:00</span>
+                <div class="control-group">
+                    <div class="section-title">Navigation</div>
+                    <div class="nav-buttons">
+                        <button class="btn" onclick="sendCommand('PREV_LAP')">
+                            <span class="btn-icon">⏮️</span> Prev Lap
+                        </button>
+                        <button class="btn" onclick="sendCommand('NEXT_LAP')">
+                            <span class="btn-icon">⏭️</span> Next Lap
+                        </button>
                     </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="section-title">Playback</div>
+                    <div class="slider-box">
+                        <input type="range" id="seek-slider" min="0" max="100" value="0" 
+                            ontouchstart="isTouching=true" 
+                            ontouchend="isTouching=false; sendCommand('SEEK', this.value)"
+                            onchange="sendCommand('SEEK', this.value)">
+                        <div class="time-labels">
+                            <span id="cur-time">0:00</span>
+                            <span id="total-time">0:00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <div class="section-title">System</div>
+                    <button class="btn btn-primary" style="width:100%" onclick="sendCommand('TOGGLE_FULLSCREEN')">
+                        <span class="btn-icon">📺</span> Toggle Fullscreen
+                    </button>
                 </div>
             `;
-
-            setupSlider();
-        }
-
-        function setupSlider() {
-            const slider = document.getElementById('seek-slider');
-
-            slider.addEventListener('touchstart', () => {
-                isTouching = true;
-            });
-
-            slider.addEventListener('touchend', () => {
-                isTouching = false;
-            });
-
-            slider.addEventListener('input', (e) => {
-                if (conn && conn.open) {
-                    conn.send({ type: 'SEEK', value: parseFloat(e.target.value) });
-                    updateTimeDisplay(parseFloat(e.target.value), parseFloat(slider.max));
-                }
-            });
-        }
-
-        function updateTimeDisplay(current, duration) {
-            const currentEl = document.getElementById('current-time');
-            const durationEl = document.getElementById('duration-time');
-
-            if (currentEl) currentEl.textContent = formatSeconds(current);
-            if (durationEl) durationEl.textContent = formatSeconds(duration);
-        }
-
-        function formatSeconds(seconds) {
-            if (!seconds || isNaN(seconds)) return '0:00';
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs.toString().padStart(2, '0')}`;
         }
 
         function initConnection() {
-            if (!hostId) {
-                showError('No host ID found in URL. Please scan the QR code again.', false);
-                return;
-            }
+            if (!hostId) return;
+            peer = new Peer();
 
-            console.log('🔧 Initializing PeerJS...');
-            console.log('🎯 Target Host ID:', hostId);
-
-            // Use same config as session.html
-            peer = new Peer({
-                debug: 2 // Enable debug logging
-            });
-
-            peer.on('open', (id) => {
-                console.log('✅ PeerJS opened with ID:', id);
-                console.log('🔌 Attempting to connect to host:', hostId);
-
-                // Wait a moment before connecting
-                setTimeout(() => {
-                    conn = peer.connect(hostId, {
-                        reliable: true,
-                        serialization: 'json',
-                        metadata: { source: 'remote-control' }
-                    });
-
-                    if (conn) {
-                        console.log('📡 Connection object created');
-                        setupConnectionHandlers();
-                    } else {
-                        console.error('❌ Failed to create connection object');
-                        showError('Failed to create connection. Please try again.');
-                    }
-                }, 500);
-            });
-
-            peer.on('error', (err) => {
-                console.error('❌ PeerJS error:', err);
-                console.error('Error type:', err.type);
-                console.error('Error message:', err.message);
-
-                if (err.type === 'peer-unavailable') {
-                    showError('TV not found. Make sure the session page is open and showing "Ready" status, then try scanning the QR code again.');
-                } else if (err.type === 'network') {
-                    showError('Network error. Please check your internet connection and try again.');
-                } else if (err.type === 'disconnected') {
-                    showError('Disconnected from signaling server. Refreshing...');
-                    setTimeout(() => location.reload(), 2000);
-                } else if (err.type === 'server-error') {
-                    showError('Server error. The PeerJS cloud server may be busy. Please wait a moment and try again.');
-                } else {
-                    showError(`Connection error (${err.type}): ${err.message}`);
-                }
-            });
-
-            peer.on('disconnected', () => {
-                console.log('⚠️ Peer disconnected from server');
-                if (!peer.destroyed) {
-                    console.log('🔄 Attempting to reconnect...');
-                    peer.reconnect();
-                }
+            peer.on('open', () => {
+                conn = peer.connect(hostId);
+                setupConnListeners();
             });
         }
 
-        function setupConnectionHandlers() {
-            if (!conn) {
-                console.error('❌ No connection object to setup');
-                return;
-            }
-
-            console.log('🔧 Setting up connection handlers...');
-
-            conn.on('open', () => {
-                console.log('✅ Connection established!');
-                console.log('🎉 Connected to:', conn.peer);
-                reconnectAttempts = 0;
-                showConnected();
-
-                // Send a test message
-                setTimeout(() => {
-                    if (conn && conn.open) {
-                        console.log('📤 Sending test message...');
-                        conn.send({ type: 'PING', timestamp: Date.now() });
-                    }
-                }, 100);
-            });
+        function setupConnListeners() {
+            conn.on('open', () => showConnected());
 
             conn.on('data', (data) => {
-                console.log('📥 Received data:', data);
-
                 if (data.type === 'STATS') {
-                    const lapEl = document.getElementById('cur-lap');
-                    const timeEl = document.getElementById('cur-time');
-                    const slider = document.getElementById('seek-slider');
+                    document.getElementById('cur-lap').textContent = data.lap;
+                    document.getElementById('last-lap').textContent = data.time;
+                    document.getElementById('total-laps').textContent = data.totalLaps;
+                    document.getElementById('fastest-lap').textContent = data.fastestLap;
 
-                    if (lapEl) lapEl.textContent = data.lap || '--';
-                    if (timeEl) timeEl.textContent = data.time || '--:--';
-
-                    if (slider && !isTouching) {
-                        slider.max = data.duration || 100;
-                        slider.value = data.currentTime || 0;
-                        updateTimeDisplay(data.currentTime, data.duration);
+                    if (!isTouching) {
+                        const slider = document.getElementById('seek-slider');
+                        slider.max = data.duration;
+                        slider.value = data.currentTime;
+                        document.getElementById('cur-time').textContent = formatTime(data.currentTime);
+                        document.getElementById('total-time').textContent = formatTime(data.duration);
                     }
                 }
             });
-
-            conn.on('close', () => {
-                console.log('❌ Connection closed');
-                document.getElementById('body').classList.remove('connected');
-
-                if (reconnectAttempts < maxReconnectAttempts) {
-                    reconnectAttempts++;
-                    console.log(`🔄 Reconnecting... (${reconnectAttempts}/${maxReconnectAttempts})`);
-                    document.getElementById('status').textContent = `Reconnecting... (${reconnectAttempts}/${maxReconnectAttempts})`;
-                    setTimeout(initConnection, 2000);
-                } else {
-                    showError('Connection lost. Please refresh to reconnect.');
-                }
-            });
-
-            conn.on('error', (err) => {
-                console.error('❌ Connection error:', err);
-                console.error('Error details:', err.message || err);
-                showError('Connection error occurred. Please try again.');
-            });
-
-            // Add timeout in case connection never opens
-            setTimeout(() => {
-                if (conn && !conn.open) {
-                    console.error('⏱️ Connection timeout - connection never opened');
-                    showError('Connection timeout. The TV may be unreachable. Please check that both devices have internet access and try again.');
-                }
-            }, 10000); // 10 second timeout
         }
 
-        // Start connection
+        function formatTime(seconds) {
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return `${m}:${s.toString().padStart(2, '0')}`;
+        }
+
         initConnection();
     </script>
 </body>

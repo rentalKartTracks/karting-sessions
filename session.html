@@ -797,34 +797,66 @@
       });
 
       peer.on('connection', (conn) => {
-        console.log('Remote device connected:', conn.peer);
+        console.log('📱 Remote connected:', conn.peer);
+
+        // 1. Add this connection to our tracking list
         connections.push(conn);
-        updateConnectionUI();
 
-        conn.on('open', () => {
-          console.log('Connection opened with:', conn.peer);
-          startStatsSync();
-        });
-
+        // 2. Handle commands sent from the mobile remote
         conn.on('data', (data) => {
-          if (data.type === 'SEEK') {
-            const targetTime = parseFloat(data.value);
-            if (player && typeof player.seekTo === 'function') {
-              player.seekTo(targetTime, true);
-            }
+          console.log('Received command:', data);
+
+          switch (data.type) {
+            case 'NEXT_LAP':
+              nextLap(); // Calls your existing function
+              break;
+
+            case 'PREV_LAP':
+              // Logic to go back one lap
+              const slider = document.getElementById('lap-selector-slider');
+              const prevVal = parseInt(slider.value) - 1;
+              if (prevVal >= 1) seekToLap(prevVal);
+              break;
+
+            case 'SEEK':
+              // Syncs video to the slider position on your phone
+              if (player && typeof player.seekTo === 'function') {
+                player.seekTo(parseFloat(data.value), true);
+              }
+              break;
+
+            case 'TOGGLE_FULLSCREEN':
+              toggleVideoFullscreen();
+              break;
           }
         });
 
+        // 3. Clean up when remote disconnects
         conn.on('close', () => {
-          console.log('Connection closed with:', conn.peer);
-          connections = connections.filter(c => c !== conn);
-          updateConnectionUI();
-          if (connections.length === 0) {
-            stopStatsSync();
-          }
+          connections = connections.filter(c => c.peer !== conn.peer);
+          console.log('📱 Remote disconnected');
         });
+
+        // 4. Start sending live stats (Lap times, progress) to the phone
+        startStatsSync();
       });
 
+      function toggleVideoFullscreen() {
+        const container = document.getElementById('video-display-container');
+        if (!document.fullscreenElement) {
+          // Enter Fullscreen
+          if (container.requestFullscreen) {
+            container.requestFullscreen();
+          } else if (container.webkitRequestFullscreen) { /* Safari */
+            container.webkitRequestFullscreen();
+          }
+        } else {
+          // Exit Fullscreen
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          }
+        }
+      }
       peer.on('error', (err) => {
         console.error('PeerJS error:', err);
         document.getElementById('peer-status').textContent = 'Error';
