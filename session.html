@@ -703,19 +703,6 @@
       border: 0;
     }
 
-    /* Quality Badge */
-    .quality-badge {
-      display: inline-block;
-      background: #4caf50;
-      color: white;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 0.8em;
-      font-weight: bold;
-      margin-left: 10px;
-      vertical-align: middle;
-    }
-
     /* Slider Styling */
     #lap-selector-slider {
       -webkit-appearance: none;
@@ -769,11 +756,26 @@
       display: none;
     }
 
+    .qr-panel.collapsed {
+      padding: 15px;
+    }
+
+    .qr-panel.collapsed .qr-content {
+      display: none;
+    }
+
+    .qr-panel.collapsed .qr-instructions {
+      display: none;
+    }
+
+    .qr-panel.collapsed .connection-stats {
+      display: none;
+    }
+
     .qr-header {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 12px;
+      justify-content: space-between;
       margin-bottom: 20px;
       flex-wrap: wrap;
     }
@@ -785,6 +787,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      flex-grow: 1;
     }
 
     .qr-instructions {
@@ -862,10 +865,7 @@
       color: #fff;
     }
 
-    .qr-auto-hide {
-      position: absolute;
-      top: 15px;
-      right: 15px;
+    .qr-toggle-btn {
       background: rgba(0, 0, 0, 0.5);
       color: #aaa;
       border: none;
@@ -874,9 +874,12 @@
       font-size: 0.8em;
       cursor: pointer;
       transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
 
-    .qr-auto-hide:hover {
+    .qr-toggle-btn:hover {
       background: rgba(0, 0, 0, 0.7);
       color: #fff;
     }
@@ -887,45 +890,15 @@
       border-radius: 50%;
       background: #f44336;
       display: inline-block;
-      animation: pulse 2s infinite;
     }
 
     .qr-panel.connected .status-indicator {
       background: #4caf50;
-      animation: none;
     }
 
-    @keyframes pulse {
-
-      0%,
-      100% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: 0.5;
-      }
-    }
-
-    /* Toast Notification */
+    /* Toast Notification - Removed */
     .toast {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #333;
-      color: white;
-      padding: 15px 25px;
-      border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      z-index: 10000;
-      opacity: 0;
-      transition: opacity 0.3s;
-      font-weight: bold;
-    }
-
-    .toast.show {
-      opacity: 1;
+      display: none;
     }
   </style>
 </head>
@@ -991,7 +964,6 @@
     <div class="chart-container detailed-chart">
       <div class="chart-title">
         📈 Lap Time Progression
-        <span id="quality-badge" class="quality-badge" style="display:none;">4K</span>
       </div>
       <div
         style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
@@ -1033,12 +1005,14 @@
 
     <!-- QR Code Panel - Moved below TV Controls -->
     <div class="qr-panel" id="qr-panel">
-      <button class="qr-auto-hide" onclick="hideQRPanel()" title="Hide QR panel">×</button>
       <div class="qr-header">
         <h3>
           <span class="status-indicator"></span>
           <span id="connection-status">📱 Phone Remote Control</span>
         </h3>
+        <button class="qr-toggle-btn" onclick="toggleQRPanel()" title="Expand/Collapse QR panel">
+          <span id="qr-toggle-icon">▼</span>
+        </button>
       </div>
 
       <p class="qr-instructions">Scan this QR code with your phone to control the video playback. Make sure both devices
@@ -1102,7 +1076,6 @@
     let allSessionsList = [];
     let currentMode = 'pc'; // 'pc' or 'tv'
     let autoFullscreenTriggered = false;
-    let qrHideTimeout = null;
     let currentVideoQuality = 'auto';
 
     if (window.Chart) {
@@ -1228,8 +1201,6 @@
           setTimeout(() => player.playVideo(), 1000);
         }
 
-        showToast('TV Mode: Simplified view for distant viewing');
-
       } else { // PC Mode
         // Show PC mode elements
         if (tvControls) tvControls.style.display = 'none';
@@ -1270,13 +1241,6 @@
       document.getElementById('tv-mode-btn').classList.toggle('active', currentMode === 'tv');
     }
 
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 3000);
-    }
-
     function shareCompareLink() {
       const compareInput = document.getElementById('compare-id-input');
       const compareIds = compareInput.value.trim();
@@ -1299,14 +1263,11 @@
         shareBtn.innerHTML = '<span>✅</span> Copied!';
         shareBtn.classList.add('copied');
 
-        showToast('Comparison link copied to clipboard!');
-
         setTimeout(() => {
           shareBtn.innerHTML = originalText;
           shareBtn.classList.remove('copied');
         }, 2000);
       }).catch(err => {
-        showToast('Failed to copy link');
         console.error('Copy failed:', err);
       });
     }
@@ -1349,7 +1310,6 @@
       const qrPanel = document.getElementById('qr-panel');
       if (qrPanel) {
         qrPanel.classList.add('hidden');
-        showToast('QR panel hidden. Refresh page to show again.');
       }
     }
 
@@ -1360,19 +1320,17 @@
       }
     }
 
-    function startQRAutoHide() {
-      // Clear any existing timeout
-      if (qrHideTimeout) {
-        clearTimeout(qrHideTimeout);
-      }
+    function toggleQRPanel() {
+      const qrPanel = document.getElementById('qr-panel');
+      const toggleIcon = document.getElementById('qr-toggle-icon');
 
-      // Hide QR panel after 10 seconds if no devices connected
-      qrHideTimeout = setTimeout(() => {
-        if (connections.length === 0) { // Only hide if no devices connected
-          hideQRPanel();
-          showToast('QR panel auto-hidden. Click refresh to show again.');
-        }
-      }, 10000); // 10 seconds
+      if (qrPanel.classList.contains('collapsed')) {
+        qrPanel.classList.remove('collapsed');
+        toggleIcon.textContent = '▼';
+      } else {
+        qrPanel.classList.add('collapsed');
+        toggleIcon.textContent = '▶';
+      }
     }
 
     // --- Initialize PeerJS ---
@@ -1397,9 +1355,6 @@
           colorLight: '#ffffff',
           correctLevel: QRCode.CorrectLevel.M
         });
-
-        // Start auto-hide timer for QR panel
-        startQRAutoHide();
       });
 
       peer.on('connection', (conn) => {
@@ -1441,12 +1396,6 @@
               break;
           }
 
-          // Cancel auto-hide when user connects
-          if (qrHideTimeout) {
-            clearTimeout(qrHideTimeout);
-            qrHideTimeout = null;
-          }
-
           // Auto-fullscreen when remote connects in TV mode
           if (currentMode === 'tv' && !autoFullscreenTriggered) {
             autoFullscreenTriggered = true;
@@ -1466,11 +1415,6 @@
           connections = connections.filter(c => c.peer !== conn.peer);
           console.log('📱 Remote disconnected');
           updateConnectionUI();
-
-          // Restart auto-hide timer when all devices disconnect
-          if (connections.length === 0) {
-            startQRAutoHide();
-          }
         });
 
         // 4. Start sending live stats (Lap times, progress) to the phone
@@ -1494,12 +1438,6 @@
       if (count > 0) {
         panel.classList.add('connected');
         statusText.textContent = `✅ ${count} Device${count > 1 ? 's' : ''} Connected`;
-
-        // Stop auto-hide when device connects
-        if (qrHideTimeout) {
-          clearTimeout(qrHideTimeout);
-          qrHideTimeout = null;
-        }
       } else {
         panel.classList.remove('connected');
         statusText.textContent = '📱 Phone Remote Control';
@@ -1748,7 +1686,6 @@
     function onPlaybackQualityChange(event) {
       console.log('Video quality changed to:', event.data);
       currentVideoQuality = event.data;
-      updateQualityBadge(event.data);
     }
 
     function onPlayerError(event) {
@@ -1758,32 +1695,9 @@
         setTimeout(() => {
           if (player && typeof player.setPlaybackQuality === 'function') {
             player.setPlaybackQuality('hd1080');
-            showToast('4K not available, falling back to 1080p');
           }
         }, 1000);
       }
-    }
-
-    function updateQualityBadge(quality) {
-      const badge = document.getElementById('quality-badge');
-      if (!badge) return;
-
-      const qualityLabels = {
-        'hd2160': '4K',
-        'hd1440': '1440p',
-        'hd1080': '1080p',
-        'hd720': '720p',
-        'large': '480p',
-        'medium': '360p',
-        'small': '240p',
-        'auto': 'Auto'
-      };
-
-      const label = qualityLabels[quality] || quality;
-      badge.textContent = label;
-      badge.style.display = 'inline-block';
-      badge.style.background = quality === 'hd2160' ? '#4caf50' :
-        quality === 'hd1080' ? '#2196f3' : '#ff9800';
     }
 
     function extractYouTubeId(url) {
@@ -1819,8 +1733,7 @@
         videoContainer.style.display = 'block';
         videoContainer.innerHTML = `
             <div class="chart-title">
-                🎥 Session Video 
-                <span id="quality-badge" class="quality-badge">4K</span>
+                🎥 Session Video
             </div>
             <div class="video-responsive">
                 <div id="youtube-player-container"></div>
@@ -1859,21 +1772,6 @@
       if (player && typeof player.setPlaybackQuality === 'function') {
         setTimeout(() => {
           player.setPlaybackQuality('hd2160'); // Try 4K first
-
-          // Check what quality was actually set
-          setTimeout(() => {
-            if (player.getPlaybackQuality) {
-              const actualQuality = player.getPlaybackQuality();
-              console.log('Actual video quality:', actualQuality);
-              updateQualityBadge(actualQuality);
-
-              if (actualQuality !== 'hd2160') {
-                showToast(`Video playing in ${actualQuality === 'hd1080' ? '1080p' : actualQuality}`);
-              } else {
-                showToast('Video playing in 4K');
-              }
-            }
-          }, 2000);
         }, 1000);
       }
 
@@ -2129,13 +2027,6 @@
       const timeRange = maxTime - minTime || 1;
       const maxLapsCount = allDatasets.reduce((max, dataset) => Math.max(max, dataset.length), 0);
       const overallFastestTime = minTime;
-
-      function getCoords(i, lapTime) {
-        const x = padding + (chartWidth / (maxLapsCount - 1 || 1)) * i;
-        const y = padding + chartHeight - ((lapTime - minTime) / timeRange) * chartHeight;
-        return { x, y };
-      }
-
 
       function getCoords(i, lapTime) {
         const x = padding + (chartWidth / (maxLapsCount - 1 || 1)) * i;
