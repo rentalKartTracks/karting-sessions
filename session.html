@@ -8,12 +8,12 @@
   <!-- Security meta tags -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
-    script-src 'self' https://www.youtube.com https://s.ytimg.com https://www.google.com https://static.doubleclick.net 'unsafe-inline' 'unsafe-eval';
+    script-src 'self' https://www.youtube.com https://s.ytimg.com https://www.google.com https://static.doubleclick.net https://unpkg.com https://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';
     style-src 'self' 'unsafe-inline';
     img-src 'self' data: https://i.ytimg.com https://www.google.com;
     frame-src https://www.youtube.com https://www.youtube-nocookie.com;
     font-src 'self';
-    connect-src 'self' https://www.google.com https://www.youtube.com https://static.doubleclick.net;
+    connect-src 'self' https://www.google.com https://www.youtube.com https://static.doubleclick.net wss: https:;
     object-src 'none';
     base-uri 'self';
     form-action 'self';
@@ -23,6 +23,13 @@
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
 
   <title>Karting Session Viewer</title>
+
+  <!-- PeerJS for P2P connection -->
+  <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+
+  <!-- QRCode.js for QR generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
   <style>
     * {
       margin: 0;
@@ -505,6 +512,101 @@
       cursor: pointer;
       transition: background .15s ease-in-out;
     }
+
+    /* QR Code Panel Styles */
+    .qr-panel {
+      background: #1e1e1e;
+      border: 3px solid #f44336;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 30px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .qr-panel.connected {
+      border-color: #4caf50;
+      background: #1e3a1e;
+    }
+
+    .qr-panel h3 {
+      margin-bottom: 15px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #f44336;
+      display: inline-block;
+      animation: pulse 2s infinite;
+    }
+
+    .qr-panel.connected .status-indicator {
+      background: #4caf50;
+      animation: none;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    #qr-code {
+      display: inline-block;
+      padding: 15px;
+      background: white;
+      border-radius: 8px;
+      margin: 15px 0;
+    }
+
+    .remote-url {
+      background: #2d2d2d;
+      padding: 10px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 0.9em;
+      word-break: break-all;
+      margin-top: 10px;
+      color: #4caf50;
+    }
+
+    .connection-stats {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #3d3d3d;
+    }
+
+    .connection-stat {
+      text-align: center;
+    }
+
+    .connection-stat-label {
+      font-size: 0.8em;
+      color: #999;
+      text-transform: uppercase;
+    }
+
+    .connection-stat-value {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #fff;
+      margin-top: 5px;
+    }
   </style>
 </head>
 
@@ -517,6 +619,27 @@
           <div id="session-date"></div>
         </div>
         <a href="index.html" class="home-button">🏠 Home</a>
+      </div>
+    </div>
+
+    <!-- QR Code Panel for Phone Remote -->
+    <div class="qr-panel" id="qr-panel">
+      <h3>
+        <span class="status-indicator"></span>
+        <span id="connection-status">📱 Phone Remote Control</span>
+      </h3>
+      <p>Scan this QR code with your phone to control the video playback</p>
+      <div id="qr-code"></div>
+      <div class="remote-url" id="remote-url">Generating connection...</div>
+      <div class="connection-stats">
+        <div class="connection-stat">
+          <div class="connection-stat-label">Status</div>
+          <div class="connection-stat-value" id="peer-status">Initializing...</div>
+        </div>
+        <div class="connection-stat">
+          <div class="connection-stat-label">Connected Devices</div>
+          <div class="connection-stat-value" id="connected-count">0</div>
+        </div>
       </div>
     </div>
 
@@ -608,7 +731,7 @@
     }
 
     // --- VIDEO SYNC GLOBAL VARIABLES ---
-    let player; // YouTube Player object
+    let player;
     let pendingVideoConfig = null;
 
     function loadYouTubeAPI() {
@@ -620,14 +743,15 @@
       document.body.appendChild(tag);
     }
 
-    // NEW: Variable to hold lap start objects {lapNumber, videoTime}
     let lapStartTimes = [];
-
-    // NEW: Variable to track current lap state for the chart
     let currentLapMarker = { lapNumber: 1 };
-
-    // NEW: Interval variable
     let updateChartInterval = null;
+
+    // --- PEER-TO-PEER VARIABLES ---
+    let peer = null;
+    let connections = [];
+    let statsInterval = null;
+
     // --- END VIDEO SYNC GLOBAL VARIABLES ---
 
     const params = new URLSearchParams(window.location.search);
@@ -648,6 +772,117 @@
       { line: '#795548', point: '#a1887f' },
       { line: '#e91e63', point: '#f06292' }
     ];
+
+    // --- Initialize PeerJS ---
+    function initializePeer() {
+      peer = new Peer();
+
+      peer.on('open', (id) => {
+        console.log('PeerJS ID:', id);
+        const remoteUrl = `${window.location.origin}${window.location.pathname.replace('session.html', 'remote.html')}?host=${id}`;
+
+        document.getElementById('remote-url').textContent = remoteUrl;
+        document.getElementById('peer-status').textContent = 'Ready';
+
+        // Generate QR Code
+        const qrContainer = document.getElementById('qr-code');
+        qrContainer.innerHTML = '';
+        new QRCode(qrContainer, {
+          text: remoteUrl,
+          width: 200,
+          height: 200,
+          colorDark: '#000000',
+          colorLight: '#ffffff',
+        });
+      });
+
+      peer.on('connection', (conn) => {
+        console.log('Remote device connected:', conn.peer);
+        connections.push(conn);
+        updateConnectionUI();
+
+        conn.on('open', () => {
+          console.log('Connection opened with:', conn.peer);
+          startStatsSync();
+        });
+
+        conn.on('data', (data) => {
+          if (data.type === 'SEEK') {
+            const targetTime = parseFloat(data.value);
+            if (player && typeof player.seekTo === 'function') {
+              player.seekTo(targetTime, true);
+            }
+          }
+        });
+
+        conn.on('close', () => {
+          console.log('Connection closed with:', conn.peer);
+          connections = connections.filter(c => c !== conn);
+          updateConnectionUI();
+          if (connections.length === 0) {
+            stopStatsSync();
+          }
+        });
+      });
+
+      peer.on('error', (err) => {
+        console.error('PeerJS error:', err);
+        document.getElementById('peer-status').textContent = 'Error';
+      });
+    }
+
+    function updateConnectionUI() {
+      const count = connections.length;
+      document.getElementById('connected-count').textContent = count;
+
+      const panel = document.getElementById('qr-panel');
+      const statusText = document.getElementById('connection-status');
+
+      if (count > 0) {
+        panel.classList.add('connected');
+        statusText.textContent = `✅ ${count} Device${count > 1 ? 's' : ''} Connected`;
+      } else {
+        panel.classList.remove('connected');
+        statusText.textContent = '📱 Phone Remote Control';
+      }
+    }
+
+    function startStatsSync() {
+      if (statsInterval) return;
+
+      statsInterval = setInterval(() => {
+        if (connections.length === 0) return;
+
+        const currentLap = currentLapMarker.lapNumber;
+        const currentLapData = currentSessionData?.laps[currentLap - 1];
+        const currentTime = player && typeof player.getCurrentTime === 'function' ? player.getCurrentTime() : 0;
+        const duration = player && typeof player.getDuration === 'function' ? player.getDuration() : 0;
+
+        const stats = {
+          type: 'STATS',
+          lap: currentLap,
+          time: currentLapData?.time || '--:--',
+          currentTime: currentTime,
+          duration: duration
+        };
+
+        connections.forEach(conn => {
+          if (conn.open) {
+            conn.send(stats);
+          }
+        });
+      }, 500); // Send stats every 500ms
+    }
+
+    function stopStatsSync() {
+      if (statsInterval) {
+        clearInterval(statsInterval);
+        statsInterval = null;
+      }
+    }
+
+    // Initialize PeerJS on load
+    initializePeer();
 
     // --- Data Loading ---
     fetch('sessions/sessions-list.json')
@@ -775,30 +1010,25 @@
     }
 
     function calculateConsistency(lapTimes) {
-      const validTimes = lapTimes.filter(t => t > 0 && t < 300); // Ignore 0 or > 5min
+      const validTimes = lapTimes.filter(t => t > 0 && t < 300);
       if (lapTimes.length < 3) return 0;
 
-      // Sort times
       const sorted = [...lapTimes].sort((a, b) => a - b);
-
-      // Median
       const mid = Math.floor(sorted.length / 2);
       const median = sorted.length % 2
         ? sorted[mid]
         : (sorted[mid - 1] + sorted[mid]) / 2;
 
-      // Remove traffic laps (slower than +3%)
       const filtered = lapTimes.filter(t => t <= median * 1.03);
-
       if (filtered.length < 2) return 0;
 
-      // Standard deviation on filtered laps
       const avg = filtered.reduce((a, b) => a + b, 0) / filtered.length;
       const variance = filtered.reduce((sum, t) =>
         sum + Math.pow(t - avg, 2), 0) / filtered.length;
 
       return Math.sqrt(variance);
     }
+
     function getConsistencyRating(stdDev) {
       if (stdDev < 0.5) return { text: 'Excellent', class: 'consistency-excellent' };
       if (stdDev < 0.9) return { text: 'Good', class: 'consistency-good' };
@@ -824,7 +1054,7 @@
         },
         events: {
           'onReady': onPlayerReady,
-          'onStateChange': onPlayerStateChange // Added State Change listener
+          'onStateChange': onPlayerStateChange
         }
       });
     };
@@ -862,26 +1092,9 @@
                 <div id="youtube-player-container"></div>
             </div>
         `;
-        if (videoId) {
-          loadYouTubeAPI();
 
-          videoContainer.style.display = 'block';
-          videoContainer.innerHTML = `
-    <div class="chart-title">🎥 Session Video</div>
-    <div class="video-responsive">
-      <div id="youtube-player-container"></div>
-    </div>
-  `;
+        loadYouTubeAPI();
 
-          pendingVideoConfig = {
-            videoId: videoId,
-            startTimeSeconds: parseTime(videoStartTime)
-          };
-
-          if (window.YT && window.YT.Player) {
-            window.onYouTubeIframeAPIReady();
-          }
-        }
         pendingVideoConfig = {
           videoId: videoId,
           startTimeSeconds: parseTime(videoStartTime)
@@ -902,10 +1115,8 @@
     }
 
     function onPlayerReady(event) {
-      // Initial sync
       seekToLap(1);
     }
-
 
     function onPlayerStateChange(event) {
       if (event.data === YT.PlayerState.PLAYING) {
@@ -915,9 +1126,7 @@
       }
     }
 
-    // --- NEW: Universal Seek Function ---
     function seekToLap(lapNumber) {
-      // Ensure lapNumber is within bounds
       const maxLap = parseInt(document.getElementById('lap-selector-slider').max);
       if (lapNumber < 1) lapNumber = 1;
       if (lapNumber > maxLap) lapNumber = maxLap;
@@ -928,12 +1137,10 @@
         player.seekTo(lapStartTimeObj.videoTime, true);
       }
 
-      // Update the marker instantly and display
       currentLapMarker.lapNumber = lapNumber;
       document.getElementById('lap-selector-slider').value = lapNumber;
       document.getElementById('current-lap-display').textContent = `Current Lap: ${lapNumber}`;
 
-      // Redraw chart to move the marker
       if (currentSessionData) {
         const currentLaps = currentSessionData.laps.filter(l => l.lap !== null && parseTime(l.time) !== null);
         const existingComparisonDatasets = comparisonDatasets.length > 0 ? comparisonDatasets : [];
@@ -941,10 +1148,7 @@
       }
     }
 
-    // --- NEW: Helper to find current lap based on video time ---
     function getCurrentLapNumber(currentVideoTime) {
-      // Reverse iterate to find the latest lap start time that is less than current video time
-      // or iterate forward.
       for (let i = lapStartTimes.length - 1; i >= 0; i--) {
         if (currentVideoTime >= lapStartTimes[i].videoTime) {
           return lapStartTimes[i].lapNumber;
@@ -953,7 +1157,6 @@
       return 1;
     }
 
-    // --- NEW: Interval Logic ---
     function startChartUpdateInterval() {
       if (updateChartInterval) clearInterval(updateChartInterval);
 
@@ -965,14 +1168,11 @@
           if (newLapNumber !== currentLapMarker.lapNumber) {
             currentLapMarker.lapNumber = newLapNumber;
 
-            // Sync Slider
             const slider = document.getElementById('lap-selector-slider');
             if (slider) slider.value = newLapNumber;
 
-            // Sync Text
             document.getElementById('current-lap-display').textContent = `Current Lap: ${newLapNumber}`;
 
-            // Redraw the chart to move the marker
             if (currentSessionData) {
               const currentLaps = currentSessionData.laps.filter(l => l.lap !== null && parseTime(l.time) !== null);
               const existingComparisonDatasets = comparisonDatasets.length > 0 ? comparisonDatasets : [];
@@ -980,7 +1180,7 @@
             }
           }
         }
-      }, 250); // Update 4 times per second
+      }, 250);
     }
 
     // --- Chart & Tooltip Interaction ---
@@ -1158,7 +1358,6 @@
         return { x, y };
       }
 
-      // Grid Lines
       ctx.strokeStyle = '#3d3d3d';
       ctx.lineWidth = 1;
       for (let i = 0; i <= 5; i++) {
@@ -1192,21 +1391,18 @@
         ctx.fillText(`Overall Best: ${formatTime(overallFastestTime)}`, padding + 5, baselineY - 5);
       }
 
-      // --- NEW: Highlight Current Lap Marker ---
-      // Draw this BEHIND the points but in front of the grid
       if (currentLapMarker.lapNumber > 0 && currentLapMarker.lapNumber <= mainLaps.length) {
         const currentIndex = currentLapMarker.lapNumber - 1;
         const xPos = padding + (chartWidth / (maxLapsCount - 1 || 1)) * currentIndex;
 
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)'; // Faint white line
-        ctx.lineWidth = 40; // Wide highlight
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+        ctx.lineWidth = 40;
         ctx.lineCap = 'round';
         ctx.beginPath();
         ctx.moveTo(xPos, padding);
         ctx.lineTo(xPos, canvas.height - padding);
         ctx.stroke();
 
-        // Sharper center line
         ctx.strokeStyle = '#f44336';
         ctx.lineWidth = 2;
         ctx.beginPath();
@@ -1349,7 +1545,6 @@
 
       renderVideoPlayer(data.video_url, data.video_start_time);
 
-      // --- NEW: Calculate Lap Video Timestamps & Setup Slider ---
       const slider = document.getElementById('lap-selector-slider');
       slider.max = validLaps.length;
       slider.value = 1;
@@ -1357,17 +1552,14 @@
 
       const videoStartTime = parseTime(data.video_start_time || "0:00");
       let cumulativeTime = videoStartTime;
-      lapStartTimes = []; // Reset global
+      lapStartTimes = [];
 
-      // Lap 1
       lapStartTimes.push({ lapNumber: 1, videoTime: cumulativeTime });
 
-      // Calculate subsequent laps
       for (let i = 0; i < validLaps.length - 1; i++) {
         cumulativeTime += parseTime(validLaps[i].time);
         lapStartTimes.push({ lapNumber: i + 2, videoTime: cumulativeTime });
       }
-      // --- END NEW ---
 
       drawLineChart(validLaps);
     }
