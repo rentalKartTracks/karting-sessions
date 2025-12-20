@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -13,6 +13,7 @@
             --card-bg: #1e1e1e;
             --text: #ffffff;
             --text-dim: #888888;
+            --accent: #ffd700;
         }
 
         * {
@@ -39,11 +40,12 @@
             background: rgba(255, 193, 7, 0.15);
             border: 1px solid #ffc107;
             border-radius: 8px;
-            padding: 10px;
+            padding: 12px;
             font-size: 0.85em;
             text-align: center;
             margin-bottom: 15px;
             color: #ffc107;
+            line-height: 1.4;
         }
 
         .header {
@@ -88,6 +90,7 @@
             padding: 15px;
             border-radius: 12px;
             border-bottom: 3px solid var(--primary);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         .stat-label {
@@ -109,6 +112,7 @@
             padding: 20px;
             border-radius: 16px;
             margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         .section-title {
@@ -116,27 +120,30 @@
             color: var(--text-dim);
             margin-bottom: 15px;
             text-transform: uppercase;
+            text-align: center;
         }
 
         .nav-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
         }
 
         .btn {
             background: #333;
             border: none;
             color: white;
-            padding: 20px;
+            padding: 18px;
             border-radius: 12px;
-            font-size: 1.1em;
+            font-size: 1em;
             font-weight: bold;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             transition: transform 0.1s, background 0.2s;
+            flex: 1;
         }
 
         .btn:active {
@@ -146,6 +153,7 @@
 
         .btn-primary {
             background: var(--primary);
+            flex: 1.5;
         }
 
         .btn-primary:active {
@@ -153,44 +161,43 @@
         }
 
         .btn-icon {
-            font-size: 1.5em;
+            font-size: 1.4em;
         }
 
         /* Slider */
         .slider-box {
-            margin-top: 10px;
+            margin-top: 5px;
         }
 
         input[type=range] {
             width: 100%;
-            height: 40px;
-            /* Bigger touch area */
+            height: 44px;
+            /* Large touch area */
             background: transparent;
             -webkit-appearance: none;
         }
 
         input[type=range]::-webkit-slider-runnable-track {
             height: 8px;
-            background: #333;
+            background: #3d3d3d;
             border-radius: 4px;
         }
 
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            height: 28px;
-            width: 28px;
+            height: 30px;
+            width: 30px;
             border-radius: 50%;
             background: var(--primary);
-            margin-top: -10px;
+            margin-top: -11px;
             box-shadow: 0 0 10px rgba(244, 67, 54, 0.4);
         }
 
-        .time-labels {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8em;
-            color: var(--text-dim);
-            margin-top: 8px;
+        .time-display {
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 10px;
         }
 
         .loading-screen {
@@ -203,8 +210,8 @@
         }
 
         .spinner {
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             border: 4px solid #333;
             border-top-color: var(--primary);
             border-radius: 50%;
@@ -222,11 +229,11 @@
 <body id="body">
     <div class="wifi-banner">
         ⚠️ <strong>Same Wi-Fi Required</strong><br>
-        Ensure this phone and the TV are on the same Wi-Fi network.
+        Ensure this phone and the TV are on the same Wi-Fi network for a direct connection.
     </div>
 
     <div class="header">
-        <h2>Remote</h2>
+        <h2 style="font-size: 1.4em;">Kart Remote</h2>
         <div class="status-badge">
             <div class="status-dot"></div>
             <span id="status">Connecting...</span>
@@ -248,7 +255,7 @@
         let isTouching = false;
 
         function hapticFeedback() {
-            if (navigator.vibrate) navigator.vibrate(10);
+            if (navigator.vibrate) navigator.vibrate(15);
         }
 
         function sendCommand(type, value = null) {
@@ -256,6 +263,13 @@
             if (conn && conn.open) {
                 conn.send({ type, value });
             }
+        }
+
+        function formatTime(seconds) {
+            if (!seconds || isNaN(seconds)) return '0:00';
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return `${m}:${s.toString().padStart(2, '0')}`;
         }
 
         function showConnected() {
@@ -268,61 +282,67 @@
                         <div id="cur-lap" class="stat-value">--</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-label">Fastest</div>
-                        <div id="fastest-lap" class="stat-value" style="color:#ffd700">--:--</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Last Lap</div>
-                        <div id="last-lap" class="stat-value">--:--</div>
-                    </div>
-                    <div class="stat-card">
                         <div class="stat-label">Total Laps</div>
                         <div id="total-laps" class="stat-value">--</div>
                     </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Last Lap</div>
+                        <div id="last-lap-time" class="stat-value">--:--</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Fastest</div>
+                        <div id="fastest-lap-time" class="stat-value" style="color:var(--accent)">--:--</div>
+                    </div>
                 </div>
 
                 <div class="control-group">
-                    <div class="section-title">Navigation</div>
+                    <div class="section-title">Playback Control</div>
                     <div class="nav-buttons">
                         <button class="btn" onclick="sendCommand('PREV_LAP')">
-                            <span class="btn-icon">⏮️</span> Prev Lap
+                            <span class="btn-icon">⏮️</span>
+                        </button>
+                        <button id="play-pause-btn" class="btn btn-primary" onclick="sendCommand('PLAY_PAUSE')">
+                            <span class="btn-icon" id="play-icon">⏸️</span>
                         </button>
                         <button class="btn" onclick="sendCommand('NEXT_LAP')">
-                            <span class="btn-icon">⏭️</span> Next Lap
+                            <span class="btn-icon">⏭️</span>
                         </button>
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <div class="section-title">Playback</div>
+                    <div class="section-title">Seek Position</div>
                     <div class="slider-box">
+                        <div id="time-display" class="time-display">0:00 / 0:00</div>
                         <input type="range" id="seek-slider" min="0" max="100" value="0" 
                             ontouchstart="isTouching=true" 
                             ontouchend="isTouching=false; sendCommand('SEEK', this.value)"
                             onchange="sendCommand('SEEK', this.value)">
-                        <div class="time-labels">
-                            <span id="cur-time">0:00</span>
-                            <span id="total-time">0:00</span>
-                        </div>
                     </div>
                 </div>
 
-                <div class="control-group">
-                    <div class="section-title">System</div>
-                    <button class="btn btn-primary" style="width:100%" onclick="sendCommand('TOGGLE_FULLSCREEN')">
-                        <span class="btn-icon">📺</span> Toggle Fullscreen
-                    </button>
-                </div>
+                <button class="btn" style="width:100%; background:#444; border-radius:12px;" onclick="sendCommand('TOGGLE_FULLSCREEN')">
+                    <span class="btn-icon">📺</span> Toggle TV Theater Mode
+                </button>
             `;
         }
 
         function initConnection() {
-            if (!hostId) return;
+            if (!hostId) {
+                document.getElementById('content-area').innerHTML = '<p style="text-align:center; padding:20px;">Error: No Host ID. Please rescan the QR code.</p>';
+                return;
+            }
+
             peer = new Peer();
 
             peer.on('open', () => {
-                conn = peer.connect(hostId);
+                conn = peer.connect(hostId, { reliable: true });
                 setupConnListeners();
+            });
+
+            peer.on('error', (err) => {
+                document.getElementById('status').textContent = 'Error';
+                console.error('Peer error:', err);
             });
         }
 
@@ -331,26 +351,39 @@
 
             conn.on('data', (data) => {
                 if (data.type === 'STATS') {
-                    document.getElementById('cur-lap').textContent = data.lap;
-                    document.getElementById('last-lap').textContent = data.time;
-                    document.getElementById('total-laps').textContent = data.totalLaps;
-                    document.getElementById('fastest-lap').textContent = data.fastestLap;
+                    // Update Stat Values
+                    const curLap = document.getElementById('cur-lap');
+                    const totalLaps = document.getElementById('total-laps');
+                    const lastLap = document.getElementById('last-lap-time');
+                    const fastLap = document.getElementById('fastest-lap-time');
+                    const playIcon = document.getElementById('play-icon');
 
+                    if (curLap) curLap.textContent = data.lap;
+                    if (totalLaps) totalLaps.textContent = data.totalLaps;
+                    if (lastLap) lastLap.textContent = data.time || '--:--';
+                    if (fastLap) fastLap.textContent = data.fastestLap || '--:--';
+
+                    // Update Play/Pause Icon state
+                    if (playIcon) playIcon.textContent = data.isPlaying ? '⏸️' : '▶️';
+
+                    // Update Slider if user isn't currently dragging it
                     if (!isTouching) {
                         const slider = document.getElementById('seek-slider');
-                        slider.max = data.duration;
-                        slider.value = data.currentTime;
-                        document.getElementById('cur-time').textContent = formatTime(data.currentTime);
-                        document.getElementById('total-time').textContent = formatTime(data.duration);
+                        const timeDisplay = document.getElementById('time-display');
+                        if (slider) {
+                            slider.max = data.duration;
+                            slider.value = data.currentTime;
+                            timeDisplay.textContent = `${formatTime(data.currentTime)} / ${formatTime(data.duration)}`;
+                        }
                     }
                 }
             });
-        }
 
-        function formatTime(seconds) {
-            const m = Math.floor(seconds / 60);
-            const s = Math.floor(seconds % 60);
-            return `${m}:${s.toString().padStart(2, '0')}`;
+            conn.on('close', () => {
+                document.getElementById('body').classList.remove('connected');
+                document.getElementById('status').textContent = 'Disconnected';
+                setTimeout(() => location.reload(), 3000);
+            });
         }
 
         initConnection();
