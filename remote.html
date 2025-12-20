@@ -7,115 +7,421 @@
     <title>Karting Remote</title>
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: sans-serif;
-            background: #121212;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #121212 0%, #1e1e1e 100%);
             color: white;
-            text-align: center;
+            min-height: 100vh;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            touch-action: manipulation;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(244, 67, 54, 0.1);
+            border-radius: 12px;
+        }
+
+        .header h1 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            color: #f44336;
+        }
+
+        .status-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #f44336;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.6;
+                transform: scale(0.95);
+            }
+        }
+
+        .connected .status-dot {
+            background: #4caf50;
+            animation: none;
+        }
+
+        #status {
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
         }
 
         .stat-card {
-            background: #1e1e1e;
+            background: linear-gradient(135deg, #2d2d2d 0%, #1e1e1e 100%);
             padding: 20px;
             border-radius: 15px;
-            margin: 10px;
-            border-bottom: 4px solid #f44336;
+            border-left: 4px solid #f44336;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .stat-card:active {
+            transform: scale(0.98);
         }
 
         .label {
             color: #888;
-            font-size: 0.8em;
+            font-size: 0.75em;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
         }
 
         .value {
             font-size: 2em;
             font-weight: bold;
             margin: 5px 0;
+            color: #fff;
+        }
+
+        .slider-container {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1e1e1e 100%);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            margin-top: auto;
+        }
+
+        .slider-label {
+            color: #888;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            text-align: center;
         }
 
         input[type=range] {
+            -webkit-appearance: none;
             width: 100%;
-            height: 60px;
-            accent-color: #f44336;
+            height: 12px;
+            border-radius: 6px;
+            background: #3d3d3d;
+            outline: none;
+            margin: 15px 0;
         }
 
-        .status-dot {
-            width: 10px;
-            height: 10px;
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
-            display: inline-block;
             background: #f44336;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(244, 67, 54, 0.5);
+            transition: all 0.2s;
         }
 
-        .connected .status-dot {
-            background: #4caf50;
+        input[type=range]::-webkit-slider-thumb:active {
+            transform: scale(1.2);
+            box-shadow: 0 4px 16px rgba(244, 67, 54, 0.8);
+        }
+
+        input[type=range]::-moz-range-thumb {
+            width: 30px;
+            height: 30px;
+            border: none;
+            border-radius: 50%;
+            background: #f44336;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(244, 67, 54, 0.5);
+            transition: all 0.2s;
+        }
+
+        input[type=range]::-moz-range-thumb:active {
+            transform: scale(1.2);
+            box-shadow: 0 4px 16px rgba(244, 67, 54, 0.8);
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            color: #999;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .error-message {
+            background: rgba(244, 67, 54, 0.2);
+            border: 2px solid #f44336;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .error-message h2 {
+            color: #f44336;
+            margin-bottom: 10px;
+        }
+
+        .reconnect-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+
+        .reconnect-btn:active {
+            transform: scale(0.95);
+            background: #d32f2f;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            margin: 20px auto;
+            border: 4px solid #3d3d3d;
+            border-top-color: #f44336;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
 
 <body id="body">
-    <div style="margin-bottom: 30px;">
-        <span class="status-dot"></span> <span id="status">Connecting...</span>
+    <div class="header">
+        <h1>🏎️ Karting Remote</h1>
+        <div class="status-container">
+            <span class="status-dot"></span>
+            <span id="status">Connecting...</span>
+        </div>
     </div>
 
-    <div class="stat-card">
-        <div class="label">Current Lap</div>
-        <div id="cur-lap" class="value">--</div>
-    </div>
-
-    <div class="stat-card">
-        <div class="label">Lap Time</div>
-        <div id="cur-time" class="value">--:--</div>
-    </div>
-
-    <div style="margin-top: 40px; padding: 0 10px;">
-        <div class="label">Drag to seek video</div>
-        <input type="range" id="seek-slider" min="0" max="100" value="0">
+    <div id="content-area">
+        <div class="loading">
+            <div class="spinner"></div>
+            <p>Establishing connection...</p>
+        </div>
     </div>
 
     <script>
         const params = new URLSearchParams(window.location.search);
         const hostId = params.get('host');
-        const peer = new Peer();
-        let conn;
 
-        peer.on('open', () => {
-            if (hostId) {
-                conn = peer.connect(hostId);
-                setupEvents();
-            } else {
-                document.getElementById('status').innerText = "No Host ID found in URL";
-            }
-        });
+        let peer = null;
+        let conn = null;
+        let isTouching = false;
+        let reconnectAttempts = 0;
+        const maxReconnectAttempts = 5;
 
-        function setupEvents() {
-            conn.on('open', () => {
-                document.getElementById('status').innerText = "Connected to TV";
-                document.getElementById('body').classList.add('connected');
+        function showError(message, showReconnect = true) {
+            document.getElementById('content-area').innerHTML = `
+                <div class="error-message">
+                    <h2>❌ Connection Error</h2>
+                    <p>${message}</p>
+                    ${showReconnect ? '<button class="reconnect-btn" onclick="location.reload()">Retry Connection</button>' : ''}
+                </div>
+            `;
+            document.getElementById('status').textContent = 'Connection Failed';
+        }
+
+        function showConnected() {
+            document.getElementById('body').classList.add('connected');
+            document.getElementById('status').textContent = 'Connected to TV';
+
+            document.getElementById('content-area').innerHTML = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="label">Current Lap</div>
+                        <div id="cur-lap" class="value">--</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">Lap Time</div>
+                        <div id="cur-time" class="value">--:--</div>
+                    </div>
+                </div>
+
+                <div class="slider-container">
+                    <div class="slider-label">Drag to Seek Video</div>
+                    <input type="range" id="seek-slider" min="0" max="100" value="0">
+                    <div class="time-display">
+                        <span id="current-time">0:00</span>
+                        <span id="duration-time">0:00</span>
+                    </div>
+                </div>
+            `;
+
+            setupSlider();
+        }
+
+        function setupSlider() {
+            const slider = document.getElementById('seek-slider');
+
+            slider.addEventListener('touchstart', () => {
+                isTouching = true;
             });
 
-            conn.on('data', (data) => {
-                if (data.type === 'STATS') {
-                    document.getElementById('cur-lap').innerText = data.lap;
-                    document.getElementById('cur-time').innerText = data.time;
-                    const slider = document.getElementById('seek-slider');
-                    slider.max = data.duration;
-                    // Only update slider if user isn't touching it
-                    if (!window.isTouching) slider.value = data.currentTime;
+            slider.addEventListener('touchend', () => {
+                isTouching = false;
+            });
+
+            slider.addEventListener('input', (e) => {
+                if (conn && conn.open) {
+                    conn.send({ type: 'SEEK', value: parseFloat(e.target.value) });
+                    updateTimeDisplay(parseFloat(e.target.value), parseFloat(slider.max));
                 }
             });
         }
 
-        const slider = document.getElementById('seek-slider');
-        slider.addEventListener('touchstart', () => window.isTouching = true);
-        slider.addEventListener('touchend', () => window.isTouching = false);
-        slider.addEventListener('input', (e) => {
-            if (conn && conn.open) {
-                conn.send({ type: 'SEEK', value: e.target.value });
+        function updateTimeDisplay(current, duration) {
+            const currentEl = document.getElementById('current-time');
+            const durationEl = document.getElementById('duration-time');
+
+            if (currentEl) currentEl.textContent = formatSeconds(current);
+            if (durationEl) durationEl.textContent = formatSeconds(duration);
+        }
+
+        function formatSeconds(seconds) {
+            if (!seconds || isNaN(seconds)) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function initConnection() {
+            if (!hostId) {
+                showError('No host ID found in URL. Please scan the QR code again.', false);
+                return;
             }
-        });
+
+            console.log('Initializing PeerJS...');
+            peer = new Peer();
+
+            peer.on('open', (id) => {
+                console.log('PeerJS opened with ID:', id);
+                console.log('Attempting to connect to host:', hostId);
+
+                conn = peer.connect(hostId, {
+                    reliable: true,
+                    serialization: 'json'
+                });
+
+                setupConnectionHandlers();
+            });
+
+            peer.on('error', (err) => {
+                console.error('PeerJS error:', err);
+
+                if (err.type === 'peer-unavailable') {
+                    showError('TV not found. Make sure the session page is open and try scanning the QR code again.');
+                } else if (err.type === 'network') {
+                    showError('Network error. Please check your internet connection.');
+                } else {
+                    showError(`Connection error: ${err.message}`);
+                }
+            });
+        }
+
+        function setupConnectionHandlers() {
+            if (!conn) return;
+
+            conn.on('open', () => {
+                console.log('Connection established!');
+                reconnectAttempts = 0;
+                showConnected();
+            });
+
+            conn.on('data', (data) => {
+                console.log('Received data:', data);
+
+                if (data.type === 'STATS') {
+                    const lapEl = document.getElementById('cur-lap');
+                    const timeEl = document.getElementById('cur-time');
+                    const slider = document.getElementById('seek-slider');
+
+                    if (lapEl) lapEl.textContent = data.lap || '--';
+                    if (timeEl) timeEl.textContent = data.time || '--:--';
+
+                    if (slider && !isTouching) {
+                        slider.max = data.duration || 100;
+                        slider.value = data.currentTime || 0;
+                        updateTimeDisplay(data.currentTime, data.duration);
+                    }
+                }
+            });
+
+            conn.on('close', () => {
+                console.log('Connection closed');
+                document.getElementById('body').classList.remove('connected');
+
+                if (reconnectAttempts < maxReconnectAttempts) {
+                    reconnectAttempts++;
+                    document.getElementById('status').textContent = `Reconnecting... (${reconnectAttempts}/${maxReconnectAttempts})`;
+                    setTimeout(initConnection, 2000);
+                } else {
+                    showError('Connection lost. Please refresh to reconnect.');
+                }
+            });
+
+            conn.on('error', (err) => {
+                console.error('Connection error:', err);
+                showError('Connection error occurred. Please try again.');
+            });
+        }
+
+        // Start connection
+        initConnection();
     </script>
 </body>
 
