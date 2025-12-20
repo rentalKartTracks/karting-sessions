@@ -43,6 +43,82 @@
       color: #e0e0e0;
       min-height: 100vh;
       padding: 20px;
+      transition: all 0.3s ease;
+    }
+
+    /* TV Mode Styles */
+    body.tv-mode {
+      padding: 40px;
+    }
+
+    body.tv-mode .driver-name {
+      font-size: 3.5em !important;
+    }
+
+    body.tv-mode .stat-value {
+      font-size: 2.5em !important;
+    }
+
+    body.tv-mode .stat-value.small {
+      font-size: 2em !important;
+    }
+
+    body.tv-mode .fastest-time {
+      font-size: 3em !important;
+    }
+
+    body.tv-mode .chart-title {
+      font-size: 2.2em !important;
+    }
+
+    body.tv-mode .section-title {
+      font-size: 1.8em !important;
+    }
+
+    body.tv-mode .stat-label {
+      font-size: 1.2em !important;
+    }
+
+    body.tv-mode #current-lap-display {
+      font-size: 1.5em !important;
+    }
+
+    body.tv-mode .comparison-input button,
+    body.tv-mode button[onclick="nextLap()"] {
+      padding: 15px 30px !important;
+      font-size: 1.2em !important;
+    }
+
+    body.tv-mode #lap-selector-slider {
+      height: 12px !important;
+    }
+
+    body.tv-mode #lap-selector-slider::-webkit-slider-thumb {
+      width: 30px !important;
+      height: 30px !important;
+    }
+
+    body.tv-mode .qr-panel h3 {
+      font-size: 1.8em !important;
+    }
+
+    body.tv-mode #qr-code {
+      transform: scale(1.3);
+      margin: 30px 0;
+    }
+
+    body.tv-mode .remote-url {
+      font-size: 1.2em !important;
+      padding: 15px !important;
+    }
+
+    /* Hide QR in PC mode when not needed */
+    body.pc-mode .qr-panel {
+      display: none;
+    }
+
+    body.pc-mode.show-qr .qr-panel {
+      display: block;
     }
 
     .container {
@@ -56,6 +132,65 @@
       border-radius: 12px;
       margin-bottom: 30px;
       box-shadow: 0 8px 32px rgba(211, 47, 47, 0.3);
+      position: relative;
+    }
+
+    /* Mode Switcher */
+    .mode-switcher {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .mode-btn {
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mode-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .mode-btn.active {
+      background: rgba(255, 255, 255, 0.4);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+
+    /* Share Button */
+    .share-btn {
+      position: absolute;
+      top: 20px;
+      right: 200px;
+      padding: 8px 16px;
+      background: #2196f3;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .share-btn:hover {
+      background: #1976d2;
+    }
+
+    .share-btn.copied {
+      background: #4caf50;
     }
 
     .driver-name {
@@ -81,6 +216,21 @@
     @media (max-width: 768px) {
       .stats-grid {
         grid-template-columns: 1fr;
+      }
+
+      .mode-switcher {
+        position: relative;
+        top: 0;
+        right: 0;
+        justify-content: center;
+        margin-top: 15px;
+      }
+
+      .share-btn {
+        position: relative;
+        top: 0;
+        right: 0;
+        margin-top: 15px;
       }
     }
 
@@ -513,7 +663,7 @@
       transition: background .15s ease-in-out;
     }
 
-    /* QR Code Panel Styles - Updated for expandable */
+    /* QR Code Panel Styles */
     .qr-panel {
       background: #1e1e1e;
       border: 3px solid #f44336;
@@ -522,25 +672,11 @@
       margin-bottom: 30px;
       text-align: center;
       transition: all 0.3s ease;
-      display: none;
-      /* Hidden by default */
     }
 
     .qr-panel.connected {
       border-color: #4caf50;
       background: #1e3a1e;
-    }
-
-    .qr-panel.expanded {
-      display: block;
-    }
-
-    .qr-panel.collapsed .qr-content {
-      display: none;
-    }
-
-    .qr-panel.expanded .qr-content {
-      display: block;
     }
 
     .qr-panel h3 {
@@ -550,21 +686,6 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .qr-toggle {
-      font-size: 0.8em;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 4px 10px;
-      border-radius: 15px;
-      margin-left: 10px;
-      transition: all 0.3s;
-    }
-
-    .qr-toggle:hover {
-      background: rgba(255, 255, 255, 0.2);
     }
 
     .status-indicator {
@@ -636,12 +757,46 @@
       color: #fff;
       margin-top: 5px;
     }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      color: white;
+      padding: 15px 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      z-index: 10000;
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-weight: bold;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
   </style>
 </head>
 
 <body>
   <div class="container">
     <div class="header">
+      <div class="mode-switcher">
+        <button class="mode-btn active" id="pc-mode-btn" onclick="switchMode('pc')">
+          <span>💻</span> PC Mode
+        </button>
+        <button class="mode-btn" id="tv-mode-btn" onclick="switchMode('tv')">
+          <span>📺</span> TV Mode
+        </button>
+      </div>
+
+      <button class="share-btn" id="share-btn" onclick="shareCompareLink()">
+        <span>🔗</span> Share Compare
+      </button>
+
       <div class="header-content">
         <div class="header-info">
           <div class="driver-name" id="driver"></div>
@@ -651,7 +806,27 @@
       </div>
     </div>
 
-    <!-- Stats Grid and other content first -->
+    <!-- QR Code Panel - Initially hidden in PC mode -->
+    <div class="qr-panel" id="qr-panel">
+      <h3>
+        <span class="status-indicator"></span>
+        <span id="connection-status">📱 Phone Remote Control</span>
+      </h3>
+      <p>Scan this QR code with your phone to control the video playback</p>
+      <div id="qr-code"></div>
+      <div class="remote-url" id="remote-url">Generating connection...</div>
+      <div class="connection-stats">
+        <div class="connection-stat">
+          <div class="connection-stat-label">Status</div>
+          <div class="connection-stat-value" id="peer-status">Initializing...</div>
+        </div>
+        <div class="connection-stat">
+          <div class="connection-stat-label">Connected Devices</div>
+          <div class="connection-stat-value" id="connected-count">0</div>
+        </div>
+      </div>
+    </div>
+
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-label">Fastest Lap</div>
@@ -686,7 +861,6 @@
 
     <div class="chart-container">
       <div class="chart-title">📈 Lap Time Progression</div>
-
       <div
         style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
         <span id="current-lap-display"
@@ -716,30 +890,6 @@
       <div id="comparison-results" class="comparison-grid"></div>
     </div>
 
-    <!-- QR Code Panel moved to bottom -->
-    <div class="qr-panel collapsed" id="qr-panel">
-      <h3 onclick="toggleQrPanel()">
-        <span class="status-indicator"></span>
-        <span id="connection-status">📱 Phone Remote Control</span>
-        <span class="qr-toggle" id="qr-toggle">▼ Show</span>
-      </h3>
-      <div class="qr-content">
-        <p>Scan this QR code with your phone to control the video playback</p>
-        <div id="qr-code"></div>
-        <div class="remote-url" id="remote-url">Generating connection...</div>
-        <div class="connection-stats">
-          <div class="connection-stat">
-            <div class="connection-stat-label">Status</div>
-            <div class="connection-stat-value" id="peer-status">Initializing...</div>
-          </div>
-          <div class="connection-stat">
-            <div class="connection-stat-label">Connected Devices</div>
-            <div class="connection-stat-value" id="connected-count">0</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div class="socials">
       <strong>Follow:</strong>
       <a href="https://www.instagram.com/YourKartingBrand/" target="_blank">Instagram</a>
@@ -749,6 +899,7 @@
   </div>
 
   <div id="chart-tooltip" class="tooltip"></div>
+  <div class="toast" id="toast"></div>
 
   <script>
     let currentSessionData = null;
@@ -758,6 +909,8 @@
     let comparisonDatasets = [];
     let activePoint = null;
     let allSessionsList = [];
+    let currentMode = 'pc'; // 'pc' or 'tv'
+    let autoFullscreenTriggered = false;
 
     if (window.Chart) {
       Chart.defaults.font.family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
@@ -806,20 +959,96 @@
       { line: '#e91e63', point: '#f06292' }
     ];
 
-    // --- QR Panel Toggle Function ---
-    function toggleQrPanel() {
-      const panel = document.getElementById('qr-panel');
-      const toggle = document.getElementById('qr-toggle');
+    // --- Mode Detection and Switching ---
+    function detectInitialMode() {
+      const params = new URLSearchParams(window.location.search);
+      const urlMode = params.get('mode');
 
-      if (panel.classList.contains('collapsed')) {
-        panel.classList.remove('collapsed');
-        panel.classList.add('expanded');
-        toggle.textContent = '▲ Hide';
+      if (urlMode === 'tv' || urlMode === 'pc') {
+        currentMode = urlMode;
       } else {
-        panel.classList.remove('expanded');
-        panel.classList.add('collapsed');
-        toggle.textContent = '▼ Show';
+        // Auto-detect: TV if large screen and likely far viewing
+        const isLikelyTV = window.innerWidth >= 1920 && window.innerHeight >= 1080;
+        currentMode = isLikelyTV ? 'tv' : 'pc';
       }
+
+      applyMode(currentMode);
+      updateModeButtons();
+    }
+
+    function switchMode(mode) {
+      currentMode = mode;
+      applyMode(mode);
+      updateModeButtons();
+
+      // Update URL without reloading
+      const url = new URL(window.location);
+      url.searchParams.set('mode', mode);
+      window.history.replaceState({}, '', url);
+
+      // In TV mode, show QR panel
+      if (mode === 'tv') {
+        document.getElementById('qr-panel').style.display = 'block';
+        // Auto-play video in TV mode
+        if (player && typeof player.playVideo === 'function') {
+          setTimeout(() => player.playVideo(), 1000);
+        }
+      }
+    }
+
+    function applyMode(mode) {
+      document.body.className = mode + '-mode';
+
+      if (mode === 'tv') {
+        // Show QR panel in TV mode
+        document.getElementById('qr-panel').style.display = 'block';
+        // Show toast notification
+        showToast('TV Mode: Larger text for distant viewing');
+      } else {
+        // Hide QR panel in PC mode by default
+        document.getElementById('qr-panel').style.display = 'none';
+      }
+    }
+
+    function updateModeButtons() {
+      document.getElementById('pc-mode-btn').classList.toggle('active', currentMode === 'pc');
+      document.getElementById('tv-mode-btn').classList.toggle('active', currentMode === 'tv');
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function shareCompareLink() {
+      const compareInput = document.getElementById('compare-id-input');
+      const compareIds = compareInput.value.trim();
+
+      let shareUrl = window.location.href.split('?')[0] + `?id=${sessionId}`;
+
+      if (compareIds) {
+        shareUrl += `&compare_id=${encodeURIComponent(compareIds)}`;
+      }
+
+      // Copy to clipboard
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        const shareBtn = document.getElementById('share-btn');
+        const originalText = shareBtn.innerHTML;
+        shareBtn.innerHTML = '<span>✅</span> Copied!';
+        shareBtn.classList.add('copied');
+
+        showToast('Comparison link copied to clipboard!');
+
+        setTimeout(() => {
+          shareBtn.innerHTML = originalText;
+          shareBtn.classList.remove('copied');
+        }, 2000);
+      }).catch(err => {
+        showToast('Failed to copy link');
+        console.error('Copy failed:', err);
+      });
     }
 
     // --- Initialize PeerJS ---
@@ -828,21 +1057,20 @@
 
       peer.on('open', (id) => {
         console.log('PeerJS ID:', id);
-        const remoteUrl = `${window.location.origin}${window.location.pathname.replace('session.html', 'remote.html')}?host=${id}`;
+        const remoteUrl = `${window.location.origin}${window.location.pathname.replace('session.html', 'remote.html')}?host=${id}&mode=${currentMode}`;
 
         document.getElementById('remote-url').textContent = remoteUrl;
         document.getElementById('peer-status').textContent = 'Ready';
 
         // Generate QR Code
         const qrContainer = document.getElementById('qr-code');
-        qrContainer.innerHTML = ''; //remoteUrl
+        qrContainer.innerHTML = '';
         new QRCode(qrContainer, {
-          text: remoteUrl, // Short URL
-          width: 250,
-          height: 250,
+          text: remoteUrl,
+          width: 200,
+          height: 200,
           colorDark: '#000000',
           colorLight: '#ffffff',
-          correctLevel: QRCode.CorrectLevel.M // Less dense QR
         });
       });
 
@@ -886,6 +1114,19 @@
               }
               break;
           }
+
+          // Auto-fullscreen when remote connects in TV mode
+          if (currentMode === 'tv' && !autoFullscreenTriggered) {
+            autoFullscreenTriggered = true;
+            setTimeout(() => {
+              const videoContainer = document.getElementById('video-display-container');
+              if (videoContainer && !document.fullscreenElement) {
+                if (videoContainer.requestFullscreen) {
+                  videoContainer.requestFullscreen();
+                }
+              }
+            }, 2000);
+          }
         });
 
         // 3. Clean up when remote disconnects
@@ -900,22 +1141,6 @@
         updateConnectionUI();
       });
 
-      function toggleVideoFullscreen() {
-        const container = document.getElementById('video-display-container');
-        if (!document.fullscreenElement) {
-          // Enter Fullscreen
-          if (container.requestFullscreen) {
-            container.requestFullscreen();
-          } else if (container.webkitRequestFullscreen) { /* Safari */
-            container.webkitRequestFullscreen();
-          }
-        } else {
-          // Exit Fullscreen
-          if (document.exitFullscreen) {
-            document.exitFullscreen();
-          }
-        }
-      }
       peer.on('error', (err) => {
         console.error('PeerJS error:', err);
         document.getElementById('peer-status').textContent = 'Error';
@@ -949,7 +1174,8 @@
         const duration = player && typeof player.getDuration === 'function' ? player.getDuration() : 0;
 
         // Grab current UI values to send back to the phone
-        const totalLaps = currentSessionData?.laps.length || 0;
+        const validLaps = currentSessionData?.laps.filter(l => l.lap !== null) || [];
+        const totalLaps = validLaps.length;
         const fastestLap = document.getElementById('fastest')?.textContent || '--:--';
         const isPlaying = player ? player.getPlayerState() === YT.PlayerState.PLAYING : false;
 
@@ -979,7 +1205,7 @@
       }
     }
 
-    // Initialize PeerJS on load (but we'll conditionally show panel)
+    // Initialize PeerJS on load
     initializePeer();
 
     // --- Data Loading ---
@@ -1210,6 +1436,15 @@
 
         // Show QR panel since we have video
         document.getElementById('qr-panel').style.display = 'block';
+
+        // Auto-play in TV mode
+        if (currentMode === 'tv') {
+          setTimeout(() => {
+            if (player && typeof player.playVideo === 'function') {
+              player.playVideo();
+            }
+          }, 1000);
+        }
       } else {
         // Hide QR panel if no valid video
         document.getElementById('qr-panel').style.display = 'none';
@@ -1785,6 +2020,11 @@
         compareSession();
       }
     }
+
+    // --- Initialize on load ---
+    window.addEventListener('DOMContentLoaded', () => {
+      detectInitialMode();
+    });
   </script>
 </body>
 
