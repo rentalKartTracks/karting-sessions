@@ -1186,9 +1186,17 @@
       const detailedChart = document.querySelector('.detailed-chart');
       const statsGrid = document.getElementById('stats-grid');
 
-      // Reset all display properties first
+      // Reset all elements to their default state
       if (tvControls) tvControls.style.display = 'none';
-      if (qrPanel) qrPanel.style.display = 'none';
+
+      // QR panel should be block in both modes when video exists
+      const videoContainer = document.getElementById('video-display-container');
+      const hasVideo = videoContainer && videoContainer.style.display !== 'none';
+
+      if (qrPanel) {
+        qrPanel.style.display = hasVideo ? 'block' : 'none';
+      }
+
       if (comparisonSection) comparisonSection.style.display = 'block';
       if (socialSection) socialSection.style.display = 'block';
       if (detailedChart) detailedChart.style.display = 'block';
@@ -1201,7 +1209,6 @@
       if (mode === 'tv') {
         // Show TV mode elements
         if (tvControls) tvControls.style.display = 'block';
-        if (qrPanel) qrPanel.style.display = 'block';
 
         // Hide complex sections
         if (comparisonSection) comparisonSection.style.display = 'none';
@@ -1210,7 +1217,7 @@
 
         // Simplify stats grid for TV mode
         if (statsGrid && currentSessionData) {
-          const fastestTime = document.getElementById('fastest')?.textContent || '--:--';
+          const fastestTime = currentSessionData.fastest_lap || '--:--';
           const currentLap = currentLapMarker.lapNumber;
           const delta = calculateCurrentDelta();
 
@@ -1221,7 +1228,7 @@
             </div>
             <div class="stat-card tv-stat">
               <div class="stat-label">Current Lap</div>
-              <div class="stat-value">${currentLap}</div>
+              <div class="stat-value" id="tv-current-lap">${currentLap}</div>
             </div>
             <div class="stat-card tv-stat">
               <div class="stat-label">Delta</div>
@@ -1479,16 +1486,14 @@
         const validLaps = currentSessionData?.laps.filter(l => l.lap !== null) || [];
         const totalLaps = validLaps.length;
 
-        // FIX: Use fastest_lap from session data instead of calculating from DOM
-        const fastestLap = currentSessionData?.fastest_lap || '--:--'; // This is the key fix
-
+        const fastestLap = currentSessionData?.fastest_lap || '--:--';
         const isPlaying = player ? player.getPlayerState() === YT.PlayerState.PLAYING : false;
 
         const stats = {
           type: 'STATS',
           lap: currentLap,
           totalLaps: totalLaps,
-          fastestLap: fastestLap, // Now using the pre-calculated fastest lap from JSON
+          fastestLap: fastestLap,
           time: currentLapData?.time || '--:--',
           currentTime: currentTime,
           duration: duration,
@@ -1501,17 +1506,17 @@
           }
         });
 
-        // Update TV mode delta display - ALWAYS update in TV mode
+        // Update TV mode displays
         if (currentMode === 'tv') {
           const delta = calculateCurrentDelta();
           const deltaEl = document.getElementById('tv-delta');
+          const currentLapEl = document.getElementById('tv-current-lap');
+
           if (deltaEl) {
             deltaEl.textContent = `${delta >= 0 ? '+' : ''}${delta.toFixed(3)}s`;
             deltaEl.style.color = delta >= 0 ? '#f44336' : '#4caf50';
           }
 
-          // Also update current lap display in TV mode
-          const currentLapEl = document.querySelector('.tv-stat:nth-child(2) .stat-value');
           if (currentLapEl) {
             currentLapEl.textContent = currentLap;
           }
@@ -1781,7 +1786,11 @@
           window.onYouTubeIframeAPIReady();
         }
 
-        document.getElementById('qr-panel').style.display = 'block';
+        // Show QR panel only if we're in a mode that should display it
+        if (currentMode === 'tv') {
+          document.getElementById('qr-panel').style.display = 'block';
+        }
+        // For PC mode, QR panel visibility is handled by CSS class (.pc-mode .qr-panel)
 
         if (currentMode === 'tv') {
           setTimeout(() => {
