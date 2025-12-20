@@ -1457,14 +1457,17 @@
         // Grab current UI values to send back to the phone
         const validLaps = currentSessionData?.laps.filter(l => l.lap !== null) || [];
         const totalLaps = validLaps.length;
-        const fastestLap = document.getElementById('fastest')?.textContent || '--:--';
+
+        // FIX: Use fastest_lap from session data instead of calculating from DOM
+        const fastestLap = currentSessionData?.fastest_lap || '--:--'; // This is the key fix
+
         const isPlaying = player ? player.getPlayerState() === YT.PlayerState.PLAYING : false;
 
         const stats = {
           type: 'STATS',
           lap: currentLap,
           totalLaps: totalLaps,
-          fastestLap: fastestLap,
+          fastestLap: fastestLap, // Now using the pre-calculated fastest lap from JSON
           time: currentLapData?.time || '--:--',
           currentTime: currentTime,
           duration: duration,
@@ -2200,8 +2203,12 @@
 
       const validLaps = data.laps.filter(lap => lap.lap !== null && parseTime(lap.time) !== null);
       const lapTimes = validLaps.map(lap => parseTime(lap.time)).filter(time => !isNaN(time));
-      const fastestTime = lapTimes.length > 0 ? Math.min(...lapTimes) : 0;
-      const fastestLapIndex = lapTimes.indexOf(fastestTime);
+
+      // Use fastest_lap from data if available, otherwise calculate
+      const fastestTime = data.fastest_lap ? parseTime(data.fastest_lap) : (lapTimes.length > 0 ? Math.min(...lapTimes) : 0);
+      const fastestLapIndex = data.fastest_lap ?
+        validLaps.findIndex(lap => lap.time === data.fastest_lap) :
+        lapTimes.indexOf(fastestTime);
 
       validLaps.forEach((lap, i) => { lap.best = (i === fastestLapIndex); });
 
@@ -2210,33 +2217,33 @@
       const consistency = getConsistencyRating(stdDev);
 
       statsGrid.innerHTML = `
-        <div class="stat-card">
-          <div class="stat-label">Fastest Lap</div>
-          <div class="stat-value fastest-time">${formatTime(fastestTime)}</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Average Lap</div>
-          <div class="stat-value small">${formatTime(avgTime)}</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Consistency</div>
-          <div class="stat-value small ${consistency.class}">${consistency.text} (±${stdDev.toFixed(3)}s)</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Track</div>
-          <div class="stat-value" style="font-size: 1.3em;">
-            <a class="track-link" href="${data.track.maps_link}" target="_blank">${data.track.name}</a>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Kart</div>
-          <div class="stat-value">${data.kart}</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Total Laps</div>
-          <div class="stat-value">${validLaps.length}</div>
-        </div>
-      `;
+    <div class="stat-card">
+      <div class="stat-label">Fastest Lap</div>
+      <div class="stat-value fastest-time">${data.fastest_lap || formatTime(fastestTime)}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Average Lap</div>
+      <div class="stat-value small">${formatTime(avgTime)}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Consistency</div>
+      <div class="stat-value small ${consistency.class}">${consistency.text} (±${stdDev.toFixed(3)}s)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Track</div>
+      <div class="stat-value" style="font-size: 1.3em;">
+        <a class="track-link" href="${data.track.maps_link}" target="_blank">${data.track.name}</a>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Kart</div>
+      <div class="stat-value">${data.kart}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Laps</div>
+      <div class="stat-value">${validLaps.length}</div>
+    </div>
+  `;
     }
 
     function renderSession(data) {
