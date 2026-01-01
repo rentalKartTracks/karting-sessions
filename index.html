@@ -347,6 +347,61 @@
     let uniqueTracks = new Set();
     let uniqueConfigs = new Set();
 
+    // URL parameter handling
+    function getUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        search: params.get('search') || '',
+        track: params.get('track') || '',
+        config: params.get('config') || '',
+        dateFilter: params.get('date') || 'all',
+        dateFrom: params.get('from') || '',
+        dateTo: params.get('to') || '',
+        sort: params.get('sort') || 'date'
+      };
+    }
+
+    function updateUrlParams() {
+      const params = new URLSearchParams();
+
+      const search = document.getElementById('search-input').value;
+      const track = document.getElementById('track-filter').value;
+      const config = document.getElementById('config-filter').value;
+      const dateFilter = document.getElementById('date-filter').value;
+      const dateFrom = document.getElementById('date-from').value;
+      const dateTo = document.getElementById('date-to').value;
+
+      if (search) params.set('search', search);
+      if (track) params.set('track', track);
+      if (config) params.set('config', config);
+      if (dateFilter !== 'all') params.set('date', dateFilter);
+      if (dateFilter === 'custom' && dateFrom) params.set('from', dateFrom);
+      if (dateFilter === 'custom' && dateTo) params.set('to', dateTo);
+      if (currentSort !== 'date') params.set('sort', currentSort);
+
+      const newUrl = params.toString() ? `${window.location.pathname}?${params.toString()}` : window.location.pathname;
+      window.history.replaceState({}, '', newUrl);
+    }
+
+    function applyUrlParams() {
+      const params = getUrlParams();
+
+      document.getElementById('search-input').value = params.search;
+      document.getElementById('track-filter').value = params.track;
+      document.getElementById('config-filter').value = params.config;
+      document.getElementById('date-filter').value = params.dateFilter;
+      document.getElementById('date-from').value = params.dateFrom;
+      document.getElementById('date-to').value = params.dateTo;
+
+      currentSort = params.sort;
+      updateDateFilterVisibility();
+
+      // Update sort button states
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.sort === currentSort);
+      });
+    }
+
     async function loadAllSessions() {
       const container = document.getElementById('sessions-container');
 
@@ -392,7 +447,8 @@
 
         populateFilters();
         filteredSessions = [...allSessions];
-        renderSessions();
+        applyUrlParams();
+        filterSessions();
       } catch (error) {
         console.error('Error loading or processing sessions:', error);
         container.innerHTML = `<div class="error">Error loading sessions: ${error.message}. Please ensure 'sessions/sessions-list.json' is accessible and correctly formatted with summary data.</div>`;
@@ -625,22 +681,39 @@
     }
 
     // --- Event Listeners and Initialization ---
-    document.getElementById('search-input').addEventListener('input', filterSessions);
-    document.getElementById('track-filter').addEventListener('change', filterSessions);
-    document.getElementById('config-filter').addEventListener('change', filterSessions);
+    document.getElementById('search-input').addEventListener('input', () => {
+      filterSessions();
+      updateUrlParams();
+    });
+    document.getElementById('track-filter').addEventListener('change', () => {
+      filterSessions();
+      updateUrlParams();
+    });
+    document.getElementById('config-filter').addEventListener('change', () => {
+      filterSessions();
+      updateUrlParams();
+    });
     document.getElementById('date-filter').addEventListener('change', function () {
       updateDateFilterVisibility();
       filterSessions();
+      updateUrlParams();
     });
 
-    document.getElementById('date-from').addEventListener('change', filterSessions);
-    document.getElementById('date-to').addEventListener('change', filterSessions);
+    document.getElementById('date-from').addEventListener('change', () => {
+      filterSessions();
+      updateUrlParams();
+    });
+    document.getElementById('date-to').addEventListener('change', () => {
+      filterSessions();
+      updateUrlParams();
+    });
 
     document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         e.target.classList.add('active');
         sortSessions(e.target.dataset.sort);
+        updateUrlParams();
       });
     });
 
