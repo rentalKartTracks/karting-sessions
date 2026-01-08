@@ -1,0 +1,36 @@
+{
+  "session_id": "b424ec42-4be0-44bc-bf6d-a989c9506ecb",
+  "driver": "Ignas M.",
+  "fastest_lap": "01:25.862",
+  "track": {
+    "name": "Speedway",
+    "configuration": "Rain",
+    "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "00:38",
+  "video_url": "https://youtu.be/H1MKQwCuGhg",
+  "session_date": "2025-11-09",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "01:26.784"
+    },
+    {
+      "lap": 2,
+      "time": "01:26.997"
+    },
+    {
+      "lap": 3,
+      "time": "01:26.246"
+    },
+    {
+      "lap": 4,
+      "time": "01:29.699"
+    },
+    {
+      "lap": 5,
+      "time": "01:25.862"
+    }
+  ]
+}

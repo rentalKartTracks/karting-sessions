@@ -97,6 +97,22 @@
             "laps_count": 29
         },
         {
+            "id": "b424ec42-4be0-44bc-bf6d-a989c9506ecb",
+            "driver": "Ignas M.",
+            "track": {
+                "name": "Speedway",
+                "configuration": "Rain",
+                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+            },
+            "session_date": "2025-11-09",
+            "kart": "9 Ag",
+            "fastest_lap": "01:25.862",
+            "average_lap": "01:27.118",
+            "fastest_lap_s": 85.862,
+            "average_lap_s": 87.1176,
+            "laps_count": 5
+        },
+        {
             "id": "bba25b2e-9a78-464f-b68e-c29697ddcfb2",
             "driver": "Kęstas Č.",
             "track": {
