@@ -1,0 +1,32 @@
+{
+  "session_id": "14bf7186-e5c5-401e-8ae0-9cbbb0142523",
+  "driver": "Romualdas P.",
+  "fastest_lap": "01:43.262",
+  "track": {
+    "name": "Speedway",
+    "configuration": "Rain",
+    "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "02:05",
+  "video_url": "https://youtu.be/ksPpzLTZgj0",
+  "session_date": "2025-11-09",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "02:07.911"
+    },
+    {
+      "lap": 2,
+      "time": "01:43.262"
+    },
+    {
+      "lap": 3,
+      "time": "01:49.788"
+    },
+    {
+      "lap": 4,
+      "time": "01:56.356"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 ## 🏎️ Karting Sessions Data Generator
 
-This utility script (`generate_list.py`) is used to automatically scan all individual session JSON files within the project directory and compile them into a single summary file, `sessions-list.json`.
+This utility script (`python .\generate_list.py`) is used to automatically scan all individual session JSON files within the project directory and compile them into a single summary file, `sessions-list.json`.
 
 The `sessions-list.json` file is required by the main dashboard (`index.html`) for quick filtering, sorting, and displaying summary statistics without having to load hundreds of detailed session files.
 
