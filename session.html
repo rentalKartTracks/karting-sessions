@@ -4,49 +4,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Security meta tags -->
-  <meta http-equiv="Content-Security-Policy" content="
-    default-src 'self';
-    script-src 'self' https://www.youtube.com https://s.ytimg.com https://www.google.com https://static.doubleclick.net https://unpkg.com https://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';
-    style-src 'self' 'unsafe-inline';
-    img-src 'self' data: https://i.ytimg.com https://www.google.com;
-    frame-src https://www.youtube.com https://www.youtube-nocookie.com;
-    font-src 'self';
-    connect-src 'self' https://www.google.com https://www.youtube.com https://static.doubleclick.net wss: https:;
-    object-src 'none';
-    base-uri 'self';
-    form-action 'self';
-    frame-ancestors 'self';
-  ">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' https://www.youtube.com https://s.ytimg.com https://www.google.com https://static.doubleclick.net https://unpkg.com https://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com https://www.google.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com; font-src 'self'; connect-src 'self' https://www.google.com https://www.youtube.com https://static.doubleclick.net wss: https:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';">
   <meta http-equiv="X-XSS-Protection" content="1; mode=block">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
-
   <title>Karting Session Viewer</title>
-
-  <!-- Preconnect for external domains -->
   <link rel="preconnect" href="https://www.youtube.com">
   <link rel="preconnect" href="https://s.ytimg.com">
   <link rel="preconnect" href="https://www.google.com">
   <link rel="preconnect" href="https://unpkg.com">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-
-  <!-- Font display optimization -->
   <style>
     @font-face {
       font-family: 'Segoe UI Fallback';
       src: local('Arial'), local('Helvetica');
       font-display: swap;
     }
-  </style>
 
-  <!-- PeerJS for P2P connection -->
-  <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-
-  <!-- QRCode.js for QR generation -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-  <style>
     * {
       margin: 0;
       padding: 0;
@@ -62,7 +36,6 @@
       transition: all 0.3s ease;
     }
 
-    /* TV Mode Styles */
     body.tv-mode {
       padding: 40px;
     }
@@ -85,10 +58,6 @@
 
     body.tv-mode .chart-title {
       font-size: 2.2em !important;
-    }
-
-    body.tv-mode .section-title {
-      font-size: 1.8em !important;
     }
 
     body.tv-mode .stat-label {
@@ -128,7 +97,6 @@
       padding: 15px !important;
     }
 
-    /* TV Mode Specific Elements */
     body.tv-mode .tv-stat {
       text-align: center;
       padding: 30px !important;
@@ -158,6 +126,11 @@
       transform: scale(0.95);
     }
 
+    body.tv-mode .tv-big-btn:focus {
+      outline: 3px solid #ffd700;
+      outline-offset: 2px;
+    }
+
     body.tv-mode .tv-big-btn span:first-child {
       font-size: 2.5em;
     }
@@ -170,14 +143,12 @@
       flex-wrap: wrap;
     }
 
-    /* Hide sections in TV mode */
     body.tv-mode .comparison-container,
     body.tv-mode .socials,
     body.tv-mode .detailed-chart {
       display: none !important;
     }
 
-    /* Show QR in PC mode when needed */
     body.pc-mode .qr-panel {
       display: none;
     }
@@ -197,10 +168,8 @@
       border-radius: 12px;
       margin-bottom: 30px;
       box-shadow: 0 8px 32px rgba(211, 47, 47, 0.3);
-      position: relative;
     }
 
-    /* Header Actions - Improved Layout */
     .header-actions {
       display: flex;
       gap: 15px;
@@ -229,11 +198,11 @@
       transform: translateY(-2px);
     }
 
-    .home-button span {
-      font-size: 1.2em;
+    .home-button:focus {
+      outline: 3px solid #ffd700;
+      outline-offset: 2px;
     }
 
-    /* Mode Switcher - Compact */
     .mode-switcher {
       display: flex;
       gap: 8px;
@@ -262,13 +231,14 @@
       background: rgba(255, 255, 255, 0.1);
     }
 
+    .mode-btn:focus {
+      outline: 2px solid #ffd700;
+      outline-offset: 2px;
+    }
+
     .mode-btn.active {
       background: rgba(255, 255, 255, 0.25);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .mode-btn span {
-      font-size: 1.1em;
     }
 
     .driver-name {
@@ -337,10 +307,6 @@
         padding: 8px;
         min-width: 36px;
       }
-
-      .home-button span {
-        font-size: 1em;
-      }
     }
 
     .stat-card {
@@ -396,7 +362,6 @@
       border-radius: 12px;
       margin-bottom: 30px;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-      position: relative;
     }
 
     .chart-title {
@@ -452,6 +417,11 @@
       transform: translateY(-2px);
     }
 
+    .socials a:focus {
+      outline: 2px solid #ffd700;
+      outline-offset: 2px;
+    }
+
     .track-link {
       color: #f44336;
       text-decoration: none;
@@ -460,6 +430,11 @@
 
     .track-link:hover {
       color: #ff5252;
+    }
+
+    .track-link:focus {
+      outline: 2px solid #ffd700;
+      outline-offset: 2px;
     }
 
     .comparison-container {
@@ -484,6 +459,11 @@
       color: #e0e0e0;
       border-radius: 8px;
       font-size: 1em;
+    }
+
+    .comparison-input input:focus {
+      outline: none;
+      border-color: #f44336;
     }
 
     .autocomplete-list {
@@ -530,6 +510,11 @@
       background: #d32f2f;
     }
 
+    .comparison-input button:focus {
+      outline: 2px solid #ffd700;
+      outline-offset: 2px;
+    }
+
     .comparison-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -554,7 +539,6 @@
       font-size: 0.9em;
     }
 
-    /* Share Button - Moved to comparison section */
     .share-btn {
       background: #2196f3;
       color: white;
@@ -574,6 +558,11 @@
     .share-btn:hover {
       background: #1976d2;
       transform: translateY(-2px);
+    }
+
+    .share-btn:focus {
+      outline: 2px solid #ffd700;
+      outline-offset: 2px;
     }
 
     .share-btn.copied {
@@ -688,10 +677,6 @@
       z-index: 1001;
     }
 
-    .point-hover {
-      cursor: pointer;
-    }
-
     .video-responsive {
       position: relative;
       padding-bottom: 56.25%;
@@ -719,7 +704,6 @@
       border: 0;
     }
 
-    /* Slider Styling */
     #lap-selector-slider {
       -webkit-appearance: none;
       height: 8px;
@@ -727,6 +711,11 @@
       border-radius: 4px;
       outline: none;
       cursor: pointer;
+    }
+
+    #lap-selector-slider:focus {
+      outline: 2px solid #ffd700;
+      outline-offset: 2px;
     }
 
     #lap-selector-slider::-webkit-slider-thumb {
@@ -740,6 +729,10 @@
       transition: background .15s ease-in-out;
     }
 
+    #lap-selector-slider::-webkit-slider-thumb:hover {
+      background: #ff5252;
+    }
+
     #lap-selector-slider::-moz-range-thumb {
       width: 20px;
       height: 20px;
@@ -750,7 +743,10 @@
       transition: background .15s ease-in-out;
     }
 
-    /* QR Code Panel Styles - Improved */
+    #lap-selector-slider::-moz-range-thumb:hover {
+      background: #ff5252;
+    }
+
     .qr-panel {
       background: #1e1e1e;
       border: 3px solid #f44336;
@@ -900,6 +896,11 @@
       color: #fff;
     }
 
+    .qr-toggle-btn:focus {
+      outline: 2px solid #ffd700;
+      outline-offset: 2px;
+    }
+
     .status-indicator {
       width: 12px;
       height: 12px;
@@ -911,12 +912,9 @@
     .qr-panel.connected .status-indicator {
       background: #4caf50;
     }
-
-    /* Toast Notification - Removed */
-    .toast {
-      display: none;
-    }
   </style>
+  <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 
 <body>
@@ -928,149 +926,81 @@
           <div id="session-date"></div>
         </div>
         <div class="header-actions">
-          <a href="index.html" class="home-button" title="Return to home">
-            <span>🏠</span>
-          </a>
-          <div class="mode-switcher">
-            <button class="mode-btn active" id="pc-mode-btn" onclick="switchMode('pc')" title="PC Mode">
-              <span>💻</span> PC
-            </button>
-            <button class="mode-btn" id="tv-mode-btn" onclick="switchMode('tv')" title="TV Mode">
-              <span>📺</span> TV
-            </button>
+          <a href="index.html" class="home-button" title="Return to home"
+            aria-label="Return to home"><span>🏠</span></a>
+          <div class="mode-switcher" role="group" aria-label="View mode switcher">
+            <button class="mode-btn active" id="pc-mode-btn" onclick="switchMode('pc')" title="PC Mode"
+              aria-label="Switch to PC Mode"><span>💻</span> <span class="mode-text">PC</span></button>
+            <button class="mode-btn" id="tv-mode-btn" onclick="switchMode('tv')" title="TV Mode"
+              aria-label="Switch to TV Mode"><span>📺</span> <span class="mode-text">TV</span></button>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Stats Grid -->
-    <div class="stats-grid" id="stats-grid">
-      <div class="stat-card">
-        <div class="stat-label">Fastest Lap</div>
-        <div class="stat-value fastest-time" id="fastest"></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Average Lap</div>
-        <div class="stat-value small" id="average"></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Consistency</div>
-        <div class="stat-value small" id="consistency"></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Track</div>
-        <div class="stat-value" style="font-size: 1.3em;">
-          <a class="track-link" id="track-link" target="_blank"></a>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Kart</div>
-        <div class="stat-value" id="kart"></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Total Laps</div>
-        <div class="stat-value" id="total-laps"></div>
-      </div>
-    </div>
-
-    <!-- Video Player Container -->
+    <div class="stats-grid" id="stats-grid"></div>
     <div id="video-display-container" class="chart-container" style="display:none;"></div>
-
-    <!-- Detailed Lap Chart -->
     <div class="chart-container detailed-chart">
-      <div class="chart-title">
-        📈 Lap Time Progression
-      </div>
+      <div class="chart-title">📈 Lap Time Progression</div>
       <div
         style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
-        <span id="current-lap-display"
-          style="font-weight: bold; color: #ffd700; font-size: 1.1em; min-width: 130px;">Current Lap: 1</span>
+        <span id="current-lap-display" style="font-weight: bold; color: #ffd700; font-size: 1.1em; min-width: 130px;"
+          aria-live="polite">Current Lap: 1</span>
         <input type="range" id="lap-selector-slider" min="1" max="1" value="1" step="1"
-          style="flex-grow: 1; margin: 0 20px;">
+          style="flex-grow: 1; margin: 0 20px;" aria-label="Select lap number">
         <button onclick="nextLap()"
-          style="padding: 8px 15px; background: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
-          Next Lap
-        </button>
+          style="padding: 8px 15px; background: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Next
+          Lap</button>
       </div>
-      <div class="line-chart">
-        <canvas id="lap-chart" class="chart-canvas"></canvas>
-      </div>
+      <div class="line-chart"><canvas id="lap-chart" class="chart-canvas"></canvas></div>
       <div id="chart-legend" class="legend"></div>
     </div>
-
-    <!-- TV Mode Controls (hidden by default) -->
     <div id="tv-controls" style="display: none;">
       <div class="chart-container">
         <div class="chart-title">🎮 Remote Controls</div>
         <div class="tv-controls">
-          <button class="tv-big-btn" onclick="sendCommandToRemote('PREV_LAP')">
-            <span>⏮️</span>
-            Prev Lap
-          </button>
-          <button class="tv-big-btn" onclick="sendCommandToRemote('PLAY_PAUSE')">
-            <span id="play-icon-tv">⏸️</span>
-            Play/Pause
-          </button>
-          <button class="tv-big-btn" onclick="sendCommandToRemote('NEXT_LAP')">
-            <span>⏭️</span>
-            Next Lap
-          </button>
+          <button class="tv-big-btn" onclick="sendCommandToRemote('PREV_LAP')"><span>⏮️</span>Prev Lap</button>
+          <button class="tv-big-btn" onclick="sendCommandToRemote('PLAY_PAUSE')"><span
+              id="play-icon-tv">⏸️</span>Play/Pause</button>
+          <button class="tv-big-btn" onclick="sendCommandToRemote('NEXT_LAP')"><span>⏭️</span>Next Lap</button>
         </div>
       </div>
     </div>
-
-    <!-- QR Code Panel - Moved below TV Controls -->
     <div class="qr-panel" id="qr-panel">
       <div class="qr-header">
-        <h3>
-          <span class="status-indicator"></span>
-          <span id="connection-status">📱 Phone Remote Control</span>
-        </h3>
-        <button class="qr-toggle-btn" onclick="toggleQRPanel()" title="Expand/Collapse QR panel">
-          <span id="qr-toggle-icon">▼</span>
-        </button>
+        <h3><span class="status-indicator"></span><span id="connection-status">📱 Phone Remote Control</span></h3>
+        <button class="qr-toggle-btn" onclick="toggleQRPanel()"><span id="qr-toggle-icon">▼</span></button>
       </div>
-
-      <p class="qr-instructions">Scan this QR code with your phone to control the video playback. Make sure both devices
-        are on the same Wi-Fi network.</p>
-
+      <p class="qr-instructions">Scan this QR code with your phone to control the video playback.</p>
       <div class="qr-content">
         <div class="qr-code-wrapper">
           <div id="qr-code"></div>
-          <div class="remote-url" id="remote-url">Generating connection URL...</div>
+          <div class="remote-url" id="remote-url">Generating...</div>
         </div>
-
         <div class="connection-stats">
           <div class="connection-stat">
             <div class="connection-stat-label">Status</div>
-            <div class="connection-stat-value" id="peer-status">Initializing...</div>
+            <div class="connection-stat-value" id="peer-status">Init...</div>
           </div>
           <div class="connection-stat">
-            <div class="connection-stat-label">Connected Devices</div>
+            <div class="connection-stat-label">Devices</div>
             <div class="connection-stat-value" id="connected-count">0</div>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Comparison Section -->
     <div class="comparison-container">
       <div class="chart-title">
         <span>🔄 Compare Sessions</span>
-        <button class="share-btn" id="share-btn" onclick="shareCompareLink()" title="Copy comparison link to clipboard">
-          <span>🔗</span> Share Compare
-        </button>
+        <button class="share-btn" id="share-btn" onclick="shareCompareLink()"><span>🔗</span> Share</button>
       </div>
       <div class="comparison-input">
-        <input type="text" id="compare-id-input"
-          placeholder="Search for session ID or Driver to compare (e.g., uuid1, uuid2)">
+        <input type="text" id="compare-id-input" placeholder="Search session ID or Driver">
         <div id="autocomplete-results" class="autocomplete-list" style="display:none;"></div>
         <button onclick="compareSession()">Compare</button>
         <button onclick="clearComparison()" style="background: #666;">Clear</button>
       </div>
       <div id="comparison-results" class="comparison-grid"></div>
     </div>
-
     <div class="socials">
       <strong>Follow:</strong>
       <a href="https://www.instagram.com/helmet.cam.heroes/" target="_blank">Instagram</a>
@@ -1078,60 +1008,20 @@
       <a href="https://www.youtube.com/@HelmetCamHeroes" target="_blank">Youtube</a>
     </div>
   </div>
-
   <div id="chart-tooltip" class="tooltip"></div>
-  <div class="toast" id="toast"></div>
 
   <script>
-    const $ = (id) => document.getElementById(id);
 
-
-    let currentSessionData = null;
-    let comparisonSessions = [];
-    let chartPoints = [];
-    let currentDataset = [];
-    let comparisonDatasets = [];
-    let activePoint = null;
-    let allSessionsList = [];
-    let currentMode = 'pc'; // 'pc' or 'tv'
-    let autoFullscreenTriggered = false;
-    let currentVideoQuality = 'auto';
-
-    if (window.Chart) {
-      Chart.defaults.font.family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Segoe UI Fallback'";
-    }
-
-    // --- VIDEO SYNC GLOBAL VARIABLES ---
-    let player;
-    let pendingVideoConfig = null;
-
-    function loadYouTubeAPI() {
-      if (window.YT && window.YT.Player) return;
-
-      const tag = document.createElement('script');
-      tag.src = 'https://www.youtube.com/iframe_api';
-      tag.async = true;
-      document.body.appendChild(tag);
-    }
-
-    let lapStartTimes = [];
-    let currentLapMarker = { lapNumber: 1 };
-    let updateChartInterval = null;
-
-    // --- PEER-TO-PEER VARIABLES ---
-    let peer = null;
-    let connections = [];
-    let statsInterval = null;
-
-    // --- END VIDEO SYNC GLOBAL VARIABLES ---
+    // Global variables
+    let currentSessionData = null, comparisonSessions = [], chartPoints = [], currentDataset = [], comparisonDatasets = [], activePoint = null, allSessionsList = [], currentMode = 'pc', autoFullscreenTriggered = false, currentVideoQuality = 'auto', animationFrameId = null, lastTooltipUpdate = 0;
+    const TOOLTIP_DEBOUNCE = 50;
+    let player, pendingVideoConfig = null, lapStartTimes = [], currentLapMarker = { lapNumber: 1 }, updateChartInterval = null;
+    let peer = null, connections = [], statsInterval = null, reconnectAttempts = 0;
+    const MAX_RECONNECT_ATTEMPTS = 3;
 
     const params = new URLSearchParams(window.location.search);
     const sessionId = params.get("id") || "example-session";
     const compareId = params.get("compare_id");
-    const compareInput = document.getElementById('compare-id-input');
-    if (compareId) {
-      compareInput.value = compareId;
-    }
 
     const comparisonColors = [
       { line: '#4caf50', point: '#8bc34a' },
@@ -1144,24 +1034,94 @@
       { line: '#e91e63', point: '#f06292' }
     ];
 
-    // --- Mode Detection and Switching ---
+    const ERROR_MESSAGES = {
+      2: 'Invalid video ID or parameters',
+      5: 'HTML5 player error - Try refreshing',
+      100: 'Video not found or removed',
+      101: 'Embedding restricted by owner',
+      150: 'Embedding restricted by owner'
+    };
+
+    // IMPROVED PARSE TIME FUNCTION
+    function parseTime(timeStr) {
+      if (timeStr === null || timeStr === undefined || timeStr === "") return 0;
+      if (typeof timeStr === 'number') return timeStr;
+
+      const cleanStr = timeStr.toString().trim();
+
+      // Handle malformed formats like "00:034" -> 34 seconds
+      if (cleanStr.match(/^00:0\d+$/)) {
+        return parseInt(cleanStr.replace(/^00:0/, ''));
+      }
+
+      // Handle "0:34" format
+      if (cleanStr.match(/^0:\d+$/)) {
+        return parseInt(cleanStr.replace(/^0:/, ''));
+      }
+
+      const parts = cleanStr.split(':');
+      if (parts.length === 2) {
+        return (parseInt(parts[0]) || 0) * 60 + (parseFloat(parts[1]) || 0);
+      }
+      return parseFloat(cleanStr) || 0;
+    }
+
+    // DATA VALIDATION
+    function validateLapData(laps) {
+      if (!Array.isArray(laps)) {
+        console.warn('Invalid laps data: not an array');
+        return [];
+      }
+      return laps.filter(lap => {
+        if (!lap || typeof lap !== 'object') return false;
+        const time = parseTime(lap.time);
+        const isValid = lap.lap > 0 && time > 0 && time < 600 && !isNaN(time);
+        if (!isValid) console.warn('Invalid lap filtered:', lap);
+        return isValid;
+      });
+    }
+
+    function formatTime(seconds) {
+      if (seconds === null || seconds === undefined) return 'N/A';
+      if (typeof seconds !== 'number' || isNaN(seconds)) return 'N/A';
+      const totalSeconds = Math.max(0, seconds);
+      const mins = Math.floor(totalSeconds / 60);
+      const secs = (totalSeconds % 60).toFixed(3);
+      const formattedSecs = secs.padStart(6, '0');
+      return mins > 0 ? `${mins}:${formattedSecs}` : `${parseFloat(secs).toFixed(3)}s`;
+    }
+
+    function calculateConsistency(lapTimes) {
+      const validTimes = lapTimes.filter(t => t > 0 && t < 300);
+      if (validTimes.length < 3) return 0;
+      const sorted = [...validTimes].sort((a, b) => a - b);
+      const mid = Math.floor(sorted.length / 2);
+      const median = sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+      const filtered = validTimes.filter(t => t <= median * 1.03);
+      if (filtered.length < 2) return 0;
+      const avg = filtered.reduce((a, b) => a + b, 0) / filtered.length;
+      const variance = filtered.reduce((sum, t) => sum + Math.pow(t - avg, 2), 0) / filtered.length;
+      return Math.sqrt(variance);
+    }
+
+    function getConsistencyRating(stdDev) {
+      if (stdDev < 0.5) return { text: 'Excellent', class: 'consistency-excellent' };
+      if (stdDev < 0.9) return { text: 'Good', class: 'consistency-good' };
+      if (stdDev < 1.4) return { text: 'Fair', class: 'consistency-fair' };
+      return { text: 'Traffic Affected', class: 'consistency-poor' };
+    }
+
     function detectInitialMode() {
-      const params = new URLSearchParams(window.location.search);
       const urlMode = params.get('mode');
-
-      // Check localStorage for previously selected mode
       const savedMode = localStorage.getItem('kartingViewerMode');
-
       if (urlMode === 'tv' || urlMode === 'pc') {
         currentMode = urlMode;
       } else if (savedMode && (savedMode === 'tv' || savedMode === 'pc')) {
         currentMode = savedMode;
       } else {
-        // Auto-detect: TV if large screen and likely far viewing
         const isLikelyTV = window.innerWidth >= 1920 && window.innerHeight >= 1080;
         currentMode = isLikelyTV ? 'tv' : 'pc';
       }
-
       applyMode(currentMode);
       updateModeButtons();
     }
@@ -1170,14 +1130,22 @@
       currentMode = mode;
       applyMode(mode);
       updateModeButtons();
-
-      // Save to localStorage
       localStorage.setItem('kartingViewerMode', mode);
-
-      // Update URL without reloading
       const url = new URL(window.location);
       url.searchParams.set('mode', mode);
       window.history.replaceState({}, '', url);
+    }
+
+    function calculateCurrentDelta() {
+      if (!currentSessionData || !currentSessionData.laps) return 0;
+      const currentLap = currentLapMarker.lapNumber;
+      const currentLapData = currentSessionData.laps[currentLap - 1];
+      if (!currentLapData || !currentLapData.time) return 0;
+      const validLaps = validateLapData(currentSessionData.laps);
+      const lapTimes = validLaps.map(l => parseTime(l.time));
+      const fastestTime = lapTimes.length > 0 ? Math.min(...lapTimes) : 0;
+      const currentTime = parseTime(currentLapData.time);
+      return currentTime - fastestTime;
     }
 
     function applyMode(mode) {
@@ -1189,82 +1157,50 @@
       const detailedChart = document.querySelector('.detailed-chart');
       const statsGrid = document.getElementById('stats-grid');
 
-      // Reset all elements to their default state
       if (tvControls) tvControls.style.display = 'none';
-
-      // QR panel should be block in both modes when video exists
       const videoContainer = document.getElementById('video-display-container');
       const hasVideo = videoContainer && videoContainer.style.display !== 'none';
-
-      if (qrPanel) {
-        qrPanel.style.display = hasVideo ? 'block' : 'none';
-      }
-
+      if (qrPanel) qrPanel.style.display = hasVideo ? 'block' : 'none';
       if (comparisonSection) comparisonSection.style.display = 'block';
       if (socialSection) socialSection.style.display = 'block';
       if (detailedChart) detailedChart.style.display = 'block';
 
-      // Restore original stats grid if needed
       if (statsGrid && currentSessionData && mode === 'pc') {
         renderStatsGrid(currentSessionData);
       }
 
       if (mode === 'tv') {
-        // Show TV mode elements
         if (tvControls) tvControls.style.display = 'block';
-
-        // Hide complex sections
         if (comparisonSection) comparisonSection.style.display = 'none';
         if (socialSection) socialSection.style.display = 'none';
         if (detailedChart) detailedChart.style.display = 'none';
 
-        // Simplify stats grid for TV mode
         if (statsGrid && currentSessionData) {
           const fastestTime = currentSessionData.fastest_lap || '--:--';
           const currentLap = currentLapMarker.lapNumber;
           const delta = calculateCurrentDelta();
-
           statsGrid.innerHTML = `
-            <div class="stat-card tv-stat">
-              <div class="stat-label">Fastest Lap</div>
-              <div class="stat-value fastest-time">${fastestTime}</div>
-            </div>
-            <div class="stat-card tv-stat">
-              <div class="stat-label">Current Lap</div>
-              <div class="stat-value" id="tv-current-lap">${currentLap}</div>
-            </div>
-            <div class="stat-card tv-stat">
-              <div class="stat-label">Delta</div>
-              <div class="stat-value" id="tv-delta" style="color:${delta >= 0 ? '#f44336' : '#4caf50'}">
-                ${delta >= 0 ? '+' : ''}${delta.toFixed(3)}s
-              </div>
-            </div>
-          `;
+        <div class="stat-card tv-stat">
+          <div class="stat-label">Fastest Lap</div>
+          <div class="stat-value fastest-time">${fastestTime}</div>
+        </div>
+        <div class="stat-card tv-stat">
+          <div class="stat-label">Current Lap</div>
+          <div class="stat-value" id="tv-current-lap">${currentLap}</div>
+        </div>
+        <div class="stat-card tv-stat">
+          <div class="stat-label">Delta</div>
+          <div class="stat-value" id="tv-delta" style="color:${delta >= 0 ? '#f44336' : '#4caf50'}">
+            ${delta >= 0 ? '+' : ''}${delta.toFixed(3)}s
+          </div>
+        </div>
+      `;
         }
-
-        // Auto-play video in TV mode
         if (player && typeof player.playVideo === 'function') {
           setTimeout(() => player.playVideo(), 1000);
         }
       }
-
       updateModeButtons();
-    }
-
-    function calculateCurrentDelta() {
-      if (!currentSessionData || !currentSessionData.laps) return 0;
-
-      const currentLap = currentLapMarker.lapNumber;
-      const currentLapData = currentSessionData.laps[currentLap - 1];
-
-      if (!currentLapData || !currentLapData.time) return 0;
-
-      const validLaps = currentSessionData.laps.filter(l => l.lap !== null && parseTime(l.time) !== null);
-      const lapTimes = validLaps.map(l => parseTime(l.time));
-      const fastestTime = lapTimes.length > 0 ? Math.min(...lapTimes) : 0;
-      const currentTime = parseTime(currentLapData.time);
-
-      return currentTime - fastestTime;
     }
 
     function updateModeButtons() {
@@ -1275,43 +1211,28 @@
     function shareCompareLink() {
       const compareInput = document.getElementById('compare-id-input');
       const compareIds = compareInput.value.trim();
-
       let shareUrl = window.location.href.split('?')[0] + `?id=${sessionId}`;
-
-      if (compareIds) {
-        shareUrl += `&compare_id=${encodeURIComponent(compareIds)}`;
-      }
-
-      // Add mode parameter if in TV mode
-      if (currentMode === 'tv') {
-        shareUrl += '&mode=tv';
-      }
-
-      // Copy to clipboard
+      if (compareIds) shareUrl += `&compare_id=${encodeURIComponent(compareIds)}`;
+      if (currentMode === 'tv') shareUrl += '&mode=tv';
       navigator.clipboard.writeText(shareUrl).then(() => {
         const shareBtn = document.getElementById('share-btn');
         const originalText = shareBtn.innerHTML;
         shareBtn.innerHTML = '<span>✅</span> Copied!';
         shareBtn.classList.add('copied');
-
         setTimeout(() => {
           shareBtn.innerHTML = originalText;
           shareBtn.classList.remove('copied');
         }, 2000);
       }).catch(err => {
         console.error('Copy failed:', err);
+        alert('Failed to copy link');
       });
     }
 
     function sendCommandToRemote(command) {
-      // Send command to connected remotes
       connections.forEach(conn => {
-        if (conn.open) {
-          conn.send({ type: command });
-        }
+        if (conn.open) conn.send({ type: command });
       });
-
-      // Also execute locally for TV mode
       switch (command) {
         case 'PREV_LAP':
           const slider = document.getElementById('lap-selector-slider');
@@ -1336,25 +1257,9 @@
       }
     }
 
-    // --- QR Code Panel Functions ---
-    function hideQRPanel() {
-      const qrPanel = document.getElementById('qr-panel');
-      if (qrPanel) {
-        qrPanel.classList.add('hidden');
-      }
-    }
-
-    function showQRPanel() {
-      const qrPanel = document.getElementById('qr-panel');
-      if (qrPanel) {
-        qrPanel.classList.remove('hidden');
-      }
-    }
-
     function toggleQRPanel() {
       const qrPanel = document.getElementById('qr-panel');
       const toggleIcon = document.getElementById('qr-toggle-icon');
-
       if (qrPanel.classList.contains('collapsed')) {
         qrPanel.classList.remove('collapsed');
         toggleIcon.textContent = '▼';
@@ -1364,108 +1269,118 @@
       }
     }
 
-    // --- Initialize PeerJS ---
     function initializePeer() {
+      if (peer) peer.destroy();
       peer = new Peer();
 
       peer.on('open', (id) => {
         console.log('PeerJS ID:', id);
+        reconnectAttempts = 0;
         const remoteUrl = `${window.location.origin}${window.location.pathname.replace('session.html', 'remote.html')}?host=${id}&mode=${currentMode}`;
-
         document.getElementById('remote-url').textContent = remoteUrl;
         document.getElementById('peer-status').textContent = 'Ready';
-
-        // Generate QR Code
         const qrContainer = document.getElementById('qr-code');
         qrContainer.innerHTML = '';
-        new QRCode(qrContainer, {
-          text: remoteUrl,
-          width: 220,
-          height: 220,
-          colorDark: '#000000',
-          colorLight: '#ffffff',
-          correctLevel: QRCode.CorrectLevel.M
-        });
+        try {
+          new QRCode(qrContainer, {
+            text: remoteUrl,
+            width: 220,
+            height: 220,
+            colorDark: '#000000',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.M
+          });
+        } catch (error) {
+          console.error('QR generation failed:', error);
+          qrContainer.innerHTML = '<p style="color:#f44336;">QR failed</p>';
+        }
       });
 
       peer.on('connection', (conn) => {
-        console.log('📱 Remote connected:', conn.peer);
-
-        // 1. Add this connection to our tracking list
+        console.log('Remote connected:', conn.peer);
         connections.push(conn);
 
-        // 2. Handle commands sent from the mobile remote
         conn.on('data', (data) => {
-          console.log('Received command:', data);
-
+          console.log('Received:', data);
           switch (data.type) {
-            case 'NEXT_LAP':
-              nextLap();
-              break;
-
+            case 'NEXT_LAP': nextLap(); break;
             case 'PREV_LAP':
               const slider = document.getElementById('lap-selector-slider');
               const prevVal = parseInt(slider.value) - 1;
               if (prevVal >= 1) seekToLap(prevVal);
               break;
-
             case 'PLAY_PAUSE':
               if (player && typeof player.getPlayerState === 'function') {
                 const state = player.getPlayerState();
-                if (state === YT.PlayerState.PLAYING) {
-                  player.pauseVideo();
-                } else {
-                  player.playVideo();
-                }
+                if (state === YT.PlayerState.PLAYING) player.pauseVideo();
+                else player.playVideo();
               }
               break;
-
             case 'SEEK':
               if (player && typeof player.seekTo === 'function') {
                 player.seekTo(parseFloat(data.value), true);
               }
               break;
           }
-
-          // Auto-fullscreen when remote connects in TV mode
           if (currentMode === 'tv' && !autoFullscreenTriggered) {
             autoFullscreenTriggered = true;
             setTimeout(() => {
               const videoContainer = document.getElementById('video-display-container');
               if (videoContainer && !document.fullscreenElement) {
                 if (videoContainer.requestFullscreen) {
-                  videoContainer.requestFullscreen();
+                  videoContainer.requestFullscreen().catch(err => console.log('Fullscreen failed:', err));
                 }
               }
             }, 2000);
           }
         });
 
-        // 3. Clean up when remote disconnects
         conn.on('close', () => {
           connections = connections.filter(c => c.peer !== conn.peer);
-          console.log('📱 Remote disconnected');
+          console.log('Remote disconnected');
           updateConnectionUI();
         });
 
-        // 4. Start sending live stats (Lap times, progress) to the phone
+        conn.on('error', (err) => {
+          console.error('Connection error:', err);
+          connections = connections.filter(c => c.peer !== conn.peer);
+          updateConnectionUI();
+        });
+
         startStatsSync();
         updateConnectionUI();
+      });
+
+      peer.on('disconnected', () => {
+        console.log('Peer disconnected, reconnecting...');
+        document.getElementById('peer-status').textContent = 'Reconnecting...';
+        if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+          reconnectAttempts++;
+          setTimeout(() => {
+            if (!peer.destroyed) peer.reconnect();
+          }, 3000);
+        } else {
+          document.getElementById('peer-status').textContent = 'Failed';
+          console.error('Max reconnects reached');
+        }
       });
 
       peer.on('error', (err) => {
         console.error('PeerJS error:', err);
         document.getElementById('peer-status').textContent = 'Error';
+        if (err.type === 'network' || err.type === 'server-error') {
+          if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+            setTimeout(() => initializePeer(), 5000);
+          }
+        }
       });
     }
 
     function updateConnectionUI() {
       const count = connections.length;
       document.getElementById('connected-count').textContent = count;
-
       const panel = document.getElementById('qr-panel');
       const statusText = document.getElementById('connection-status');
-
       if (count > 0) {
         panel.classList.add('connected');
         statusText.textContent = `✅ ${count} Device${count > 1 ? 's' : ''} Connected`;
@@ -1479,16 +1394,12 @@
       if (statsInterval) return;
       statsInterval = setInterval(() => {
         if (connections.length === 0 && currentMode !== 'tv') return;
-
         const currentLap = currentLapMarker.lapNumber;
         const currentLapData = currentSessionData?.laps[currentLap - 1];
         const currentTime = player && typeof player.getCurrentTime === 'function' ? player.getCurrentTime() : 0;
         const duration = player && typeof player.getDuration === 'function' ? player.getDuration() : 0;
-
-        // Grab current UI values to send back to the phone
-        const validLaps = currentSessionData?.laps.filter(l => l.lap !== null) || [];
+        const validLaps = validateLapData(currentSessionData?.laps || []);
         const totalLaps = validLaps.length;
-
         const fastestLap = currentSessionData?.fastest_lap || '--:--';
         const isPlaying = player ? player.getPlayerState() === YT.PlayerState.PLAYING : false;
 
@@ -1505,24 +1416,19 @@
 
         connections.forEach(conn => {
           if (conn.open) {
-            conn.send(stats);
+            try { conn.send(stats); } catch (error) { console.error('Send failed:', error); }
           }
         });
 
-        // Update TV mode displays
         if (currentMode === 'tv') {
           const delta = calculateCurrentDelta();
           const deltaEl = document.getElementById('tv-delta');
           const currentLapEl = document.getElementById('tv-current-lap');
-
           if (deltaEl) {
             deltaEl.textContent = `${delta >= 0 ? '+' : ''}${delta.toFixed(3)}s`;
             deltaEl.style.color = delta >= 0 ? '#f44336' : '#4caf50';
           }
-
-          if (currentLapEl) {
-            currentLapEl.textContent = currentLap;
-          }
+          if (currentLapEl) currentLapEl.textContent = currentLap;
         }
       }, 500);
     }
@@ -1534,70 +1440,69 @@
       }
     }
 
-    // Initialize PeerJS on load
+    // CONTINUE FROM PART 2 - ADD THIS AFTER THE PREVIOUS JAVASCRIPT
+
+    // Initialize PeerJS
     initializePeer();
 
-    // --- Data Loading ---
+    // Data Loading
+    if (compareId) {
+      document.getElementById('compare-id-input').value = compareId;
+    }
+
     fetch('sessions/sessions-list.json')
       .then(r => r.json())
       .then(data => {
         allSessionsList = data.sessions || [];
         setupAutocomplete();
       })
-      .catch(err => {
-        console.warn("Could not load sessions-list.json for autocomplete.");
-      });
+      .catch(err => console.warn("Autocomplete load failed:", err));
 
     fetch(`sessions/${sessionId}.json`)
       .then(r => {
-        if (!r.ok) throw new Error('Main session not found');
+        if (!r.ok) throw new Error('Session not found');
         return r.json();
       })
       .then(data => {
         data.id = sessionId;
+        data.laps = validateLapData(data.laps);
+        if (data.laps.length === 0) throw new Error('No valid lap data');
         currentSessionData = data;
         renderSession(data);
         compareSession();
       })
       .catch(err => {
-        document.body.innerHTML = '<div style="text-align:center; padding: 50px; color: #f44336;"><h1>❌ Session not found</h1></div>';
+        console.error('Session error:', err);
+        document.body.innerHTML = `<div style="text-align:center;padding:50px;color:#f44336;"><h1>⚠️ Error</h1><p>${err.message}</p><a href="index.html" style="color:#4caf50;">Return Home</a></div>`;
       });
 
-    // --- Autocomplete Logic ---
     function setupAutocomplete() {
       const input = document.getElementById('compare-id-input');
       const resultsBox = document.getElementById('autocomplete-results');
       let selectedIndex = -1;
 
       input.addEventListener('input', () => {
-        const query = input.value.trim().toLowerCase();
         const currentIds = input.value.split(',').map(id => id.trim());
         const lastQuery = currentIds[currentIds.length - 1].toLowerCase();
-
         resultsBox.innerHTML = '';
         selectedIndex = -1;
-
         if (lastQuery.length < 2) {
           resultsBox.style.display = 'none';
           return;
         }
-
-        const filtered = allSessionsList
-          .filter(session =>
-            session.id.toLowerCase().includes(lastQuery) ||
-            session.driver.toLowerCase().includes(lastQuery) ||
-            session.track.name.toLowerCase().includes(lastQuery)
-          )
-          .slice(0, 5);
+        const filtered = allSessionsList.filter(session =>
+          session.id.toLowerCase().includes(lastQuery) ||
+          session.driver.toLowerCase().includes(lastQuery) ||
+          session.track.name.toLowerCase().includes(lastQuery)
+        ).slice(0, 5);
 
         if (filtered.length > 0) {
           resultsBox.style.display = 'block';
-          filtered.forEach((session, index) => {
+          filtered.forEach(session => {
             const item = document.createElement('div');
             item.className = 'autocomplete-item';
             item.textContent = `${session.driver} @ ${session.track.name} (${session.session_date})`;
             item.dataset.id = session.id;
-
             item.addEventListener('click', () => {
               currentIds[currentIds.length - 1] = session.id;
               input.value = currentIds.join(', ') + ', ';
@@ -1614,7 +1519,6 @@
       input.addEventListener('keydown', (e) => {
         const items = resultsBox.querySelectorAll('.autocomplete-item');
         if (items.length === 0) return;
-
         if (e.key === 'ArrowDown') {
           e.preventDefault();
           selectedIndex = (selectedIndex + 1) % items.length;
@@ -1624,13 +1528,13 @@
         } else if (e.key === 'Enter' && selectedIndex >= 0) {
           e.preventDefault();
           items[selectedIndex].click();
+        } else if (e.key === 'Escape') {
+          resultsBox.style.display = 'none';
+          selectedIndex = -1;
         }
-
         items.forEach((item, index) => {
           item.classList.toggle('selected', index === selectedIndex);
-          if (index === selectedIndex) {
-            item.scrollIntoView({ block: 'nearest' });
-          }
+          if (index === selectedIndex) item.scrollIntoView({ block: 'nearest' });
         });
       });
 
@@ -1641,60 +1545,18 @@
       });
     }
 
-    // --- Utility Functions ---
-    function parseTime(timeStr) {
-      if (timeStr === null || timeStr === undefined || timeStr === "") return 0;
-      if (typeof timeStr === 'number') return timeStr;
-      const parts = timeStr.toString().split(':');
-      if (parts.length === 2) {
-        return (parseInt(parts[0]) || 0) * 60 + (parseFloat(parts[1]) || 0);
-      }
-      return parseFloat(timeStr) || 0;
+    function loadYouTubeAPI() {
+      if (window.YT && window.YT.Player) return;
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      tag.async = true;
+      document.body.appendChild(tag);
     }
 
-    function formatTime(seconds) {
-      if (seconds === null || seconds === undefined) return 'N/A';
-      if (typeof seconds !== 'number' || isNaN(seconds)) return 'N/A';
-      const totalSeconds = Math.max(0, seconds);
-      const mins = Math.floor(totalSeconds / 60);
-      const secs = (totalSeconds % 60).toFixed(3);
-      const formattedSecs = secs.padStart(6, '0');
-      return mins > 0 ? `${mins}:${formattedSecs}` : `${parseFloat(secs).toFixed(3)}s`;
-    }
-
-    function calculateConsistency(lapTimes) {
-      const validTimes = lapTimes.filter(t => t > 0 && t < 300);
-      if (lapTimes.length < 3) return 0;
-
-      const sorted = [...lapTimes].sort((a, b) => a - b);
-      const mid = Math.floor(sorted.length / 2);
-      const median = sorted.length % 2
-        ? sorted[mid]
-        : (sorted[mid - 1] + sorted[mid]) / 2;
-
-      const filtered = lapTimes.filter(t => t <= median * 1.03);
-      if (filtered.length < 2) return 0;
-
-      const avg = filtered.reduce((a, b) => a + b, 0) / filtered.length;
-      const variance = filtered.reduce((sum, t) =>
-        sum + Math.pow(t - avg, 2), 0) / filtered.length;
-
-      return Math.sqrt(variance);
-    }
-
-    function getConsistencyRating(stdDev) {
-      if (stdDev < 0.5) return { text: 'Excellent', class: 'consistency-excellent' };
-      if (stdDev < 0.9) return { text: 'Good', class: 'consistency-good' };
-      if (stdDev < 1.4) return { text: 'Fair', class: 'consistency-fair' };
-      return { text: 'Traffic Affected', class: 'consistency-poor' };
-    }
-
-    // --- 4K YouTube Video Player Functions ---
     window.onYouTubeIframeAPIReady = function () {
       if (!pendingVideoConfig) return;
       const { videoId, startTimeSeconds } = pendingVideoConfig;
       if (!document.getElementById('youtube-player-container')) return;
-
       player = new YT.Player('youtube-player-container', {
         videoId: videoId,
         playerVars: {
@@ -1704,38 +1566,27 @@
           modestbranding: 1,
           origin: window.location.origin,
           enablejsapi: 1,
-          // 4K optimization
-          vq: 'hd2160', // Request 4K quality
           controls: 1,
           playsinline: 1,
-          iv_load_policy: 3, // Hide annotations
-          fs: 1, // Allow fullscreen
-          disablekb: 0 // Enable keyboard controls
+          iv_load_policy: 3,
+          fs: 1,
+          disablekb: 0
         },
         events: {
           'onReady': onPlayerReady,
           'onStateChange': onPlayerStateChange,
-          'onPlaybackQualityChange': onPlaybackQualityChange,
+          'onPlaybackQualityChange': (e) => { console.log('Quality:', e.data); currentVideoQuality = e.data; },
           'onError': onPlayerError
         }
       });
     };
 
-    function onPlaybackQualityChange(event) {
-      console.log('Video quality changed to:', event.data);
-      currentVideoQuality = event.data;
-    }
-
     function onPlayerError(event) {
-      console.error('YouTube player error:', event.data);
-      // If 4K fails, fall back to highest available quality
-      if (event.data === 2 && currentVideoQuality === 'hd2160') {
-        setTimeout(() => {
-          if (player && typeof player.setPlaybackQuality === 'function') {
-            player.setPlaybackQuality('hd1080');
-          }
-        }, 1000);
-      }
+      console.error('YT error:', event.data);
+      const videoContainer = document.getElementById('video-display-container');
+      const errorMsg = ERROR_MESSAGES[event.data] || 'Unknown error';
+      videoContainer.innerHTML = `<div class="chart-title">🎥 Video</div><div class="error-message" style="padding:40px;text-align:center;"><h3>⚠️ Error</h3><p>${errorMsg}</p></div>`;
+      document.getElementById('qr-panel').style.display = 'none';
     }
 
     function extractYouTubeId(url) {
@@ -1748,160 +1599,117 @@
       const videoContainer = document.getElementById('video-display-container');
       videoContainer.style.display = 'none';
       videoContainer.innerHTML = '';
-
       if (!videoUrl || videoUrl.trim() === '') {
         document.getElementById('qr-panel').style.display = 'none';
         return;
       }
-
       if (videoUrl.toLowerCase() === 'pending') {
         videoContainer.style.display = 'block';
-        videoContainer.innerHTML = `
-            <div class="chart-title">🎥 Session Video</div>
-            <p style="text-align: center; padding: 20px 0; font-size: 1.2em; color: #ffeb3b;">
-                Video will be available soon! Please check back later.
-            </p>
-        `;
+        videoContainer.innerHTML = '<div class="chart-title">🎥 Video</div><p style="text-align:center;padding:20px;color:#ffeb3b;">Coming soon!</p>';
         document.getElementById('qr-panel').style.display = 'none';
         return;
       }
-
       const videoId = extractYouTubeId(videoUrl);
       if (videoId) {
         videoContainer.style.display = 'block';
-        videoContainer.innerHTML = `
-            <div class="chart-title">
-                🎥 Session Video
-            </div>
-            <div class="video-responsive">
-                <div id="youtube-player-container"></div>
-            </div>
-        `;
-
+        videoContainer.innerHTML = '<div class="chart-title">🎥 Session Video</div><div class="video-responsive"><div id="youtube-player-container"></div></div>';
         loadYouTubeAPI();
-
-        pendingVideoConfig = {
-          videoId: videoId,
-          startTimeSeconds: parseTime(videoStartTime)
-        };
-
-        if (window.YT && window.YT.Player) {
-          window.onYouTubeIframeAPIReady();
-        }
-
-        // Show QR panel only if we're in a mode that should display it
+        pendingVideoConfig = { videoId, startTimeSeconds: parseTime(videoStartTime) };
+        if (window.YT && window.YT.Player) window.onYouTubeIframeAPIReady();
         if (currentMode === 'tv') {
           document.getElementById('qr-panel').style.display = 'block';
-        }
-        // For PC mode, QR panel visibility is handled by CSS class (.pc-mode .qr-panel)
-
-        if (currentMode === 'tv') {
-          setTimeout(() => {
-            if (player && typeof player.playVideo === 'function') {
-              player.playVideo();
-            }
-          }, 1000);
+          setTimeout(() => { if (player && typeof player.playVideo === 'function') player.playVideo(); }, 1000);
         }
       } else {
+        console.error('Invalid URL:', videoUrl);
+        videoContainer.style.display = 'block';
+        videoContainer.innerHTML = '<div class="chart-title">🎥 Video</div><div class="error-message" style="padding:40px;text-align:center;"><h3>⚠️ Invalid URL</h3></div>';
         document.getElementById('qr-panel').style.display = 'none';
       }
     }
 
     function onPlayerReady(event) {
-      console.log('YouTube player ready');
-
-      // Try to set to 4K quality
-      if (player && typeof player.setPlaybackQuality === 'function') {
-        setTimeout(() => {
-          player.setPlaybackQuality('hd2160'); // Try 4K first
-        }, 1000);
+      console.log('Player ready');
+      if (player && typeof player.getAvailableQualityLevels === 'function') {
+        const qualities = player.getAvailableQualityLevels();
+        console.log('Available:', qualities);
+        if (qualities.includes('hd2160')) player.setPlaybackQuality('hd2160');
+        else if (qualities.includes('hd1080')) player.setPlaybackQuality('hd1080');
       }
-
       seekToLap(1);
     }
 
     function onPlayerStateChange(event) {
       if (event.data === YT.PlayerState.PLAYING) {
         startChartUpdateInterval();
-        // Update TV play icon
-        if (currentMode === 'tv') {
-          document.getElementById('play-icon-tv').textContent = '⏸️';
-        }
+        if (currentMode === 'tv') document.getElementById('play-icon-tv').textContent = '⏸️';
       } else {
         if (updateChartInterval) clearInterval(updateChartInterval);
-        // Update TV play icon
-        if (currentMode === 'tv') {
-          document.getElementById('play-icon-tv').textContent = '▶️';
-        }
+        if (currentMode === 'tv') document.getElementById('play-icon-tv').textContent = '▶️';
       }
     }
 
     function nextLap() {
       const slider = document.getElementById('lap-selector-slider');
       const nextVal = parseInt(slider.value) + 1;
-      if (nextVal <= parseInt(slider.max)) {
-        seekToLap(nextVal);
-      }
+      if (nextVal <= parseInt(slider.max)) seekToLap(nextVal);
     }
 
     function seekToLap(lapNumber) {
-      const maxLap = parseInt(document.getElementById('lap-selector-slider').max);
+      const slider = document.getElementById('lap-selector-slider');
+      const maxLap = parseInt(slider.max);
       if (lapNumber < 1) lapNumber = 1;
       if (lapNumber > maxLap) lapNumber = maxLap;
-
       const lapStartTimeObj = lapStartTimes.find(l => l.lapNumber === lapNumber);
-
       if (lapStartTimeObj && player && typeof player.seekTo === 'function') {
         player.seekTo(lapStartTimeObj.videoTime, true);
       }
-
       currentLapMarker.lapNumber = lapNumber;
-      document.getElementById('lap-selector-slider').value = lapNumber;
+      slider.value = lapNumber;
+      slider.setAttribute('aria-valuenow', lapNumber);
+      slider.setAttribute('aria-valuetext', `Lap ${lapNumber} of ${maxLap}`);
       document.getElementById('current-lap-display').textContent = `Current Lap: ${lapNumber}`;
-
       if (currentSessionData) {
-        const currentLaps = currentSessionData.laps.filter(l => l.lap !== null && parseTime(l.time) !== null);
-        const existingComparisonDatasets = comparisonDatasets.length > 0 ? comparisonDatasets : [];
-        drawLineChart(currentLaps, existingComparisonDatasets);
+        const currentLaps = validateLapData(currentSessionData.laps);
+        drawLineChart(currentLaps, comparisonDatasets);
       }
     }
 
     function getCurrentLapNumber(currentVideoTime) {
       for (let i = lapStartTimes.length - 1; i >= 0; i--) {
-        if (currentVideoTime >= lapStartTimes[i].videoTime) {
-          return lapStartTimes[i].lapNumber;
-        }
+        if (currentVideoTime >= lapStartTimes[i].videoTime) return lapStartTimes[i].lapNumber;
       }
       return 1;
     }
 
     function startChartUpdateInterval() {
       if (updateChartInterval) clearInterval(updateChartInterval);
-
-      updateChartInterval = setInterval(() => {
+      function updateLap() {
         if (player && typeof player.getCurrentTime === 'function' && currentLapMarker.lapNumber !== -1) {
           const videoTime = player.getCurrentTime();
           const newLapNumber = getCurrentLapNumber(videoTime);
-
           if (newLapNumber !== currentLapMarker.lapNumber) {
             currentLapMarker.lapNumber = newLapNumber;
-
             const slider = document.getElementById('lap-selector-slider');
-            if (slider) slider.value = newLapNumber;
-
+            if (slider) {
+              slider.value = newLapNumber;
+              slider.setAttribute('aria-valuenow', newLapNumber);
+              slider.setAttribute('aria-valuetext', `Lap ${newLapNumber} of ${slider.max}`);
+            }
             document.getElementById('current-lap-display').textContent = `Current Lap: ${newLapNumber}`;
-
             if (currentSessionData) {
-              const currentLaps = currentSessionData.laps.filter(l => l.lap !== null && parseTime(l.time) !== null);
-              const existingComparisonDatasets = comparisonDatasets.length > 0 ? comparisonDatasets : [];
-              drawLineChart(currentLaps, existingComparisonDatasets);
+              const currentLaps = validateLapData(currentSessionData.laps);
+              drawLineChart(currentLaps, comparisonDatasets);
             }
           }
         }
-      }, 250);
+        if (player && player.getPlayerState() === YT.PlayerState.PLAYING) {
+          animationFrameId = requestAnimationFrame(updateLap);
+        }
+      }
+      animationFrameId = requestAnimationFrame(updateLap);
     }
 
-    // --- Chart & Tooltip Interaction ---
     function setupTooltipInteractions() {
       const canvas = document.getElementById('lap-chart');
       if (canvas.currentMouseMoveHandler) canvas.removeEventListener('mousemove', canvas.currentMouseMoveHandler);
@@ -1909,12 +1717,22 @@
       if (canvas.currentTouchMoveHandler) canvas.removeEventListener('touchmove', canvas.currentTouchMoveHandler);
       if (canvas.currentTouchEndHandler) canvas.removeEventListener('touchend', canvas.currentTouchEndHandler);
 
-      canvas.currentMouseMoveHandler = (e) => { handleInteraction(e.clientX, e.clientY); };
+      canvas.currentMouseMoveHandler = (e) => {
+        const now = Date.now();
+        if (now - lastTooltipUpdate >= TOOLTIP_DEBOUNCE) {
+          handleInteraction(e.clientX, e.clientY);
+          lastTooltipUpdate = now;
+        }
+      };
       canvas.currentMouseLeaveHandler = () => { activePoint = null; hideTooltip(); };
       canvas.currentTouchMoveHandler = (e) => {
         if (e.touches.length > 0) {
           e.preventDefault();
-          handleInteraction(e.touches[0].clientX, e.touches[0].clientY);
+          const now = Date.now();
+          if (now - lastTooltipUpdate >= TOOLTIP_DEBOUNCE) {
+            handleInteraction(e.touches[0].clientX, e.touches[0].clientY);
+            lastTooltipUpdate = now;
+          }
         }
       };
       canvas.currentTouchEndHandler = () => { setTimeout(() => { activePoint = null; hideTooltip(); }, 500); };
@@ -1930,20 +1748,17 @@
         const y = clientY - rect.top;
         let closestPoint = null;
         let minDistance = Infinity;
-
         chartPoints.forEach(point => {
-          const hitRadius = 15;
           const distance = Math.sqrt(Math.pow(x - point.x, 2) + Math.pow(y - point.y, 2));
-          if (distance < hitRadius && distance < minDistance) {
+          if (distance < 15 && distance < minDistance) {
             minDistance = distance;
             closestPoint = point;
           }
         });
-
         if (closestPoint) {
-          const pointIdentifier = `${closestPoint.lapNumber}-${closestPoint.isComparison}-${closestPoint.sessionIndex}`;
-          if (!activePoint || activePoint.identifier !== pointIdentifier) {
-            activePoint = { ...closestPoint, identifier: pointIdentifier };
+          const pointId = `${closestPoint.lapNumber}-${closestPoint.isComparison}-${closestPoint.sessionIndex}`;
+          if (!activePoint || activePoint.identifier !== pointId) {
+            activePoint = { ...closestPoint, identifier: pointId };
             showTooltip(activePoint, clientX, clientY);
           }
         } else {
@@ -1957,7 +1772,6 @@
       const tooltip = document.getElementById('chart-tooltip');
       const canvas = document.getElementById('lap-chart');
       const canvasRect = canvas.getBoundingClientRect();
-
       let session = currentSessionData;
       let dataset = currentDataset;
       let fastestTime = Math.min(...dataset.map(l => parseTime(l.time)));
@@ -1968,85 +1782,77 @@
         session = comparisonSessions[point.sessionIndex];
         dataset = comparisonDatasets[point.sessionIndex];
         fastestTime = Math.min(...dataset.map(l => parseTime(l.time)));
-        lineColor = comparisonColors[index % comparisonColors.length].line;
-        driverLabel = `<span class="tooltip-driver" style="color: ${lineColor};">${session.driver}</span>`;
+        lineColor = comparisonColors[point.sessionIndex % comparisonColors.length].line;
+        driverLabel = `<span class="tooltip-driver" style="color:${lineColor};">${session.driver}</span>`;
       } else if (point.isComparison === false) {
-        driverLabel = `<span class="tooltip-driver" style="color: #ffd700;">${session.driver}</span>`;
+        driverLabel = `<span class="tooltip-driver" style="color:#ffd700;">${session.driver}</span>`;
       }
 
       const currentTime = parseTime(point.lap.time);
       const delta = currentTime - fastestTime;
-      const deltaStr = delta === 0 ? 'Fastest Lap' : (delta > 0 ? `+${delta.toFixed(3)}s` : `${delta.toFixed(3)}s`);
+      const deltaStr = delta === 0 ? 'Fastest' : (delta > 0 ? `+${delta.toFixed(3)}s` : `${delta.toFixed(3)}s`);
 
-      const tooltipHTML = `
-                <div class="tooltip-header">
-                    ${driverLabel}
-                    <span class="tooltip-lap">Lap ${point.lapNumber}</span>
-                </div>
-                <div class="tooltip-time">${point.lap.time}</div>
-                ${point.lap.best ? '<div class="tooltip-best">★ Best Lap</div>' : ''}
-                <div class="tooltip-delta">Delta to Session Best: ${deltaStr}</div>
-                <div class="tooltip-footer">
-                    Session: ${new Date(session.session_date).toLocaleDateString()}<br>
-                    Kart: ${session.kart}
-                </div>
-            `;
-
-      tooltip.innerHTML = tooltipHTML + '<div class="tooltip-arrow"></div>';
+      tooltip.innerHTML = `
+    <div class="tooltip-header">${driverLabel}<span class="tooltip-lap">Lap ${point.lapNumber}</span></div>
+    <div class="tooltip-time">${point.lap.time}</div>
+    ${point.lap.best ? '<div class="tooltip-best">★ Best</div>' : ''}
+    <div class="tooltip-delta">Delta: ${deltaStr}</div>
+    <div class="tooltip-footer">Session: ${new Date(session.session_date).toLocaleDateString()}<br>Kart: ${session.kart}</div>
+    <div class="tooltip-arrow"></div>
+  `;
       tooltip.classList.add('tooltip-visible');
 
       const tooltipWidth = tooltip.offsetWidth;
       const tooltipHeight = tooltip.offsetHeight;
       const scrollX = window.scrollX || window.pageXOffset;
       const scrollY = window.scrollY || window.pageYOffset;
-      const pointDocumentX = canvasRect.left + scrollX + point.x;
-      const pointDocumentY = canvasRect.top + scrollY + point.y;
+      const pointX = canvasRect.left + scrollX + point.x;
+      const pointY = canvasRect.top + scrollY + point.y;
 
-      let left = pointDocumentX - tooltipWidth / 2;
-      let top = pointDocumentY - tooltipHeight - 20;
+      let left = pointX - tooltipWidth / 2;
+      let top = pointY - tooltipHeight - 20;
 
       if (left < scrollX + 20) left = scrollX + 20;
       if (left + tooltipWidth > scrollX + window.innerWidth - 20) left = scrollX + window.innerWidth - tooltipWidth - 20;
 
       const arrow = tooltip.querySelector('.tooltip-arrow');
       if (top < scrollY + 20) {
-        top = pointDocumentY + 30;
+        top = pointY + 30;
         arrow.style.borderTop = 'none';
         arrow.style.borderBottom = `8px solid ${lineColor}`;
         arrow.style.top = '-8px';
         arrow.style.bottom = 'auto';
-        arrow.style.marginLeft = '0';
       } else {
         arrow.style.borderTop = `8px solid ${lineColor}`;
         arrow.style.borderBottom = 'none';
         arrow.style.bottom = '-8px';
         arrow.style.top = 'auto';
-        arrow.style.marginLeft = '0';
       }
 
-      const tooltipMidpointOnPage = left + tooltipWidth / 2;
-      const arrowOffsetX = pointDocumentX - tooltipMidpointOnPage;
+      const arrowOffsetX = pointX - (left + tooltipWidth / 2);
       arrow.style.marginLeft = `${arrowOffsetX}px`;
-
       tooltip.style.left = left + 'px';
       tooltip.style.top = top + 'px';
     }
 
     function hideTooltip() {
-      const tooltip = document.getElementById('chart-tooltip');
-      tooltip.classList.remove('tooltip-visible');
+      document.getElementById('chart-tooltip').classList.remove('tooltip-visible');
     }
+
+    // FINAL PART - ADD AFTER PART 3
 
     function drawLineChart(mainLaps, compareLapsArray = []) {
       const canvas = document.getElementById('lap-chart');
       const ctx = canvas.getContext('2d');
-
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
 
       const padding = 60;
-      const chartWidth = canvas.width - padding * 2;
-      const chartHeight = canvas.height - padding * 2;
+      const chartWidth = rect.width - padding * 2;
+      const chartHeight = rect.height - padding * 2;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       chartPoints = [];
@@ -2060,7 +1866,8 @@
       if (lapTimes.length === 0) {
         ctx.fillStyle = '#999';
         ctx.textAlign = 'center';
-        ctx.fillText("No lap data available to chart.", canvas.width / 2, canvas.height / 2);
+        ctx.font = '16px Arial';
+        ctx.fillText("No lap data", rect.width / 2, rect.height / 2);
         return;
       }
 
@@ -2068,7 +1875,7 @@
       const maxTime = Math.max(...lapTimes);
       const timeRange = maxTime - minTime || 1;
       const maxLapsCount = allDatasets.reduce((max, dataset) => Math.max(max, dataset.length), 0);
-      const overallFastestTime = minTime;
+      const overallFastest = minTime;
 
       function getCoords(i, lapTime) {
         const x = padding + (chartWidth / (maxLapsCount - 1 || 1)) * i;
@@ -2076,56 +1883,58 @@
         return { x, y };
       }
 
+      // Grid
       ctx.strokeStyle = '#3d3d3d';
       ctx.lineWidth = 1;
       for (let i = 0; i <= 5; i++) {
         const y = padding + (chartHeight / 5) * i;
         ctx.beginPath();
         ctx.moveTo(padding, y);
-        ctx.lineTo(canvas.width - padding, y);
+        ctx.lineTo(rect.width - padding, y);
         ctx.stroke();
       }
       for (let i = 0; i < maxLapsCount; i++) {
         const x = padding + (chartWidth / (maxLapsCount - 1 || 1)) * i;
         ctx.beginPath();
         ctx.moveTo(x, padding);
-        ctx.lineTo(x, canvas.height - padding);
+        ctx.lineTo(x, rect.height - padding);
         ctx.strokeStyle = '#2d2d2d';
         ctx.stroke();
       }
 
-      if (overallFastestTime) {
-        const { y: baselineY } = getCoords(0, overallFastestTime);
+      // Fastest baseline
+      if (overallFastest) {
+        const { y: baselineY } = getCoords(0, overallFastest);
         ctx.strokeStyle = '#ffd700';
         ctx.lineWidth = 1.5;
         ctx.setLineDash([5, 5]);
         ctx.beginPath();
         ctx.moveTo(padding, baselineY);
-        ctx.lineTo(canvas.width - padding, baselineY);
+        ctx.lineTo(rect.width - padding, baselineY);
         ctx.stroke();
         ctx.setLineDash([]);
         ctx.fillStyle = '#ffd700';
         ctx.textAlign = 'left';
-        ctx.fillText(`Overall Best: ${formatTime(overallFastestTime)}`, padding + 5, baselineY - 5);
+        ctx.font = '12px Arial';
+        ctx.fillText(`Best: ${formatTime(overallFastest)}`, padding + 5, baselineY - 5);
       }
 
+      // Current lap marker
       if (currentLapMarker.lapNumber > 0 && currentLapMarker.lapNumber <= mainLaps.length) {
         const currentIndex = currentLapMarker.lapNumber - 1;
         const xPos = padding + (chartWidth / (maxLapsCount - 1 || 1)) * currentIndex;
-
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
         ctx.lineWidth = 40;
         ctx.lineCap = 'round';
         ctx.beginPath();
         ctx.moveTo(xPos, padding);
-        ctx.lineTo(xPos, canvas.height - padding);
+        ctx.lineTo(xPos, rect.height - padding);
         ctx.stroke();
-
         ctx.strokeStyle = '#f44336';
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(xPos, padding);
-        ctx.lineTo(xPos, canvas.height - padding);
+        ctx.lineTo(xPos, rect.height - padding);
         ctx.stroke();
       }
 
@@ -2142,7 +1951,6 @@
           chartPoints.push({ x, y, lap, lapNumber: lap.lap, isComparison, sessionIndex });
         });
         ctx.stroke();
-
         laps.forEach((lap, i) => {
           const lapTime = parseTime(lap.time);
           if (isNaN(lapTime)) return;
@@ -2162,11 +1970,11 @@
       }
 
       function drawBestLapMarkers(laps) {
-        const bestLapIndex = laps.findIndex(lap => lap.best);
-        if (bestLapIndex !== -1) {
-          const lapTime = parseTime(laps[bestLapIndex].time);
+        const bestIdx = laps.findIndex(lap => lap.best);
+        if (bestIdx !== -1) {
+          const lapTime = parseTime(laps[bestIdx].time);
           if (isNaN(lapTime)) return;
-          const { x, y } = getCoords(bestLapIndex, lapTime);
+          const { x, y } = getCoords(bestIdx, lapTime);
           ctx.fillStyle = '#ffd700';
           ctx.beginPath();
           ctx.moveTo(x, y - 10);
@@ -2187,20 +1995,19 @@
         const colors = comparisonColors[index % comparisonColors.length];
         drawLapLine(laps, colors.line, colors.point, true, index);
       });
-
       drawLapLine(mainLaps, '#f44336', '#ff5252', false, -1);
       allDatasets.forEach(laps => drawBestLapMarkers(laps));
 
+      // Axis labels
       ctx.fillStyle = '#999';
       ctx.font = '12px Arial';
       ctx.textAlign = 'center';
       for (let i = 0; i < maxLapsCount; i++) {
         const x = padding + (chartWidth / (maxLapsCount - 1 || 1)) * i;
         if (i % Math.ceil(maxLapsCount / 10) === 0 || i === maxLapsCount - 1) {
-          ctx.fillText(`L${i + 1}`, x, canvas.height - 20);
+          ctx.fillText(`L${i + 1}`, x, rect.height - 20);
         }
       }
-
       ctx.textAlign = 'right';
       ctx.textBaseline = 'middle';
       for (let i = 0; i <= 5; i++) {
@@ -2209,28 +2016,14 @@
         ctx.fillText(formatTime(time), padding - 10, y);
       }
 
+      // Legend
       const legend = document.getElementById('chart-legend');
-      let legendHTML = `
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #f44336;"></div>
-                    <span>${currentSessionData.driver} (${mainLaps.length} laps)</span>
-                </div>
-            `;
+      let legendHTML = `<div class="legend-item"><div class="legend-color" style="background:#f44336;"></div><span>${currentSessionData.driver} (${mainLaps.length})</span></div>`;
       comparisonSessions.forEach((session, index) => {
         const colors = comparisonColors[index % comparisonColors.length];
-        legendHTML += `
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: ${colors.line};"></div>
-                        <span>${session.driver} (${comparisonDatasets[index].length} laps)</span>
-                    </div>
-                `;
+        legendHTML += `<div class="legend-item"><div class="legend-color" style="background:${colors.line};"></div><span>${session.driver} (${comparisonDatasets[index].length})</span></div>`;
       });
-      legendHTML += `
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #ffd700;"></div>
-                    <span>★ Best Lap / Overall Best Baseline</span>
-                </div>
-            `;
+      legendHTML += `<div class="legend-item"><div class="legend-color" style="background:#ffd700;"></div><span>★ Best</span></div>`;
       legend.innerHTML = legendHTML;
 
       setupTooltipInteractions();
@@ -2239,49 +2032,22 @@
     function renderStatsGrid(data) {
       const statsGrid = document.getElementById('stats-grid');
       if (!statsGrid) return;
-
-      const validLaps = data.laps.filter(lap => lap.lap !== null && parseTime(lap.time) !== null);
+      const validLaps = validateLapData(data.laps);
       const lapTimes = validLaps.map(lap => parseTime(lap.time)).filter(time => !isNaN(time));
-
-      // Use fastest_lap from data if available, otherwise calculate
       const fastestTime = data.fastest_lap ? parseTime(data.fastest_lap) : (lapTimes.length > 0 ? Math.min(...lapTimes) : 0);
-      const fastestLapIndex = data.fastest_lap ?
-        validLaps.findIndex(lap => lap.time === data.fastest_lap) :
-        lapTimes.indexOf(fastestTime);
-
-      validLaps.forEach((lap, i) => { lap.best = (i === fastestLapIndex); });
-
+      const fastestIdx = data.fastest_lap ? validLaps.findIndex(lap => lap.time === data.fastest_lap) : lapTimes.indexOf(fastestTime);
+      validLaps.forEach((lap, i) => { lap.best = (i === fastestIdx); });
       const avgTime = lapTimes.length > 0 ? lapTimes.reduce((a, b) => a + b, 0) / lapTimes.length : 0;
       const stdDev = calculateConsistency(lapTimes);
       const consistency = getConsistencyRating(stdDev);
 
       statsGrid.innerHTML = `
-    <div class="stat-card">
-      <div class="stat-label">Fastest Lap</div>
-      <div class="stat-value fastest-time">${data.fastest_lap || formatTime(fastestTime)}</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Average Lap</div>
-      <div class="stat-value small">${formatTime(avgTime)}</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Consistency</div>
-      <div class="stat-value small ${consistency.class}">${consistency.text} (±${stdDev.toFixed(3)}s)</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Track</div>
-      <div class="stat-value" style="font-size: 1.3em;">
-        <a class="track-link" href="${data.track.maps_link}" target="_blank">${data.track.name}</a>
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Kart</div>
-      <div class="stat-value">${data.kart}</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Total Laps</div>
-      <div class="stat-value">${validLaps.length}</div>
-    </div>
+    <div class="stat-card"><div class="stat-label">Fastest Lap</div><div class="stat-value fastest-time">${data.fastest_lap || formatTime(fastestTime)}</div></div>
+    <div class="stat-card"><div class="stat-label">Average Lap</div><div class="stat-value small">${formatTime(avgTime)}</div></div>
+    <div class="stat-card"><div class="stat-label">Consistency</div><div class="stat-value small ${consistency.class}">${consistency.text} (±${stdDev.toFixed(3)}s)</div></div>
+    <div class="stat-card"><div class="stat-label">Track</div><div class="stat-value" style="font-size:1.3em;"><a class="track-link" href="${data.track.maps_link}" target="_blank">${data.track.name}</a></div></div>
+    <div class="stat-card"><div class="stat-label">Kart</div><div class="stat-value">${data.kart}</div></div>
+    <div class="stat-card"><div class="stat-label">Total Laps</div><div class="stat-value">${validLaps.length}</div></div>
   `;
     }
 
@@ -2290,27 +2056,26 @@
       document.getElementById('session-date').textContent = new Date(data.session_date).toLocaleDateString('en-US', {
         year: 'numeric', month: 'long', day: 'numeric'
       });
-
       renderStatsGrid(data);
       renderVideoPlayer(data.video_url, data.video_start_time);
-
       const slider = document.getElementById('lap-selector-slider');
-      const validLaps = data.laps.filter(lap => lap.lap !== null && parseTime(lap.time) !== null);
+      const validLaps = validateLapData(data.laps);
       slider.max = validLaps.length;
       slider.value = 1;
+      slider.setAttribute('aria-valuemax', validLaps.length);
+      slider.setAttribute('aria-valuenow', '1');
+      slider.setAttribute('aria-valuetext', `Lap 1 of ${validLaps.length}`);
       slider.oninput = function () { seekToLap(parseInt(this.value)); };
 
       const videoStartTime = parseTime(data.video_start_time || "0:00");
       let cumulativeTime = videoStartTime;
       lapStartTimes = [];
-
       lapStartTimes.push({ lapNumber: 1, videoTime: cumulativeTime });
-
       for (let i = 0; i < validLaps.length - 1; i++) {
         cumulativeTime += parseTime(validLaps[i].time);
         lapStartTimes.push({ lapNumber: i + 2, videoTime: cumulativeTime });
       }
-
+      console.log('Lap times:', lapStartTimes);
       drawLineChart(validLaps);
     }
 
@@ -2322,7 +2087,7 @@
       comparisonDatasets = [];
 
       if (!currentSessionData) return;
-      const currentLaps = currentSessionData.laps.filter(l => l.lap !== null && parseTime(l.time) !== null);
+      const currentLaps = validateLapData(currentSessionData.laps);
 
       if (sessionIds.length === 0) {
         drawLineChart(currentLaps, []);
@@ -2345,7 +2110,7 @@
       const errorSessions = results.filter(r => r.error);
 
       successfulSessions.forEach(sessionData => {
-        const compareLaps = sessionData.laps.filter(l => l.lap !== null && parseTime(l.time) !== null);
+        const compareLaps = validateLapData(sessionData.laps);
         const compareTimes = compareLaps.map(l => parseTime(l.time));
         const compareFastest = compareTimes.length > 0 ? Math.min(...compareTimes) : 0;
         const compareFastestIdx = compareTimes.indexOf(compareFastest);
@@ -2375,7 +2140,7 @@
       });
 
       if (comparisonSessions.length > 0) {
-        const allFastestTimes = [
+        const allFastest = [
           { time: currentFastest, driver: currentSessionData.driver, color: '#f44336' },
           ...comparisonSessions.map((s, i) => ({
             time: Math.min(...comparisonDatasets[i].map(l => parseTime(l.time))),
@@ -2383,15 +2148,14 @@
             color: comparisonColors[i % comparisonColors.length].line
           }))
         ];
-        const overallBest = allFastestTimes.reduce((best, current) => current.time < best.time ? current : best, allFastestTimes[0]);
+        const overallBest = allFastest.reduce((best, current) => current.time < best.time ? current : best, allFastest[0]);
         resultHTML += `
-                    <div class="comparison-card">
-                        <h3>🏆 Overall Fastest Lap</h3>
-                        <p><strong>Time:</strong> <strong class="fastest-time" style="font-size: 1.8em; color: ${overallBest.color};">${formatTime(overallBest.time)}</strong></p>
-                        <p><strong>Driver:</strong> <strong style="color: ${overallBest.color};">${overallBest.driver}</strong></p>
-                        <p><strong>Session:</strong> ${overallBest.driver === currentSessionData.driver ? new Date(currentSessionData.session_date).toLocaleDateString() : new Date(comparisonSessions.find(s => s.driver === overallBest.driver)?.session_date || 'Unknown').toLocaleDateString()}</p>
-                    </div>
-                `;
+      <div class="comparison-card">
+        <h3>🏆 Overall Fastest</h3>
+        <p><strong>Time:</strong> <strong class="fastest-time" style="font-size:1.8em;color:${overallBest.color};">${formatTime(overallBest.time)}</strong></p>
+        <p><strong>Driver:</strong> <strong style="color:${overallBest.color};">${overallBest.driver}</strong></p>
+      </div>
+    `;
       }
       errorSessions.forEach(err => { resultHTML += `<div class="error-message">${err.error}</div>`; });
       document.getElementById('comparison-results').innerHTML = resultHTML;
@@ -2402,17 +2166,17 @@
       const consistency = getConsistencyRating(stdDev);
       const sessionDate = new Date(data.session_date).toLocaleDateString();
       return `
-                <div class="comparison-card" style="border-top-color: ${color};">
-                    <h3>${data.driver} - ${sessionDate}</h3>
-                    <p><strong>Session ID:</strong> <code>${data.id}</code></p>
-                    <p><strong>Track:</strong> ${data.track.name}</p>
-                    <p><strong>Fastest:</strong> <span style="font-weight: bold; color: ${color === '#f44336' ? '#ffd700' : color};">${formatTime(fastest)}</span></p>
-                    <p><strong>Average:</strong> ${formatTime(average)}</p>
-                    <p><strong>Laps:</strong> ${lapCount}</p>
-                    <p><strong>Consistency:</strong> <span class="${consistency.class}">${consistency.text} (±${stdDev.toFixed(3)}s)</span></p>
-                    <p><strong>Kart:</strong> ${data.kart}</p>
-                </div>
-            `;
+    <div class="comparison-card" style="border-top-color:${color};">
+      <h3>${data.driver} - ${sessionDate}</h3>
+      <p><strong>ID:</strong> <code>${data.id}</code></p>
+      <p><strong>Track:</strong> ${data.track.name}</p>
+      <p><strong>Fastest:</strong> <span style="font-weight:bold;color:${color === '#f44336' ? '#ffd700' : color};">${formatTime(fastest)}</span></p>
+      <p><strong>Average:</strong> ${formatTime(average)}</p>
+      <p><strong>Laps:</strong> ${lapCount}</p>
+      <p><strong>Consistency:</strong> <span class="${consistency.class}">${consistency.text} (±${stdDev.toFixed(3)}s)</span></p>
+      <p><strong>Kart:</strong> ${data.kart}</p>
+    </div>
+  `;
     }
 
     function clearComparison() {
@@ -2420,78 +2184,92 @@
       comparisonDatasets = [];
       document.getElementById('compare-id-input').value = '';
       if (currentSessionData) {
-        const validLaps = currentSessionData.laps.filter(lap => lap.lap !== null && parseTime(lap.time) !== null);
+        const validLaps = validateLapData(currentSessionData.laps);
         drawLineChart(validLaps, []);
         compareSession();
       }
     }
 
-    // --- BFCache and Page Visibility Handling ---
+    // Event handlers
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
-        // Page became visible again (back/forward navigation)
         if (player && typeof player.playVideo === 'function') {
-          // Resume video playback if it was playing
-          setTimeout(() => {
-            if (currentMode === 'tv') {
-              player.playVideo();
-            }
-          }, 500);
+          setTimeout(() => { if (currentMode === 'tv') player.playVideo(); }, 500);
         }
-
-        // Reinitialize chart if needed
         if (currentSessionData) {
-          const validLaps = currentSessionData.laps.filter(lap => lap.lap !== null && parseTime(lap.time) !== null);
+          const validLaps = validateLapData(currentSessionData.laps);
           drawLineChart(validLaps, comparisonDatasets);
         }
-      }
-    });
-
-    // Also add pageshow event for back/forward cache
-    window.addEventListener('pageshow', (event) => {
-      if (event.persisted) {
-        // Page was restored from bfcache
-        console.log('Page restored from bfcache');
-
-        // Reinitialize mode
-        detectInitialMode();
-
-        // Reinitialize PeerJS connection
-        if (peer && peer.disconnected) {
-          setTimeout(() => initializePeer(), 1000);
+      } else {
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
         }
       }
     });
 
-    // Add page hide handler for BFCache
-    window.addEventListener('pagehide', (event) => {
-      // Clean up intervals
-      if (statsInterval) {
-        clearInterval(statsInterval);
-        statsInterval = null;
-      }
-
-      if (updateChartInterval) {
-        clearInterval(updateChartInterval);
-        updateChartInterval = null;
-      }
-
-      // Disconnect PeerJS
-      if (peer) {
-        connections.forEach(conn => conn.close());
-        peer.destroy();
-      }
-
-      // Stop YouTube player
-      if (player && typeof player.stopVideo === 'function') {
-        player.stopVideo();
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted) {
+        console.log('BFCache restore');
+        detectInitialMode();
+        if (peer && peer.disconnected) setTimeout(() => initializePeer(), 1000);
       }
     });
 
-    // --- Initialize on load ---
+    window.addEventListener('pagehide', () => {
+      if (statsInterval) { clearInterval(statsInterval); statsInterval = null; }
+      if (updateChartInterval) { clearInterval(updateChartInterval); updateChartInterval = null; }
+      if (animationFrameId) { cancelAnimationFrame(animationFrameId); animationFrameId = null; }
+      if (peer) {
+        connections.forEach(conn => { try { conn.close(); } catch (e) { } });
+        peer.destroy();
+      }
+      if (player && typeof player.stopVideo === 'function') player.stopVideo();
+    });
+
+    window.addEventListener('beforeunload', () => {
+      if (player && typeof player.pauseVideo === 'function') player.pauseVideo();
+    });
+
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        if (currentSessionData) {
+          const validLaps = validateLapData(currentSessionData.laps);
+          drawLineChart(validLaps, comparisonDatasets);
+        }
+      }, 250);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT') return;
+      switch (e.key) {
+        case 'ArrowLeft':
+          e.preventDefault();
+          const slider = document.getElementById('lap-selector-slider');
+          const prevVal = parseInt(slider.value) - 1;
+          if (prevVal >= 1) seekToLap(prevVal);
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          nextLap();
+          break;
+        case ' ':
+          e.preventDefault();
+          if (player && typeof player.getPlayerState === 'function') {
+            const state = player.getPlayerState();
+            if (state === YT.PlayerState.PLAYING) player.pauseVideo();
+            else player.playVideo();
+          }
+          break;
+      }
+    });
+
     window.addEventListener('DOMContentLoaded', () => {
       detectInitialMode();
     });
+
   </script>
 </body>
 
