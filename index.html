@@ -124,6 +124,22 @@
       color: white;
     }
 
+    .reset-btn {
+      padding: 10px 20px;
+      background: #ff9800;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .reset-btn:hover {
+      background: #f57c00;
+      transform: translateY(-2px);
+    }
+
     .select-filter {
       padding: 10px 15px;
       background: #1e1e1e;
@@ -435,7 +451,6 @@
       }
     }
 
-    /* Skeleton Loading States */
     .skeleton {
       background: linear-gradient(90deg, #2d2d2d 25%, #3d3d3d 50%, #2d2d2d 75%);
       background-size: 200% 100%;
@@ -486,7 +501,6 @@
       margin-top: 15px;
     }
 
-    /* Mobile Responsive */
     @media (max-width: 768px) {
       body {
         padding: 10px;
@@ -508,7 +522,8 @@
         min-width: auto;
       }
 
-      .filter-btn {
+      .filter-btn,
+      .reset-btn {
         flex: 1;
         min-width: calc(50% - 5px);
       }
@@ -606,12 +621,12 @@
       <div class="filter-group">
         <button class="filter-btn active" data-sort="date">Latest First</button>
         <button class="filter-btn" data-sort="fastest">Fastest First</button>
+        <button class="reset-btn" id="reset-filters">🔄 Reset Filters</button>
       </div>
     </div>
 
     <div id="sessions-container">
       <div class="sessions-grid" id="skeleton-loader">
-        <!-- Skeleton loading cards -->
       </div>
     </div>
   </div>
@@ -625,7 +640,6 @@
     let personalBests = {};
     let isLoading = true;
 
-    // Performance optimization: Debounce function
     function debounce(func, wait) {
       let timeout;
       return function executedFunction(...args) {
@@ -638,7 +652,6 @@
       };
     }
 
-    // Show skeleton loading
     function showSkeletonLoading() {
       const loader = document.getElementById('skeleton-loader');
       const skeletonHTML = Array(6).fill().map(() => `
@@ -658,7 +671,6 @@
       loader.innerHTML = skeletonHTML;
     }
 
-    // URL parameter handling
     function getUrlParams() {
       const params = new URLSearchParams(window.location.search);
       return {
@@ -710,6 +722,31 @@
       document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.sort === currentSort);
       });
+    }
+
+    function resetFilters() {
+      document.getElementById('search-input').value = '';
+      document.getElementById('track-filter').value = '';
+      document.getElementById('config-filter').value = '';
+      document.getElementById('date-filter').value = 'all';
+
+      const today = new Date().toISOString().split('T')[0];
+      const monthAgo = new Date();
+      monthAgo.setDate(monthAgo.getDate() - 30);
+      const defaultFrom = monthAgo.toISOString().split('T')[0];
+
+      document.getElementById('date-from').value = defaultFrom;
+      document.getElementById('date-to').value = today;
+
+      currentSort = 'date';
+
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.sort === 'date');
+      });
+
+      updateDateFilterVisibility();
+      filterSessions();
+      updateUrlParams();
     }
 
     async function loadAllSessions() {
@@ -789,7 +826,6 @@
       return mins > 0 ? `${mins}:${secs.padStart(6, '0')}` : `${secs}s`;
     }
 
-    // Calculate personal bests for each track/config combination
     function calculatePersonalBests() {
       personalBests = {};
       allSessions.forEach(session => {
@@ -805,7 +841,6 @@
       });
     }
 
-    // Calculate performance trends
     function calculateTrends() {
       const sortedSessions = [...allSessions].sort((a, b) =>
         new Date(a.session_date) - new Date(b.session_date)
@@ -940,3 +975,161 @@
 
         container.innerHTML = `<div class="sessions-grid">${html}</div>`;
       }
+
+      updateFilteredSummaryStats();
+    }
+
+    function viewSession(sessionId) {
+      window.location.href = `session.html?id=${sessionId}&mode=pc`;
+    }
+
+    function sortSessions(criteria) {
+      currentSort = criteria;
+      filteredSessions.sort((a, b) => {
+        let diff = 0;
+        if (criteria === 'date') {
+          diff = new Date(b.session_date) - new Date(a.session_date);
+        } else {
+          const timeA = parseTime(a.fastest_lap);
+          const timeB = parseTime(b.fastest_lap);
+          diff = timeA - timeB;
+        }
+        return diff || (new Date(b.session_date) - new Date(a.session_date));
+      });
+
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.sort === currentSort);
+      });
+
+      renderSessions();
+    }
+
+    function filterSessions() {
+      const searchTerm = document.getElementById('search-input').value.toLowerCase();
+      const selectedTrack = document.getElementById('track-filter').value;
+      const selectedConfig = document.getElementById('config-filter').value;
+      const dateFilter = document.getElementById('date-filter').value;
+
+      filteredSessions = allSessions.filter(session => {
+        const kart = (session.kart || '').toLowerCase();
+        if (searchTerm &&
+          !session.driver.toLowerCase().includes(searchTerm) &&
+          !session.track_name.toLowerCase().includes(searchTerm) &&
+          !kart.includes(searchTerm)) {
+          return false;
+        }
+
+        if (selectedTrack && session.track_name !== selectedTrack) {
+          return false;
+        }
+
+        if (selectedConfig && session.track_config !== selectedConfig) {
+          return false;
+        }
+
+        const sessionDate = new Date(session.session_date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (dateFilter === 'today') {
+          const sessionDay = new Date(sessionDate);
+          sessionDay.setHours(0, 0, 0, 0);
+          if (sessionDay.getTime() !== today.getTime()) return false;
+        } else if (dateFilter === 'week') {
+          const weekAgo = new Date(today);
+          weekAgo.setDate(weekAgo.getDate() - 7);
+          if (sessionDate < weekAgo) return false;
+        } else if (dateFilter === 'month') {
+          const monthAgo = new Date(today);
+          monthAgo.setDate(monthAgo.getDate() - 30);
+          if (sessionDate < monthAgo) return false;
+        } else if (dateFilter === 'custom') {
+          const dateFrom = document.getElementById('date-from').value;
+          const dateTo = document.getElementById('date-to').value;
+
+          if (dateFrom && new Date(session.session_date) < new Date(dateFrom)) return false;
+          if (dateTo) {
+            const dateToMax = new Date(dateTo);
+            dateToMax.setDate(dateToMax.getDate() + 1);
+            if (new Date(session.session_date) >= dateToMax) return false;
+          }
+        }
+
+        return true;
+      });
+
+      sortSessions(currentSort);
+    }
+
+    function updateDateFilterVisibility() {
+      const dateFilter = document.getElementById('date-filter').value;
+      const customRange = document.getElementById('custom-date-range');
+
+      if (dateFilter === 'custom') {
+        customRange.style.display = 'flex';
+      } else {
+        customRange.style.display = 'none';
+      }
+    }
+
+    const debouncedFilter = debounce(() => {
+      filterSessions();
+      updateUrlParams();
+    }, 300);
+
+    document.getElementById('search-input').addEventListener('input', debouncedFilter);
+
+    document.getElementById('track-filter').addEventListener('change', () => {
+      filterSessions();
+      updateUrlParams();
+    });
+
+    document.getElementById('config-filter').addEventListener('change', () => {
+      filterSessions();
+      updateUrlParams();
+    });
+
+    document.getElementById('date-filter').addEventListener('change', function () {
+      updateDateFilterVisibility();
+      filterSessions();
+      updateUrlParams();
+    });
+
+    document.getElementById('date-from').addEventListener('change', () => {
+      filterSessions();
+      updateUrlParams();
+    });
+
+    document.getElementById('date-to').addEventListener('change', () => {
+      filterSessions();
+      updateUrlParams();
+    });
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        sortSessions(e.target.dataset.sort);
+        updateUrlParams();
+      });
+    });
+
+    document.getElementById('reset-filters').addEventListener('click', resetFilters);
+
+    const today = new Date().toISOString().split('T')[0];
+    const monthAgo = new Date();
+    monthAgo.setDate(monthAgo.getDate() - 30);
+    const defaultFrom = monthAgo.toISOString().split('T')[0];
+
+    document.getElementById('date-from').value = defaultFrom;
+    document.getElementById('date-to').value = today;
+    document.getElementById('date-from').max = today;
+    document.getElementById('date-to').max = today;
+    document.getElementById('date-to').min = '2020-01-01';
+    document.getElementById('date-from').min = '2020-01-01';
+
+    loadAllSessions();
+  </script>
+</body>
+
+</html>
