@@ -4,66 +4,65 @@
   "fastest_lap": "00:44.030",
   "track": {
     "name": "Plytinės Kartodromas",
-    "configuration": "Autumn",
+    "configuration": "Summer",
     "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
   },
   "video_url": "https://youtu.be/6Ud6Kd39MQ0?si=ajuwJRbJHI_eBJL1",
   "video_start_time": "00:34",
   "kart": "9 Ag",
-  "session_date": "2025-12-07",
+  "session_date": "2025-07-17",
   "laps": [
     {
       "lap": 1,
-      "time": "00:48.962"
+      "time": "00:46.557"
     },
     {
       "lap": 2,
-      "time": "00:46.100"
+      "time": "00:44.789"
     },
     {
       "lap": 3,
-      "time": "00:45.503"
+      "time": "00:44.603"
     },
     {
       "lap": 4,
-      "time": "00:44.446"
+      "time": "00:44.488"
     },
     {
       "lap": 5,
-      "time": "00:44.237"
+      "time": "00:44.809"
     },
     {
       "lap": 6,
-      "time": "00:43.997",
-      "best": true
+      "time": "00: 44.490"
     },
     {
       "lap": 7,
-      "time": "00:44.214"
+      "time": "00:44.142"
     },
     {
       "lap": 8,
-      "time": "00:44.030"
+      "time": "00:44.542"
     },
     {
       "lap": 9,
-      "time": "00:44.243"
+      "time": "00:44.606"
     },
     {
       "lap": 10,
-      "time": "00:44.144"
+      "time": "00:44.273"
     },
     {
       "lap": 11,
-      "time": "00:44.219"
-    },
-    {
-      "lap": 12,
       "time": "00:44.061"
     },
     {
+      "lap": 12,
+      "time": "00:44.390"
+    },
+    {
       "lap": 13,
-      "time": "00:53.060"
+      "time": "00:44.030"
     }
   ]
 }
