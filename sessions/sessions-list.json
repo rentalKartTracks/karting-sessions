@@ -1,22 +1,6 @@
 {
     "sessions": [
         {
-            "id": "07e9d4fa-24a5-4368-b7a0-191fe3e328fe",
-            "driver": "Kęstas Č.",
-            "track": {
-                "name": "Plytinės Kartodromas",
-                "configuration": "Autumn",
-                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
-            },
-            "session_date": "2025-12-19",
-            "kart": "9 Ag",
-            "fastest_lap": "00:45.006",
-            "average_lap": "00:46.059",
-            "fastest_lap_s": 45.006,
-            "average_lap_s": 46.05946153846154,
-            "laps_count": 13
-        },
-        {
             "id": "14bf7186-e5c5-401e-8ae0-9cbbb0142523",
             "driver": "Romualdas P.",
             "track": {
@@ -37,15 +21,15 @@
             "driver": "Povilas L.",
             "track": {
                 "name": "Plytinės Kartodromas",
-                "configuration": "Autumn",
+                "configuration": "Summer",
                 "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
             },
-            "session_date": "2025-12-07",
+            "session_date": "2025-07-17",
             "kart": "9 Ag",
-            "fastest_lap": "00:43.997",
-            "average_lap": "00:45.478",
-            "fastest_lap_s": 43.997,
-            "average_lap_s": 45.478153846153845,
+            "fastest_lap": "00:44.030",
+            "average_lap": "00:44.598",
+            "fastest_lap_s": 44.03,
+            "average_lap_s": 44.598461538461535,
             "laps_count": 13
         },
         {
@@ -63,38 +47,6 @@
             "fastest_lap_s": 18.534,
             "average_lap_s": 19.399866666666668,
             "laps_count": 45
-        },
-        {
-            "id": "76136bb6-c64c-4281-981a-811a6eea1343",
-            "driver": "Ignas M.",
-            "track": {
-                "name": "Plytinės Kartodromas",
-                "configuration": "Autumn",
-                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
-            },
-            "session_date": "2025-12-19",
-            "kart": "9 Ag",
-            "fastest_lap": "00:43.804",
-            "average_lap": "00:44.963",
-            "fastest_lap_s": 43.804,
-            "average_lap_s": 44.96261538461538,
-            "laps_count": 13
-        },
-        {
-            "id": "8971ed4f-da34-43ad-8c84-e203e2437c16",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Plytinės Kartodromas",
-                "configuration": "Autumn",
-                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
-            },
-            "session_date": "2025-12-19",
-            "kart": "9 Ag",
-            "fastest_lap": "00:43.963",
-            "average_lap": "00:44.567",
-            "fastest_lap_s": 43.963,
-            "average_lap_s": 44.567,
-            "laps_count": 13
         },
         {
             "id": "9da53414-8e0c-4434-9651-63fe6e46edac",
