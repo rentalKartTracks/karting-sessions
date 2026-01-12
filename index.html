@@ -29,10 +29,39 @@
       background: linear-gradient(135deg, #d32f2f 0%, #f44336 100%);
       padding: 40px;
       border-radius: 12px;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       box-shadow: 0 8px 32px rgba(211, 47, 47, 0.3);
       text-align: center;
       animation: slideDown 0.5s ease-out;
+    }
+
+    /* Legend Section */
+    .badge-legend {
+      background: #2d2d2d;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      border: 1px solid #3d3d3d;
+      font-size: 0.9em;
+      animation: fadeIn 0.5s ease-out 0.1s both;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .legend-badge {
+      padding: 4px 10px;
+      border-radius: 15px;
+      font-size: 0.75em;
+      font-weight: bold;
+      text-transform: uppercase;
     }
 
     @keyframes slideDown {
@@ -255,30 +284,6 @@
       }
     }
 
-    .session-card:nth-child(1) {
-      animation-delay: 0.05s;
-    }
-
-    .session-card:nth-child(2) {
-      animation-delay: 0.1s;
-    }
-
-    .session-card:nth-child(3) {
-      animation-delay: 0.15s;
-    }
-
-    .session-card:nth-child(4) {
-      animation-delay: 0.2s;
-    }
-
-    .session-card:nth-child(5) {
-      animation-delay: 0.25s;
-    }
-
-    .session-card:nth-child(6) {
-      animation-delay: 0.3s;
-    }
-
     .session-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 8px 24px rgba(244, 67, 54, 0.3);
@@ -306,7 +311,7 @@
       margin-bottom: 15px;
       flex-wrap: wrap;
       gap: 10px;
-      padding-right: 100px;
+      padding-right: 90px;
     }
 
     .driver-name {
@@ -346,18 +351,36 @@
       color: #ffc107;
     }
 
-    .pb-badge {
+    /* Badge Styles */
+    .badge-container {
       position: absolute;
       top: 15px;
       right: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-end;
+    }
+
+    .pb-badge {
       background: linear-gradient(135deg, #ffd700, #ffed4e);
       color: #1e1e1e;
       padding: 6px 12px;
       border-radius: 20px;
-      font-size: 0.8em;
+      font-size: 0.75em;
       font-weight: bold;
       box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
       animation: pulse 2s infinite;
+    }
+
+    .tr-badge {
+      background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.75em;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(0, 210, 255, 0.4);
     }
 
     @keyframes pulse {
@@ -412,18 +435,12 @@
       transform: scale(1.02);
     }
 
-    .loading {
+    .loading,
+    .no-results {
       text-align: center;
       padding: 50px;
       font-size: 1.5em;
       color: #999;
-    }
-
-    .no-results {
-      text-align: center;
-      padding: 50px;
-      color: #999;
-      animation: fadeIn 0.5s ease-out;
     }
 
     .error {
@@ -433,25 +450,9 @@
       border-radius: 8px;
       margin: 20px 0;
       text-align: center;
-      animation: shake 0.5s;
     }
 
-    @keyframes shake {
-
-      0%,
-      100% {
-        transform: translateX(0);
-      }
-
-      25% {
-        transform: translateX(-10px);
-      }
-
-      75% {
-        transform: translateX(10px);
-      }
-    }
-
+    /* Skeleton Loading */
     .skeleton {
       background: linear-gradient(90deg, #2d2d2d 25%, #3d3d3d 50%, #2d2d2d 75%);
       background-size: 200% 100%;
@@ -503,47 +504,20 @@
     }
 
     @media (max-width: 768px) {
-      body {
-        padding: 10px;
-      }
-
-      .header {
-        padding: 20px;
-      }
-
-      .controls {
-        padding: 15px;
-        gap: 10px;
+      .stats-summary {
+        grid-template-columns: repeat(2, 1fr);
       }
 
       .search-box,
       .select-filter,
       .date-input {
         width: 100%;
-        min-width: auto;
       }
 
       .filter-btn,
       .reset-btn {
         flex: 1;
         min-width: calc(50% - 5px);
-      }
-
-      .sessions-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .stats-summary {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
-      }
-
-      .stat-card {
-        padding: 15px;
-      }
-
-      .filtered-stat-value {
-        font-size: 1.5em;
       }
     }
 
@@ -554,13 +528,12 @@
 
       .session-header {
         flex-direction: column;
-        align-items: flex-start;
         padding-right: 0;
       }
 
-      .pb-badge {
+      .badge-container {
         position: static;
-        display: inline-block;
+        flex-direction: row;
         margin-top: 10px;
       }
     }
@@ -571,7 +544,21 @@
   <div class="container">
     <div class="header">
       <h1>🏎️ Karting Telemetry</h1>
-      <div class="subtitle">Track your performance across all sessions</div>
+      <div class="subtitle">Personal Records & Track Leaderboards</div>
+    </div>
+
+    <div class="badge-legend">
+      <div class="legend-item">
+        <span class="legend-badge pb-badge">PB</span>
+        <span><strong>Personal Best:</strong> Your fastest time on this specific configuration.</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-badge tr-badge">TR</span>
+        <span><strong>Track Record:</strong> The fastest time ever recorded by anyone here.</span>
+      </div>
+      <div class="legend-item">
+        <span>📈 <strong>Trends:</strong> Comparison against your previous sessions.</span>
+      </div>
     </div>
 
     <div class="stats-summary" id="summary-stats">
@@ -628,8 +615,7 @@
     </div>
 
     <div id="sessions-container">
-      <div class="sessions-grid" id="skeleton-loader">
-      </div>
+      <div class="sessions-grid" id="skeleton-loader"></div>
     </div>
   </div>
 
@@ -639,7 +625,10 @@
     let currentSort = 'date';
     let uniqueTracks = new Set();
     let uniqueConfigs = new Set();
-    let personalBests = {};
+
+    // Achievement Tracking
+    let personalBests = {}; // Key: Driver_Track_Config
+    let trackRecords = {};  // Key: Track_Config
     let isLoading = true;
 
     function debounce(func, wait) {
@@ -665,8 +654,6 @@
           <div class="skeleton skeleton-stat"></div>
           <div class="skeleton skeleton-stat"></div>
           <div class="skeleton skeleton-stat"></div>
-          <div class="skeleton skeleton-stat"></div>
-          <div class="skeleton skeleton-stat"></div>
           <div class="skeleton skeleton-button"></div>
         </div>
       `).join('');
@@ -688,67 +675,19 @@
 
     function updateUrlParams() {
       const params = new URLSearchParams();
-
       const search = document.getElementById('search-input').value;
       const track = document.getElementById('track-filter').value;
       const config = document.getElementById('config-filter').value;
       const dateFilter = document.getElementById('date-filter').value;
-      const dateFrom = document.getElementById('date-from').value;
-      const dateTo = document.getElementById('date-to').value;
 
       if (search) params.set('search', search);
       if (track) params.set('track', track);
       if (config) params.set('config', config);
       if (dateFilter !== 'all') params.set('date', dateFilter);
-      if (dateFilter === 'custom' && dateFrom) params.set('from', dateFrom);
-      if (dateFilter === 'custom' && dateTo) params.set('to', dateTo);
       if (currentSort !== 'date') params.set('sort', currentSort);
 
       const newUrl = params.toString() ? `${window.location.pathname}?${params.toString()}` : window.location.pathname;
       window.history.replaceState({}, '', newUrl);
-    }
-
-    function applyUrlParams() {
-      const params = getUrlParams();
-
-      document.getElementById('search-input').value = params.search;
-      document.getElementById('track-filter').value = params.track;
-      document.getElementById('config-filter').value = params.config;
-      document.getElementById('date-filter').value = params.dateFilter;
-      document.getElementById('date-from').value = params.dateFrom;
-      document.getElementById('date-to').value = params.dateTo;
-
-      currentSort = params.sort;
-      updateDateFilterVisibility();
-
-      document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.sort === currentSort);
-      });
-    }
-
-    function resetFilters() {
-      document.getElementById('search-input').value = '';
-      document.getElementById('track-filter').value = '';
-      document.getElementById('config-filter').value = '';
-      document.getElementById('date-filter').value = 'all';
-
-      const today = new Date().toISOString().split('T')[0];
-      const monthAgo = new Date();
-      monthAgo.setDate(monthAgo.getDate() - 30);
-      const defaultFrom = monthAgo.toISOString().split('T')[0];
-
-      document.getElementById('date-from').value = defaultFrom;
-      document.getElementById('date-to').value = today;
-
-      currentSort = 'date';
-
-      document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.sort === 'date');
-      });
-
-      updateDateFilterVisibility();
-      filterSessions();
-      updateUrlParams();
     }
 
     async function loadAllSessions() {
@@ -757,378 +696,238 @@
 
       try {
         const listResponse = await fetch('sessions/sessions-list.json');
-
-        if (!listResponse.ok) {
-          throw new Error(`Failed to load sessions: ${listResponse.statusText}`);
-        }
-
+        if (!listResponse.ok) throw new Error(`Failed to load: ${listResponse.statusText}`);
         const sessionList = await listResponse.json();
 
-        if (!sessionList || !Array.isArray(sessionList.sessions)) {
-          throw new Error('Invalid session data format');
-        }
-
-        allSessions = sessionList.sessions.map(session => ({
-          id: session.id,
-          driver: session.driver,
-          track_name: session.track?.name || 'N/A',
-          track_config: session.track?.configuration || 'N/A',
-          session_date: session.session_date,
-          fastest_lap: session.fastest_lap,
-          kart: session.kart,
-          laps_count: session.laps_count,
-          average_lap: session.average_lap
+        allSessions = sessionList.sessions.map(s => ({
+          ...s,
+          track_name: s.track?.name || 'N/A',
+          track_config: s.track?.configuration || 'N/A'
         }));
 
         if (allSessions.length === 0) {
-          container.innerHTML = '<div class="no-results">No sessions found. Start tracking your performance!</div>';
-          isLoading = false;
+          container.innerHTML = '<div class="no-results">No sessions found.</div>';
           return;
         }
 
-        allSessions.forEach(session => {
-          uniqueTracks.add(session.track_name);
-          uniqueConfigs.add(session.track_config);
+        allSessions.forEach(s => {
+          uniqueTracks.add(s.track_name);
+          uniqueConfigs.add(s.track_config);
         });
 
-        calculatePersonalBests();
-        calculateTrends();
+        calculateAchievements(); // PB and Track Records
+        calculateDriverTrends(); // Per Driver Logic
         populateFilters();
-        filteredSessions = [...allSessions];
-        applyUrlParams();
+
+        const params = getUrlParams();
+        applyUrlParams(params);
         filterSessions();
         isLoading = false;
       } catch (error) {
-        console.error('Error loading sessions:', error);
-        container.innerHTML = `
-          <div class="error">
-            <strong>⚠️ Error Loading Sessions</strong><br>
-            ${error.message}<br>
-            <small>Please check that sessions/sessions-list.json is accessible and properly formatted.</small>
-          </div>
-        `;
-        isLoading = false;
+        container.innerHTML = `<div class="error">⚠️ Error Loading: ${error.message}</div>`;
       }
     }
 
-    function parseTime(timeStr) {
-      if (timeStr === null || timeStr === undefined || timeStr === "") return Infinity;
-      if (typeof timeStr === 'number') return timeStr;
-      const parts = timeStr.toString().split(':');
-      if (parts.length === 2) {
-        return (parseInt(parts[0]) || 0) * 60 + (parseFloat(parts[1]) || 0);
+    function calculateAchievements() {
+      personalBests = {};
+      trackRecords = {};
+
+      allSessions.forEach(session => {
+        const lapTime = parseTime(session.fastest_lap);
+        const trackKey = `${session.track_name}_${session.track_config}`;
+        const driverKey = `${session.driver}_${trackKey}`;
+
+        // Global Track Record
+        if (!trackRecords[trackKey] || lapTime < trackRecords[trackKey].time) {
+          trackRecords[trackKey] = { time: lapTime, sessionId: session.id };
+        }
+
+        // Driver PB
+        if (!personalBests[driverKey] || lapTime < personalBests[driverKey].time) {
+          personalBests[driverKey] = { time: lapTime, sessionId: session.id };
+        }
+      });
+    }
+
+    function calculateDriverTrends() {
+      // Sort chronologically for calculation
+      const sorted = [...allSessions].sort((a, b) => new Date(a.session_date) - new Date(b.session_date));
+      const driverHistory = {};
+
+      sorted.forEach(session => {
+        const key = `${session.driver}_${session.track_name}_${session.track_config}`;
+        if (!driverHistory[key]) driverHistory[key] = [];
+
+        const recent = driverHistory[key].slice(-3);
+        if (recent.length >= 2) {
+          const currentTime = parseTime(session.fastest_lap);
+          const avgPrevious = recent.reduce((sum, s) => sum + parseTime(s.fastest_lap), 0) / recent.length;
+          const improvement = ((avgPrevious - currentTime) / avgPrevious) * 100;
+
+          if (improvement > 1) { session.trend = 'improving'; session.trendValue = improvement.toFixed(1); }
+          else if (improvement < -1) { session.trend = 'declining'; session.trendValue = Math.abs(improvement).toFixed(1); }
+          else { session.trend = 'stable'; }
+        }
+        driverHistory[key].push(session);
+      });
+    }
+
+    function renderSessions() {
+      const container = document.getElementById('sessions-container');
+      if (filteredSessions.length === 0) {
+        container.innerHTML = '<div class="no-results">No matches found.</div>';
+        return;
       }
+
+      const html = filteredSessions.map(session => {
+        const trackKey = `${session.track_name}_${session.track_config}`;
+        const driverKey = `${session.driver}_${trackKey}`;
+
+        const isTR = trackRecords[trackKey]?.sessionId === session.id;
+        const isPB = personalBests[driverKey]?.sessionId === session.id;
+
+        let trendHTML = '';
+        if (session.trend) {
+          const icon = session.trend === 'improving' ? '📈' : session.trend === 'declining' ? '📉' : '➡️';
+          const text = session.trend === 'stable' ? 'Stable' : `${session.trendValue}% ${session.trend === 'improving' ? 'faster' : 'slower'}`;
+          trendHTML = `<div class="trend-indicator trend-${session.trend}">${icon} ${text}</div>`;
+        }
+
+        return `
+          <div class="session-card" onclick="viewSession('${session.id}')">
+            <div class="badge-container">
+              ${isTR ? '<div class="tr-badge">🏆 Record</div>' : ''}
+              ${isPB ? '<div class="pb-badge">⭐ PB</div>' : ''}
+            </div>
+            <div class="session-header">
+              <div>
+                <div class="driver-name">${session.driver}</div>
+                ${trendHTML}
+              </div>
+              <div class="session-date">${new Date(session.session_date).toLocaleDateString()}</div>
+            </div>
+            <div class="session-stats">
+              <div class="session-stat"><span class="stat-name">Track</span><span class="stat-val">${session.track_name} (${session.track_config})</span></div>
+              <div class="session-stat"><span class="stat-name">Kart</span><span class="stat-val">${session.kart || '-'}</span></div>
+              <div class="session-stat"><span class="stat-name">Fastest Lap</span><span class="stat-val">🏆 ${session.fastest_lap}</span></div>
+              <div class="session-stat"><span class="stat-name">Laps</span><span class="stat-val">${session.laps_count || 0}</span></div>
+            </div>
+            <button class="view-btn">View Full Telemetry →</button>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = `<div class="sessions-grid">${html}</div>`;
+      updateFilteredSummaryStats();
+    }
+
+    function parseTime(timeStr) {
+      if (!timeStr) return Infinity;
+      const parts = timeStr.toString().split(':');
+      if (parts.length === 2) return (parseInt(parts[0]) * 60) + parseFloat(parts[1]);
       return parseFloat(timeStr) || Infinity;
     }
 
     function formatTime(seconds) {
-      if (seconds === Infinity || isNaN(seconds)) return '-';
+      if (seconds === Infinity) return '-';
       const mins = Math.floor(seconds / 60);
       const secs = (seconds % 60).toFixed(3);
       return mins > 0 ? `${mins}:${secs.padStart(6, '0')}` : `${secs}s`;
     }
 
-    function calculatePersonalBests() {
-      personalBests = {};
-      allSessions.forEach(session => {
-        const key = `${session.track_name}_${session.track_config}`;
-        const lapTime = parseTime(session.fastest_lap);
-
-        if (!personalBests[key] || lapTime < personalBests[key].time) {
-          personalBests[key] = {
-            time: lapTime,
-            sessionId: session.id
-          };
-        }
-      });
-    }
-
-    function calculateTrends() {
-      const sortedSessions = [...allSessions].sort((a, b) =>
-        new Date(a.session_date) - new Date(b.session_date)
-      );
-
-      sortedSessions.forEach((session, index) => {
-        const key = `${session.track_name}_${session.track_config}`;
-        const recentSessions = sortedSessions
-          .slice(0, index)
-          .filter(s => `${s.track_name}_${s.track_config}` === key)
-          .slice(-3);
-
-        if (recentSessions.length >= 2) {
-          const currentTime = parseTime(session.fastest_lap);
-          const avgPrevious = recentSessions.reduce((sum, s) =>
-            sum + parseTime(s.fastest_lap), 0) / recentSessions.length;
-
-          const improvement = ((avgPrevious - currentTime) / avgPrevious) * 100;
-
-          if (improvement > 1) {
-            session.trend = 'improving';
-            session.trendValue = improvement.toFixed(1);
-          } else if (improvement < -1) {
-            session.trend = 'declining';
-            session.trendValue = Math.abs(improvement).toFixed(1);
-          } else {
-            session.trend = 'stable';
-          }
-        }
-      });
+    function updateFilteredSummaryStats() {
+      const best = Math.min(...filteredSessions.map(s => parseTime(s.fastest_lap)));
+      document.getElementById('filtered-sessions-count').textContent = filteredSessions.length;
+      document.getElementById('filtered-total-laps').textContent = filteredSessions.reduce((sum, s) => sum + (s.laps_count || 0), 0);
+      document.getElementById('filtered-tracks-count').textContent = new Set(filteredSessions.map(s => s.track_name)).size;
+      document.getElementById('filtered-best-lap').textContent = best === Infinity ? '-' : formatTime(best);
     }
 
     function populateFilters() {
       const trackFilter = document.getElementById('track-filter');
       const configFilter = document.getElementById('config-filter');
+      [...uniqueTracks].sort().forEach(t => trackFilter.add(new Option(t, t)));
+      [...uniqueConfigs].sort().forEach(c => configFilter.add(new Option(c, c)));
+    }
 
-      Array.from(uniqueTracks).sort().forEach(track => {
-        const option = document.createElement('option');
-        option.value = track;
-        option.textContent = track;
-        trackFilter.appendChild(option);
+    function filterSessions() {
+      const search = document.getElementById('search-input').value.toLowerCase();
+      const track = document.getElementById('track-filter').value;
+      const config = document.getElementById('config-filter').value;
+      const dateFilter = document.getElementById('date-filter').value;
+
+      filteredSessions = allSessions.filter(s => {
+        if (search && !s.driver.toLowerCase().includes(search) && !s.track_name.toLowerCase().includes(search)) return false;
+        if (track && s.track_name !== track) return false;
+        if (config && s.track_config !== config) return false;
+
+        const sessionDate = new Date(s.session_date);
+        const today = new Date(); today.setHours(0, 0, 0, 0);
+
+        if (dateFilter === 'today' && sessionDate.toDateString() !== today.toDateString()) return false;
+        if (dateFilter === 'week') { const w = new Date(today); w.setDate(w.getDate() - 7); if (sessionDate < w) return false; }
+        if (dateFilter === 'month') { const m = new Date(today); m.setDate(m.getDate() - 30); if (sessionDate < m) return false; }
+        if (dateFilter === 'custom') {
+          const from = document.getElementById('date-from').value;
+          const to = document.getElementById('date-to').value;
+          if (from && sessionDate < new Date(from)) return false;
+          if (to && sessionDate > new Date(to)) return false;
+        }
+        return true;
       });
-
-      Array.from(uniqueConfigs).sort().forEach(config => {
-        const option = document.createElement('option');
-        option.value = config;
-        option.textContent = config;
-        configFilter.appendChild(option);
-      });
-    }
-
-    function updateFilteredSummaryStats() {
-      const sessionsToUse = filteredSessions;
-      const totalSessions = sessionsToUse.length;
-      const totalLaps = sessionsToUse.reduce((sum, s) => sum + (s.laps_count || 0), 0);
-
-      const allFastestLaps = sessionsToUse
-        .map(s => parseTime(s.fastest_lap))
-        .filter(t => t !== Infinity);
-
-      const bestLapEver = allFastestLaps.length > 0 ? Math.min(...allFastestLaps) : null;
-      const uniqueTrackNames = new Set(sessionsToUse.map(s => s.track_name).filter(n => n && n !== 'N/A'));
-
-      document.getElementById('filtered-sessions-count').textContent = totalSessions;
-      document.getElementById('filtered-total-laps').textContent = totalLaps;
-      document.getElementById('filtered-tracks-count').textContent = uniqueTrackNames.size;
-      document.getElementById('filtered-best-lap').textContent = bestLapEver !== null ? formatTime(bestLapEver) : '-';
-    }
-
-    function renderSessions() {
-      const container = document.getElementById('sessions-container');
-
-      if (filteredSessions.length === 0) {
-        container.innerHTML = '<div class="no-results">No sessions match your filters. Try adjusting your search criteria.</div>';
-      } else {
-        const html = filteredSessions.map(session => {
-          const fastestTime = session.fastest_lap || '-';
-          const averageTime = session.average_lap || '-';
-          const lapsCount = session.laps_count || 0;
-
-          const key = `${session.track_name}_${session.track_config}`;
-          const isPB = personalBests[key]?.sessionId === session.id;
-
-          let trendHTML = '';
-          if (session.trend) {
-            const trendClass = `trend-${session.trend}`;
-            const trendIcon = session.trend === 'improving' ? '📈' :
-              session.trend === 'declining' ? '📉' : '➡️';
-            const trendText = session.trend === 'improving' ? `${session.trendValue}% faster` :
-              session.trend === 'declining' ? `${session.trendValue}% slower` : 'Stable';
-            trendHTML = `<div class="trend-indicator ${trendClass}">${trendIcon} ${trendText}</div>`;
-          }
-
-          return `
-            <div class="session-card" onclick="viewSession('${session.id}')">
-              ${isPB ? '<div class="pb-badge">⭐ PB</div>' : ''}
-              <div class="session-header">
-                <div>
-                  <div class="driver-name">${session.driver}</div>
-                  ${trendHTML}
-                </div>
-                <div class="session-date">${new Date(session.session_date).toLocaleDateString()}</div>
-              </div>
-              
-              <div class="session-stats">
-                <div class="session-stat">
-                  <span class="stat-name">Track</span>
-                  <span class="stat-val">${session.track_name} (${session.track_config})</span>
-                </div>
-                <div class="session-stat">
-                  <span class="stat-name">Kart</span>
-                  <span class="stat-val">${session.kart || '-'}</span>
-                </div>
-                <div class="session-stat">
-                  <span class="stat-name">Fastest Lap</span>
-                  <span class="stat-val">🏆 ${fastestTime}</span>
-                </div>
-                <div class="session-stat">
-                  <span class="stat-name">Average</span>
-                  <span class="stat-val">${averageTime}</span>
-                </div>
-                <div class="session-stat">
-                  <span class="stat-name">Laps</span>
-                  <span class="stat-val">${lapsCount}</span>
-                </div>
-              </div>
-              
-              <button class="view-btn">View Full Telemetry →</button>
-            </div>
-          `;
-        }).join('');
-
-        container.innerHTML = `<div class="sessions-grid">${html}</div>`;
-      }
-
-      updateFilteredSummaryStats();
-    }
-
-    function viewSession(sessionId) {
-      window.location.href = `session.html?id=${sessionId}&mode=pc`;
+      sortSessions(currentSort);
     }
 
     function sortSessions(criteria) {
       currentSort = criteria;
       filteredSessions.sort((a, b) => {
-        let diff = 0;
-        if (criteria === 'date') {
-          diff = new Date(b.session_date) - new Date(a.session_date);
-        } else {
-          const timeA = parseTime(a.fastest_lap);
-          const timeB = parseTime(b.fastest_lap);
-          diff = timeA - timeB;
-        }
-        return diff || (new Date(b.session_date) - new Date(a.session_date));
+        if (criteria === 'date') return new Date(b.session_date) - new Date(a.session_date);
+        return parseTime(a.fastest_lap) - parseTime(b.fastest_lap);
       });
-
-      document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.sort === currentSort);
-      });
-
       renderSessions();
     }
 
-    function filterSessions() {
-      const searchTerm = document.getElementById('search-input').value.toLowerCase();
-      const selectedTrack = document.getElementById('track-filter').value;
-      const selectedConfig = document.getElementById('config-filter').value;
-      const dateFilter = document.getElementById('date-filter').value;
-
-      filteredSessions = allSessions.filter(session => {
-        const kart = (session.kart || '').toLowerCase();
-        if (searchTerm &&
-          !session.driver.toLowerCase().includes(searchTerm) &&
-          !session.track_name.toLowerCase().includes(searchTerm) &&
-          !kart.includes(searchTerm)) {
-          return false;
-        }
-
-        if (selectedTrack && session.track_name !== selectedTrack) {
-          return false;
-        }
-
-        if (selectedConfig && session.track_config !== selectedConfig) {
-          return false;
-        }
-
-        const sessionDate = new Date(session.session_date);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        if (dateFilter === 'today') {
-          const sessionDay = new Date(sessionDate);
-          sessionDay.setHours(0, 0, 0, 0);
-          if (sessionDay.getTime() !== today.getTime()) return false;
-        } else if (dateFilter === 'week') {
-          const weekAgo = new Date(today);
-          weekAgo.setDate(weekAgo.getDate() - 7);
-          if (sessionDate < weekAgo) return false;
-        } else if (dateFilter === 'month') {
-          const monthAgo = new Date(today);
-          monthAgo.setDate(monthAgo.getDate() - 30);
-          if (sessionDate < monthAgo) return false;
-        } else if (dateFilter === 'custom') {
-          const dateFrom = document.getElementById('date-from').value;
-          const dateTo = document.getElementById('date-to').value;
-
-          if (dateFrom && new Date(session.session_date) < new Date(dateFrom)) return false;
-          if (dateTo) {
-            const dateToMax = new Date(dateTo);
-            dateToMax.setDate(dateToMax.getDate() + 1);
-            if (new Date(session.session_date) >= dateToMax) return false;
-          }
-        }
-
-        return true;
-      });
-
-      sortSessions(currentSort);
+    function applyUrlParams(params) {
+      if (params.search) document.getElementById('search-input').value = params.search;
+      if (params.track) document.getElementById('track-filter').value = params.track;
+      if (params.config) document.getElementById('config-filter').value = params.config;
+      if (params.dateFilter) document.getElementById('date-filter').value = params.dateFilter;
+      currentSort = params.sort;
+      updateDateFilterVisibility();
     }
 
     function updateDateFilterVisibility() {
-      const dateFilter = document.getElementById('date-filter').value;
-      const customRange = document.getElementById('custom-date-range');
-
-      if (dateFilter === 'custom') {
-        customRange.style.display = 'flex';
-      } else {
-        customRange.style.display = 'none';
-      }
+      document.getElementById('custom-date-range').style.display =
+        document.getElementById('date-filter').value === 'custom' ? 'flex' : 'none';
     }
 
-    const debouncedFilter = debounce(() => {
-      filterSessions();
-      updateUrlParams();
-    }, 300);
-
-    document.getElementById('search-input').addEventListener('input', debouncedFilter);
-
-    document.getElementById('track-filter').addEventListener('change', () => {
-      filterSessions();
-      updateUrlParams();
-    });
-
-    document.getElementById('config-filter').addEventListener('change', () => {
-      filterSessions();
-      updateUrlParams();
-    });
-
-    document.getElementById('date-filter').addEventListener('change', function () {
+    function resetFilters() {
+      document.getElementById('search-input').value = '';
+      document.getElementById('track-filter').value = '';
+      document.getElementById('config-filter').value = '';
+      document.getElementById('date-filter').value = 'all';
+      currentSort = 'date';
       updateDateFilterVisibility();
       filterSessions();
       updateUrlParams();
-    });
+    }
 
-    document.getElementById('date-from').addEventListener('change', () => {
-      filterSessions();
+    function viewSession(id) { window.location.href = `session.html?id=${id}&mode=pc`; }
+
+    const debouncedFilter = debounce(() => { filterSessions(); updateUrlParams(); }, 300);
+    document.getElementById('search-input').addEventListener('input', debouncedFilter);
+    document.getElementById('track-filter').addEventListener('change', () => { filterSessions(); updateUrlParams(); });
+    document.getElementById('config-filter').addEventListener('change', () => { filterSessions(); updateUrlParams(); });
+    document.getElementById('date-filter').addEventListener('change', () => { updateDateFilterVisibility(); filterSessions(); updateUrlParams(); });
+    document.getElementById('date-from').addEventListener('change', filterSessions);
+    document.getElementById('date-to').addEventListener('change', filterSessions);
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.addEventListener('click', (e) => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      sortSessions(e.target.dataset.sort);
       updateUrlParams();
-    });
-
-    document.getElementById('date-to').addEventListener('change', () => {
-      filterSessions();
-      updateUrlParams();
-    });
-
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        sortSessions(e.target.dataset.sort);
-        updateUrlParams();
-      });
-    });
-
+    }));
     document.getElementById('reset-filters').addEventListener('click', resetFilters);
-
-    const today = new Date().toISOString().split('T')[0];
-    const monthAgo = new Date();
-    monthAgo.setDate(monthAgo.getDate() - 30);
-    const defaultFrom = monthAgo.toISOString().split('T')[0];
-
-    document.getElementById('date-from').value = defaultFrom;
-    document.getElementById('date-to').value = today;
-    document.getElementById('date-from').max = today;
-    document.getElementById('date-to').max = today;
-    document.getElementById('date-to').min = '2020-01-01';
-    document.getElementById('date-from').min = '2020-01-01';
 
     loadAllSessions();
   </script>
