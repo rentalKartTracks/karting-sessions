@@ -4,29 +4,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Karting Telemetry | Pro Dashboard</title>
+  <title>Karting Telemetry | E-Ink Archive</title>
   <style>
-    /* DESIGN SYSTEM 
-       High-contrast, dark-mode racing aesthetic using CSS Variables 
+    /* E-INK & PASTEL DESIGN SYSTEM 
+       High-legibility, digital paper aesthetic 
     */
     :root {
-      --brand-red: #e63946;
-      --brand-red-hover: #c92a35;
-      --bg-dark: #0f1113;
-      --surface-low: #1a1d21;
-      --surface-mid: #24282d;
-      --surface-high: #2f353b;
-      --text-main: #f8f9fa;
-      --text-dim: #9ca3af;
-      --accent-gold: #fbbf24;
-      /* PB Color */
-      --accent-blue: #3b82f6;
-      /* Track Record Color */
-      --success: #22c55e;
-      --radius-lg: 12px;
-      --radius-md: 8px;
-      --border: 1px solid rgba(255, 255, 255, 0.08);
-      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      --bg-paper: #fcfaf5;
+      --text-main: #2d3436;
+      --text-dim: #636e72;
+      --border-ink: #d1d1d1;
+
+      /* Pastel Palette */
+      --pastel-blue: #dbeafe;
+      /* Track Record */
+      --pastel-yellow: #fef9c3;
+      /* Personal Best */
+      --pastel-green: #dcfce7;
+      /* Improving */
+      --pastel-red: #fee2e2;
+      /* Declining */
+      --pastel-gray: #f3f4f6;
+      /* Stable */
+
+      --radius-sm: 4px;
+      --transition: all 0.2s ease;
     }
 
     * {
@@ -36,54 +38,45 @@
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background-color: var(--bg-dark);
-      background-image: radial-gradient(circle at 0% 0%, rgba(230, 57, 70, 0.03) 0%, transparent 40%);
+      font-family: 'Charter', 'Georgia', 'Times New Roman', serif;
+      background-color: var(--bg-paper);
       color: var(--text-main);
-      line-height: 1.5;
-      min-height: 100vh;
-      padding: 2rem 1rem;
+      line-height: 1.6;
+      padding: 3rem 1.5rem;
     }
 
     .container {
-      max-width: 1400px;
+      max-width: 900px;
       margin: 0 auto;
     }
 
     /* Header Section */
     .header {
-      margin-bottom: 2.5rem;
-      text-align: left;
+      border-bottom: 2px solid var(--text-main);
+      margin-bottom: 3rem;
+      padding-bottom: 1rem;
     }
 
     h1 {
-      font-size: 2.5rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
+      font-size: 2.2rem;
+      font-weight: 700;
+      font-family: system-ui, -apple-system, sans-serif;
     }
 
     .subtitle {
       color: var(--text-dim);
-      font-size: 1.1rem;
-      margin-top: 0.25rem;
+      font-style: italic;
     }
 
-    /* Performance Glossary (Badge Legend) */
+    /* Badge Legend */
     .badge-legend {
-      background: var(--surface-low);
+      background: #fff;
       padding: 1.5rem;
-      border-radius: var(--radius-lg);
-      border: var(--border);
+      border: 1px solid var(--border-ink);
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1.5rem;
-      margin-bottom: 2.5rem;
-    }
-
-    .legend-item {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
+      margin-bottom: 3rem;
     }
 
     .legend-label {
@@ -92,260 +85,199 @@
       gap: 0.75rem;
       font-weight: 700;
       font-size: 0.9rem;
+      font-family: system-ui, sans-serif;
     }
 
     .legend-desc {
       font-size: 0.85rem;
       color: var(--text-dim);
-      line-height: 1.4;
     }
 
     /* Stats Overview */
     .stats-summary {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
     }
 
     .stat-card {
-      background: var(--surface-low);
-      padding: 1.25rem;
-      border-radius: var(--radius-lg);
-      border: var(--border);
-      border-bottom: 3px solid var(--surface-high);
-      transition: var(--transition);
-    }
-
-    .stat-card:hover {
-      border-bottom-color: var(--brand-red);
+      border-left: 2px solid var(--text-main);
+      padding-left: 1rem;
     }
 
     .stat-label {
       font-size: 0.7rem;
-      font-weight: 800;
       text-transform: uppercase;
+      letter-spacing: 0.05em;
       color: var(--text-dim);
-      margin-bottom: 0.5rem;
+      font-family: system-ui, sans-serif;
     }
 
     .filtered-stat-value {
-      font-size: 1.75rem;
-      font-weight: 800;
-      color: var(--accent-gold);
+      font-size: 1.5rem;
+      font-weight: 700;
     }
 
-    /* Controls & Filters */
+    /* Controls */
     .controls {
-      background: var(--surface-mid);
-      padding: 1.25rem;
-      border-radius: var(--radius-lg);
-      margin-bottom: 2rem;
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr auto;
-      gap: 1rem;
-      align-items: center;
-      border: var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border-ink);
     }
 
     .search-box,
     .select-filter {
-      width: 100%;
-      padding: 0.8rem 1rem;
-      background: var(--surface-low);
-      border: 1px solid var(--surface-high);
-      border-radius: var(--radius-md);
-      color: var(--text-main);
-      font-size: 0.9rem;
-      transition: var(--transition);
+      padding: 0.6rem;
+      border: 1px solid var(--border-ink);
+      background: #fff;
+      font-family: inherit;
+      border-radius: var(--radius-sm);
     }
 
-    .search-box:focus {
-      outline: none;
-      border-color: var(--brand-red);
+    .search-box {
+      flex: 2;
+    }
+
+    .select-filter {
+      flex: 1;
     }
 
     .reset-btn {
-      padding: 0.8rem 1.2rem;
-      background: transparent;
-      border: 1px solid var(--brand-red);
-      color: var(--brand-red);
-      border-radius: var(--radius-md);
+      padding: 0.5rem 1rem;
+      background: #fff;
+      border: 1px solid var(--text-main);
       font-weight: 700;
       cursor: pointer;
-      transition: var(--transition);
     }
 
-    .reset-btn:hover {
-      background: var(--brand-red);
-      color: white;
-    }
-
-    /* Session Grid & Cards */
+    /* Session List */
     .sessions-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-      gap: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
     }
 
     .session-card {
-      background: var(--surface-low);
-      border-radius: var(--radius-lg);
-      padding: 1.5rem;
-      border: var(--border);
+      background: #fff;
+      padding: 2rem;
+      border: 1px solid var(--border-ink);
       position: relative;
       transition: var(--transition);
-      display: flex;
-      flex-direction: column;
       cursor: pointer;
     }
 
     .session-card:hover {
-      transform: translateY(-4px);
-      background: var(--surface-mid);
-      border-color: rgba(230, 57, 70, 0.4);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+      border-color: var(--text-main);
+      box-shadow: 4px 4px 0px var(--border-ink);
     }
 
-    /* Fixed overlapping by using a flex container instead of loose absolute items */
     .card-top-row {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 1rem;
-      gap: 10px;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-ink);
+      padding-bottom: 1rem;
+    }
+
+    .driver-name {
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+
+    .session-date {
+      font-size: 0.9rem;
+      color: var(--text-dim);
     }
 
     .badge-stack {
       display: flex;
-      flex-direction: column;
-      gap: 6px;
-      align-items: flex-end;
-      flex-shrink: 0;
+      gap: 8px;
     }
 
     .pill-badge {
       padding: 4px 10px;
-      border-radius: 4px;
-      font-size: 0.65rem;
-      font-weight: 900;
+      font-size: 0.7rem;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.02em;
+      font-family: system-ui, sans-serif;
+      border-radius: 4px;
     }
 
     .pb-badge {
-      background: var(--accent-gold);
-      color: #000;
+      background: var(--pastel-yellow);
+      color: #854d0e;
     }
 
     .tr-badge {
-      background: var(--accent-blue);
-      color: #fff;
-    }
-
-    .driver-name {
-      font-size: 1.4rem;
-      font-weight: 800;
-      line-height: 1.2;
-    }
-
-    .session-date {
-      font-size: 0.8rem;
-      color: var(--text-dim);
-      margin-top: 2px;
+      background: var(--pastel-blue);
+      color: #1e3a8a;
     }
 
     .metrics-container {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      padding-top: 1.25rem;
-      border-top: var(--border);
-      margin-bottom: 1rem;
-    }
-
-    .metric-item {
-      display: flex;
-      flex-direction: column;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 2rem;
     }
 
     .metric-label {
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       color: var(--text-dim);
       text-transform: uppercase;
-      font-weight: 700;
+      font-family: system-ui, sans-serif;
     }
 
     .metric-value {
-      font-size: 1rem;
-      font-weight: 600;
+      font-size: 1.1rem;
+      font-weight: 700;
     }
 
     .fastest-lap-value {
-      color: var(--brand-red);
-      font-weight: 800;
-      font-size: 1.1rem;
-    }
-
-    .delta-indicator {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--text-dim);
-      margin-top: 2px;
-    }
-
-    .delta-gap {
-      color: var(--brand-red);
+      font-size: 1.3rem;
+      text-decoration: underline;
     }
 
     .trend-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      width: fit-content;
-      margin-top: auto;
+      margin-top: 1.5rem;
+      display: inline-block;
+      padding: 4px 12px;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      font-family: system-ui, sans-serif;
     }
 
     .trend-improving {
-      background: rgba(34, 197, 94, 0.15);
-      color: #4ade80;
+      background: var(--pastel-green);
+      color: #065f46;
     }
 
     .trend-declining {
-      background: rgba(230, 57, 70, 0.15);
-      color: #f87171;
+      background: var(--pastel-red);
+      color: #991b1b;
     }
 
     .trend-stable {
-      background: var(--surface-high);
+      background: var(--pastel-gray);
       color: var(--text-dim);
     }
 
     .view-btn {
+      margin-top: 1.5rem;
       width: 100%;
-      padding: 0.9rem;
-      background: var(--surface-high);
-      border: none;
-      border-radius: var(--radius-md);
-      color: white;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      transition: var(--transition);
-      margin-top: 1rem;
+      padding: 0.8rem;
+      background: #fff;
+      border: 1px solid var(--text-main);
+      font-weight: 700;
+      cursor: pointer;
     }
 
-    .session-card:hover .view-btn {
-      background: var(--brand-red);
-    }
-
-    @media (max-width: 900px) {
-      .controls {
-        grid-template-columns: 1fr;
+    @media (max-width: 600px) {
+      .metrics-container {
+        grid-template-columns: 1fr 1fr;
       }
     }
   </style>
@@ -354,32 +286,23 @@
 <body>
 
   <div class="container">
-    <div class="header">
-      <h1>🏁 Karting Telemetry</h1>
-      <p class="subtitle">Personal Records & Track historical data</p>
-    </div>
+    <header class="header">
+      <h1>Karting Telemetry</h1>
+      <p class="subtitle">Performance logs & track configurations</p>
+    </header>
 
     <div class="badge-legend">
       <div class="legend-item">
         <div class="legend-label">
           <span class="pill-badge tr-badge">Track Record</span>
-          <span>Global Peak</span>
         </div>
-        <p class="legend-desc">The absolute fastest lap recorded at this track across all sessions in the database.</p>
+        <p class="legend-desc">The fastest lap recorded at this track across all sessions.</p>
       </div>
       <div class="legend-item">
         <div class="legend-label">
           <span class="pill-badge pb-badge">Personal Best</span>
-          <span>Individual Peak</span>
         </div>
-        <p class="legend-desc">Your fastest lap for this specific track configuration.</p>
-      </div>
-      <div class="legend-item">
-        <div class="legend-label">
-          <span>📈 PACE TREND</span>
-        </div>
-        <p class="legend-desc">Compares this session's fastest lap to your rolling average of the <strong>last 3
-            sessions</strong> at this track.</p>
+        <p class="legend-desc">Your individual fastest lap for this configuration.</p>
       </div>
     </div>
 
@@ -389,48 +312,38 @@
         <div id="filtered-sessions-count" class="filtered-stat-value">0</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Best Lap (Filtered)</div>
+        <div class="stat-label">Best Lap</div>
         <div id="filtered-best-lap" class="filtered-stat-value">--:--</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Total Laps Driven</div>
+        <div class="stat-label">Total Laps</div>
         <div id="filtered-total-laps" class="filtered-stat-value">0</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Active Tracks</div>
-        <div id="filtered-tracks-count" class="filtered-stat-value">0</div>
       </div>
     </div>
 
     <div class="controls">
-      <input type="text" id="search-input" class="search-box" placeholder="Search driver, track, or kart...">
+      <input type="text" id="search-input" class="search-box" placeholder="Filter by driver or track...">
       <select id="track-filter" class="select-filter">
         <option value="">All Tracks</option>
       </select>
       <select id="config-filter" class="select-filter">
         <option value="">All Configs</option>
       </select>
-      <select id="date-filter" class="select-filter">
-        <option value="all">All Time</option>
-        <option value="week">Last 7 Days</option>
-        <option value="month">Last 30 Days</option>
-      </select>
-      <button id="reset-filters" class="reset-btn">Reset Filters</button>
+      <button id="reset-filters" class="reset-btn">Reset</button>
     </div>
 
-    <div id="sessions-container" class="sessions-grid">
-    </div>
+    <div id="sessions-container" class="sessions-grid"></div>
   </div>
 
   <script>
     let allSessions = [];
     let filteredSessions = [];
-    let trackRecords = {}; //
-    let personalBests = {}; //
+    let trackRecords = {};
+    let personalBests = {};
 
     async function loadAllSessions() {
       try {
-        const response = await fetch('sessions/sessions-list.json'); //
+        const response = await fetch('sessions/sessions-list.json');
         const data = await response.json();
         allSessions = data.sessions.map(s => ({
           ...s,
@@ -438,16 +351,15 @@
           track_config: s.track?.configuration || 'N/A'
         }));
 
-        preprocessData(); // Calculate achievements and trends
+        preprocessData();
         populateFilters();
         applyFilters();
       } catch (err) {
-        console.error("Telemetry failed to load", err);
+        console.error("Failed to load data", err);
       }
     }
 
     function preprocessData() {
-      // Sort chronologically to calculate trends
       const sorted = [...allSessions].sort((a, b) => new Date(a.session_date) - new Date(b.session_date));
       const driverHistory = {};
 
@@ -456,17 +368,13 @@
         const trackKey = `${s.track_name}_${s.track_config}`;
         const pbKey = `${s.driver}_${trackKey}`;
 
-        // Global Track Records
         if (!trackRecords[trackKey] || lapTime < trackRecords[trackKey].time) {
           trackRecords[trackKey] = { time: lapTime, id: s.id };
         }
-
-        // Personal Bests
         if (!personalBests[pbKey] || lapTime < personalBests[pbKey].time) {
           personalBests[pbKey] = { time: lapTime, id: s.id };
         }
 
-        // Trend Calculation (Rolling average of last 3)
         if (!driverHistory[pbKey]) driverHistory[pbKey] = [];
         const history = driverHistory[pbKey];
 
@@ -485,22 +393,15 @@
       container.innerHTML = filteredSessions.map(s => {
         const trackKey = `${s.track_name}_${s.track_config}`;
         const pbKey = `${s.driver}_${trackKey}`;
-
         const isTR = trackRecords[trackKey].id === s.id;
         const isPB = personalBests[pbKey].id === s.id;
-
-        // Calculate Delta to Track Record
-        const currentLap = parseTime(s.fastest_lap);
-        const recordLap = trackRecords[trackKey].time;
-        const delta = currentLap - recordLap;
-        const deltaText = delta > 0 ? `<span class="delta-gap">+${delta.toFixed(3)}s</span> to record` : 'Match Record';
 
         return `
         <div class="session-card" onclick="window.location.href='session.html?id=${s.id}'">
           <div class="card-top-row">
             <div>
               <div class="driver-name">${s.driver}</div>
-              <div class="session-date">${new Date(s.session_date).toLocaleDateString()}</div>
+              <div class="session-date">${new Date(s.session_date).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</div>
             </div>
             <div class="badge-stack">
               ${isTR ? '<span class="pill-badge tr-badge">Track Record</span>' : ''}
@@ -511,16 +412,15 @@
           <div class="metrics-container">
             <div class="metric-item">
               <span class="metric-label">Fastest Lap</span>
-              <span class="metric-value fastest-lap-value">${s.fastest_lap}</span>
-              <div class="delta-indicator">${deltaText}</div>
-            </div>
-            <div class="metric-item">
-              <span class="metric-label">Kart</span>
-              <span class="metric-value">${s.kart || '-'}</span>
+              <span class="metric-value fastest-lap-value">${s.fastest_lap}s</span>
             </div>
             <div class="metric-item">
               <span class="metric-label">Track</span>
               <span class="metric-value">${s.track_name}</span>
+            </div>
+            <div class="metric-item">
+              <span class="metric-label">Kart</span>
+              <span class="metric-value">${s.kart || '—'}</span>
             </div>
             <div class="metric-item">
               <span class="metric-label">Laps</span>
@@ -529,36 +429,32 @@
           </div>
 
           ${renderTrendPill(s)}
-
-          <button class="view-btn">View Full Telemetry →</button>
         </div>
       `;
       }).join('');
-
       updateGlobalStats();
     }
 
     function renderTrendPill(s) {
       if (!s.trend) return '';
       const labels = {
-        improving: { class: 'trend-improving', icon: '📈', txt: 'Faster than average' },
-        declining: { class: 'trend-declining', icon: '📉', txt: 'Slower than average' },
-        stable: { class: 'trend-stable', icon: '➡️', txt: 'Stable Pace' }
+        improving: { class: 'trend-improving', icon: '↑', txt: 'Improving' },
+        declining: { class: 'trend-declining', icon: '↓', txt: 'Slower' },
+        stable: { class: 'trend-stable', icon: '→', txt: 'Stable' }
       };
       const c = labels[s.trend];
-      return `<div class="trend-pill ${c.class}">${c.icon} ${s.trendValue || ''}% ${c.txt}</div>`;
+      return `<div class="trend-pill ${c.class}">${c.icon} ${c.txt} (${s.trendValue}%)</div>`;
     }
 
     function parseTime(t) {
       if (!t) return Infinity;
-      const p = t.toString().split(':'); //
+      const p = t.toString().split(':');
       return p.length === 2 ? (parseInt(p[0]) * 60) + parseFloat(p[1]) : parseFloat(t);
     }
 
     function updateGlobalStats() {
       document.getElementById('filtered-sessions-count').textContent = filteredSessions.length;
       document.getElementById('filtered-total-laps').textContent = filteredSessions.reduce((a, b) => a + (b.laps_count || 0), 0);
-      document.getElementById('filtered-tracks-count').textContent = new Set(filteredSessions.map(s => s.track_name)).size;
       const lapTimes = filteredSessions.map(s => parseTime(s.fastest_lap));
       const best = Math.min(...lapTimes);
       document.getElementById('filtered-best-lap').textContent = best === Infinity ? '--:--' : best.toFixed(3) + 's';
@@ -583,7 +479,7 @@
         return matchSearch && matchTrack && matchConfig;
       });
 
-      filteredSessions.sort((a, b) => new Date(b.session_date) - new Date(a.session_date)); // Latest first
+      filteredSessions.sort((a, b) => new Date(b.session_date) - new Date(a.session_date));
       renderSessions();
     }
 
