@@ -53,6 +53,7 @@
     /* Header Section */
     .header {
       margin-bottom: 2.5rem;
+      text-align: left;
     }
 
     h1 {
@@ -131,7 +132,7 @@
     .filtered-stat-value {
       font-size: 1.75rem;
       font-weight: 800;
-      color: var(--text-main);
+      color: var(--accent-gold);
     }
 
     /* Controls & Filters */
@@ -206,14 +207,21 @@
       box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
     }
 
+    /* Fixed overlapping by using a flex container instead of loose absolute items */
+    .card-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      gap: 10px;
+    }
+
     .badge-stack {
-      position: absolute;
-      top: 15px;
-      right: 15px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
       align-items: flex-end;
+      flex-shrink: 0;
     }
 
     .pill-badge {
@@ -238,13 +246,13 @@
     .driver-name {
       font-size: 1.4rem;
       font-weight: 800;
-      margin-bottom: 2px;
+      line-height: 1.2;
     }
 
     .session-date {
       font-size: 0.8rem;
       color: var(--text-dim);
-      margin-bottom: 1.25rem;
+      margin-top: 2px;
     }
 
     .metrics-container {
@@ -253,7 +261,7 @@
       gap: 1rem;
       padding-top: 1.25rem;
       border-top: var(--border);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     .metric-item {
@@ -299,6 +307,7 @@
       font-size: 0.75rem;
       font-weight: 700;
       width: fit-content;
+      margin-top: auto;
     }
 
     .trend-improving {
@@ -316,11 +325,6 @@
       color: var(--text-dim);
     }
 
-    .card-footer {
-      margin-top: auto;
-      padding-top: 1.5rem;
-    }
-
     .view-btn {
       width: 100%;
       padding: 0.9rem;
@@ -332,6 +336,7 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
       transition: var(--transition);
+      margin-top: 1rem;
     }
 
     .session-card:hover .view-btn {
@@ -342,10 +347,6 @@
       .controls {
         grid-template-columns: 1fr;
       }
-
-      .search-box {
-        grid-column: auto;
-      }
     }
   </style>
 </head>
@@ -354,8 +355,8 @@
 
   <div class="container">
     <div class="header">
-      <h1>🏁 Telemetry Dashboard</h1>
-      <p class="subtitle">Real-time driver performance and track historical data</p>
+      <h1>🏁 Karting Telemetry</h1>
+      <p class="subtitle">Personal Records & Track historical data</p>
     </div>
 
     <div class="badge-legend">
@@ -364,47 +365,45 @@
           <span class="pill-badge tr-badge">Track Record</span>
           <span>Global Peak</span>
         </div>
-        <p class="legend-desc">The absolute fastest lap ever recorded at this track/configuration in our entire database
-          across all drivers.</p>
+        <p class="legend-desc">The absolute fastest lap recorded at this track across all sessions in the database.</p>
       </div>
       <div class="legend-item">
         <div class="legend-label">
           <span class="pill-badge pb-badge">Personal Best</span>
           <span>Individual Peak</span>
         </div>
-        <p class="legend-desc">Your personal record for this specific track. Represents your highest level of
-          performance here.</p>
+        <p class="legend-desc">Your fastest lap for this specific track configuration.</p>
       </div>
       <div class="legend-item">
         <div class="legend-label">
           <span>📈 PACE TREND</span>
         </div>
-        <p class="legend-desc">Calculated by comparing your current fastest lap against the average of your <strong>last
-            3 sessions</strong> on this specific track.</p>
+        <p class="legend-desc">Compares this session's fastest lap to your rolling average of the <strong>last 3
+            sessions</strong> at this track.</p>
       </div>
     </div>
 
     <div class="stats-summary">
       <div class="stat-card">
         <div class="stat-label">Total Sessions</div>
-        <div id="stat-count" class="filtered-stat-value">0</div>
+        <div id="filtered-sessions-count" class="filtered-stat-value">0</div>
       </div>
-      <div id="best-lap-card" class="stat-card">
-        <div class="stat-label">Fastest Lap (Filtered)</div>
-        <div id="stat-best" class="filtered-stat-value">--:--</div>
+      <div class="stat-card">
+        <div class="stat-label">Best Lap (Filtered)</div>
+        <div id="filtered-best-lap" class="filtered-stat-value">--:--</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Total Laps Driven</div>
-        <div id="stat-laps" class="filtered-stat-value">0</div>
+        <div id="filtered-total-laps" class="filtered-stat-value">0</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Active Tracks</div>
-        <div id="stat-tracks" class="filtered-stat-value">0</div>
+        <div id="filtered-tracks-count" class="filtered-stat-value">0</div>
       </div>
     </div>
 
     <div class="controls">
-      <input type="text" id="search-input" class="search-box" placeholder="Search driver or track...">
+      <input type="text" id="search-input" class="search-box" placeholder="Search driver, track, or kart...">
       <select id="track-filter" class="select-filter">
         <option value="">All Tracks</option>
       </select>
@@ -426,33 +425,35 @@
   <script>
     let allSessions = [];
     let filteredSessions = [];
-    let trackRecords = {}; // Key: Track_Config
-    let personalBests = {}; // Key: Driver_Track_Config
+    let trackRecords = {}; //
+    let personalBests = {}; //
 
-    // 1. Load Data
-    async function init() {
+    async function loadAllSessions() {
       try {
-        const response = await fetch('sessions/sessions-list.json');
+        const response = await fetch('sessions/sessions-list.json'); //
         const data = await response.json();
-        allSessions = data.sessions;
+        allSessions = data.sessions.map(s => ({
+          ...s,
+          track_name: s.track?.name || 'N/A',
+          track_config: s.track?.configuration || 'N/A'
+        }));
 
-        preprocessData();
-        populateFilterOptions();
+        preprocessData(); // Calculate achievements and trends
+        populateFilters();
         applyFilters();
       } catch (err) {
-        console.error("Failed to load telemetry data", err);
+        console.error("Telemetry failed to load", err);
       }
     }
 
-    // 2. Business Logic: Achievements & Trends
     function preprocessData() {
-      // Sort chronologically for trend calculations
+      // Sort chronologically to calculate trends
       const sorted = [...allSessions].sort((a, b) => new Date(a.session_date) - new Date(b.session_date));
       const driverHistory = {};
 
       sorted.forEach(s => {
-        const lapTime = parseLapTime(s.fastest_lap);
-        const trackKey = `${s.track.name}_${s.track.configuration}`;
+        const lapTime = parseTime(s.fastest_lap);
+        const trackKey = `${s.track_name}_${s.track_config}`;
         const pbKey = `${s.driver}_${trackKey}`;
 
         // Global Track Records
@@ -472,38 +473,40 @@
         if (history.length >= 2) {
           const avg = history.slice(-3).reduce((acc, val) => acc + val, 0) / history.slice(-3).length;
           const diff = ((avg - lapTime) / avg) * 100;
-          s.performanceTrend = diff > 0.5 ? 'improving' : diff < -0.5 ? 'declining' : 'stable';
+          s.trend = diff > 0.5 ? 'improving' : diff < -0.5 ? 'declining' : 'stable';
           s.trendValue = Math.abs(diff).toFixed(1);
         }
         history.push(lapTime);
       });
     }
 
-    // 3. Render Dashboard
     function renderSessions() {
       const container = document.getElementById('sessions-container');
       container.innerHTML = filteredSessions.map(s => {
-        const trackKey = `${s.track.name}_${s.track.configuration}`;
+        const trackKey = `${s.track_name}_${s.track_config}`;
         const pbKey = `${s.driver}_${trackKey}`;
 
         const isTR = trackRecords[trackKey].id === s.id;
         const isPB = personalBests[pbKey].id === s.id;
 
         // Calculate Delta to Track Record
-        const currentLap = parseLapTime(s.fastest_lap);
+        const currentLap = parseTime(s.fastest_lap);
         const recordLap = trackRecords[trackKey].time;
         const delta = currentLap - recordLap;
         const deltaText = delta > 0 ? `<span class="delta-gap">+${delta.toFixed(3)}s</span> to record` : 'Match Record';
 
         return `
         <div class="session-card" onclick="window.location.href='session.html?id=${s.id}'">
-          <div class="badge-stack">
-            ${isTR ? '<span class="pill-badge tr-badge">Track Record</span>' : ''}
-            ${isPB ? '<span class="pill-badge pb-badge">Personal Best</span>' : ''}
+          <div class="card-top-row">
+            <div>
+              <div class="driver-name">${s.driver}</div>
+              <div class="session-date">${new Date(s.session_date).toLocaleDateString()}</div>
+            </div>
+            <div class="badge-stack">
+              ${isTR ? '<span class="pill-badge tr-badge">Track Record</span>' : ''}
+              ${isPB ? '<span class="pill-badge pb-badge">Personal Best</span>' : ''}
+            </div>
           </div>
-
-          <div class="driver-name">${s.driver}</div>
-          <div class="session-date">${new Date(s.session_date).toLocaleDateString(undefined, { dateStyle: 'long' })}</div>
 
           <div class="metrics-container">
             <div class="metric-item">
@@ -512,24 +515,22 @@
               <div class="delta-indicator">${deltaText}</div>
             </div>
             <div class="metric-item">
-              <span class="metric-label">Laps</span>
-              <span class="metric-value">${s.laps_count}</span>
+              <span class="metric-label">Kart</span>
+              <span class="metric-value">${s.kart || '-'}</span>
             </div>
             <div class="metric-item">
               <span class="metric-label">Track</span>
-              <span class="metric-value">${s.track.name}</span>
+              <span class="metric-value">${s.track_name}</span>
             </div>
             <div class="metric-item">
-              <span class="metric-label">Config</span>
-              <span class="metric-value">${s.track.configuration}</span>
+              <span class="metric-label">Laps</span>
+              <span class="metric-value">${s.laps_count || 0}</span>
             </div>
           </div>
 
           ${renderTrendPill(s)}
 
-          <div class="card-footer">
-            <button class="view-btn">Review Telemetry</button>
-          </div>
+          <button class="view-btn">View Full Telemetry →</button>
         </div>
       `;
       }).join('');
@@ -538,59 +539,54 @@
     }
 
     function renderTrendPill(s) {
-      if (!s.performanceTrend) return '';
-      const config = {
-        improving: { class: 'trend-improving', icon: '▲', label: 'Faster than avg' },
-        declining: { class: 'trend-declining', icon: '▼', label: 'Slower than avg' },
-        stable: { class: 'trend-stable', icon: '●', label: 'Consistent pace' }
+      if (!s.trend) return '';
+      const labels = {
+        improving: { class: 'trend-improving', icon: '📈', txt: 'Faster than average' },
+        declining: { class: 'trend-declining', icon: '📉', txt: 'Slower than average' },
+        stable: { class: 'trend-stable', icon: '➡️', txt: 'Stable Pace' }
       };
-      const c = config[s.performanceTrend];
-      return `<div class="trend-pill ${c.class}">${c.icon} ${s.trendValue || ''}% ${c.label}</div>`;
+      const c = labels[s.trend];
+      return `<div class="trend-pill ${c.class}">${c.icon} ${s.trendValue || ''}% ${c.txt}</div>`;
     }
 
-    // Helpers
-    function parseLapTime(t) {
-      const parts = t.toString().split(':');
-      return parts.length === 2 ? (parseInt(parts[0]) * 60) + parseFloat(parts[1]) : parseFloat(parts[0]);
+    function parseTime(t) {
+      if (!t) return Infinity;
+      const p = t.toString().split(':'); //
+      return p.length === 2 ? (parseInt(p[0]) * 60) + parseFloat(p[1]) : parseFloat(t);
     }
 
     function updateGlobalStats() {
-      document.getElementById('stat-count').textContent = filteredSessions.length;
-      document.getElementById('stat-laps').textContent = filteredSessions.reduce((a, b) => a + (b.laps_count || 0), 0);
-      document.getElementById('stat-tracks').textContent = new Set(filteredSessions.map(s => s.track.name)).size;
-
-      const times = filteredSessions.map(s => parseLapTime(s.fastest_lap));
-      document.getElementById('stat-best').textContent = times.length ? Math.min(...times).toFixed(3) + 's' : '--:--';
+      document.getElementById('filtered-sessions-count').textContent = filteredSessions.length;
+      document.getElementById('filtered-total-laps').textContent = filteredSessions.reduce((a, b) => a + (b.laps_count || 0), 0);
+      document.getElementById('filtered-tracks-count').textContent = new Set(filteredSessions.map(s => s.track_name)).size;
+      const lapTimes = filteredSessions.map(s => parseTime(s.fastest_lap));
+      const best = Math.min(...lapTimes);
+      document.getElementById('filtered-best-lap').textContent = best === Infinity ? '--:--' : best.toFixed(3) + 's';
     }
 
-    function populateFilterOptions() {
-      const tracks = [...new Set(allSessions.map(s => s.track.name))].sort();
+    function populateFilters() {
       const trackSelect = document.getElementById('track-filter');
-      tracks.forEach(t => trackSelect.add(new Option(t, t)));
-
-      const configs = [...new Set(allSessions.map(s => s.track.configuration))].sort();
+      [...new Set(allSessions.map(s => s.track_name))].sort().forEach(t => trackSelect.add(new Option(t, t)));
       const configSelect = document.getElementById('config-filter');
-      configs.forEach(c => configSelect.add(new Option(c, c)));
+      [...new Set(allSessions.map(s => s.track_config))].sort().forEach(c => configSelect.add(new Option(c, c)));
     }
 
     function applyFilters() {
-      const searchTerm = document.getElementById('search-input').value.toLowerCase();
-      const trackVal = document.getElementById('track-filter').value;
-      const configVal = document.getElementById('config-filter').value;
+      const search = document.getElementById('search-input').value.toLowerCase();
+      const track = document.getElementById('track-filter').value;
+      const config = document.getElementById('config-filter').value;
 
       filteredSessions = allSessions.filter(s => {
-        const matchesSearch = s.driver.toLowerCase().includes(searchTerm) || s.track.name.toLowerCase().includes(searchTerm);
-        const matchesTrack = !trackVal || s.track.name === trackVal;
-        const matchesConfig = !configVal || s.track.configuration === configVal;
-        return matchesSearch && matchesTrack && matchesConfig;
+        const matchSearch = s.driver.toLowerCase().includes(search) || s.track_name.toLowerCase().includes(search);
+        const matchTrack = !track || s.track_name === track;
+        const matchConfig = !config || s.track_config === config;
+        return matchSearch && matchTrack && matchConfig;
       });
 
-      // Default Sort: Newest First
-      filteredSessions.sort((a, b) => new Date(b.session_date) - new Date(a.session_date));
+      filteredSessions.sort((a, b) => new Date(b.session_date) - new Date(a.session_date)); // Latest first
       renderSessions();
     }
 
-    // Event Listeners
     document.getElementById('search-input').addEventListener('input', applyFilters);
     document.getElementById('track-filter').addEventListener('change', applyFilters);
     document.getElementById('config-filter').addEventListener('change', applyFilters);
@@ -601,7 +597,7 @@
       applyFilters();
     });
 
-    init();
+    loadAllSessions();
   </script>
 
 </body>
