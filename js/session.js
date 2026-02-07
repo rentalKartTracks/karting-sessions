@@ -13,10 +13,11 @@ let lastTooltipUpdate = 0;
 const TOOLTIP_DEBOUNCE = 50;
 
 // Video players
-let mainPlayer = null;
-let comparePlayer = null;
-let pendingMainVideoConfig = null;
-let pendingCompareVideoConfig = null;
+// Video players
+let videoPlayers = {}; // sessionId -> YT.Player
+let videoConfigs = {}; // sessionId -> { videoId, startTimeSeconds, label }
+let activeVideoIds = []; // ordered list of sessionIds
+let activeLayout = 'single';
 
 // Lap tracking
 let lapStartTimes = [];
@@ -233,8 +234,13 @@ function applyMode(mode) {
     }
 
     // Auto-play video in TV mode
-    if (mainPlayer && typeof mainPlayer.playVideo === 'function') {
-      setTimeout(() => mainPlayer.playVideo(), 1000);
+    // Auto-play video in TV mode
+    if (Object.keys(videoPlayers).length > 0) {
+      setTimeout(() => {
+        Object.values(videoPlayers).forEach(p => {
+          if (typeof p.playVideo === 'function') p.playVideo();
+        });
+      }, 1000);
     }
   } else {
     // PC Mode: Full view
@@ -393,27 +399,35 @@ function loadYouTubeAPI() {
 }
 
 /**
-* YouTube API ready callback
-*/
+ * YouTube API ready callback
+ */
 window.onYouTubeIframeAPIReady = function () {
-  // Initialize main player
-  if (pendingMainVideoConfig && document.getElementById('main-youtube-player')) {
-    createMainPlayer(pendingMainVideoConfig);
-  }
-
-  // Initialize comparison player if needed
-  if (pendingCompareVideoConfig && document.getElementById('compare-youtube-player')) {
-    createComparePlayer(pendingCompareVideoConfig);
-  }
+  // Initialize all active players that have configs
+  activeVideoIds.forEach(id => {
+    if (videoConfigs[id] && !videoPlayers[id]) {
+      createPlayer(id, videoConfigs[id]);
+    }
+  });
 };
 
 /**
 * Create main YouTube player
 */
-function createMainPlayer(config) {
+/**
+ * Generic create player function
+ */
+function createPlayer(id, config) {
   const { videoId, startTimeSeconds } = config;
+  const containerId = `player-${id}`;
 
-  mainPlayer = new YT.Player('main-youtube-player', {
+  // Ensure container exists (it should via renderVideoGrid)
+  if (!document.getElementById(containerId)) {
+    console.warn(`Container ${containerId} not found for player creation`);
+    return;
+  }
+
+  videoPlayers[id] = new YT.Player(containerId, {
+    host: 'https://www.youtube.com',
     videoId: videoId,
     playerVars: {
       start: startTimeSeconds,
@@ -429,9 +443,9 @@ function createMainPlayer(config) {
       disablekb: 0
     },
     events: {
-      'onReady': onMainPlayerReady,
+      'onReady': (e) => onPlayerReady(e, id),
       'onStateChange': onPlayerStateChange,
-      'onError': (e) => onPlayerError(e, 'main')
+      'onError': (e) => onPlayerError(e, id)
     }
   });
 }
@@ -439,90 +453,52 @@ function createMainPlayer(config) {
 /**
 * Create comparison YouTube player
 */
-function createComparePlayer(config) {
-  const { videoId, startTimeSeconds } = config;
-
-  comparePlayer = new YT.Player('compare-youtube-player', {
-    videoId: videoId,
-    playerVars: {
-      start: startTimeSeconds,
-      autoplay: 0,
-      rel: 0,
-      modestbranding: 1,
-      origin: window.location.origin,
-      enablejsapi: 1,
-      controls: 1,
-      playsinline: 1,
-      iv_load_policy: 3,
-      fs: 1,
-      disablekb: 0
-    },
-    events: {
-      'onReady': onComparePlayerReady,
-      'onStateChange': onPlayerStateChange,
-      'onError': (e) => onPlayerError(e, 'compare')
-    }
-  });
-}
-
 /**
-* Main player ready handler
-*/
-function onMainPlayerReady(event) {
-  console.log('Main player ready');
+ * Player ready handler
+ */
+function onPlayerReady(event, id) {
+  console.log(`Player ${id} ready`);
+  const player = videoPlayers[id];
 
   // Set quality
-  if (mainPlayer && typeof mainPlayer.getAvailableQualityLevels === 'function') {
-    const qualities = mainPlayer.getAvailableQualityLevels();
-    console.log('Available qualities:', qualities);
-
+  if (player && typeof player.getAvailableQualityLevels === 'function') {
+    const qualities = player.getAvailableQualityLevels();
     if (qualities.includes('hd2160')) {
-      mainPlayer.setPlaybackQuality('hd2160');
+      player.setPlaybackQuality('hd2160');
     } else if (qualities.includes('hd1080')) {
-      mainPlayer.setPlaybackQuality('hd1080');
+      player.setPlaybackQuality('hd1080');
     }
   }
 
-  seekToLap(1);
+  // Sync logic
+  if (id === sessionId) {
+    seekToLap(currentLapMarker.lapNumber || 1);
 
-  // Show QR panel in TV mode
-  if (currentMode === 'tv') {
-    const qrPanel = document.getElementById('qr-panel');
-    if (qrPanel) qrPanel.style.display = 'block';
+    // Show QR panel if TV mode
+    if (currentMode === 'tv') {
+      const qrPanel = document.getElementById('qr-panel');
+      if (qrPanel) qrPanel.style.display = 'block';
+    }
+  } else {
+    // If main player is running, sync this one
+    const mainP = videoPlayers[sessionId];
+    if (mainP && typeof mainP.getCurrentTime === 'function') {
+      player.seekTo(mainP.getCurrentTime(), true);
+      if (mainP.getPlayerState() === YT.PlayerState.PLAYING) {
+        player.playVideo();
+      }
+    }
   }
 }
 
 /**
-* Comparison player ready handler
-*/
-function onComparePlayerReady(event) {
-  console.log('Comparison player ready');
-
-  // Set quality
-  if (comparePlayer && typeof comparePlayer.getAvailableQualityLevels === 'function') {
-    const qualities = comparePlayer.getAvailableQualityLevels();
-
-    if (qualities.includes('hd2160')) {
-      comparePlayer.setPlaybackQuality('hd2160');
-    } else if (qualities.includes('hd1080')) {
-      comparePlayer.setPlaybackQuality('hd1080');
-    }
-  }
-
-  // Sync with main player
-  if (mainPlayer && typeof mainPlayer.getCurrentTime === 'function') {
-    const currentTime = mainPlayer.getCurrentTime();
-    comparePlayer.seekTo(currentTime, true);
-  }
-}
-
-/**
-* Player state change handler (unified for both players)
-*/
+ * Player state change handler (unified)
+ */
 function onPlayerStateChange(event) {
   const isPlaying = event.data === YT.PlayerState.PLAYING;
+  const senderId = Object.keys(videoPlayers).find(key => videoPlayers[key] === event.target);
 
-  // Update UI
+  // Update UI icons based on state
   const playIcon = document.getElementById('play-icon');
   const playText = document.getElementById('play-text');
   const playIconTV = document.getElementById('play-icon-tv');
@@ -533,124 +509,309 @@ function onPlayerStateChange(event) {
     if (playIconTV) playIconTV.textContent = '⏸️';
     startStatsUpdateInterval();
   } else {
+    // Check if ALL are paused before showing play icon?
+    // For now, if any pauses, we show play (as we pause all)
     if (playIcon) playIcon.textContent = '▶️';
     if (playText) playText.textContent = 'Play';
     if (playIconTV) playIconTV.textContent = '▶️';
     stopStatsUpdateInterval();
   }
 
-  // Sync both players
-  if (event.target === mainPlayer && comparePlayer) {
-    if (isPlaying && comparePlayer.getPlayerState() !== YT.PlayerState.PLAYING) {
-      comparePlayer.playVideo();
-    } else if (!isPlaying && comparePlayer.getPlayerState() === YT.PlayerState.PLAYING) {
-      comparePlayer.pauseVideo();
-    }
-  } else if (event.target === comparePlayer && mainPlayer) {
-    if (isPlaying && mainPlayer.getPlayerState() !== YT.PlayerState.PLAYING) {
-      mainPlayer.playVideo();
-    } else if (!isPlaying && mainPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
-      mainPlayer.pauseVideo();
-    }
+  // Sync other players
+  // Only sync on explicit PLAYING or PAUSED events to avoid buffering loops
+  if (isPlaying) {
+    Object.keys(videoPlayers).forEach(id => {
+      if (id === senderId) return; // Don't sync self
+      const p = videoPlayers[id];
+      if (!p || typeof p.getPlayerState !== 'function') return;
+
+      const pState = p.getPlayerState();
+      // If valid state to play (not already playing or buffering)
+      if (pState !== YT.PlayerState.PLAYING && pState !== YT.PlayerState.BUFFERING) {
+        p.playVideo();
+      }
+    });
+  } else if (event.data === YT.PlayerState.PAUSED) {
+    // Only pause if the source explicitly paused
+    Object.keys(videoPlayers).forEach(id => {
+      if (id === senderId) return; // Don't sync self
+      const p = videoPlayers[id];
+      if (!p || typeof p.getPlayerState !== 'function') return;
+
+      const pState = p.getPlayerState();
+      if (pState === YT.PlayerState.PLAYING || pState === YT.PlayerState.BUFFERING) {
+        p.pauseVideo();
+      }
+    });
+  }
+  // Ignore BUFFERING, ENDED, CUED for sync triggers to prevent loops
+}
+
+/**
+ * Player error handler
+ */
+function onPlayerError(event, id) {
+  console.error(`Player ${id} error:`, event.data);
+  const errorMsg = ERROR_MESSAGES[event.data] || 'Unknown error occurred';
+  const container = document.getElementById(`container-${id}`);
+
+  if (container) {
+    container.innerHTML = `
+      <div class="error-message" style="padding:40px;text-align:center;">
+        <h3>⚠️ Video Error</h3>
+        <p>${errorMsg}</p>
+      </div>
+    `;
   }
 }
 
 /**
-* Player error handler
-*/
-function onPlayerError(event, playerType) {
-  console.error(`${playerType} player error:`, event.data);
+ * Change Video Layout
+ */
+function changeVideoLayout(layout) {
+  activeLayout = layout;
 
-  const errorMsg = ERROR_MESSAGES[event.data] || 'Unknown error occurred';
-  const containerId = playerType === 'main' ? 'main-video-container' : 'compare-video-container';
-  const container = document.getElementById(containerId);
+  // Update Buttons
+  document.querySelectorAll('.layout-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.layout === layout);
+  });
 
-  if (container) {
-    container.innerHTML = `
-  <div class="error-message" style="padding:40px;text-align:center;">
-    <h3>⚠️ Video Error</h3>
-    <p>${errorMsg}</p>
-    <p style="margin-top:10px;font-size:0.9em;color:var(--text-secondary);">
-      Error code: ${event.data}
-    </p>
-  </div>
-  `;
+  // Re-render grid classes
+  const grid = document.getElementById('video-grid');
+  if (grid) {
+    grid.className = `video-grid layout-${layout}`;
   }
 
-  // Hide QR panel if main video fails
-  if (playerType === 'main') {
-    const qrPanel = document.getElementById('qr-panel');
-    if (qrPanel) qrPanel.style.display = 'none';
+  renderVideoGrid();
+}
+
+/**
+ * Render Video Grid
+ */
+function renderVideoGrid() {
+  console.log('Rendering video grid for:', activeVideoIds);
+  const grid = document.getElementById('video-grid');
+  if (!grid) {
+    console.error('Video grid element not found!');
+    return;
   }
+
+  // Determine limit based on layout
+  let limit = 4;
+  if (activeLayout === 'single') limit = 1;
+  else if (activeLayout === 'dual') limit = 2;
+  else if (activeLayout === 'pip') limit = 2;
+  else if (activeLayout === 'main-side') limit = 3;
+  // grid is 4
+
+  // Active IDs (limited by layout)
+  const idsRendering = activeVideoIds.slice(0, limit);
+
+  // Cleanup removed players
+  Object.keys(videoPlayers).forEach(id => {
+    if (!idsRendering.includes(id)) {
+      if (typeof videoPlayers[id].destroy === 'function') videoPlayers[id].destroy();
+      delete videoPlayers[id];
+    }
+  });
+
+  // Re-build DOM (sync with idsRendering)
+  idsRendering.forEach((id, index) => {
+    let container = document.getElementById(`container-${id}`);
+
+    if (!container) {
+      console.log(`Creating container for ${id}`);
+      // Create new
+      container = document.createElement('div');
+      container.id = `container-${id}`;
+      // ... (rest of creation logic unchanged for now, just logging) ...
+      container.className = 'video-container';
+      container.dataset.sessionId = id;
+
+      const config = videoConfigs[id];
+      const label = config ? config.label : 'Session ' + id;
+
+      container.innerHTML = `
+          <div class="video-wrapper">
+            <div id="player-${id}"></div>
+          </div>
+          <div class="video-overlay" style="display:none">
+             <div class="video-driver-name">${label}</div>
+          </div>
+        `;
+
+      if (index < grid.children.length) {
+        grid.insertBefore(container, grid.children[index]);
+      } else {
+        grid.appendChild(container);
+      }
+
+      // Initialize player
+      if (window.YT && window.YT.Player && config) {
+        console.log(`Creating player for ${id} immediately`);
+        createPlayer(id, config);
+      } else {
+        console.log(`Waiting for API or config to create player ${id}`);
+      }
+    } else {
+      // Ensure it's in the right spot
+      if (grid.children[index] !== container) {
+        grid.insertBefore(container, grid.children[index]);
+      }
+      container.style.display = 'block';
+    }
+  });
+
+  // Remove extras
+  while (grid.children.length > idsRendering.length) {
+    const child = grid.children[idsRendering.length];
+    const childId = child.dataset.sessionId;
+    if (childId && videoPlayers[childId]) {
+      videoPlayers[childId].destroy();
+      delete videoPlayers[childId];
+    }
+    grid.removeChild(child);
+  }
+
+  // Update CSS class
+  grid.className = `video-grid layout-${activeLayout}`;
+
+  updateVideoSelector();
+}
+
+/**
+ * Toggle Video Selector Panel
+ */
+function toggleVideoSelector() {
+  const panel = document.getElementById('video-selector-panel');
+  if (panel) {
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    if (panel.style.display === 'block') updateVideoSelector();
+  }
+}
+
+/**
+ * Update Video Selector List
+ */
+function updateVideoSelector() {
+  const list = document.getElementById('active-video-list');
+  if (!list) return;
+
+  // Collect all available sessions
+  const allSessions = [];
+  if (sessionId) {
+    allSessions.push({
+      id: sessionId,
+      name: document.getElementById('driver')?.textContent || 'Main Session'
+    });
+  }
+
+  comparisonSessions.forEach(s => {
+    allSessions.push({ id: s.id, name: `${s.driver} (${s.date || s.session_date})` });
+  });
+
+  list.innerHTML = '';
+
+  allSessions.forEach(s => {
+    const item = document.createElement('div');
+    item.className = 'video-list-item';
+    if (activeVideoIds.includes(s.id)) item.classList.add('selected');
+
+    // Checkbox
+    const fileCk = document.createElement('input');
+    fileCk.type = 'checkbox';
+    fileCk.checked = activeVideoIds.includes(s.id);
+    fileCk.onclick = (e) => e.stopPropagation();
+    fileCk.onchange = (e) => toggleActiveVideo(s.id, e.target.checked);
+
+    const label = document.createElement('span');
+    label.textContent = s.name;
+
+    item.appendChild(fileCk);
+    item.appendChild(label);
+    item.onclick = (e) => {
+      fileCk.click();
+    };
+
+    list.appendChild(item);
+  });
+}
+
+/**
+ * Toggle active video state
+ */
+function toggleActiveVideo(id, isActive) {
+  if (isActive) {
+    if (!activeVideoIds.includes(id)) {
+      if (activeVideoIds.length >= 4) {
+        activeVideoIds.pop();
+      }
+      activeVideoIds.push(id);
+    }
+  } else {
+    activeVideoIds = activeVideoIds.filter(vid => vid !== id);
+  }
+
+  renderVideoGrid();
+}
+
+/**
+ * Register and display a video
+ */
+function registerVideo(id, url, startTime, label) {
+  const vidId = extractYouTubeId(url);
+  if (!vidId) return;
+
+  videoConfigs[id] = {
+    videoId: vidId,
+    startTimeSeconds: parseTime(startTime),
+    label: label || 'Session'
+  };
+
+  if (!activeVideoIds.includes(id)) {
+    if (activeVideoIds.length < 4) {
+      activeVideoIds.push(id);
+    }
+    // If full? Logic in toggleActiveVideo implies replacement, here we just don't add?
+    // Or we should force add main?
+    // For now, simple logic: if space, add.
+  }
+
+  renderVideoGrid();
+
+  // Ensure section is visible
+  const videoSection = document.getElementById('video-section');
+  if (videoSection) videoSection.style.display = 'block';
+  const toolbar = document.getElementById('video-toolbar');
+  if (toolbar) toolbar.style.display = 'flex';
 }
 
 /**
 * Render video player(s)
 */
+/**
+ * Render video player(s)
+ */
 function renderVideoPlayer(videoUrl, videoStartTime, isMainPlayer = true) {
   const videoSection = document.getElementById('video-section');
-  const containerId = isMainPlayer ? 'main-video-container' : 'compare-video-container';
-  const container = document.getElementById(containerId);
+  const toolbar = document.getElementById('video-toolbar');
 
   if (!videoUrl || videoUrl.trim() === '') {
-    if (container) container.style.display = 'none';
-    if (isMainPlayer) videoSection.style.display = 'none';
+    // Hide?
     return;
   }
 
-  // Handle "pending" status
-  if (videoUrl.toLowerCase() === 'pending') {
-    if (container) {
-      container.innerHTML = `
-  <div class="error-message" style="padding:40px;text-align:center;">
-    <h3>🎥 Video Coming Soon</h3>
-    <p>This session's video is being processed and will be available shortly.</p>
-  </div>
-  `;
-      container.style.display = 'block';
-    }
-    if (isMainPlayer) videoSection.style.display = 'block';
-    return;
-  }
-
-  const videoId = extractYouTubeId(videoUrl);
-
-  if (!videoId) {
-    console.error('Invalid video URL:', videoUrl);
-    if (container) {
-      container.innerHTML = `
-  <div class="error-message" style="padding:40px;text-align:center;">
-    <h3>⚠️ Invalid Video URL</h3>
-    <p>The video URL provided is not valid.</p>
-  </div>
-  `;
-      container.style.display = 'block';
-    }
-    return;
-  }
-
-  // Show video section and container
-  if (container) container.style.display = 'block';
-  if (isMainPlayer) videoSection.style.display = 'block';
-
-  // Load YouTube API
-  loadYouTubeAPI();
-
-  const config = {
-    videoId,
-    startTimeSeconds: parseTime(videoStartTime)
-  };
+  // Show section
+  if (videoSection) videoSection.style.display = 'block';
+  if (toolbar) toolbar.style.display = 'flex';
 
   if (isMainPlayer) {
-    pendingMainVideoConfig = config;
-    if (window.YT && window.YT.Player) {
-      createMainPlayer(config);
-    }
+    registerVideo(sessionId, videoUrl, videoStartTime, document.getElementById('driver')?.textContent);
   } else {
-    pendingCompareVideoConfig = config;
-    if (window.YT && window.YT.Player) {
-      createComparePlayer(config);
-    }
+    // Legacy call for comparison? compareSession should handle this itself via showComparisonVideo.
+    // If we are here, it might be a direct call?
+    // For safety, warn or try to register if we can guess ID?
+    console.warn('Legacy renderVideoPlayer called for comparison without ID');
   }
 }
 
@@ -659,18 +820,29 @@ function renderVideoPlayer(videoUrl, videoStartTime, isMainPlayer = true) {
 /**
 * Toggle play/pause for both players
 */
+/**
+* Toggle play/pause for all players
+*/
 function togglePlayPause() {
-  if (!mainPlayer || typeof mainPlayer.getPlayerState !== 'function') return;
+  const players = Object.values(videoPlayers);
+  if (players.length === 0) return;
 
-  const state = mainPlayer.getPlayerState();
+  // Use the first player to determine state
+  const primaryPlayer = players[0];
+  if (typeof primaryPlayer.getPlayerState !== 'function') return;
 
-  if (state === YT.PlayerState.PLAYING) {
-    mainPlayer.pauseVideo();
-    if (comparePlayer) comparePlayer.pauseVideo();
-  } else {
-    mainPlayer.playVideo();
-    if (comparePlayer) comparePlayer.playVideo();
-  }
+  const state = primaryPlayer.getPlayerState();
+  const isPlaying = state === YT.PlayerState.PLAYING;
+
+  players.forEach(p => {
+    if (typeof p.getPlayerState === 'function') {
+      if (isPlaying) {
+        p.pauseVideo();
+      } else {
+        p.playVideo();
+      }
+    }
+  });
 }
 
 /**
@@ -696,6 +868,9 @@ function previousLap() {
 /**
  * Seek to specific lap
  */
+/**
+ * Seek to specific lap
+ */
 function seekToLap(lapNumber) {
   if (!currentSessionData || !currentSessionData.laps) return;
   const maxLap = currentSessionData.laps.length;
@@ -708,24 +883,18 @@ function seekToLap(lapNumber) {
   const lapStartTimeObj = lapStartTimes.find(l => l.lapNumber === lapNumber);
 
   if (lapStartTimeObj) {
-    // Seek both players
-    if (mainPlayer && typeof mainPlayer.seekTo === 'function') {
-      mainPlayer.seekTo(lapStartTimeObj.videoTime, true);
-    }
-    if (comparePlayer && typeof comparePlayer.seekTo === 'function') {
-      comparePlayer.seekTo(lapStartTimeObj.videoTime, true);
-    }
+    // Seek all players
+    Object.values(videoPlayers).forEach(p => {
+      if (typeof p.seekTo === 'function') {
+        p.seekTo(lapStartTimeObj.videoTime, true);
+      }
+    });
+
     // Update UI
     currentLapMarker.lapNumber = lapNumber;
 
-    // New slider logic is time-based, so we don't set slider value here unless we want to sync it
-    // But updateLiveStats will handle the slider position.
-    // We just ensure the slider is "aware" if we stopped playback.
-
     const lapDisplay = document.getElementById('current-lap-display');
     if (lapDisplay) {
-      // We need maxLapsCount here, which is usually derived from currentSessionData.laps
-      // For now, we can get it from the slider if it exists, or calculate from currentSessionData
       const maxLap = currentSessionData && currentSessionData.laps ? currentSessionData.laps.length : 0;
       lapDisplay.textContent = `Lap: ${lapNumber} / ${maxLap}`;
     }
@@ -733,9 +902,6 @@ function seekToLap(lapNumber) {
     // Redraw chart with current lap marker and time
     if (currentSessionData) {
       const currentLaps = validateLapData(currentSessionData.laps);
-      // When seeking to a lap, we assume start of lap for visual indication
-      // However, the video update is async, so we might just wait for the next stats update
-      // But forcing a redraw here is good for responsiveness
       drawLineChart(currentLaps, comparisonDatasets, lapStartTimeObj.videoTime);
     }
   }
@@ -777,12 +943,13 @@ function stopStatsUpdateInterval() {
 }
 
 /**
-* Update live stats overlays and detect lap changes
-*/
+ * Update live stats overlays and detect lap changes
+ */
 function updateLiveStats() {
-  if (!mainPlayer || typeof mainPlayer.getCurrentTime !== 'function') return;
+  const player = videoPlayers[sessionId];
+  if (!player || typeof player.getCurrentTime !== 'function') return;
 
-  const videoTime = mainPlayer.getCurrentTime();
+  const videoTime = player.getCurrentTime();
   const newLapNumber = getCurrentLapNumber(videoTime);
 
   // Update lap if changed
@@ -1274,10 +1441,11 @@ function setupTooltipInteractions(maxLapsCount, rect, padding, chartWidth) {
 
       const targetTime = lapStartTime + (lapDuration * progress);
 
-      if (mainPlayer && typeof mainPlayer.seekTo === 'function') {
-        mainPlayer.seekTo(targetTime, true);
-        if (comparePlayer) comparePlayer.seekTo(targetTime, true);
-      }
+      Object.values(videoPlayers).forEach(p => {
+        if (typeof p.seekTo === 'function') {
+          p.seekTo(targetTime, true);
+        }
+      });
     }
   });
 }
@@ -1431,8 +1599,9 @@ async function compareSession() {
   }
 
   // Fetch all comparison sessions
+  const t = new Date().getTime();
   const fetchPromises = sessionIds.map(id =>
-    fetch(`sessions/${id}.json`)
+    fetch(`sessions/${id}.json?t=${t}`)
       .then(r => r.ok ? r.json() : Promise.reject(`Session ${id} not found`))
       .catch(err => ({ error: err }))
   );
@@ -1474,7 +1643,15 @@ async function compareSession() {
 
   // Show comparison video if available
   if (comparisonSessions.length > 0 && currentMode === 'pc') {
-    showComparisonVideo(comparisonSessions[0]);
+    // Register all sessions
+    comparisonSessions.forEach(s => {
+      registerVideo(s.id, s.video_url, s.video_start_time, s.driver);
+    });
+
+    // Auto-switch layout based on active count
+    if (activeVideoIds.length === 2) changeVideoLayout('dual');
+    else if (activeVideoIds.length === 3) changeVideoLayout('main-side');
+    else if (activeVideoIds.length >= 4) changeVideoLayout('grid');
   } else {
     hideComparisonVideo();
   }
@@ -1593,60 +1770,51 @@ function createComparisonCard(data, fastest, average, lapCount, color) {
 /**
 * Show comparison video
 */
+/**
+ * Show comparison video
+ */
 function showComparisonVideo(comparisonSession) {
   if (!comparisonSession.video_url || comparisonSession.video_url === 'pending') {
-    hideComparisonVideo();
+    // maybe show placeholder or nothing?
     return;
   }
 
-  const videoGrid = document.getElementById('video-grid');
-  const compareContainer = document.getElementById('compare-video-container');
+  // Register and show
+  registerVideo(
+    comparisonSession.id,
+    comparisonSession.video_url,
+    comparisonSession.video_start_time || '0:00',
+    comparisonSession.driver
+  );
 
-  if (videoGrid && compareContainer) {
-    // Enable grid mode
-    videoGrid.classList.add('comparison-mode');
-    compareContainer.style.display = 'block';
-
-    // Update comparison driver name
-    const compareDriverName = document.getElementById('compare-driver-name');
-    if (compareDriverName) {
-      compareDriverName.textContent = comparisonSession.driver;
-    }
-
-    // Render comparison video
-    renderVideoPlayer(
-      comparisonSession.video_url,
-      comparisonSession.video_start_time || '0:00',
-      false // isMainPlayer = false
-    );
+  // Update layout if needed (e.g. switch to dual/grid)
+  if (activeLayout === 'single' && activeVideoIds.length > 1) {
+    if (activeVideoIds.length === 2) changeVideoLayout('dual');
+    else if (activeVideoIds.length === 3) changeVideoLayout('main-side');
+    else changeVideoLayout('grid');
   }
 }
 
 /**
-* Hide comparison video
-*/
-function hideComparisonVideo() {
-  const videoGrid = document.getElementById('video-grid');
-  const compareContainer = document.getElementById('compare-video-container');
-
-  if (videoGrid) {
-    videoGrid.classList.remove('comparison-mode');
-  }
-
-  if (compareContainer) {
-    compareContainer.style.display = 'none';
-  }
-
-  // Destroy comparison player
-  if (comparePlayer && typeof comparePlayer.destroy === 'function') {
-    comparePlayer.destroy();
-    comparePlayer = null;
+ * Hide comparison video
+ */
+function hideComparisonVideo(idToHide) {
+  // If id provided, hide just that one
+  if (idToHide) {
+    toggleActiveVideo(idToHide, false);
+  } else {
+    // Hide all except main? Legacy behavior was hiding "the" comparison video.
+    // Now we might have multiple.
+    // Let's hide all active videos except the main one.
+    [...activeVideoIds].forEach(id => {
+      if (id !== sessionId) toggleActiveVideo(id, false);
+    });
   }
 }
 
 /**
-* Clear comparison
-*/
+ * Clear comparison
+ */
 function clearComparison() {
   comparisonSessions = [];
   comparisonDatasets = [];
@@ -1656,13 +1824,17 @@ function clearComparison() {
     compareInput.value = '';
   }
 
-  hideComparisonVideo();
+  hideComparisonVideo(); // Hides all non-main
 
   if (currentSessionData) {
     const validLaps = validateLapData(currentSessionData.laps);
     drawLineChart(validLaps, []);
     renderComparisonResults([]);
   }
+
+  // Reset layout
+  changeVideoLayout('single');
+  updateVideoSelector();
 }
 
 /**
@@ -2086,7 +2258,8 @@ function toggleQRPanel() {
 * Load sessions list for autocomplete
 */
 function loadSessionsList() {
-  fetch('sessions/sessions-list.json')
+  const t = new Date().getTime();
+  fetch(`sessions/sessions-list.json?t=${t}`)
     .then(r => r.json())
     .then(data => {
       allSessionsList = data.sessions || [];
@@ -2102,7 +2275,8 @@ function loadSessionsList() {
 * Load main session data
 */
 function loadSessionData() {
-  fetch(`sessions/${sessionId}.json`)
+  const t = new Date().getTime();
+  fetch(`sessions/${sessionId}.json?t=${t}`)
     .then(r => {
       if (!r.ok) throw new Error('Session not found');
       return r.json();
@@ -2300,11 +2474,16 @@ document.addEventListener('keydown', (e) => {
     case 'm':
       e.preventDefault();
       // Toggle mute
-      if (mainPlayer && typeof mainPlayer.isMuted === 'function') {
-        if (mainPlayer.isMuted()) {
-          mainPlayer.unMute();
-        } else {
-          mainPlayer.mute();
+      // Toggle mute
+      const players = Object.values(videoPlayers);
+      if (players.length > 0) {
+        const firstP = players[0];
+        if (typeof firstP.isMuted === 'function') {
+          const isMuted = firstP.isMuted();
+          players.forEach(p => {
+            if (typeof p.unMute === 'function' && isMuted) p.unMute();
+            else if (typeof p.mute === 'function' && !isMuted) p.mute();
+          });
         }
       }
       break;
@@ -2317,10 +2496,10 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') {
     // Resume
-    if (currentMode === 'tv' && mainPlayer && typeof mainPlayer.playVideo === 'function') {
-      setTimeout(() => {
-        mainPlayer.playVideo();
-      }, 500);
+    if (currentMode === 'tv') {
+      Object.values(videoPlayers).forEach(p => {
+        if (typeof p.playVideo === 'function') p.playVideo();
+      });
     }
 
     // Redraw chart
@@ -2382,24 +2561,19 @@ window.addEventListener('pagehide', () => {
   }
 
   // Stop videos
-  if (mainPlayer && typeof mainPlayer.stopVideo === 'function') {
-    mainPlayer.stopVideo();
-  }
-  if (comparePlayer && typeof comparePlayer.stopVideo === 'function') {
-    comparePlayer.stopVideo();
-  }
+  // Stop videos
+  Object.values(videoPlayers).forEach(p => {
+    if (typeof p.stopVideo === 'function') p.stopVideo();
+  });
 });
 
 /**
 * Before unload handler
 */
 window.addEventListener('beforeunload', () => {
-  if (mainPlayer && typeof mainPlayer.pauseVideo === 'function') {
-    mainPlayer.pauseVideo();
-  }
-  if (comparePlayer && typeof comparePlayer.pauseVideo === 'function') {
-    comparePlayer.pauseVideo();
-  }
+  Object.values(videoPlayers).forEach(p => {
+    if (typeof p.pauseVideo === 'function') p.pauseVideo();
+  });
 });
 
 /**
@@ -2424,6 +2598,9 @@ function initializeApp() {
 
   // Initialize PeerJS for remote control
   initializePeer();
+
+  // Load YouTube API
+  loadYouTubeAPI();
 
   // Load sessions list for autocomplete
   loadSessionsList();

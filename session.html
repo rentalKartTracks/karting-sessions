@@ -99,22 +99,48 @@
 
     <!-- Video Section -->
     <section class="video-section" id="video-section" style="display:none;">
-      <div class="video-grid" id="video-grid">
-        <!-- Main video container -->
-        <div class="video-container" id="main-video-container">
-          <div class="video-wrapper">
-            <div id="main-youtube-player"></div>
-          </div>
-          <div class="video-overlay" id="main-video-overlay" style="display: none;"></div>
+      <!-- Video Layout Toolbar -->
+      <div class="video-toolbar" id="video-toolbar" style="display: none;">
+        <div class="layout-selector">
+          <button class="layout-btn active" data-layout="single" onclick="changeVideoLayout('single')"
+            title="Single View">
+            <span class="layout-icon layout-icon-single"></span>
+          </button>
+          <button class="layout-btn" data-layout="dual" onclick="changeVideoLayout('dual')" title="Dual View">
+            <span class="layout-icon layout-icon-dual"></span>
+          </button>
+          <button class="layout-btn" data-layout="main-side" onclick="changeVideoLayout('main-side')"
+            title="Main + Side">
+            <span class="layout-icon layout-icon-main-side"></span>
+          </button>
+          <button class="layout-btn" data-layout="grid" onclick="changeVideoLayout('grid')" title="Grid View">
+            <span class="layout-icon layout-icon-grid"></span>
+          </button>
+          <button class="layout-btn" data-layout="pip" onclick="changeVideoLayout('pip')" title="Picture in Picture">
+            <span class="layout-icon layout-icon-pip"></span>
+          </button>
         </div>
+        <div class="video-selector-toggle">
+          <button class="btn btn-sm btn-secondary" onclick="toggleVideoSelector()" id="video-selector-btn">
+            <span>📹</span>
+            <span>Select Videos</span>
+          </button>
+        </div>
+      </div>
 
-        <!-- Comparison video container (hidden by default) -->
-        <div class="video-container" id="compare-video-container" style="display:none;">
-          <div class="video-wrapper">
-            <div id="compare-youtube-player"></div>
-          </div>
-          <div class="video-overlay" id="compare-video-overlay" style="display: none;"></div>
+      <!-- Video Selector Panel (Hidden by default) -->
+      <div class="video-selector-panel" id="video-selector-panel" style="display: none;">
+        <div class="panel-header">
+          <h4>Active Videos (Max 4)</h4>
+          <button onclick="toggleVideoSelector()" class="close-btn">&times;</button>
         </div>
+        <div class="video-list" id="active-video-list">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <div class="video-grid" id="video-grid">
+        <!-- Videos will be dynamically injected here -->
       </div>
 
       <!-- Unified Playback Controls -->

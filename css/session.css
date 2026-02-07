@@ -393,13 +393,272 @@
 
     .video-grid {
       display: grid;
-      grid-template-columns: 1fr;
       gap: var(--spacing-lg);
       margin-bottom: var(--spacing-lg);
+      transition: all var(--transition-base);
     }
 
-    .video-grid.comparison-mode {
-      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    /* Layout Variants */
+    .video-grid.layout-single {
+      grid-template-columns: 1fr;
+    }
+
+    .video-grid.layout-dual {
+      grid-template-columns: 1fr 1fr;
+    }
+    
+    @media (max-width: 768px) {
+      .video-grid.layout-dual {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .video-grid.layout-main-side {
+      grid-template-columns: 2fr 1fr;
+      grid-template-rows: auto auto;
+    }
+    
+    /* In main-side, first child spans 2 rows (if enough videos) */
+    .video-grid.layout-main-side .video-container:first-child {
+      grid-row: span 2;
+    }
+    
+    @media (max-width: 768px) {
+      .video-grid.layout-main-side {
+        grid-template-columns: 1fr;
+      }
+      .video-grid.layout-main-side .video-container:first-child {
+        grid-row: auto;
+      }
+    }
+
+    .video-grid.layout-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    @media (max-width: 768px) {
+      .video-grid.layout-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Video Toolbar */
+    .video-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-sm);
+      background: var(--surface-2);
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: var(--radius-full);
+      border: 1px solid var(--surface-4);
+    }
+
+    .layout-selector {
+      display: flex;
+      gap: var(--spacing-sm);
+    }
+
+    .layout-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      padding: 6px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .layout-btn:hover {
+      background: var(--surface-3);
+      color: var(--text-primary);
+    }
+
+    .layout-btn.active {
+      background: var(--surface-3);
+      color: var(--accent);
+      border-color: var(--surface-4);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* CSS-only Layout Icons */
+    .layout-icon {
+      display: block;
+      width: 20px;
+      height: 14px;
+      border: 1.5px solid currentColor;
+      border-radius: 1px;
+      position: relative;
+    }
+
+    /* Single: [ ] */
+    .layout-icon-single {
+      /* Default border is enough */
+    }
+
+    /* Dual: [ ][ ] */
+    .layout-icon-dual::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 1.5px;
+      background: currentColor;
+      transform: translateX(-50%);
+    }
+
+    /* Main-Side: [ | ] - customized */
+    .layout-icon-main-side::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 33%;
+      width: 1.5px;
+      background: currentColor;
+    }
+    
+    .layout-icon-main-side::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 0;
+      width: 33%;
+      height: 1.5px;
+      background: currentColor;
+      transform: translateY(-50%);
+    }
+
+    /* Grid: [+] - 2x2 */
+    .layout-icon-grid::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 1.5px;
+      background: currentColor;
+      transform: translateX(-50%);
+    }
+    
+    .layout-icon-grid::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1.5px;
+      background: currentColor;
+      transform: translateY(-50%);
+    }
+
+    /* PiP: [ + ] */
+    .layout-icon-pip::before {
+      content: '';
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 8px;
+      height: 5px;
+      background: currentColor;
+      border: 1px solid var(--surface-2);
+      z-index: 2;
+    }  
+
+    /* PiP Layout */
+    .video-grid.layout-pip {
+      display: grid;
+      grid-template-columns: 1fr;
+      position: relative;
+    }
+
+    .video-grid.layout-pip .video-container:first-child {
+      grid-column: 1 / -1;
+      grid-row: 1 / -1;
+      z-index: 1;
+    }
+
+    .video-grid.layout-pip .video-container:nth-child(2) {
+      position: absolute;
+      bottom: 2rem;
+      right: 2rem;
+      width: 30%;
+      z-index: 20;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      border: 2px solid var(--primary);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    /* Video Selector Panel */
+    .video-selector-panel {
+      background: var(--surface-2);
+      border: 2px solid var(--primary);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-md);
+      margin-bottom: var(--spacing-md);
+      position: relative;
+      animation: slideDown var(--transition-fast);
+    }
+    
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-sm);
+      border-bottom: 1px solid var(--surface-4);
+      padding-bottom: var(--spacing-xs);
+    }
+    
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+    
+    .close-btn:hover {
+      color: var(--text-primary);
+    }
+    
+    .video-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    
+    .video-list-item {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: 8px;
+      background: var(--surface-1);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background var(--transition-fast);
+    }
+    
+    .video-list-item:hover {
+      background: var(--surface-3);
+    }
+    
+    .video-list-item.selected {
+      background: rgba(76, 175, 80, 0.2); /* Green tint */
+      border: 1px solid var(--secondary);
+    }
+    
+    .video-list-item input[type="checkbox"] {
+      accent-color: var(--secondary);
+      width: 16px;
+      height: 16px;
     }
 
     .video-container {
