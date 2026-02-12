@@ -167,7 +167,6 @@ async function loadAllSessions() {
     }
 
   } catch (error) {
-    console.error('Error loading sessions:', error);
     container.innerHTML = `
       <div class="error">
         <strong>⚠️ Error Loading Sessions</strong><br>

@@ -92,7 +92,6 @@ function parseTime(timeStr) {
  */
 function validateLapData(laps) {
   if (!Array.isArray(laps)) {
-    console.warn('Invalid laps data: not an array');
     return [];
   }
 
@@ -100,7 +99,6 @@ function validateLapData(laps) {
     if (!lap || typeof lap !== 'object') return false;
     const time = parseTime(lap.time);
     const isValid = lap.lap > 0 && time > 0 && time < 600 && !isNaN(time);
-    if (!isValid) console.warn('Invalid lap filtered:', lap);
     return isValid;
   });
 }
@@ -422,7 +420,6 @@ function createPlayer(id, config) {
 
   // Ensure container exists (it should via renderVideoGrid)
   if (!document.getElementById(containerId)) {
-    console.warn(`Container ${containerId} not found for player creation`);
     return;
   }
 
@@ -457,7 +454,6 @@ function createPlayer(id, config) {
  * Player ready handler
  */
 function onPlayerReady(event, id) {
-  console.log(`Player ${id} ready`);
   const player = videoPlayers[id];
 
   // Set quality
@@ -496,7 +492,6 @@ function onPlayerReady(event, id) {
         const newStartOffset = newConfig.startTimeSeconds || 0;
         const targetTime = newStartOffset + currentSessionTime;
 
-        console.log(`Syncing ${id}: mainVideoTime=${mainVideoTime}s, mainOffset=${mainStartOffset}s, sessionTime=${currentSessionTime}s, newOffset=${newStartOffset}s, targetTime=${targetTime}s`);
 
         player.seekTo(targetTime, true);
       } else {
@@ -571,7 +566,6 @@ function onPlayerStateChange(event) {
  * Player error handler
  */
 function onPlayerError(event, id) {
-  console.error(`Player ${id} error:`, event.data);
   const errorMsg = ERROR_MESSAGES[event.data] || 'Unknown error occurred';
   const container = document.getElementById(`container-${id}`);
 
@@ -609,10 +603,8 @@ function changeVideoLayout(layout) {
  * Render Video Grid
  */
 function renderVideoGrid() {
-  console.log('Rendering video grid for:', activeVideoIds);
   const grid = document.getElementById('video-grid');
   if (!grid) {
-    console.error('Video grid element not found!');
     return;
   }
 
@@ -640,7 +632,6 @@ function renderVideoGrid() {
     let container = document.getElementById(`container-${id}`);
 
     if (!container) {
-      console.log(`Creating container for ${id}`);
       // Create new
       container = document.createElement('div');
       container.id = `container-${id}`;
@@ -668,10 +659,8 @@ function renderVideoGrid() {
 
       // Initialize player
       if (window.YT && window.YT.Player && config) {
-        console.log(`Creating player for ${id} immediately`);
         createPlayer(id, config);
       } else {
-        console.log(`Waiting for API or config to create player ${id}`);
       }
     } else {
       // Ensure it's in the right spot
@@ -831,7 +820,6 @@ function renderVideoPlayer(videoUrl, videoStartTime, isMainPlayer = true) {
     // Legacy call for comparison? compareSession should handle this itself via showComparisonVideo.
     // If we are here, it might be a direct call?
     // For safety, warn or try to register if we can guess ID?
-    console.warn('Legacy renderVideoPlayer called for comparison without ID');
   }
 }
 
@@ -908,7 +896,6 @@ function seekToLap(lapNumber) {
     const mainStartOffset = mainConfig ? (mainConfig.startTimeSeconds || 0) : 0;
     const sessionTime = lapStartTimeObj.videoTime - mainStartOffset;
 
-    console.log(`Seeking to lap ${lapNumber}: mainVideoTime=${lapStartTimeObj.videoTime}s, mainOffset=${mainStartOffset}s, sessionTime=${sessionTime}s`);
 
     // Seek all players to their respective video times for this session time
     Object.keys(videoPlayers).forEach(id => {
@@ -918,7 +905,6 @@ function seekToLap(lapNumber) {
         if (config) {
           const playerStartOffset = config.startTimeSeconds || 0;
           const targetTime = playerStartOffset + sessionTime;
-          console.log(`  - Player ${id}: offset=${playerStartOffset}s, targetTime=${targetTime}s`);
           player.seekTo(targetTime, true);
         } else {
           // Fallback if config is missing
@@ -1904,7 +1890,6 @@ function shareCompareLink() {
       }, 2000);
     }
   }).catch(err => {
-    console.error('Copy failed:', err);
     alert('Failed to copy link to clipboard');
   });
 }
@@ -1930,7 +1915,6 @@ function copySessionUUID() {
       }, 2000);
     }
   }).catch(err => {
-    console.error('UUID copy failed:', err);
   });
 }
 
@@ -2039,7 +2023,6 @@ function initializePeer() {
   peer = new Peer();
 
   peer.on('open', (id) => {
-    console.log('PeerJS ID:', id);
     reconnectAttempts = 0;
 
     const remoteUrl = `${window.location.origin}${window.location.pathname.replace('session.html',
@@ -2069,29 +2052,24 @@ function initializePeer() {
           correctLevel: QRCode.CorrectLevel.M
         });
       } catch (error) {
-        console.error('QR generation failed:', error);
         qrContainer.innerHTML = '<p style="color:var(--error);">QR code generation failed</p>';
       }
     }
   });
 
   peer.on('connection', (conn) => {
-    console.log('Remote connected:', conn.peer);
     connections.push(conn);
 
     conn.on('data', (data) => {
-      console.log('Received command:', data);
       handleRemoteCommand(data);
     });
 
     conn.on('close', () => {
       connections = connections.filter(c => c.peer !== conn.peer);
-      console.log('Remote disconnected:', conn.peer);
       updateConnectionUI();
     });
 
     conn.on('error', (err) => {
-      console.error('Connection error:', err);
       connections = connections.filter(c => c.peer !== conn.peer);
       updateConnectionUI();
     });
@@ -2106,9 +2084,9 @@ function initializePeer() {
         const videoSection = document.getElementById('video-section');
         if (videoSection && !document.fullscreenElement) {
           if (videoSection.requestFullscreen) {
-            videoSection.requestFullscreen().catch(err =>
-              console.log('Fullscreen failed:', err)
-            );
+            videoSection.requestFullscreen().catch(err => {
+              // Fullscreen request failed
+            });
           }
         }
       }, 2000);
@@ -2116,7 +2094,6 @@ function initializePeer() {
   });
 
   peer.on('disconnected', () => {
-    console.log('Peer disconnected, attempting reconnect...');
     const peerStatus = document.getElementById('peer-status');
     if (peerStatus) {
       peerStatus.textContent = 'Reconnecting...';
@@ -2132,12 +2109,10 @@ function initializePeer() {
       if (peerStatus) {
         peerStatus.textContent = 'Failed';
       }
-      console.error('Max reconnection attempts reached');
     }
   });
 
   peer.on('error', (err) => {
-    console.error('PeerJS error:', err);
     const peerStatus = document.getElementById('peer-status');
     if (peerStatus) {
       peerStatus.textContent = 'Error';
@@ -2187,7 +2162,6 @@ function sendCommandToRemote(command) {
       try {
         conn.send({ type: command });
       } catch (error) {
-        console.error('Failed to send command:', error);
       }
     }
   });
@@ -2265,7 +2239,6 @@ function sendStatsToRemotes() {
       try {
         conn.send(stats);
       } catch (error) {
-        console.error('Stats send failed:', error);
       }
     }
   });
@@ -2300,11 +2273,9 @@ function loadSessionsList() {
     .then(r => r.json())
     .then(data => {
       allSessionsList = data.sessions || [];
-      console.log(`Loaded ${allSessionsList.length} sessions for autocomplete`);
       setupAutocomplete();
     })
     .catch(err => {
-      console.warn("Autocomplete load failed:", err);
     });
 }
 
@@ -2339,7 +2310,6 @@ function loadSessionData() {
       }
     })
     .catch(err => {
-      console.error('Session load error:', err);
       showErrorPage(err.message);
     });
 }
@@ -2445,7 +2415,9 @@ function renderSession(data) {
       lapNumber: i + 2,
       videoTime: cumulativeTime
     });
-  } console.log('Lap start times:', lapStartTimes); // Draw initial
+  }
+
+  // Draw initial chart
   drawLineChart(validLaps);
 
   // Update lap display
@@ -2558,7 +2530,6 @@ document.addEventListener('visibilitychange', () => {
 */
 window.addEventListener('pageshow', (event) => {
   if (event.persisted) {
-    console.log('Page restored from BFCache');
     detectInitialMode();
 
     // Reconnect peer if needed
@@ -2591,7 +2562,6 @@ window.addEventListener('pagehide', () => {
       try {
         conn.close();
       } catch (e) {
-        console.error('Connection close error:', e);
       }
     });
     peer.destroy();
@@ -2617,7 +2587,6 @@ window.addEventListener('beforeunload', () => {
 * Fullscreen change handler
 */
 document.addEventListener('fullscreenchange', () => {
-  console.log('Fullscreen:', !!document.fullscreenElement);
 });
 
 // ===== INITIALIZATION =====
@@ -2626,9 +2595,6 @@ document.addEventListener('fullscreenchange', () => {
 * Initialize application
 */
 function initializeApp() {
-  console.log('Initializing Karting Session Viewer...');
-  console.log('Session ID:', sessionId);
-  console.log('Compare ID:', compareId);
 
   // Detect and apply mode
   detectInitialMode();
@@ -2645,7 +2611,6 @@ function initializeApp() {
   // Load main session data
   loadSessionData();
 
-  console.log('Initialization complete');
 }
 
 // Start when DOM is ready

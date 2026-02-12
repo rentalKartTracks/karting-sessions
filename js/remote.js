@@ -39,7 +39,6 @@ function sendCommand(type, value = null) {
     haptic();
     if (conn?.open) {
         conn.send({ type, value });
-        console.log(`Sent: ${type}`, value);
     }
 }
 
@@ -212,7 +211,6 @@ function setupPeerConnection() {
     peer = new Peer();
 
     peer.on('open', () => {
-        console.log('Connecting to host:', hostId);
         conn = peer.connect(hostId, {
             reliable: true,
             serialization: 'json'
@@ -221,14 +219,12 @@ function setupPeerConnection() {
     });
 
     peer.on('error', err => {
-        console.error('Peer error:', err);
         showError('Connection Error', 'Unable to establish connection. Please try again.');
     });
 }
 
 function setupConnectionListeners() {
     conn.on('open', () => {
-        console.log('Connected to host');
         showConnectedUI();
     });
 
@@ -237,7 +233,6 @@ function setupConnectionListeners() {
     });
 
     conn.on('close', () => {
-        console.log('Connection closed');
         document.getElementById('body').classList.remove('connected');
         showError('Disconnected', 'Connection to session was lost.');
         setTimeout(() => {
@@ -245,7 +240,9 @@ function setupConnectionListeners() {
         }, 5000);
     });
 
-    conn.on('error', err => console.error('Connection error:', err));
+    conn.on('error', err => {
+        // Connection error occurred
+    });
 }
 
 function updateStats(data) {
