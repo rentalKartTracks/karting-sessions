@@ -480,10 +480,30 @@ function onPlayerReady(event, id) {
       if (qrPanel) qrPanel.style.display = 'block';
     }
   } else {
-    // If main player is running, sync this one
+    // If main player is running, sync this one to the same session time
     const mainP = videoPlayers[sessionId];
     if (mainP && typeof mainP.getCurrentTime === 'function') {
-      player.seekTo(mainP.getCurrentTime(), true);
+      const mainConfig = videoConfigs[sessionId];
+      const newConfig = videoConfigs[id];
+
+      if (mainConfig && newConfig) {
+        // Calculate current session time from main player
+        const mainVideoTime = mainP.getCurrentTime();
+        const mainStartOffset = mainConfig.startTimeSeconds || 0;
+        const currentSessionTime = mainVideoTime - mainStartOffset;
+
+        // Calculate target time for new player
+        const newStartOffset = newConfig.startTimeSeconds || 0;
+        const targetTime = newStartOffset + currentSessionTime;
+
+        console.log(`Syncing ${id}: mainVideoTime=${mainVideoTime}s, mainOffset=${mainStartOffset}s, sessionTime=${currentSessionTime}s, newOffset=${newStartOffset}s, targetTime=${targetTime}s`);
+
+        player.seekTo(targetTime, true);
+      } else {
+        // Fallback to simple sync if configs are missing
+        player.seekTo(mainP.getCurrentTime(), true);
+      }
+
       if (mainP.getPlayerState() === YT.PlayerState.PLAYING) {
         player.playVideo();
       }
@@ -883,10 +903,27 @@ function seekToLap(lapNumber) {
   const lapStartTimeObj = lapStartTimes.find(l => l.lapNumber === lapNumber);
 
   if (lapStartTimeObj) {
-    // Seek all players
-    Object.values(videoPlayers).forEach(p => {
-      if (typeof p.seekTo === 'function') {
-        p.seekTo(lapStartTimeObj.videoTime, true);
+    // Calculate session time from main player's lap start
+    const mainConfig = videoConfigs[sessionId];
+    const mainStartOffset = mainConfig ? (mainConfig.startTimeSeconds || 0) : 0;
+    const sessionTime = lapStartTimeObj.videoTime - mainStartOffset;
+
+    console.log(`Seeking to lap ${lapNumber}: mainVideoTime=${lapStartTimeObj.videoTime}s, mainOffset=${mainStartOffset}s, sessionTime=${sessionTime}s`);
+
+    // Seek all players to their respective video times for this session time
+    Object.keys(videoPlayers).forEach(id => {
+      const player = videoPlayers[id];
+      if (typeof player.seekTo === 'function') {
+        const config = videoConfigs[id];
+        if (config) {
+          const playerStartOffset = config.startTimeSeconds || 0;
+          const targetTime = playerStartOffset + sessionTime;
+          console.log(`  - Player ${id}: offset=${playerStartOffset}s, targetTime=${targetTime}s`);
+          player.seekTo(targetTime, true);
+        } else {
+          // Fallback if config is missing
+          player.seekTo(lapStartTimeObj.videoTime, true);
+        }
       }
     });
 
