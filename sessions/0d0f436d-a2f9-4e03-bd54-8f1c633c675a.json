@@ -1,0 +1,52 @@
+{
+  "session_id": "0d0f436d-a2f9-4e03-bd54-8f1c633c675a",
+  "driver": "Ignas M.",
+  "fastest_lap": "00:47.989",
+  "track": {
+    "name": "Speedway",
+    "configuration": "Winter 2026",
+    "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "01:02",
+  "video_url": "https://youtu.be/1fpADMUbeiA",
+  "session_date": "2026-01-04",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "00:47.989"
+    },
+    {
+      "lap": 2,
+      "time": "01:02.129"
+    },
+    {
+      "lap": 3,
+      "time": "01:01.833"
+    },
+    {
+      "lap": 4,
+      "time": "00:58.015"
+    },
+    {
+      "lap": 5,
+      "time": "01:10.651"
+    },
+    {
+      "lap": 6,
+      "time": "01:33.579"
+    },
+    {
+      "lap": 7,
+      "time": "00:51.129"
+    },
+    {
+      "lap": 8,
+      "time": "01:01.206"
+    },
+    {
+      "lap": 9,
+      "time": "01:01.206s"
+    }
+  ]
+}

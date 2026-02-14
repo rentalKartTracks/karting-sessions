@@ -1,0 +1,60 @@
+{
+  "session_id": "784594f9-e230-4397-a8ce-4643d32b65df",
+  "driver": "Kęstas Č.",
+  "fastest_lap": "00:46.013",
+  "track": {
+    "name": "Speedway",
+    "configuration": "Winter 2026",
+    "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "01:02",
+  "video_url": "https://youtu.be/zzdYtObhraw",
+  "session_date": "2026-01-04",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "00:46.013"
+    },
+    {
+      "lap": 2,
+      "time": "00:46.729"
+    },
+    {
+      "lap": 3,
+      "time": "00:49.542"
+    },
+    {
+      "lap": 4,
+      "time": "00:46.912"
+    },
+    {
+      "lap": 5,
+      "time": "00:46.929"
+    },
+    {
+      "lap": 6,
+      "time": "00:46.931"
+    },
+    {
+      "lap": 7,
+      "time": "00:48.458"
+    },
+    {
+      "lap": 8,
+      "time": "00:52.560"
+    },
+    {
+      "lap": 9,
+      "time": "00:47.407"
+    },
+    {
+      "lap": 10,
+      "time": "00:59.485"
+    },
+    {
+      "lap": 11,
+      "time": "00:55.884"
+    }
+  ]
+}

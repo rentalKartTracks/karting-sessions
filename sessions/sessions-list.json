@@ -1,6 +1,22 @@
 {
     "sessions": [
         {
+            "id": "0d0f436d-a2f9-4e03-bd54-8f1c633c675a",
+            "driver": "Ignas M.",
+            "track": {
+                "name": "Speedway",
+                "configuration": "Winter 2026",
+                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+            },
+            "session_date": "2026-01-04",
+            "kart": "9 Ag",
+            "fastest_lap": "00:47.989",
+            "average_lap": "01:03.316",
+            "fastest_lap_s": 47.989,
+            "average_lap_s": 63.316375,
+            "laps_count": 8
+        },
+        {
             "id": "14bf7186-e5c5-401e-8ae0-9cbbb0142523",
             "driver": "Romualdas P.",
             "track": {
@@ -95,6 +111,22 @@
             "fastest_lap_s": 83.385,
             "average_lap_s": 85.93757142857143,
             "laps_count": 7
+        },
+        {
+            "id": "784594f9-e230-4397-a8ce-4643d32b65df",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Speedway",
+                "configuration": "Winter 2026",
+                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+            },
+            "session_date": "2026-01-04",
+            "kart": "9 Ag",
+            "fastest_lap": "00:46.013",
+            "average_lap": "00:49.714",
+            "fastest_lap_s": 46.013,
+            "average_lap_s": 49.71363636363637,
+            "laps_count": 11
         },
         {
             "id": "9da53414-8e0c-4434-9651-63fe6e46edac",
