@@ -3,6 +3,7 @@ let filteredSessions = [];
 let currentSort = 'date';
 let uniqueTracks = new Set();
 let uniqueConfigs = new Set();
+let trackConfigsMap = new Map();
 let personalBests = {};
 let trackBests = {};
 let isLoading = true;
@@ -81,6 +82,7 @@ function applyUrlParams() {
   const params = getUrlParams();
   document.getElementById('search-input').value = params.search;
   document.getElementById('track-filter').value = params.track;
+  updateConfigFilter();
   document.getElementById('config-filter').value = params.config;
   document.getElementById('date-filter').value = params.dateFilter;
   document.getElementById('date-from').value = params.dateFrom;
@@ -95,6 +97,7 @@ function applyUrlParams() {
 function resetFilters() {
   document.getElementById('search-input').value = '';
   document.getElementById('track-filter').value = '';
+  updateConfigFilter();
   document.getElementById('config-filter').value = '';
   document.getElementById('date-filter').value = 'all';
 
@@ -183,6 +186,11 @@ function processSessionData() {
   allSessions.forEach(session => {
     uniqueTracks.add(session.track_name);
     uniqueConfigs.add(session.track_config);
+
+    if (!trackConfigsMap.has(session.track_name)) {
+      trackConfigsMap.set(session.track_name, new Set());
+    }
+    trackConfigsMap.get(session.track_name).add(session.track_config);
   });
 
   calculatePersonalBests();
@@ -282,9 +290,35 @@ function calculateTrends() {
   });
 }
 
-function populateFilters() {
+function updateConfigFilter() {
   const trackFilter = document.getElementById('track-filter');
   const configFilter = document.getElementById('config-filter');
+  const selectedTrack = trackFilter.value;
+  const currentConfig = configFilter.value;
+
+  configFilter.innerHTML = '<option value="">All Configurations</option>';
+
+  let configsToShow = uniqueConfigs;
+  if (selectedTrack && trackConfigsMap.has(selectedTrack)) {
+    configsToShow = trackConfigsMap.get(selectedTrack);
+  }
+
+  Array.from(configsToShow).sort().forEach(config => {
+    const option = document.createElement('option');
+    option.value = config;
+    option.textContent = config;
+    configFilter.appendChild(option);
+  });
+
+  if (currentConfig && configsToShow.has(currentConfig)) {
+    configFilter.value = currentConfig;
+  } else {
+    configFilter.value = '';
+  }
+}
+
+function populateFilters() {
+  const trackFilter = document.getElementById('track-filter');
 
   Array.from(uniqueTracks).sort().forEach(track => {
     const option = document.createElement('option');
@@ -293,12 +327,7 @@ function populateFilters() {
     trackFilter.appendChild(option);
   });
 
-  Array.from(uniqueConfigs).sort().forEach(config => {
-    const option = document.createElement('option');
-    option.value = config;
-    option.textContent = config;
-    configFilter.appendChild(option);
-  });
+  updateConfigFilter();
 }
 
 function updateFilteredSummaryStats() {
@@ -539,6 +568,7 @@ const debouncedFilter = debounce(() => {
 document.getElementById('search-input').addEventListener('input', debouncedFilter);
 
 document.getElementById('track-filter').addEventListener('change', () => {
+  updateConfigFilter();
   filterSessions();
   updateUrlParams();
 });
