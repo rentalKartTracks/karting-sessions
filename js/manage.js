@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('driver').value = data.driver;
         document.getElementById('session_date').value = data.session_date;
+        document.getElementById('kart').value = data.kart || '';
         document.getElementById('track_name').value = data.track.name;
         document.getElementById('track_config').value = data.track.configuration;
         document.getElementById('maps_link').value = data.track.maps_link || '';
@@ -214,6 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 configuration: document.getElementById('track_config').value,
                 maps_link: document.getElementById('maps_link').value
             },
+            kart: document.getElementById('kart').value,
             video_start_time: document.getElementById('video_start_time').value,
             video_url: document.getElementById('video_url').value,
             session_date: document.getElementById('session_date').value,
