@@ -121,32 +121,6 @@
       overflow: hidden;
     }
 
-    /* Subtle shimmer effect (Apple-inspired) */
-    .header::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(45deg,
-          transparent 30%,
-          rgba(255, 255, 255, 0.1) 50%,
-          transparent 70%);
-      animation: shimmer 3s infinite;
-      pointer-events: none;
-    }
-
-    @keyframes shimmer {
-      0% {
-        transform: translateX(-100%) translateY(-100%) rotate(45deg);
-      }
-
-      100% {
-        transform: translateX(100%) translateY(100%) rotate(45deg);
-      }
-    }
-
     .header-content {
       display: flex;
       justify-content: space-between;
@@ -497,6 +471,7 @@
     /* Single: [ ] */
     .layout-icon-single {
       /* Default border is enough */
+      border-color: currentColor;
     }
 
     /* Dual: [ ][ ] */
