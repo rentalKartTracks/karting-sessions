@@ -1,0 +1,63 @@
+{
+  "session_id": "788bbf09-1f4e-4380-88af-c6bc46d1cb35",
+  "driver": "Povilas Liniauskas",
+  "fastest_lap": "00:44.327",
+  "track": {
+    "name": "Speedway",
+    "configuration": "Winter 2026",
+    "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+  },
+  "video_start_time": "00:33",
+  "video_url": "https://www.youtube.com/watch?v=087442qcjAw",
+  "session_date": "2026-01-04",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "01:01.053"
+    },
+    {
+      "lap": 2,
+      "time": "00:45.795"
+    },
+    {
+      "lap": 3,
+      "time": "00:44.531"
+    },
+    {
+      "lap": 4,
+      "time": "00:44.327"
+    },
+    {
+      "lap": 5,
+      "time": "00:48.881"
+    },
+    {
+      "lap": 6,
+      "time": "00:53.026"
+    },
+    {
+      "lap": 7,
+      "time": "00:46.137"
+    },
+    {
+      "lap": 8,
+      "time": " 00:46.274"
+    },
+    {
+      "lap": 9,
+      "time": " 00:49.720"
+    },
+    {
+      "lap": 10,
+      "time": "00:45.072"
+    },
+    {
+      "lap": 11,
+      "time": " 00:45.170"
+    },
+    {
+      "lap": 12,
+      "time": "00:44.363"
+    }
+  ]
+}

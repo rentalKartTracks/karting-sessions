@@ -431,7 +431,10 @@ function renderSessions() {
           </div>
         </div>
         
-        <button class="view-btn">View Full Telemetry →</button>
+        <div class="session-actions" style="display: flex; gap: 8px; margin-top: 12px;">
+          <button class="view-btn" style="flex: 1;">View Telemetry</button>
+          <button class="edit-btn secondary-btn" onclick="event.stopPropagation(); window.location.href='manage.html?id=${session.id}'" style="padding: 8px 12px;">✏️</button>
+        </div>
       </div>
     `;
   }).join('');

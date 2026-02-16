@@ -108,3 +108,34 @@ select {
   margin: 0 auto;
   width: 100%;
 }
+
+/* Shared Button Styles */
+.primary-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-weight: 600;
+  transition: background var(--transition-fast);
+}
+
+.primary-btn:hover {
+  background: var(--primary-dark);
+}
+
+.secondary-btn {
+  background: var(--surface-3);
+  color: var(--text-primary);
+  border: 1px solid var(--text-tertiary);
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.secondary-btn:hover {
+  background: var(--surface-4);
+  border-color: var(--text-secondary);
+}
