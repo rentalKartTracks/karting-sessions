@@ -137,7 +137,7 @@
                 "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
             },
             "session_date": "2026-01-04",
-            "kart": null,
+            "kart": "9 Ag",
             "fastest_lap": "00:44.327",
             "average_lap": "00:47.862",
             "fastest_lap_s": 44.327,
@@ -159,6 +159,22 @@
             "fastest_lap_s": 27.118,
             "average_lap_s": 30.136068965517243,
             "laps_count": 29
+        },
+        {
+            "id": "a7d61fbf-6d41-4b59-abd0-63454ab69dc0",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Kartlandas Kaunas",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/7Q9SbwwcmwyNqUH56"
+            },
+            "session_date": "2026-02-14",
+            "kart": "9 Ag",
+            "fastest_lap": "00:25.906",
+            "average_lap": "00:28.676",
+            "fastest_lap_s": 25.906,
+            "average_lap_s": 28.6764,
+            "laps_count": 30
         },
         {
             "id": "b424ec42-4be0-44bc-bf6d-a989c9506ecb",
