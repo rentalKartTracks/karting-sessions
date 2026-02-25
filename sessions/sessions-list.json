@@ -130,7 +130,7 @@
         },
         {
             "id": "788bbf09-1f4e-4380-88af-c6bc46d1cb35",
-            "driver": "Povilas Liniauskas",
+            "driver": "Povilas L.",
             "track": {
                 "name": "Speedway",
                 "configuration": "Winter 2026",
@@ -223,6 +223,22 @@
             "fastest_lap_s": 80.385,
             "average_lap_s": 84.50157142857142,
             "laps_count": 7
+        },
+        {
+            "id": "8c41672f-7a9e-4b6e-bc57-4b232e5d79cb",
+            "driver": "Romualdas P.",
+            "track": {
+                "name": "Speedway",
+                "configuration": "Winter 2026",
+                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+            },
+            "session_date": "2026-01-04",
+            "kart": "9 Ag",
+            "fastest_lap": "00:51.584",
+            "average_lap": "00:55.315",
+            "fastest_lap_s": 51.584,
+            "average_lap_s": 55.315200000000004,
+            "laps_count": 10
         },
         {
             "id": "c74839e7-1346-4027-ad80-dd3bc2a631dd",

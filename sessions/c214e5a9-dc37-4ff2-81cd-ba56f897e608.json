@@ -1,0 +1,56 @@
+{
+  "session_id": "8c41672f-7a9e-4b6e-bc57-4b232e5d79cb",
+  "driver": "Romualdas P.",
+  "fastest_lap": "00:51.584",
+  "track": {
+    "name": "Speedway",
+    "configuration": "Winter 2026",
+    "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "00:30",
+  "video_url": "https://youtu.be/Nt8CoJdz5-g",
+  "session_date": "2026-01-04",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "00:54.058"
+    },
+    {
+      "lap": 2,
+      "time": "00:54.568"
+    },
+    {
+      "lap": 3,
+      "time": "00:53.140"
+    },
+    {
+      "lap": 4,
+      "time": "00:51.601"
+    },
+    {
+      "lap": 5,
+      "time": "00:56.000"
+    },
+    {
+      "lap": 6,
+      "time": "01:06.132"
+    },
+    {
+      "lap": 7,
+      "time": "00:59.269"
+    },
+    {
+      "lap": 8,
+      "time": " 00:55.116"
+    },
+    {
+      "lap": 9,
+      "time": "00:51.584"
+    },
+    {
+      "lap": 10,
+      "time": "00:51.684"
+    }
+  ]
+}
