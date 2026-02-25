@@ -13,11 +13,12 @@ let lastTooltipUpdate = 0;
 const TOOLTIP_DEBOUNCE = 50;
 
 // Video players
-// Video players
 let videoPlayers = {}; // sessionId -> YT.Player
 let videoConfigs = {}; // sessionId -> { videoId, startTimeSeconds, label }
 let activeVideoIds = []; // ordered list of sessionIds
 let activeLayout = 'single';
+let firstSelectedVideoId = null; // for swapping videos
+let activeAudioSessionId = null; // tracks which video plays sound
 
 // Lap tracking
 let lapStartTimes = [];
@@ -466,6 +467,9 @@ function onPlayerReady(event, id) {
     }
   }
 
+  // Set initial audio state
+  updateAudioState();
+
   // Sync logic
   if (id === sessionId) {
     seekToLap(currentLapMarker.lapNumber || 1);
@@ -475,8 +479,7 @@ function onPlayerReady(event, id) {
       const qrPanel = document.getElementById('qr-panel');
       if (qrPanel) qrPanel.style.display = 'block';
     }
-  } else {
-    // If main player is running, sync this one to the same session time
+    // If main player is running, sync this one to the current session time/lap
     const mainP = videoPlayers[sessionId];
     if (mainP && typeof mainP.getCurrentTime === 'function') {
       const mainConfig = videoConfigs[sessionId];
@@ -488,10 +491,40 @@ function onPlayerReady(event, id) {
         const mainStartOffset = mainConfig.startTimeSeconds || 0;
         const currentSessionTime = mainVideoTime - mainStartOffset;
 
-        // Calculate target time for new player
-        const newStartOffset = newConfig.startTimeSeconds || 0;
-        const targetTime = newStartOffset + currentSessionTime;
+        let targetTime = newConfig.startTimeSeconds || 0;
 
+        // Try to find the exact lap offset if we are on a specific lap
+        if (currentLapMarker && currentLapMarker.lapNumber) {
+          const lapNum = currentLapMarker.lapNumber;
+          let sessionDataToUse = comparisonSessions.find(s => s.id === id);
+          let mainSessionData = currentSessionData;
+
+          if (sessionDataToUse && sessionDataToUse.laps && lapNum <= sessionDataToUse.laps.length &&
+            mainSessionData && mainSessionData.laps && lapNum <= mainSessionData.laps.length) {
+
+            // Calculate how far into the current lap the main video is
+            let mainAccumulatedTime = 0;
+            for (let i = 0; i < lapNum - 1; i++) {
+              mainAccumulatedTime += parseTime(mainSessionData.laps[i].time);
+            }
+            const timeIntoLap = currentSessionTime - mainAccumulatedTime;
+
+            // Calculate the base start time for this specific lap on the new video
+            let newAccumulatedTime = 0;
+            for (let i = 0; i < lapNum - 1; i++) {
+              newAccumulatedTime += parseTime(sessionDataToUse.laps[i].time);
+            }
+
+            // The target time is its start offset + its lap base time + how far into the lap we are
+            targetTime = (newConfig.startTimeSeconds || 0) + newAccumulatedTime + timeIntoLap;
+          } else {
+            // Fallback if lap data missing: just add raw session time
+            targetTime += currentSessionTime;
+          }
+        } else {
+          // Fallback if no lap marker
+          targetTime += currentSessionTime;
+        }
 
         player.seekTo(targetTime, true);
       } else {
@@ -646,10 +679,18 @@ function renderVideoGrid() {
           <div class="video-wrapper">
             <div id="player-${id}"></div>
           </div>
-          <div class="video-overlay" style="display:none">
-             <div class="video-driver-name">${label}</div>
+          <div class="video-controls-overlay">
+             <button class="sound-control-btn" title="Toggle Sound" onclick="event.stopPropagation(); toggleAudio('${id}')">🔇</button>
+             <button class="fullscreen-control-btn" title="Toggle Fullscreen" onclick="event.stopPropagation(); toggleFullscreen('${id}')">⛶</button>
+          </div>
+          <div class="video-overlay" title="Click to select/swap video" onclick="event.stopPropagation(); handleVideoClick('${id}', event)">
           </div>
         `;
+
+      // Setup click listener for swapping/fullscreen
+      container.addEventListener('click', (e) => {
+        handleVideoClick(id, e);
+      });
 
       if (index < grid.children.length) {
         grid.insertBefore(container, grid.children[index]);
@@ -686,63 +727,195 @@ function renderVideoGrid() {
   grid.className = `video-grid layout-${activeLayout}`;
 
   updateVideoSelector();
+  updateVideoSelectionUI();
+  updateAudioState();
 }
 
 /**
- * Toggle Video Selector Panel
+ * Toggles which video has active audio
  */
-function toggleVideoSelector() {
-  const panel = document.getElementById('video-selector-panel');
-  if (panel) {
-    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-    if (panel.style.display === 'block') updateVideoSelector();
+function toggleAudio(id) {
+  if (activeAudioSessionId === id) {
+    // If clicking the currently active one, mute it
+    activeAudioSessionId = null;
+  } else {
+    // Set new active audio
+    activeAudioSessionId = id;
+  }
+  updateAudioState();
+}
+
+/**
+ * Applies the audio state to all players and UI
+ */
+function updateAudioState() {
+  if (activeAudioSessionId === null && activeVideoIds.length > 0) {
+    // Default to first video if none selected
+    activeAudioSessionId = activeVideoIds[0];
+  }
+
+  Object.keys(videoPlayers).forEach(id => {
+    const player = videoPlayers[id];
+    if (player && typeof player.isMuted === 'function') {
+      const btn = document.querySelector(`#container-${id} .sound-control-btn`);
+
+      if (id === activeAudioSessionId) {
+        player.unMute();
+        if (btn) btn.textContent = '🔊';
+      } else {
+        player.mute();
+        if (btn) btn.textContent = '🔇';
+      }
+    }
+  });
+}
+
+/**
+ * Toggles fullscreen for a specific video container
+ */
+function toggleFullscreen(id) {
+  const container = document.getElementById(`container-${id}`);
+  if (!container) return;
+
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+  } else if (container.classList.contains('fullscreen-video')) {
+    container.classList.remove('fullscreen-video');
+  } else {
+    // CSS-based faux-fullscreen to avoid iframe restriction issues, or actual Fullscreen API
+    container.classList.add('fullscreen-video');
   }
 }
 
 /**
- * Update Video Selector List
+ * Handle clicks on the video container for swapping or fullscreen
+ */
+function handleVideoClick(id, event) {
+  // If clicking on controls (like sound button later), ignore
+  if (event.target.closest('.sound-control-btn') || event.target.closest('.fullscreen-control-btn')) {
+    return;
+  }
+
+  // Handle double click for fullscreen? Or just swapping?
+  // Per implementation plan choice 1: we can use a dedicated button for fullscreen and swap on click.
+  // Wait, the user didn't explicitly choose, but they approved. Let's do single click to select/swap.
+
+  if (firstSelectedVideoId === null) {
+    firstSelectedVideoId = id;
+  } else if (firstSelectedVideoId === id) {
+    // Deselect if clicking the same video
+    firstSelectedVideoId = null;
+  } else {
+    // Swap videos
+    swapVideos(firstSelectedVideoId, id);
+    firstSelectedVideoId = null; // Reset after swap
+  }
+
+  updateVideoSelectionUI();
+}
+
+/**
+ * Swaps the position of two active videos
+ */
+function swapVideos(id1, id2) {
+  const index1 = activeVideoIds.indexOf(id1);
+  const index2 = activeVideoIds.indexOf(id2);
+
+  if (index1 !== -1 && index2 !== -1) {
+    // Swap in array
+    [activeVideoIds[index1], activeVideoIds[index2]] = [activeVideoIds[index2], activeVideoIds[index1]];
+
+    // Re-render
+    renderVideoGrid();
+  }
+}
+
+/**
+ * Updates UI to show which video is currently selected for swapping
+ */
+function updateVideoSelectionUI() {
+  document.querySelectorAll('.video-container').forEach(container => {
+    if (container.dataset.sessionId === firstSelectedVideoId) {
+      container.classList.add('selected-for-swap');
+    } else {
+      container.classList.remove('selected-for-swap');
+    }
+  });
+}
+
+/**
+ * Toggle Video Selector Panel (Deprecated - replaced by circular buttons)
+ */
+function toggleVideoSelector() {
+  // Keeping this empty just in case there are old references
+}
+
+/**
+ * Get initials from a name string
+ */
+function getInitials(name) {
+  if (!name) return '?';
+
+  // Remove content in parentheses
+  const cleanName = name.replace(/\s*\(.*?\)\s*/g, ' ').trim();
+
+  const words = cleanName.split(' ').filter(w => w.length > 0);
+  if (words.length === 0) return '?';
+  if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
+
+  return (words[0][0] + words[words.length - 1][0]).toUpperCase();
+}
+
+/**
+ * Update Video Selector List (Circular buttons)
  */
 function updateVideoSelector() {
-  const list = document.getElementById('active-video-list');
-  if (!list) return;
+  const container = document.getElementById('driver-selector-container');
+  if (!container) return;
 
   // Collect all available sessions
   const allSessions = [];
   if (sessionId) {
     allSessions.push({
       id: sessionId,
-      name: document.getElementById('driver')?.textContent || 'Main Session'
+      name: document.getElementById('driver')?.textContent || 'Main',
+      date: document.getElementById('session-date')?.textContent || ''
     });
   }
 
   comparisonSessions.forEach(s => {
-    allSessions.push({ id: s.id, name: `${s.driver} (${s.date || s.session_date})` });
+    allSessions.push({
+      id: s.id,
+      name: s.driver,
+      date: s.date || s.session_date
+    });
   });
 
-  list.innerHTML = '';
+  if (allSessions.length <= 1) {
+    container.style.display = 'none';
+    return;
+  } else {
+    container.style.display = 'flex';
+  }
+
+  container.innerHTML = '';
 
   allSessions.forEach(s => {
-    const item = document.createElement('div');
-    item.className = 'video-list-item';
-    if (activeVideoIds.includes(s.id)) item.classList.add('selected');
+    const btn = document.createElement('button');
+    const isActive = activeVideoIds.includes(s.id);
 
-    // Checkbox
-    const fileCk = document.createElement('input');
-    fileCk.type = 'checkbox';
-    fileCk.checked = activeVideoIds.includes(s.id);
-    fileCk.onclick = (e) => e.stopPropagation();
-    fileCk.onchange = (e) => toggleActiveVideo(s.id, e.target.checked);
+    btn.className = `driver-circle-btn ${isActive ? 'active' : ''}`;
+    btn.title = `${s.name} ${s.date ? `(${s.date})` : ''}`;
+    btn.dataset.id = s.id;
 
-    const label = document.createElement('span');
-    label.textContent = s.name;
+    // Set initials as content
+    btn.textContent = getInitials(s.name);
 
-    item.appendChild(fileCk);
-    item.appendChild(label);
-    item.onclick = (e) => {
-      fileCk.click();
+    btn.onclick = () => {
+      toggleActiveVideo(s.id, !isActive);
     };
 
-    list.appendChild(item);
+    container.appendChild(btn);
   });
 }
 
@@ -891,23 +1064,36 @@ function seekToLap(lapNumber) {
   const lapStartTimeObj = lapStartTimes.find(l => l.lapNumber === lapNumber);
 
   if (lapStartTimeObj) {
-    // Calculate session time from main player's lap start
+    // Calculate fallback session time from main player's lap start
     const mainConfig = videoConfigs[sessionId];
     const mainStartOffset = mainConfig ? (mainConfig.startTimeSeconds || 0) : 0;
     const sessionTime = lapStartTimeObj.videoTime - mainStartOffset;
 
-
-    // Seek all players to their respective video times for this session time
+    // Seek all players to their respective video times for this target lap
     Object.keys(videoPlayers).forEach(id => {
       const player = videoPlayers[id];
       if (typeof player.seekTo === 'function') {
         const config = videoConfigs[id];
-        if (config) {
+        let targetTime = 0;
+
+        // Find the specific lap data for this session to get its exact start time
+        let sessionDataToUse = (id === sessionId) ? currentSessionData : comparisonSessions.find(s => s.id === id);
+
+        if (sessionDataToUse && sessionDataToUse.laps && lapNumber <= sessionDataToUse.laps.length) {
+          // Calculate time by summing previous laps + offset
+          let accumulatedTime = 0;
+          for (let i = 0; i < lapNumber - 1; i++) {
+            accumulatedTime += parseTime(sessionDataToUse.laps[i].time);
+          }
+          const startOffset = config ? (config.startTimeSeconds || 0) : 0;
+          targetTime = startOffset + accumulatedTime;
+          player.seekTo(targetTime, true);
+        } else if (config) {
+          // Fallback if session data is missing or lap out of bounds
           const playerStartOffset = config.startTimeSeconds || 0;
-          const targetTime = playerStartOffset + sessionTime;
+          targetTime = playerStartOffset + sessionTime;
           player.seekTo(targetTime, true);
         } else {
-          // Fallback if config is missing
           player.seekTo(lapStartTimeObj.videoTime, true);
         }
       }
