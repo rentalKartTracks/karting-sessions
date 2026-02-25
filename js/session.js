@@ -771,19 +771,19 @@ function updateAudioState() {
 }
 
 /**
- * Toggles fullscreen for a specific video container
+ * Toggles fullscreen for the entire video grid
  */
 function toggleFullscreen(id) {
-  const container = document.getElementById(`container-${id}`);
+  const container = document.getElementById('video-grid');
   if (!container) return;
 
   if (document.fullscreenElement) {
     document.exitFullscreen();
-  } else if (container.classList.contains('fullscreen-video')) {
-    container.classList.remove('fullscreen-video');
+  } else if (container.classList.contains('fullscreen-grid')) {
+    container.classList.remove('fullscreen-grid');
   } else {
-    // CSS-based faux-fullscreen to avoid iframe restriction issues, or actual Fullscreen API
-    container.classList.add('fullscreen-video');
+    // CSS-based faux-fullscreen for the whole grid
+    container.classList.add('fullscreen-grid');
   }
 }
 
