@@ -145,6 +145,22 @@
             "laps_count": 12
         },
         {
+            "id": "8c41672f-7a9e-4b6e-bc57-4b232e5d79cb",
+            "driver": "Romualdas P.",
+            "track": {
+                "name": "Speedway",
+                "configuration": "Winter 2026",
+                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+            },
+            "session_date": "2026-01-04",
+            "kart": "9 Ag",
+            "fastest_lap": "00:51.584",
+            "average_lap": "00:55.315",
+            "fastest_lap_s": 51.584,
+            "average_lap_s": 55.315200000000004,
+            "laps_count": 10
+        },
+        {
             "id": "9da53414-8e0c-4434-9651-63fe6e46edac",
             "driver": "Povilas L.",
             "track": {
@@ -225,20 +241,20 @@
             "laps_count": 7
         },
         {
-            "id": "8c41672f-7a9e-4b6e-bc57-4b232e5d79cb",
-            "driver": "Romualdas P.",
+            "id": "6ca0eb3e-ac7c-4478-baf8-806850e79e98",
+            "driver": "Ignas M.",
             "track": {
-                "name": "Speedway",
-                "configuration": "Winter 2026",
-                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+                "name": "GOKARTING CENTER KRAKOW",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/fbAaPCaugyx4FDjYA"
             },
-            "session_date": "2026-01-04",
+            "session_date": "2026-02-21",
             "kart": "9 Ag",
-            "fastest_lap": "00:51.584",
-            "average_lap": "00:55.315",
-            "fastest_lap_s": 51.584,
-            "average_lap_s": 55.315200000000004,
-            "laps_count": 10
+            "fastest_lap": "00:28.790",
+            "average_lap": "00:30.082",
+            "fastest_lap_s": 28.79,
+            "average_lap_s": 30.081533333333333,
+            "laps_count": 15
         },
         {
             "id": "c74839e7-1346-4027-ad80-dd3bc2a631dd",

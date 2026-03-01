@@ -1,0 +1,76 @@
+{
+  "session_id": "6ca0eb3e-ac7c-4478-baf8-806850e79e98",
+  "driver": "Ignas M.",
+  "fastest_lap": "00:28.790",
+  "track": {
+    "name": "GOKARTING CENTER KRAKOW",
+    "configuration": "2025",
+    "maps_link": "https://maps.app.goo.gl/fbAaPCaugyx4FDjYA"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "00:43",
+  "video_url": "https://www.youtube.com/watch?v=TikiSpsoTFA",
+  "session_date": "2026-02-21",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "00:31.945"
+    },
+    {
+      "lap": 2,
+      "time": "00:33.338"
+    },
+    {
+      "lap": 3,
+      "time": "00:30.465"
+    },
+    {
+      "lap": 4,
+      "time": "00:30.928"
+    },
+    {
+      "lap": 5,
+      "time": "00:29.621"
+    },
+    {
+      "lap": 6,
+      "time": "00:29.365"
+    },
+    {
+      "lap": 7,
+      "time": "00:29.256"
+    },
+    {
+      "lap": 8,
+      "time": "00:32.470"
+    },
+    {
+      "lap": 9,
+      "time": "00:29.233"
+    },
+    {
+      "lap": 10,
+      "time": "00:29.024"
+    },
+    {
+      "lap": 11,
+      "time": "00:29.916"
+    },
+    {
+      "lap": 12,
+      "time": "00:28.790"
+    },
+    {
+      "lap": 13,
+      "time": "00:28.850"
+    },
+    {
+      "lap": 14,
+      "time": "00:28.852"
+    },
+    {
+      "lap": 15,
+      "time": "00:29.170"
+    }
+  ]
+}
