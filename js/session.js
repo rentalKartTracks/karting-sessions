@@ -724,7 +724,7 @@ function renderVideoGrid() {
   }
 
   // Update CSS class
-  grid.className = `video-grid layout-${activeLayout}`;
+  grid.className = `video-grid layout-${activeLayout} ${idsRendering.length === 1 ? 'single-video' : ''}`;
 
   updateVideoSelector();
   updateVideoSelectionUI();

@@ -665,6 +665,12 @@
       z-index: 20;
     }
     
+    /* Hide overlays when only 1 video is watched */
+    .single-video .video-overlay,
+    .single-video .video-controls-overlay {
+      display: none !important;
+    }
+    
     .sound-control-btn, .fullscreen-control-btn {
       background: rgba(0, 0, 0, 0.6);
       color: white;
