@@ -293,27 +293,68 @@ function calculateTrends() {
 }
 
 function updateLegendWithRealData() {
-  const improvingSessions = allSessions.filter(s => s.trend === 'improving');
-  const decliningSessions = allSessions.filter(s => s.trend === 'declining');
-
   const improvingSpan = document.querySelector('.legend-item .trend-improving');
-  if (improvingSpan) {
-    if (improvingSessions.length > 0) {
-      const avgImp = improvingSessions.reduce((sum, s) => sum + parseFloat(s.trendValue), 0) / improvingSessions.length;
-      improvingSpan.innerHTML = `📈 ${avgImp.toFixed(1)}% faster`;
-    } else {
-      improvingSpan.innerHTML = `📈 -% faster`;
-    }
+  const decliningSpan = document.querySelector('.legend-item .trend-declining');
+
+  if (!improvingSpan || !decliningSpan) return;
+
+  const trendsSection = improvingSpan.closest('.legend-section');
+
+  if (filteredSessions.length < 3) {
+    if (trendsSection) trendsSection.style.display = 'none';
+    return;
   }
 
-  const decliningSpan = document.querySelector('.legend-item .trend-declining');
-  if (decliningSpan) {
-    if (decliningSessions.length > 0) {
-      const avgDec = decliningSessions.reduce((sum, s) => sum + parseFloat(s.trendValue), 0) / decliningSessions.length;
-      decliningSpan.innerHTML = `📉 ${avgDec.toFixed(1)}% slower`;
-    } else {
-      decliningSpan.innerHTML = `📉 -% slower`;
+  if (trendsSection) trendsSection.style.display = 'block';
+
+  // Group by driver + track + config for accurate progression calculation
+  const groups = new Map();
+  filteredSessions.forEach(session => {
+    const t = parseTime(session.fastest_lap);
+    if (t === Infinity) return;
+
+    const key = `${session.driver}_${session.track_name}_${session.track_config}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(session);
+  });
+
+  let totalImprovement = 0;
+  let countImprovement = 0;
+  let totalDecline = 0;
+  let countDecline = 0;
+
+  groups.forEach(sessions => {
+    if (sessions.length >= 2) {
+      const sorted = [...sessions].sort((a, b) => new Date(a.session_date) - new Date(b.session_date));
+      const firstTime = parseTime(sorted[0].fastest_lap);
+      const lastTime = parseTime(sorted[sorted.length - 1].fastest_lap);
+
+      if (firstTime !== Infinity && lastTime !== Infinity) {
+        const improvement = ((firstTime - lastTime) / firstTime) * 100;
+
+        if (improvement > 0.1) {
+          totalImprovement += improvement;
+          countImprovement++;
+        } else if (improvement < -0.1) {
+          totalDecline += Math.abs(improvement);
+          countDecline++;
+        }
+      }
     }
+  });
+
+  if (countImprovement > 0) {
+    const avgImp = totalImprovement / countImprovement;
+    improvingSpan.innerHTML = `📈 ${avgImp.toFixed(1)}% faster`;
+  } else {
+    improvingSpan.innerHTML = `📈 -% faster`;
+  }
+
+  if (countDecline > 0) {
+    const avgDec = totalDecline / countDecline;
+    decliningSpan.innerHTML = `📉 ${avgDec.toFixed(1)}% slower`;
+  } else {
+    decliningSpan.innerHTML = `📉 -% slower`;
   }
 }
 
@@ -576,6 +617,7 @@ function filterSessions() {
 
   // Reset to page 1 when filters change
   currentPage = 1;
+  updateLegendWithRealData();
   sortSessions(currentSort);
 }
 
