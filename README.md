@@ -21,19 +21,21 @@ To run this application locally, you need:
 - All session JSON files in the `sessions/` directory
 - Generated `sessions-list.json` file
 
-### Step 1: Generate Sessions List
+### Step 1: Add Sessions
 
-First, ensure you have all your individual session JSON files in the `sessions/` directory, then generate the summary file:
+Simply add your individual session JSON files in the `sessions/` directory.
+
+> [!TIP]
+> A GitHub Action is now configured to automatically run `generate_list.py` and update `sessions-list.json` whenever you commit and push new `.json` files!
+
+If you are testing locally, you can manually generate the summary file from the project root:
 
 ```bash
-# Navigate to the sessions directory
-cd sessions
-
-# Run the generator script
+# Run the generator script from the project root
 python generate_list.py
 ```
 
-This will create `sessions-list.json` which contains the summary of all sessions.
+This creates/updates `sessions/sessions-list.json` which contains the summary of all sessions.
 
 ### Step 2: Start Local Web Server
 
@@ -92,11 +94,11 @@ php -S localhost:8000
 karting-telemetry/
 ├── index.html              # Main dashboard
 ├── session.html            # Individual session viewer (if exists)
-├── README.md              # This file
+├── README.md               # This file
+├── generate_list.py        # Session list generator
 └── sessions/
-    ├── generate_list.py   # Session list generator
-    ├── sessions-list.json # Generated summary file
-    ├── session-001.json   # Individual session files
+    ├── sessions-list.json  # Generated summary file
+    ├── session-001.json    # Individual session files
     ├── session-002.json
     └── ...
 ```
@@ -133,15 +135,14 @@ Trends are calculated **per driver** by comparing each session to the average of
 
 ## ⚙️ Configuration Setup
 
-The `generate_list.py` script expects all individual session JSON files (`*.json`) to reside within the **same directory** as the script (the `sessions/` folder).
+The `generate_list.py` script resides in the root directory and processes JSON files located in the `sessions/` folder.
 
-Open `generate_list.py` and ensure the configuration section looks like this:
+Its configuration looks like this:
 
 ```python
 # --- Configuration ---
-# SESSIONS_DIR = "." tells the script to look for files in the current directory.
-SESSIONS_DIR = "." 
-OUTPUT_FILE = os.path.join(SESSIONS_DIR, "sessions-list.json")
+SESSIONS_DIR = Path("sessions")
+OUTPUT_FILE = SESSIONS_DIR / "sessions-list.json"
 ```
 
 ## 📊 Session Data Format
@@ -167,10 +168,10 @@ Each session JSON file should contain:
 ## 🔄 Workflow
 
 1. Add new session JSON files to `sessions/` directory
-2. Run `python generate_list.py` in the sessions directory
-3. Start web server: `python -m http.server 8000`
+2. (Optional, local testing) Run `python generate_list.py` from the root directory
+3. Start local web server: `python -m http.server 8000`
 4. Open `http://localhost:8000` in your browser
-5. View and analyze your sessions!
+5. Commit and push: GitHub Actions will automatically update `sessions-list.json` on the live site!
 
 ## 📱 Mobile Support
 
