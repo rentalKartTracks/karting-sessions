@@ -288,6 +288,33 @@ function calculateTrends() {
       }
     });
   });
+
+  updateLegendWithRealData();
+}
+
+function updateLegendWithRealData() {
+  const improvingSessions = allSessions.filter(s => s.trend === 'improving');
+  const decliningSessions = allSessions.filter(s => s.trend === 'declining');
+
+  const improvingSpan = document.querySelector('.legend-item .trend-improving');
+  if (improvingSpan) {
+    if (improvingSessions.length > 0) {
+      const avgImp = improvingSessions.reduce((sum, s) => sum + parseFloat(s.trendValue), 0) / improvingSessions.length;
+      improvingSpan.innerHTML = `📈 ${avgImp.toFixed(1)}% faster`;
+    } else {
+      improvingSpan.innerHTML = `📈 -% faster`;
+    }
+  }
+
+  const decliningSpan = document.querySelector('.legend-item .trend-declining');
+  if (decliningSpan) {
+    if (decliningSessions.length > 0) {
+      const avgDec = decliningSessions.reduce((sum, s) => sum + parseFloat(s.trendValue), 0) / decliningSessions.length;
+      decliningSpan.innerHTML = `📉 ${avgDec.toFixed(1)}% slower`;
+    } else {
+      decliningSpan.innerHTML = `📉 -% slower`;
+    }
+  }
 }
 
 function updateConfigFilter() {

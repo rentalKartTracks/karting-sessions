@@ -1,0 +1,36 @@
+{
+  "session_id": "7aad12f4-6619-4bf6-ae8a-c313d966d54c",
+  "driver": "Ignas M.",
+  "fastest_lap": " 01:30.043",
+  "track": {
+    "name": "Plytinės Kartodromas",
+    "configuration": "Winter",
+    "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "00:40",
+  "video_url": "https://youtu.be/hnAGW5bgR_s",
+  "session_date": "2026-02-08",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "02:56.761"
+    },
+    {
+      "lap": 2,
+      "time": "01:31.142"
+    },
+    {
+      "lap": 3,
+      "time": " 01:30.043"
+    },
+    {
+      "lap": 4,
+      "time": " 01:33.616"
+    },
+    {
+      "lap": 5,
+      "time": "01:30.333"
+    }
+  ]
+}
