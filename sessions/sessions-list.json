@@ -177,6 +177,22 @@
             "laps_count": 13
         },
         {
+            "id": "182f5046-4c4d-4da5-9d53-552a2622506b",
+            "driver": "Vaidas R.",
+            "track": {
+                "name": "Kartlandas Max",
+                "configuration": "Kartlandas Max 2026",
+                "maps_link": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7"
+            },
+            "session_date": "2026-03-15",
+            "kart": "9 Ag",
+            "fastest_lap": "00:38.701",
+            "average_lap": "00:40.396",
+            "fastest_lap_s": 38.701,
+            "average_lap_s": 40.39566666666666,
+            "laps_count": 21
+        },
+        {
             "id": "f5ae1534-60dd-46aa-a549-06ce3c9c0b9e",
             "driver": "Povilas L.",
             "track": {
