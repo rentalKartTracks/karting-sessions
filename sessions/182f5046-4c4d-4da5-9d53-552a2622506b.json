@@ -1,0 +1,100 @@
+{
+  "session_id": "182f5046-4c4d-4da5-9d53-552a2622506b",
+  "driver": "Vaidas R.",
+  "fastest_lap": "00:38.787",
+  "track": {
+    "name": "Kartlandas Max",
+    "configuration": "Kartlandas Max 2026",
+    "maps_link": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "00:44",
+  "video_url": "https://youtu.be/LykY7cTh9EU",
+  "session_date": "2026-03-15",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "00:41.596"
+    },
+    {
+      "lap": 2,
+      "time": "00:39.947"
+    },
+    {
+      "lap": 3,
+      "time": "00:41.755"
+    },
+    {
+      "lap": 4,
+      "time": "00:39.196"
+    },
+    {
+      "lap": 5,
+      "time": "00:39.430"
+    },
+    {
+      "lap": 6,
+      "time": "00:39.451"
+    },
+    {
+      "lap": 7,
+      "time": "00:45.527"
+    },
+    {
+      "lap": 8,
+      "time": "00:44.625"
+    },
+    {
+      "lap": 9,
+      "time": "00:39.118"
+    },
+    {
+      "lap": 10,
+      "time": "00:39.308"
+    },
+    {
+      "lap": 11,
+      "time": "00:42.224"
+    },
+    {
+      "lap": 12,
+      "time": "00:39.362"
+    },
+    {
+      "lap": 13,
+      "time": "00:40.611"
+    },
+    {
+      "lap": 14,
+      "time": "00:39.614"
+    },
+    {
+      "lap": 15,
+      "time": "00:38.989"
+    },
+    {
+      "lap": 16,
+      "time": "00:38.871"
+    },
+    {
+      "lap": 17,
+      "time": "00:38.701"
+    },
+    {
+      "lap": 18,
+      "time": "00:40.148"
+    },
+    {
+      "lap": 19,
+      "time": "00:41.975"
+    },
+    {
+      "lap": 20,
+      "time": "00:39.122"
+    },
+    {
+      "lap": 21,
+      "time": "00:38.739"
+    }
+  ]
+}
