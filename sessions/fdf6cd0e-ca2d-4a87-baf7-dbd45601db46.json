@@ -1,0 +1,52 @@
+{
+  "session_id": "fdf6cd0e-ca2d-4a87-baf7-dbd45601db46",
+  "driver": "Ignas M.",
+  "fastest_lap": "00:59.463",
+  "track": {
+    "name": "Speedway",
+    "configuration": "3 konfiguracija",
+    "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "00:31",
+  "video_url": "https://youtu.be/nOej02Y0PMc",
+  "session_date": "2026-03-29",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "01:12.245"
+    },
+    {
+      "lap": 2,
+      "time": "01:01.199"
+    },
+    {
+      "lap": 3,
+      "time": "01:01.257"
+    },
+    {
+      "lap": 4,
+      "time": "01:03.026"
+    },
+    {
+      "lap": 5,
+      "time": "01:01.854"
+    },
+    {
+      "lap": 6,
+      "time": "01:00.182"
+    },
+    {
+      "lap": 7,
+      "time": "00:59.761"
+    },
+    {
+      "lap": 8,
+      "time": "01:04.485"
+    },
+    {
+      "lap": 9,
+      "time": "00:59.463"
+    }
+  ]
+}
