@@ -417,6 +417,22 @@
             "laps_count": 45
         },
         {
+            "id": "fdf6cd0e-ca2d-4a87-baf7-dbd45601db46",
+            "driver": "Ignas M.",
+            "track": {
+                "name": "Speedway",
+                "configuration": "3 konfiguracija",
+                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+            },
+            "session_date": "2026-03-29",
+            "kart": "9 Ag",
+            "fastest_lap": "00:59.463",
+            "average_lap": "01:02.608",
+            "fastest_lap_s": 59.463,
+            "average_lap_s": 62.608,
+            "laps_count": 9
+        },
+        {
             "id": "a7d61fbf-6d41-4b59-abd0-63454ab69dc0",
             "driver": "Povilas L.",
             "track": {
