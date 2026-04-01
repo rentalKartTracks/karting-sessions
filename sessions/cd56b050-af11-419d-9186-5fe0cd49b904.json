@@ -1,0 +1,52 @@
+{
+  "session_id": "cd56b050-af11-419d-9186-5fe0cd49b904",
+  "driver": "Romualdas P.",
+  "fastest_lap": "01:00.764",
+  "track": {
+    "name": "Speedway",
+    "configuration": "3 konfiguracija",
+    "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "00:25",
+  "video_url": "https://youtu.be/qb_yagUKc10",
+  "session_date": "2026-03-29",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "01:03.455"
+    },
+    {
+      "lap": 2,
+      "time": "01:03.104"
+    },
+    {
+      "lap": 3,
+      "time": "01:02.388"
+    },
+    {
+      "lap": 4,
+      "time": " 01:01.093"
+    },
+    {
+      "lap": 5,
+      "time": "01:01.670"
+    },
+    {
+      "lap": 6,
+      "time": "01:02.685"
+    },
+    {
+      "lap": 7,
+      "time": " 01:01.308"
+    },
+    {
+      "lap": 8,
+      "time": "01:01.320"
+    },
+    {
+      "lap": 9,
+      "time": "01:00.764"
+    }
+  ]
+}
