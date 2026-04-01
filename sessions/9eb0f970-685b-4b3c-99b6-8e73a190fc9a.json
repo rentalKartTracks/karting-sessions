@@ -1,0 +1,52 @@
+{
+  "session_id": "9eb0f970-685b-4b3c-99b6-8e73a190fc9a",
+  "driver": "Povilas L.",
+  "fastest_lap": "00:59.598",
+  "track": {
+    "name": "Speedway",
+    "configuration": "3 konfiguracija",
+    "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "00:28",
+  "video_url": "https://youtu.be/5OUwZAEFaf8",
+  "session_date": "2026-03-29",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "01:04.083"
+    },
+    {
+      "lap": 2,
+      "time": "01:01.780"
+    },
+    {
+      "lap": 3,
+      "time": "01:00.967"
+    },
+    {
+      "lap": 4,
+      "time": "01:00.110"
+    },
+    {
+      "lap": 5,
+      "time": "01:00.668"
+    },
+    {
+      "lap": 6,
+      "time": "01:00.216"
+    },
+    {
+      "lap": 7,
+      "time": "00:59.780"
+    },
+    {
+      "lap": 8,
+      "time": "01:00.240"
+    },
+    {
+      "lap": 9,
+      "time": "00:59.598"
+    }
+  ]
+}
