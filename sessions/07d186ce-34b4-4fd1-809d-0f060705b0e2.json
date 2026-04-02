@@ -1,0 +1,52 @@
+{
+  "session_id": "07d186ce-34b4-4fd1-809d-0f060705b0e2",
+  "driver": "Kęstas Č.",
+  "fastest_lap": "00:59.196",
+  "track": {
+    "name": "Speedway",
+    "configuration": "3 konfiguracija",
+    "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "00:34",
+  "video_url": "",
+  "session_date": "2026-03-29",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "01:05.382"
+    },
+    {
+      "lap": 2,
+      "time": " 01:01.378"
+    },
+    {
+      "lap": 3,
+      "time": "01:01.018"
+    },
+    {
+      "lap": 4,
+      "time": "01:01.151"
+    },
+    {
+      "lap": 5,
+      "time": "01:01.666"
+    },
+    {
+      "lap": 6,
+      "time": "01:01.462"
+    },
+    {
+      "lap": 7,
+      "time": "00:59.616"
+    },
+    {
+      "lap": 8,
+      "time": "00:59.543"
+    },
+    {
+      "lap": 9,
+      "time": "00:59.196"
+    }
+  ]
+}
