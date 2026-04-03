@@ -1,0 +1,52 @@
+{
+  "session_id": "48de1510-3317-4fdd-90a1-39b5243c7b44",
+  "driver": "Justas Ž.",
+  "fastest_lap": "01:00.941",
+  "track": {
+    "name": "Speedway",
+    "configuration": "3 konfiguracija",
+    "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+  },
+  "kart": "13 Ag",
+  "video_start_time": "00:54",
+  "video_url": "https://youtu.be/k8GN1iK6usI",
+  "session_date": "2026-03-29",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "01:06.088"
+    },
+    {
+      "lap": 2,
+      "time": "01:03.582"
+    },
+    {
+      "lap": 3,
+      "time": " 01:03.048"
+    },
+    {
+      "lap": 4,
+      "time": "01:02.310"
+    },
+    {
+      "lap": 5,
+      "time": "01:03.080"
+    },
+    {
+      "lap": 6,
+      "time": " 01:03.766"
+    },
+    {
+      "lap": 7,
+      "time": "01:01.291"
+    },
+    {
+      "lap": 8,
+      "time": "01:00.941"
+    },
+    {
+      "lap": 9,
+      "time": "01:01.126"
+    }
+  ]
+}
