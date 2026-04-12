@@ -12,8 +12,8 @@ TRACKS_OUTPUT_FILE = SESSIONS_DIR / "tracks-list.json"
 STATIC_TRACKS = {
     "Speedway": {
         "id": "speedway",
-        "lat": 54.7663,
-        "lng": 24.5821,
+        "lat": 54.7974894630313,
+        "lng": 24.56925536425135,
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "#4ab8e8",
         "note": "Outdoor circuit · Elektrėnai"
