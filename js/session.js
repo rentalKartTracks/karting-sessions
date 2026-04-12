@@ -2316,6 +2316,10 @@ function initializePeer() {
 * Handle remote command
 */
 function handleRemoteCommand(data) {
+  const players = Object.values(videoPlayers);
+  const mainPlayer = players.length > 0 ? players[0] : null;
+  const comparePlayer = players.length > 1 ? players[1] : null;
+
   switch (data.type) {
     case 'NEXT_LAP':
       nextLap();
@@ -2396,6 +2400,9 @@ function startStatsSync() {
 */
 function sendStatsToRemotes() {
   if (connections.length === 0) return;
+
+  const players = Object.values(videoPlayers);
+  const mainPlayer = players.length > 0 ? players[0] : null;
 
   const currentLap = currentLapMarker.lapNumber;
   const currentLapData = currentSessionData?.laps[currentLap - 1];
