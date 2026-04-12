@@ -7,6 +7,58 @@ from typing import Optional, Dict, List, Any
 # --- Configuration ---
 SESSIONS_DIR = Path("sessions")
 OUTPUT_FILE = SESSIONS_DIR / "sessions-list.json"
+TRACKS_OUTPUT_FILE = SESSIONS_DIR / "tracks-list.json"
+
+STATIC_TRACKS = {
+    "Speedway": {
+        "id": "speedway",
+        "lat": 54.6770,
+        "lng": 25.2800,
+        "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
+        "color": "#4ab8e8",
+        "note": "Outdoor circuit · Vilnius area"
+    },
+    "Plytinės Kartodromas": {
+        "id": "plytines",
+        "lat": 54.6650,
+        "lng": 25.2100,
+        "mapsLink": "https://maps.app.goo.gl/AmF51NGm8bysceeN9",
+        "color": "#a84ae8",
+        "note": "Professional karting circuit"
+    },
+    "Vilko Kartodromas": {
+        "id": "vilko",
+        "lat": 54.7200,
+        "lng": 25.3200,
+        "mapsLink": "https://maps.app.goo.gl/9erykKE9f58EYZ9TA",
+        "color": "#e84a4a",
+        "note": "Technical indoor circuit"
+    },
+    "Kartlandas Max": {
+        "id": "kartlandas_max",
+        "lat": 54.6548,
+        "lng": 25.2135,
+        "mapsLink": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7",
+        "color": "#e87a4a",
+        "note": "Technical indoor circuit"
+    },
+    "Kartlandas Kaunas": {
+        "id": "kartlandas",
+        "lat": 54.8985,
+        "lng": 23.9036,
+        "mapsLink": "https://maps.app.goo.gl/7Q9SbwwcmwyNqUH56",
+        "color": "#e8c84a",
+        "note": "High-speed Kaunas circuit"
+    },
+    "GOKARTING CENTER KRAKOW": {
+        "id": "gokarting_center_krakow",
+        "lat": 50.0205,
+        "lng": 20.0384,
+        "mapsLink": "https://maps.app.goo.gl/fbAaPCaugyx4FDjYA",
+        "color": "#4a4ae8",
+        "note": "Major Polish venue"
+    }
+}
 
 # --- Helper Functions ---
 
@@ -118,19 +170,68 @@ def generate_sessions_list() -> None:
         return
 
     all_sessions_summary: List[Dict[str, Any]] = []
+    tracks_aggregation: Dict[str, Any] = {}
     
     # Use pathlib to glob json files
     try:
         for filepath in SESSIONS_DIR.glob("*.json"):
-            if filepath.name == "sessions-list.json":
+            if filepath.name in ["sessions-list.json", "tracks-list.json"]:
                 continue
                 
             summary = process_session_file(filepath)
             if summary:
                 all_sessions_summary.append(summary)
+
+                # --- Track Aggregation ---
+                track_data = summary.get("track")
+                if not track_data:
+                    continue
+                    
+                track_name = track_data.get("name") if isinstance(track_data, dict) else str(track_data)
+                
+                if track_name not in tracks_aggregation:
+                    static_info = STATIC_TRACKS.get(track_name, {})
+                    tracks_aggregation[track_name] = {
+                        "id": static_info.get("id", track_name.lower().replace(" ", "_")),
+                        "name": track_name,
+                        "lat": static_info.get("lat", 0),
+                        "lng": static_info.get("lng", 0),
+                        "mapsLink": static_info.get("mapsLink", track_data.get("maps_link") if isinstance(track_data, dict) else ""),
+                        "color": static_info.get("color", "#aaaaaa"),
+                        "note": static_info.get("note", "Generated circuit"),
+                        "configs": set(),
+                        "sessions": 0,
+                        "bestLap": None,
+                        "bestLap_s": float('inf'),
+                        "bestDriver": None
+                    }
+                
+                t_agg = tracks_aggregation[track_name]
+                t_agg["sessions"] += 1
+                
+                config_name = track_data.get("configuration") if isinstance(track_data, dict) else None
+                if config_name:
+                    t_agg["configs"].add(config_name)
+                    
+                fastest_lap_s = summary.get("fastest_lap_s")
+                if fastest_lap_s is not None and fastest_lap_s < t_agg["bestLap_s"]:
+                    t_agg["bestLap_s"] = fastest_lap_s
+                    t_agg["bestLap"] = summary.get("fastest_lap")
+                    t_agg["bestDriver"] = summary.get("driver")
+
     except Exception as e:
         print(f"Error scanning directory: {e}")
         return
+
+    # Convert sets to lists and remove internal sorting keys
+    final_tracks_list = []
+    for t_val in tracks_aggregation.values():
+        t_val["configs"] = list(t_val["configs"])
+        if t_val["bestLap_s"] == float('inf'):
+            t_val["bestLap_s"] = None
+        else:
+            del t_val["bestLap_s"]
+        final_tracks_list.append(t_val)
 
     final_output = {
         "sessions": all_sessions_summary
@@ -140,6 +241,11 @@ def generate_sessions_list() -> None:
         with OUTPUT_FILE.open('w', encoding='utf-8') as outfile:
             json.dump(final_output, outfile, indent=4, ensure_ascii=False)
         print(f"SUCCESS: Created {OUTPUT_FILE} with {len(all_sessions_summary)} sessions.")
+        
+        with TRACKS_OUTPUT_FILE.open('w', encoding='utf-8') as outfile:
+            json.dump(final_tracks_list, outfile, indent=4, ensure_ascii=False)
+        print(f"SUCCESS: Created {TRACKS_OUTPUT_FILE} with {len(final_tracks_list)} tracks.")
+        
     except OSError as e:
         print(f"Error writing output file: {e}")
 

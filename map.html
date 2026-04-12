@@ -428,60 +428,7 @@
 <script>
 window.addEventListener('DOMContentLoaded', () => {
 
-const tracks = [
-  {
-    id: 'speedway',
-    name: 'Speedway',
-    lat: 54.6770,
-    lng: 25.2800,
-    configs: ['Winter 2026', 'Rain'],
-    sessions: 6,
-    bestLap: '00:44.327',
-    bestDriver: 'Povilas L.',
-    mapsLink: 'https://maps.app.goo.gl/oYmMNt3N2fXehzVf9',
-    color: '#4ab8e8',
-    note: 'Outdoor circuit · Vilnius area',
-  },
-  {
-    id: 'plytines',
-    name: 'Plytinės Kartodromas',
-    lat: 54.6650,
-    lng: 25.2100,
-    configs: ['Summer', 'Winter'],
-    sessions: 5,
-    bestLap: '00:44.030',
-    bestDriver: 'Povilas L.',
-    mapsLink: 'https://maps.app.goo.gl/AmF51NGm8bysceeN9',
-    color: '#a84ae8',
-    note: 'Professional karting circuit',
-  },
-  {
-    id: 'vilko',
-    name: 'Vilko Kartodromas',
-    lat: 54.7200,
-    lng: 25.3200,
-    configs: ['wolf 2025'],
-    sessions: 2,
-    bestLap: '00:18.050',
-    bestDriver: 'Kęstas Č.',
-    mapsLink: 'https://maps.app.goo.gl/9erykKE9f58EYZ9TA',
-    color: '#e84a4a',
-    note: 'Technical indoor circuit',
-  },
-  {
-    id: 'kartlandas',
-    name: 'Kartlandas Kaunas',
-    lat: 54.8985,
-    lng: 23.9036,
-    configs: ['2025'],
-    sessions: 3,
-    bestLap: '00:25.906',
-    bestDriver: 'Povilas L.',
-    mapsLink: 'https://maps.app.goo.gl/7Q9SbwwcmwyNqUH56',
-    color: '#e8c84a',
-    note: 'High-speed Kaunas circuit',
-  },
-];
+let tracks = [];
 
 // Init map centered on Lithuania
 const map = L.map('map', {
@@ -509,80 +456,97 @@ const popupContent = (t) => `
         <span class="popup-stat-label">Sessions</span>
       </div>
       <div>
-        <span class="popup-stat-val">${t.configs.length}</span>
+        <span class="popup-stat-val">${t.configs ? t.configs.length : 0}</span>
         <span class="popup-stat-label">Configs</span>
       </div>
       <div>
-        <span class="popup-stat-val" style="font-size:18px">${t.bestLap}</span>
+        <span class="popup-stat-val" style="font-size:18px">${t.bestLap || '--:--'}</span>
         <span class="popup-stat-label">Track Record</span>
       </div>
     </div>
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:#666677;margin-bottom:4px;">By ${t.bestDriver}</div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:#666677;margin-bottom:4px;">By ${t.bestDriver || 'N/A'}</div>
     <a href="${t.mapsLink}" target="_blank" class="popup-link">Open in Google Maps ↗</a>
   </div>
 `;
-
-tracks.forEach(t => {
-  const icon = L.divIcon({
-    html: `<div style="
-      width:36px;height:36px;
-      background:${t.color};
-      border-radius:50% 50% 50% 0;
-      transform:rotate(-45deg);
-      display:flex;align-items:center;justify-content:center;
-      box-shadow:0 4px 20px rgba(0,0,0,.5), 0 0 20px ${t.color}44;
-    "><div style="width:12px;height:12px;border-radius:50%;background:rgba(0,0,0,.5);"></div></div>`,
-    className: '',
-    iconSize: [36, 36],
-    iconAnchor: [18, 36],
-    popupAnchor: [0, -38],
-  });
-
-  const marker = L.marker([t.lat, t.lng], { icon })
-    .addTo(map)
-    .bindPopup(popupContent(t), { maxWidth: 260 });
-
-  markers[t.id] = marker;
-});
 
 // Sidebar
 const list = document.getElementById('tracks-list');
 let activeId = null;
 
-tracks.forEach(t => {
-  const card = document.createElement('div');
-  card.className = 'track-card';
-  card.id = `card-${t.id}`;
-  card.innerHTML = `
-    <div class="track-card-header">
-      <div class="track-dot" style="background:${t.color};box-shadow:0 0 8px ${t.color}66;"></div>
-      <div class="track-name">${t.name}</div>
-      <div class="track-sessions">${t.sessions} sessions</div>
-    </div>
-    <div class="track-meta">
-      <div class="track-meta-item">📍 ${t.note}</div>
-    </div>
-    <div class="track-configs">
-      ${t.configs.map(c => `<span class="config-tag">${c}</span>`).join('')}
-    </div>
-    <div class="track-best">
-      <div class="track-best-label">Track Record</div>
-      <div class="track-best-time">${t.bestLap}</div>
-    </div>
-  `;
+// Fetch auto-generated map data
+fetch('sessions/tracks-list.json')
+  .then(res => res.json())
+  .then(data => {
+    tracks = data;
+    
+    // Update sidebar count
+    const countEl = document.querySelector('.sidebar-count');
+    if (countEl) countEl.innerHTML = `${tracks.length} <span>tracks</span>`;
 
-  card.addEventListener('click', () => {
-    // Reset all
-    document.querySelectorAll('.track-card').forEach(c => c.classList.remove('active'));
-    card.classList.add('active');
-    activeId = t.id;
+    tracks.forEach(t => {
+      // Don't draw tracks missing GPS coordinates
+      if (t.lat === 0 && t.lng === 0) return;
 
-    map.setView([t.lat, t.lng], 13, { animate: true });
-    markers[t.id].openPopup();
+      const icon = L.divIcon({
+        html: \`<div style="
+          width:36px;height:36px;
+          background:\${t.color};
+          border-radius:50% 50% 50% 0;
+          transform:rotate(-45deg);
+          display:flex;align-items:center;justify-content:center;
+          box-shadow:0 4px 20px rgba(0,0,0,.5), 0 0 20px \${t.color}44;
+        "><div style="width:12px;height:12px;border-radius:50%;background:rgba(0,0,0,.5);"></div></div>\`,
+        className: '',
+        iconSize: [36, 36],
+        iconAnchor: [18, 36],
+        popupAnchor: [0, -38],
+      });
+
+      const marker = L.marker([t.lat, t.lng], { icon })
+        .addTo(map)
+        .bindPopup(popupContent(t), { maxWidth: 260 });
+
+      markers[t.id] = marker;
+
+      // Create card
+      const card = document.createElement('div');
+      card.className = 'track-card';
+      card.id = \`card-\${t.id}\`;
+      card.innerHTML = \`
+        <div class="track-card-header">
+          <div class="track-dot" style="background:\${t.color};box-shadow:0 0 8px \${t.color}66;"></div>
+          <div class="track-name">\${t.name}</div>
+          <div class="track-sessions">\${t.sessions} sessions</div>
+        </div>
+        <div class="track-meta">
+          <div class="track-meta-item">📍 \${t.note}</div>
+        </div>
+        <div class="track-configs">
+          \${(t.configs || []).map(c => \`<span class="config-tag">\${c}</span>\`).join('')}
+        </div>
+        <div class="track-best">
+          <div class="track-best-label">Track Record</div>
+          <div class="track-best-time">\${t.bestLap || '--:--'}</div>
+        </div>
+      \`;
+
+      card.addEventListener('click', () => {
+        // Reset all
+        document.querySelectorAll('.track-card').forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+        activeId = t.id;
+
+        map.setView([t.lat, t.lng], 13, { animate: true });
+        markers[t.id].openPopup();
+      });
+
+      list.appendChild(card);
+    });
+  })
+  .catch(err => {
+    console.error("Error loading map data:", err);
+    list.innerHTML = '<div style="padding: 20px; color: var(--red);">Failed to load map data.</div>';
   });
-
-  list.appendChild(card);
-});
 
 }); // End of DOMContentLoaded
 </script>
