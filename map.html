@@ -488,14 +488,14 @@ fetch('sessions/tracks-list.json')
       if (t.lat === 0 && t.lng === 0) return;
 
       const icon = L.divIcon({
-        html: \`<div style="
+        html: `<div style="
           width:36px;height:36px;
-          background:\${t.color};
+          background:${t.color};
           border-radius:50% 50% 50% 0;
           transform:rotate(-45deg);
           display:flex;align-items:center;justify-content:center;
-          box-shadow:0 4px 20px rgba(0,0,0,.5), 0 0 20px \${t.color}44;
-        "><div style="width:12px;height:12px;border-radius:50%;background:rgba(0,0,0,.5);"></div></div>\`,
+          box-shadow:0 4px 20px rgba(0,0,0,.5), 0 0 20px ${t.color}44;
+        "><div style="width:12px;height:12px;border-radius:50%;background:rgba(0,0,0,.5);"></div></div>`,
         className: '',
         iconSize: [36, 36],
         iconAnchor: [18, 36],
@@ -511,24 +511,24 @@ fetch('sessions/tracks-list.json')
       // Create card
       const card = document.createElement('div');
       card.className = 'track-card';
-      card.id = \`card-\${t.id}\`;
-      card.innerHTML = \`
+      card.id = `card-${t.id}`;
+      card.innerHTML = `
         <div class="track-card-header">
-          <div class="track-dot" style="background:\${t.color};box-shadow:0 0 8px \${t.color}66;"></div>
-          <div class="track-name">\${t.name}</div>
-          <div class="track-sessions">\${t.sessions} sessions</div>
+          <div class="track-dot" style="background:${t.color};box-shadow:0 0 8px ${t.color}66;"></div>
+          <div class="track-name">${t.name}</div>
+          <div class="track-sessions">${t.sessions} sessions</div>
         </div>
         <div class="track-meta">
-          <div class="track-meta-item">📍 \${t.note}</div>
+          <div class="track-meta-item">📍 ${t.note}</div>
         </div>
         <div class="track-configs">
-          \${(t.configs || []).map(c => \`<span class="config-tag">\${c}</span>\`).join('')}
+          ${(t.configs || []).map(c => `<span class="config-tag">${c}</span>`).join('')}
         </div>
         <div class="track-best">
           <div class="track-best-label">Track Record</div>
-          <div class="track-best-time">\${t.bestLap || '--:--'}</div>
+          <div class="track-best-time">${t.bestLap || '--:--'}</div>
         </div>
-      \`;
+      `;
 
       card.addEventListener('click', () => {
         // Reset all
