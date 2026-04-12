@@ -2,8 +2,8 @@
     {
         "id": "kartlandas_max",
         "name": "Kartlandas Max",
-        "lat": 54.6548,
-        "lng": 25.2135,
+        "lat": 54.65066751187685,
+        "lng": 25.219812673115587,
         "mapsLink": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7",
         "color": "#e87a4a",
         "note": "Technical indoor circuit",
@@ -23,8 +23,8 @@
         "color": "#4ab8e8",
         "note": "Outdoor circuit · Elektrėnai",
         "configs": [
-            "3 konfiguracija",
             "Winter 2026",
+            "3 konfiguracija",
             "Rain"
         ],
         "sessions": 14,
@@ -34,8 +34,8 @@
     {
         "id": "plytines",
         "name": "Plytinės Kartodromas",
-        "lat": 54.665,
-        "lng": 25.21,
+        "lat": 54.724858099752225,
+        "lng": 25.349237826984915,
         "mapsLink": "https://maps.app.goo.gl/AmF51NGm8bysceeN9",
         "color": "#a84ae8",
         "note": "Professional karting circuit",
@@ -50,8 +50,8 @@
     {
         "id": "vilko",
         "name": "Vilko Kartodromas",
-        "lat": 54.72,
-        "lng": 25.32,
+        "lat": 54.88831631453673,
+        "lng": 23.922075279103808,
         "mapsLink": "https://maps.app.goo.gl/9erykKE9f58EYZ9TA",
         "color": "#e84a4a",
         "note": "Technical indoor circuit",
@@ -65,8 +65,8 @@
     {
         "id": "kartlandas",
         "name": "Kartlandas Kaunas",
-        "lat": 54.8985,
-        "lng": 23.9036,
+        "lat": 54.91482127742085,
+        "lng": 23.84298728162076,
         "mapsLink": "https://maps.app.goo.gl/7Q9SbwwcmwyNqUH56",
         "color": "#e8c84a",
         "note": "High-speed Kaunas circuit",
@@ -80,8 +80,8 @@
     {
         "id": "gokarting_center_krakow",
         "name": "GOKARTING CENTER KRAKOW",
-        "lat": 50.0205,
-        "lng": 20.0384,
+        "lat": 50.02719152362129,
+        "lng": 20.050499873015085,
         "mapsLink": "https://maps.app.goo.gl/fbAaPCaugyx4FDjYA",
         "color": "#4a4ae8",
         "note": "Major Polish venue",
