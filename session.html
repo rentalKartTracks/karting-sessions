@@ -5,16 +5,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self' https://www.youtube.com https://s.ytimg.com https://www.google.com https://static.doubleclick.net https://unpkg.com https://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com https://www.google.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com; font-src 'self'; connect-src 'self' https://www.google.com https://www.youtube.com https://static.doubleclick.net wss: https:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';">
+    content="default-src 'self'; script-src 'self' https://www.youtube.com https://s.ytimg.com https://www.google.com https://static.doubleclick.net https://unpkg.com https://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com https://www.google.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://www.google.com https://www.youtube.com https://static.doubleclick.net wss: https:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';">
   <meta http-equiv="X-XSS-Protection" content="1; mode=block">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <title>Karting Session Viewer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://www.youtube.com">
   <link rel="preconnect" href="https://s.ytimg.com">
-  <link rel="preconnect" href="https://www.google.com">
   <link rel="preconnect" href="https://unpkg.com">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-  <link rel="stylesheet" href="css/common.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/session.css">
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -22,95 +23,95 @@
 
 <body>
   <div class="container">
-    <!-- Visible Error Handler -->
-    <div id="global-error-display"
-      style="display:none; position:fixed; top:0; left:0; right:0; background:#f44336; color:white; padding:20px; z-index:9999; text-align:center; font-family:sans-serif; font-weight:bold;">
+
+    <!-- ── ERROR BANNER ── -->
+    <div id="global-error-display" class="global-error-banner" style="display:none;">
       <span id="global-error-text"></span>
-      <button onclick="this.parentElement.style.display='none'"
-        style="float:right; background:none; border:none; color:white; font-size:20px; cursor:pointer;">&times;</button>
+      <button onclick="this.parentElement.style.display='none'" class="global-error-close">✕</button>
     </div>
     <script>
-      window.onerror = function (msg, url, line, col, error) {
-        var display = document.getElementById('global-error-display');
-        var text = document.getElementById('global-error-text');
-        if (display && text) {
-          display.style.display = 'block';
-          text.textContent = 'Msg: ' + msg + ' | Line: ' + line;
-        }
+      window.onerror = function (msg, url, line) {
+        var d = document.getElementById('global-error-display');
+        var t = document.getElementById('global-error-text');
+        if (d && t) { d.style.display = 'flex'; t.textContent = msg + ' — line ' + line; }
         return false;
       };
-      window.addEventListener('unhandledrejection', function (event) {
-        var display = document.getElementById('global-error-display');
-        var text = document.getElementById('global-error-text');
-        if (display && text) {
-          display.style.display = 'block';
-          text.textContent = 'Unhandled Promise Rejection: ' + event.reason;
-        }
+      window.addEventListener('unhandledrejection', function (e) {
+        var d = document.getElementById('global-error-display');
+        var t = document.getElementById('global-error-text');
+        if (d && t) { d.style.display = 'flex'; t.textContent = 'Unhandled: ' + e.reason; }
       });
     </script>
 
-    <!-- Header -->
+    <!-- ── HEADER ── -->
     <header class="header">
       <div class="header-content">
+
+        <!-- Left: driver name + meta -->
         <div class="header-info">
-          <h1 class="driver-name" id="driver">Loading...</h1>
+          <div class="header-eyebrow">🏁 Session Telemetry</div>
+          <h1 class="driver-name" id="driver">Loading…</h1>
           <div class="session-meta">
             <span class="session-meta-item" id="session-date">
               <span>📅</span>
-              <span>Loading...</span>
+              <span>Loading…</span>
             </span>
             <span class="session-meta-item" id="session-track">
-              <span>🏁</span>
-              <span>Loading...</span>
+              <span>🏎️</span>
+              <span>Loading…</span>
             </span>
-            <span class="session-meta-item pc-only" id="session-uuid-container" style="display: none;">
+            <span class="session-meta-item pc-only" id="session-uuid-container" style="display:none;">
               <span>🆔</span>
               <span id="session-uuid-display" class="uuid-text"></span>
-              <button class="copy-btn" id="copy-uuid-btn" onclick="copySessionUUID()" title="Copy Session ID">
-                📋
-              </button>
+              <button class="copy-btn" id="copy-uuid-btn" onclick="copySessionUUID()" title="Copy Session ID">📋</button>
             </span>
           </div>
         </div>
+
+        <!-- Right: nav + mode switcher -->
         <div class="header-actions">
-          <a href="index.html" class="btn btn-primary btn-icon" title="Return to home" aria-label="Return to home">
-            <span>🏠</span>
-          </a>
+          <!-- Site navigation pills -->
+          <nav class="header-nav" aria-label="Site navigation">
+            <a href="hub.html"          class="nav-pill">HUB</a>
+            <a href="sessions.html"     class="nav-pill">SESSIONS</a>
+            <a href="map.html"          class="nav-pill">MAP</a>
+            <a href="championship.html" class="nav-pill">CHAMPIONSHIP</a>
+          </nav>
+
+          <!-- PC / TV mode toggle -->
           <div class="mode-switcher" role="group" aria-label="View mode switcher">
-            <button class="mode-btn active" id="pc-mode-btn" onclick="switchMode('pc')" title="PC Mode"
-              aria-label="Switch to PC Mode">
+            <button class="mode-btn active" id="pc-mode-btn" onclick="switchMode('pc')" title="PC Mode" aria-label="Switch to PC Mode">
               <span>💻</span>
               <span class="mode-text">PC</span>
             </button>
-            <button class="mode-btn" id="tv-mode-btn" onclick="switchMode('tv')" title="TV Mode"
-              aria-label="Switch to TV Mode">
+            <button class="mode-btn" id="tv-mode-btn" onclick="switchMode('tv')" title="TV Mode" aria-label="Switch to TV Mode">
               <span>📺</span>
               <span class="mode-text">TV</span>
             </button>
           </div>
         </div>
+
       </div>
     </header>
 
-    <!-- Stats Grid -->
+    <!-- ── STATS GRID ── -->
     <section class="stats-grid" id="stats-grid" aria-label="Session statistics">
-      <!-- Stats will be populated by JavaScript -->
+      <!-- Populated by JavaScript -->
     </section>
 
-    <!-- Video Section -->
+    <!-- ── VIDEO SECTION ── -->
     <section class="video-section" id="video-section" style="display:none;">
-      <!-- Video Layout Toolbar -->
-      <div class="video-toolbar" id="video-toolbar" style="display: none;">
+
+      <!-- Layout & driver toolbar -->
+      <div class="video-toolbar" id="video-toolbar" style="display:none;">
         <div class="layout-selector">
-          <button class="layout-btn active" data-layout="single" onclick="changeVideoLayout('single')"
-            title="Single View">
+          <button class="layout-btn active" data-layout="single" onclick="changeVideoLayout('single')" title="Single View">
             <span class="layout-icon layout-icon-single"></span>
           </button>
           <button class="layout-btn" data-layout="dual" onclick="changeVideoLayout('dual')" title="Dual View">
             <span class="layout-icon layout-icon-dual"></span>
           </button>
-          <button class="layout-btn" data-layout="main-side" onclick="changeVideoLayout('main-side')"
-            title="Main + Side">
+          <button class="layout-btn" data-layout="main-side" onclick="changeVideoLayout('main-side')" title="Main + Side">
             <span class="layout-icon layout-icon-main-side"></span>
           </button>
           <button class="layout-btn" data-layout="grid" onclick="changeVideoLayout('grid')" title="Grid View">
@@ -125,11 +126,12 @@
         </div>
       </div>
 
+      <!-- Video grid -->
       <div class="video-grid" id="video-grid">
-        <!-- Videos will be dynamically injected here -->
+        <!-- Dynamically injected -->
       </div>
 
-      <!-- Unified Playback Controls -->
+      <!-- Playback Controls -->
       <div class="playback-controls">
         <div class="controls-wrapper">
           <div class="controls-top">
@@ -137,8 +139,7 @@
               <span>⏮️</span>
               <span>Previous</span>
             </button>
-            <button class="control-btn play-btn" id="play-pause-btn" onclick="togglePlayPause()"
-              aria-label="Play/Pause">
+            <button class="control-btn play-btn" id="play-pause-btn" onclick="togglePlayPause()" aria-label="Play/Pause">
               <span id="play-icon">▶️</span>
               <span id="play-text">Play</span>
             </button>
@@ -147,12 +148,11 @@
               <span>Next</span>
             </button>
           </div>
-
         </div>
       </div>
     </section>
 
-    <!-- QR Panel (Phone Remote) -->
+    <!-- ── QR PANEL (Phone Remote) ── -->
     <div class="qr-panel" id="qr-panel">
       <div class="qr-header">
         <h3>
@@ -164,17 +164,15 @@
         </button>
       </div>
       <div class="qr-content">
-        <p class="qr-instructions">
-          Scan this QR code with your phone to control video playback remotely.
-        </p>
+        <p class="qr-instructions">Scan this QR code with your phone to control video playback remotely.</p>
         <div class="qr-code-wrapper">
           <div id="qr-code"></div>
-          <div class="remote-url" id="remote-url">Generating...</div>
+          <div class="remote-url" id="remote-url">Generating…</div>
         </div>
         <div class="connection-stats">
           <div class="connection-stat">
             <div class="connection-stat-label">Status</div>
-            <div class="connection-stat-value" id="peer-status">Initializing...</div>
+            <div class="connection-stat-value" id="peer-status">Initializing…</div>
           </div>
           <div class="connection-stat">
             <div class="connection-stat-label">Connected</div>
@@ -184,7 +182,7 @@
       </div>
     </div>
 
-    <!-- TV Mode Controls -->
+    <!-- ── TV MODE CONTROLS ── -->
     <section class="tv-controls-section chart-container">
       <div class="chart-title">🎮 Remote Controls</div>
       <div class="tv-controls-grid">
@@ -203,7 +201,7 @@
       </div>
     </section>
 
-    <!-- Chart Container -->
+    <!-- ── LAP TIME CHART ── -->
     <section class="chart-container detailed-chart" aria-label="Lap time progression">
       <div class="chart-title">
         <span>📈 Lap Time Progression</span>
@@ -216,7 +214,7 @@
       </div>
     </section>
 
-    <!-- Comparison Section (PC Mode Only) -->
+    <!-- ── COMPARE SESSIONS (PC only) ── -->
     <section class="comparison-section" id="comparison-section">
       <div class="comparison-header">
         <div class="chart-title">
@@ -228,7 +226,7 @@
         </div>
         <div class="comparison-input-wrapper">
           <input type="text" id="compare-id-input" class="comparison-input"
-            placeholder="Search session ID or driver name..." aria-label="Search sessions to compare"
+            placeholder="Search session ID or driver name…" aria-label="Search sessions to compare"
             autocomplete="off">
           <div id="autocomplete-results" class="autocomplete-list" style="display:none;" role="listbox">
             <!-- Autocomplete items populated by JavaScript -->
@@ -250,27 +248,19 @@
       </div>
     </section>
 
-    <!-- Footer (Social Links) -->
+    <!-- ── FOOTER ── -->
     <footer class="footer">
       <strong>Follow us:</strong>
-      <a href="https://www.instagram.com/helmet.cam.heroes/" target="_blank" rel="noopener noreferrer">
-        Instagram
-      </a>
-      <a href="https://www.facebook.com/Helmet.Cam.Heroes" target="_blank" rel="noopener noreferrer">
-        Facebook
-      </a>
-      <a href="https://www.youtube.com/@HelmetCamHeroes" target="_blank" rel="noopener noreferrer">
-        YouTube
-      </a>
+      <a href="https://www.instagram.com/helmet.cam.heroes/" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href="https://www.facebook.com/Helmet.Cam.Heroes" target="_blank" rel="noopener noreferrer">Facebook</a>
+      <a href="https://www.youtube.com/@HelmetCamHeroes" target="_blank" rel="noopener noreferrer">YouTube</a>
     </footer>
-  </div>
+
+  </div><!-- /container -->
 
   <!-- Tooltip -->
-  <div id="chart-tooltip" class="tooltip" role="tooltip" aria-hidden="true">
-    <!-- Tooltip content populated by JavaScript -->
-  </div>
+  <div id="chart-tooltip" class="tooltip" role="tooltip" aria-hidden="true"></div>
 
-  <!-- Scripts will continue in Part 4 -->
   <script src="js/session.js"></script>
 </body>
 

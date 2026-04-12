@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>YouTube Schedule Calendar</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      width: 860px; min-height: 600px; margin: 0; padding: 0;
+      font-family: Arial, sans-serif; background: #fff;
+    }
+    header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 16px; background: #f9f9f9; border-bottom: 1px solid #ddd;
+    }
+    h1 { margin: 0; font-size: 20px; color: #111; }
+    .header-right { display: flex; align-items: center; gap: 6px; }
+    button {
+      padding: 6px 12px; background: #f0f0f0;
+      border: 1px solid #ccc; border-radius: 4px;
+      cursor: pointer; font-size: 13px;
+    }
+    button:hover { background: #e0e0e0; }
+    .btn-red    { background:#cc0000; color:#fff; border-color:#aa0000; font-weight:bold; }
+    .btn-red:hover { background:#aa0000; }
+    .btn-blue   { background:#1a73e8; color:#fff; border-color:#1557b0; }
+    .btn-blue:hover { background:#1557b0; }
+    .btn-debug  { background:#555; color:#fff; border-color:#333; font-size:12px; padding:5px 10px; }
+    .btn-debug:hover { background:#333; }
+
+    .toolbar {
+      display:flex; align-items:center; gap:8px;
+      padding:8px 16px; background:#f9f9f9;
+      border-bottom:1px solid #ddd; flex-wrap:wrap;
+    }
+    .toolbar-section { display:flex; align-items:center; gap:6px; }
+    .toolbar-label { font-size:12px; color:#555; font-weight:bold; white-space:nowrap; }
+    .toolbar-sep { width:1px; height:24px; background:#ddd; margin:0 4px; }
+    label { font-size:12px; display:flex; align-items:center; gap:4px; cursor:pointer; white-space:nowrap; }
+
+    .legend {
+      display:flex; gap:10px; flex-wrap:wrap;
+      padding:6px 16px; background:#fafafa; border-bottom:1px solid #eee;
+    }
+    .legend-item { display:flex; align-items:center; gap:4px; font-size:11px; }
+    .legend-swatch { width:14px; height:14px; border-radius:2px; flex-shrink:0; }
+
+    .calendar {
+      display:grid; grid-template-columns:repeat(7, 1fr);
+      gap:4px; padding:8px;
+    }
+    .day-header {
+      font-weight:bold; text-align:center; padding:6px 4px;
+      background:#f0f0f0; font-size:12px; border-radius:3px;
+    }
+    .day-cell {
+      min-height:110px; border:1px solid #e0e0e0; padding:4px;
+      border-radius:4px; display:flex; flex-direction:column;
+      overflow:hidden; background:#fff;
+    }
+    .day-cell.current-day { border:2px solid #cc0000; }
+    .day-cell.has-videos  { background:#fafafa; }
+    .day-number { font-weight:bold; font-size:12px; margin-bottom:3px; color:#333; }
+    .day-cell.current-day .day-number { color:#cc0000; }
+    .video-list { flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:2px; }
+    .video-item {
+      font-size:11px; padding:2px 4px; cursor:pointer;
+      border-left:3px solid; border-radius:2px; word-break:break-word;
+    }
+    .type-badge {
+      display:inline-block; font-size:9px; font-weight:bold;
+      padding:0 3px; border-radius:2px; margin-right:2px;
+      vertical-align:middle; letter-spacing:0.3px;
+    }
+    .badge-short { background:#7c4dff; color:#fff; }
+    .badge-video { background:#0288d1; color:#fff; }
+    .status-scheduled { background:#e3f2fd; border-left-color:#2196F3; }
+    .status-private   { background:#ffebee; border-left-color:#f44336; }
+    .status-public    { background:#e8f5e9; border-left-color:#4CAF50; }
+    .status-unlisted  { background:#fff8e1; border-left-color:#FFC107; }
+    .status-unknown   { background:#f3e5f5; border-left-color:#9C27B0; }
+    .video-title { color:#333; text-decoration:none; display:block; }
+    .video-title:hover { text-decoration:underline; }
+
+    #status-bar {
+      padding:5px 16px; font-size:11px; color:#555;
+      background:#f9f9f9; border-top:1px solid #eee;
+    }
+    #debug-panel {
+      display:none; margin:8px 16px; padding:10px;
+      background:#1e1e1e; color:#a5d6a7;
+      font-family:monospace; font-size:11px;
+      border-radius:4px; white-space:pre-wrap;
+      max-height:200px; overflow-y:auto;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="current-month">Loading…</h1>
+    <div class="header-right">
+      <button id="prev-month">&#8249;</button>
+      <button id="next-month">&#8250;</button>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="toolbar-section">
+      <span class="toolbar-label">Go to:</span>
+      <button class="btn-red"  id="btn-open-videos">🎬 Videos page</button>
+      <button class="btn-red"  id="btn-open-shorts">📱 Shorts page</button>
+      <button class="btn-blue" id="btn-refresh">🧹 Clear Data</button>
+    </div>
+    <div class="toolbar-sep"></div>
+    <div class="toolbar-section">
+      <span class="toolbar-label">Show:</span>
+      <label><input type="checkbox" id="filter-type-video" checked> Videos</label>
+      <label><input type="checkbox" id="filter-type-short" checked> Shorts</label>
+    </div>
+    <div class="toolbar-sep"></div>
+    <div class="toolbar-section">
+      <span class="toolbar-label">Status:</span>
+      <label><input type="checkbox" id="filter-scheduled" checked> Scheduled</label>
+      <label><input type="checkbox" id="filter-private"   checked> Private</label>
+      <label><input type="checkbox" id="filter-public"    checked> Public</label>
+      <label><input type="checkbox" id="filter-unlisted"  checked> Unlisted</label>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch" style="background:#e3f2fd;border-left:3px solid #2196F3;"></div>Scheduled</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#ffebee;border-left:3px solid #f44336;"></div>Private</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#e8f5e9;border-left:3px solid #4CAF50;"></div>Public</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#fff8e1;border-left:3px solid #FFC107;"></div>Unlisted</div>
+    <div class="legend-item" style="margin-left:12px;"><span class="type-badge badge-video">VID</span> Video</div>
+    <div class="legend-item"><span class="type-badge badge-short">SHT</span> Short</div>
+  </div>
+
+  <div id="debug-panel"></div>
+  <div class="calendar" id="calendar-grid"></div>
+  <div id="status-bar">Loading…</div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

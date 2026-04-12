@@ -2526,7 +2526,7 @@ function showErrorPage(message) {
       <h1 style="font-size: 3em; margin-bottom: 20px;">⚠️</h1>
       <h2 style="margin-bottom: 10px; color: var(--error);">Error Loading Session</h2>
       <p style="color: var(--text-secondary); margin-bottom: 30px;">${message}</p>
-      <a href="index.html" class="btn btn-primary" style="
+      <a href="sessions.html" class="btn btn-primary" style="
               display: inline-block;
               padding: 12px 24px;
               text-decoration: none;

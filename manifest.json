@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Creator Calendar",
+  "version": "4.0",
+  "description": "Display YouTube scheduled videos and shorts in a calendar view",
+  "permissions": ["tabs", "storage", "scripting"],
+  "host_permissions": ["https://studio.youtube.com/*"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "images/icon16.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://studio.youtube.com/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "icons": {
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "popup.html",
+        "popup.js"
+      ],
+      "matches": [
+        "https://studio.youtube.com/*"
+      ]
+    }
+  ]
+}

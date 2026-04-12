@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Helmet Cam Heroes — Racing Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold:    #e8c84a;
+    --red:     #e84a4a;
+    --bg:      #07070d;
+    --surface: #0f0f1a;
+    --line:    #1c1c2a;
+    --dim:     #333344;
+    --text:    #ddddf0;
+    --muted:   #666677;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Barlow', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  /* Animated grid lines */
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(232,200,74,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(232,200,74,.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridDrift 20s linear infinite;
+  }
+
+  @keyframes gridDrift {
+    0%   { background-position: 0 0; }
+    100% { background-position: 60px 60px; }
+  }
+
+  /* Radial glow */
+  .hero-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(ellipse, rgba(232,200,74,.07) 0%, transparent 70%);
+    pointer-events: none;
+    animation: glowPulse 4s ease-in-out infinite;
+  }
+
+  @keyframes glowPulse {
+    0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+    50%       { opacity: 1;   transform: translate(-50%, -50%) scale(1.15); }
+  }
+
+  /* Speed lines */
+  .speed-lines {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .speed-line {
+    position: absolute;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(232,200,74,.15), transparent);
+    animation: speedLine 3s ease-in-out infinite;
+    opacity: 0;
+  }
+
+  .speed-line:nth-child(1)  { top: 20%; width: 60%; left: -60%; animation-delay: 0s;    animation-duration: 2.8s; }
+  .speed-line:nth-child(2)  { top: 35%; width: 45%; left: -45%; animation-delay: 0.7s;  animation-duration: 3.2s; }
+  .speed-line:nth-child(3)  { top: 50%; width: 70%; left: -70%; animation-delay: 1.4s;  animation-duration: 2.5s; }
+  .speed-line:nth-child(4)  { top: 65%; width: 50%; left: -50%; animation-delay: 0.3s;  animation-duration: 3.5s; }
+  .speed-line:nth-child(5)  { top: 80%; width: 40%; left: -40%; animation-delay: 1.0s;  animation-duration: 2.9s; }
+
+  @keyframes speedLine {
+    0%   { left: -70%; opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { left: 110%; opacity: 0; }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp .8s ease .2s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(64px, 14vw, 160px);
+    letter-spacing: 6px;
+    line-height: 0.9;
+    color: #fff;
+    text-shadow:
+      0 0 80px rgba(232,200,74,.2),
+      0 0 160px rgba(232,200,74,.1);
+    opacity: 0;
+    animation: fadeUp .8s ease .4s forwards;
+  }
+
+  .hero-title span {
+    color: var(--gold);
+    display: block;
+  }
+
+  .hero-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(14px, 2.5vw, 18px);
+    font-weight: 300;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 20px;
+    margin-bottom: 60px;
+    opacity: 0;
+    animation: fadeUp .8s ease .6s forwards;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── NAV PILLS ── */
+  .header-nav {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    z-index: 100;
+    opacity: 0;
+    animation: fadeUp .8s ease .8s forwards;
+  }
+  .nav-pill {
+    background: rgba(255,255,255,.06); backdrop-filter: blur(8px);
+    color: var(--muted); text-decoration: none; padding: 5px 12px;
+    border-radius: 4px; font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; transition: all .2s;
+    border: 1px solid rgba(255,255,255,.08); white-space: nowrap;
+  }
+  .nav-pill:hover {
+    background: rgba(232,200,74,.15); border-color: rgba(232,200,74,.4);
+    color: var(--gold); transform: translateY(-2px);
+  }
+
+  /* ── CHEVRON DOWN ── */
+  .scroll-cue {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    z-index: 1;
+    animation: fadeIn 1s ease 1.2s both;
+  }
+
+  .scroll-cue span {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .chevron {
+    width: 18px;
+    height: 18px;
+    border-right: 1.5px solid var(--muted);
+    border-bottom: 1.5px solid var(--muted);
+    transform: rotate(45deg);
+    animation: bounce 2s ease infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: rotate(45deg) translateY(0); }
+    50%       { transform: rotate(45deg) translateY(5px); }
+  }
+
+  /* ── NAV CARDS SECTION ── */
+  .cards-section {
+    position: relative;
+    z-index: 1;
+    padding: 0 20px 100px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 48px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: center;
+  }
+
+  .section-label::before,
+  .section-label::after {
+    content: '';
+    flex: 1;
+    max-width: 120px;
+    height: 1px;
+    background: var(--line);
+  }
+
+  /* ── MAIN 3-CARD GRID ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2px;
+  }
+
+  .card {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    aspect-ratio: 3/4;
+    background: var(--surface);
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--card-gradient);
+    opacity: 0.85;
+    transition: opacity .4s ease;
+    z-index: 1;
+  }
+
+  .card:hover::before { opacity: 0.65; }
+
+  .card-bg {
+    position: absolute;
+    inset: 0;
+    background: var(--card-bg);
+    transform: scale(1);
+    transition: transform .6s ease;
+  }
+
+  .card:hover .card-bg {
+    transform: scale(1.08);
+  }
+
+  /* Card 1 — Map */
+  .card-map {
+    --card-bg: linear-gradient(160deg, #0d1f0d 0%, #071a0f 50%, #050d08 100%);
+    --card-gradient: linear-gradient(180deg, rgba(7,7,13,0) 0%, rgba(7,7,13,.95) 100%);
+  }
+
+  .card-map .card-bg {
+    background:
+      linear-gradient(160deg, #0a180a 0%, #050d08 100%);
+  }
+
+  /* Animated map dots on card 1 */
+  .map-dots {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .map-dot {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(74,232,160,.6);
+    box-shadow: 0 0 12px rgba(74,232,160,.4);
+    animation: dotPulse 2.5s ease-in-out infinite;
+  }
+
+  .map-dot::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1px solid rgba(74,232,160,.3);
+    animation: dotRing 2.5s ease-in-out infinite;
+  }
+
+  @keyframes dotPulse {
+    0%,100% { transform: scale(1); opacity: .8; }
+    50%      { transform: scale(1.3); opacity: 1; }
+  }
+
+  @keyframes dotRing {
+    0%   { transform: scale(1); opacity: .6; }
+    100% { transform: scale(2.5); opacity: 0; }
+  }
+
+  /* Pseudo-map lines */
+  .map-lines-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.12;
+    z-index: 0;
+  }
+
+  /* Card 2 — Championship */
+  .card-champ {
+    --card-bg: linear-gradient(160deg, #1a120a 0%, #0d0905 100%);
+    --card-gradient: linear-gradient(180deg, rgba(7,7,13,0) 0%, rgba(7,7,13,.95) 100%);
+  }
+
+  /* Card 3 — Telemetry */
+  .card-telemetry {
+    --card-bg: linear-gradient(160deg, #0a0d1a 0%, #05070d 100%);
+    --card-gradient: linear-gradient(180deg, rgba(7,7,13,0) 0%, rgba(7,7,13,.95) 100%);
+  }
+
+  /* Animated chart bars */
+  .chart-bars {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 6px;
+    padding: 0 20px 80px;
+    z-index: 0;
+  }
+
+  .chart-bar {
+    flex: 1;
+    background: linear-gradient(0deg, rgba(74,184,232,.5), rgba(74,184,232,.1));
+    border-radius: 2px 2px 0 0;
+    animation: barGrow 2s ease-in-out infinite alternate;
+    opacity: 0.6;
+  }
+
+  .chart-bar:nth-child(1)  { height: 30%; animation-delay: 0s; }
+  .chart-bar:nth-child(2)  { height: 55%; animation-delay: .1s; }
+  .chart-bar:nth-child(3)  { height: 42%; animation-delay: .2s; }
+  .chart-bar:nth-child(4)  { height: 70%; animation-delay: .3s; }
+  .chart-bar:nth-child(5)  { height: 38%; animation-delay: .4s; }
+  .chart-bar:nth-child(6)  { height: 60%; animation-delay: .5s; }
+  .chart-bar:nth-child(7)  { height: 48%; animation-delay: .6s; }
+  .chart-bar:nth-child(8)  { height: 75%; animation-delay: .7s; }
+  .chart-bar:nth-child(9)  { height: 32%; animation-delay: .8s; }
+  .chart-bar:nth-child(10) { height: 58%; animation-delay: .9s; }
+
+  @keyframes barGrow {
+    0%   { transform: scaleY(0.6); }
+    100% { transform: scaleY(1); }
+  }
+
+  /* Trophy icon for card 2 */
+  .trophy-visual {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 0;
+    font-size: 100px;
+    opacity: 0.07;
+    animation: trophyFloat 4s ease-in-out infinite;
+  }
+
+  @keyframes trophyFloat {
+    0%,100% { transform: translateY(0) scale(1); }
+    50%      { transform: translateY(-12px) scale(1.05); }
+  }
+
+  /* Card Content */
+  .card-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 28px 24px;
+    z-index: 2;
+    transition: transform .4s ease;
+  }
+
+  .card:hover .card-content { transform: translateY(-6px); }
+
+  .card-tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--card-accent, var(--gold));
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-tag::before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 1px;
+    background: var(--card-accent, var(--gold));
+  }
+
+  .card-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(28px, 3.5vw, 42px);
+    letter-spacing: 2px;
+    line-height: 1;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+
+  .card-desc {
+    font-family: 'Barlow', sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    color: rgba(255,255,255,.55);
+    line-height: 1.6;
+    letter-spacing: 0.3px;
+    margin-bottom: 20px;
+  }
+
+  .card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--card-accent, var(--gold));
+    transition: gap .3s ease;
+  }
+
+  .card:hover .card-cta { gap: 16px; }
+
+  .card-cta-arrow {
+    width: 24px;
+    height: 1px;
+    background: var(--card-accent, var(--gold));
+    position: relative;
+    flex-shrink: 0;
+    transition: width .3s ease;
+  }
+
+  .card:hover .card-cta-arrow { width: 32px; }
+
+  .card-cta-arrow::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+    width: 6px;
+    height: 6px;
+    border-right: 1.5px solid var(--card-accent, var(--gold));
+    border-top: 1.5px solid var(--card-accent, var(--gold));
+  }
+
+  /* Card accent colors */
+  .card-map     { --card-accent: #4ae8a0; }
+  .card-champ   { --card-accent: var(--gold); }
+  .card-telemetry { --card-accent: #4ab8e8; }
+
+  /* Top-right corner label */
+  .card-num {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 64px;
+    line-height: 1;
+    color: rgba(255,255,255,.04);
+    z-index: 2;
+    letter-spacing: -2px;
+    transition: color .4s ease;
+    user-select: none;
+  }
+
+  .card:hover .card-num { color: rgba(255,255,255,.07); }
+
+  /* Hover border flash */
+  .card-border {
+    position: absolute;
+    inset: 0;
+    border: 1px solid transparent;
+    z-index: 3;
+    pointer-events: none;
+    transition: border-color .4s ease;
+  }
+
+  .card:hover .card-border {
+    border-color: rgba(255,255,255,.08);
+  }
+
+  /* ── STATS STRIP ── */
+  .stats-strip {
+    position: relative;
+    z-index: 1;
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 24px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    overflow: hidden;
+    margin-bottom: 0;
+  }
+
+  .stat-item {
+    flex: 1;
+    text-align: center;
+    padding: 0 24px;
+    border-right: 1px solid var(--line);
+  }
+
+  .stat-item:last-child { border-right: none; }
+
+  .stat-val {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(28px, 4vw, 48px);
+    letter-spacing: 2px;
+    color: var(--gold);
+    line-height: 1;
+    display: block;
+  }
+
+  .stat-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 4px;
+    display: block;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    position: relative;
+    z-index: 1;
+    padding: 40px;
+    text-align: center;
+    border-top: 1px solid var(--line);
+  }
+
+  .footer-logo {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 20px;
+    letter-spacing: 4px;
+    color: rgba(255,255,255,.15);
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+  }
+
+  .footer-link {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color .2s ease;
+  }
+
+  .footer-link:hover { color: var(--text); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .header-nav { top: 16px; right: 16px; justify-content: center; width: calc(100% - 32px); }
+    .nav-pill { font-size: 9px; padding: 4px 8px; }
+    
+    .cards-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .card {
+      aspect-ratio: 16/9;
+    }
+
+    .stats-strip {
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 24px 20px;
+    }
+
+    .stat-item {
+      border-right: none;
+      flex: 0 0 45%;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .card { aspect-ratio: 4/3; }
+    .stat-item { flex: 0 0 100%; }
+    .hero-title { letter-spacing: 2px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="speed-lines">
+    <div class="speed-line"></div>
+    <div class="speed-line"></div>
+    <div class="speed-line"></div>
+    <div class="speed-line"></div>
+    <div class="speed-line"></div>
+  </div>
+
+  <nav class="header-nav">
+    <a href="sessions.html"     class="nav-pill">SESSIONS</a>
+    <a href="map.html"          class="nav-pill">MAP</a>
+    <a href="championship.html" class="nav-pill">CHAMPIONSHIP</a>
+  </nav>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">🏁 Helmet Cam Heroes Racing</div>
+    <h1 class="hero-title">
+      Kart
+      <span>Racing</span>
+      Hub
+    </h1>
+    <p class="hero-sub">Tracks · Championships · Telemetry</p>
+  </div>
+
+  <div class="scroll-cue">
+    <span>Explore</span>
+    <div class="chevron"></div>
+  </div>
+</section>
+
+<!-- ── STATS STRIP ── -->
+<div class="stats-strip">
+  <div class="stat-item">
+    <span class="stat-val">4</span>
+    <span class="stat-label">Tracks Driven</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-val">8</span>
+    <span class="stat-label">Drivers</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-val">18</span>
+    <span class="stat-label">Sessions</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-val">3</span>
+    <span class="stat-label">Championship Rounds</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-val">00:18</span>
+    <span class="stat-label">Track Record</span>
+  </div>
+</div>
+
+<!-- ── CARDS ── -->
+<section class="cards-section" style="padding-top: 80px;">
+  <div class="section-label">Choose Your Section</div>
+
+  <div class="cards-grid">
+
+    <!-- CARD 1: MAP -->
+    <a href="map.html" class="card card-map">
+      <div class="card-bg"></div>
+
+      <!-- Pseudo map lines -->
+      <svg class="map-lines-svg" viewBox="0 0 300 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 80 Q80 40 160 100 T280 80" stroke="#4ae8a0" stroke-width="1.5" fill="none"/>
+        <path d="M10 200 Q120 160 200 220 T290 200" stroke="#4ae8a0" stroke-width="1" fill="none"/>
+        <path d="M40 320 Q100 280 180 310 T270 290" stroke="#4ae8a0" stroke-width="0.8" fill="none"/>
+        <path d="M80 50 L80 350" stroke="#4ae8a0" stroke-width="0.5" opacity="0.4"/>
+        <path d="M160 30 L160 370" stroke="#4ae8a0" stroke-width="0.5" opacity="0.4"/>
+        <path d="M240 50 L240 340" stroke="#4ae8a0" stroke-width="0.5" opacity="0.4"/>
+        <circle cx="80" cy="100" r="4" fill="#4ae8a0" opacity="0.8"/>
+        <circle cx="80" cy="100" r="10" stroke="#4ae8a0" stroke-width="0.8" opacity="0.3"/>
+        <circle cx="200" cy="220" r="4" fill="#4ae8a0" opacity="0.8"/>
+        <circle cx="200" cy="220" r="10" stroke="#4ae8a0" stroke-width="0.8" opacity="0.3"/>
+        <circle cx="160" cy="310" r="4" fill="#4ae8a0" opacity="0.8"/>
+        <circle cx="160" cy="310" r="10" stroke="#4ae8a0" stroke-width="0.8" opacity="0.3"/>
+        <circle cx="240" cy="80" r="3" fill="#e8c84a" opacity="0.7"/>
+        <circle cx="240" cy="80" r="8" stroke="#e8c84a" stroke-width="0.6" opacity="0.3"/>
+      </svg>
+
+      <!-- Animated glowing dots -->
+      <div class="map-dots">
+        <div class="map-dot" style="width:10px;height:10px;top:25%;left:27%;animation-delay:0s;"></div>
+        <div class="map-dot" style="width:8px;height:8px;top:55%;left:67%;animation-delay:.9s;background:rgba(232,200,74,.7);box-shadow:0 0 12px rgba(232,200,74,.4);"></div>
+        <div class="map-dot" style="width:9px;height:9px;top:77%;left:53%;animation-delay:1.6s;"></div>
+        <div class="map-dot" style="width:7px;height:7px;top:20%;left:80%;animation-delay:.4s;"></div>
+      </div>
+
+      <span class="card-num">01</span>
+      <div class="card-border"></div>
+
+      <div class="card-content">
+        <div class="card-tag">Locations</div>
+        <h2 class="card-title">Tracks<br>Map</h2>
+        <p class="card-desc">All driven circuits plotted on an interactive map. Explore every venue, distance, and configuration.</p>
+        <div class="card-cta">
+          View Map
+          <span class="card-cta-arrow"></span>
+        </div>
+      </div>
+    </a>
+
+    <!-- CARD 2: CHAMPIONSHIP -->
+    <a href="championship.html" class="card card-champ">
+      <div class="card-bg"></div>
+
+      <div class="trophy-visual">🏆</div>
+
+      <!-- Animated shimmer bars representing podium -->
+      <div style="position:absolute;inset:0;z-index:0;display:flex;align-items:flex-end;justify-content:center;gap:8px;padding:0 30px 80px;">
+        <div style="flex:1;height:50%;background:linear-gradient(0deg,rgba(192,192,192,.25),rgba(192,192,192,.05));border-radius:2px 2px 0 0;animation:barGrow 2.2s ease-in-out infinite alternate;animation-delay:.3s;"></div>
+        <div style="flex:1;height:75%;background:linear-gradient(0deg,rgba(232,200,74,.3),rgba(232,200,74,.05));border-radius:2px 2px 0 0;animation:barGrow 2.2s ease-in-out infinite alternate;"></div>
+        <div style="flex:1;height:38%;background:linear-gradient(0deg,rgba(205,127,50,.2),rgba(205,127,50,.05));border-radius:2px 2px 0 0;animation:barGrow 2.2s ease-in-out infinite alternate;animation-delay:.6s;"></div>
+      </div>
+
+      <span class="card-num">02</span>
+      <div class="card-border"></div>
+
+      <div class="card-content">
+        <div class="card-tag">2026 Season</div>
+        <h2 class="card-title">Spring<br>Challenge</h2>
+        <p class="card-desc">Full championship standings across 3 venues. Best lap scoring, gaps, intervals, and pace ratings.</p>
+        <div class="card-cta">
+          View Standings
+          <span class="card-cta-arrow"></span>
+        </div>
+      </div>
+    </a>
+
+    <!-- CARD 3: TELEMETRY -->
+    <a href="sessions.html" class="card card-telemetry">
+      <div class="card-bg"></div>
+
+      <!-- Animated chart bars -->
+      <div class="chart-bars">
+        <div class="chart-bar"></div>
+        <div class="chart-bar"></div>
+        <div class="chart-bar"></div>
+        <div class="chart-bar"></div>
+        <div class="chart-bar"></div>
+        <div class="chart-bar"></div>
+        <div class="chart-bar"></div>
+        <div class="chart-bar"></div>
+        <div class="chart-bar"></div>
+        <div class="chart-bar"></div>
+      </div>
+
+      <!-- Animated line chart -->
+      <svg style="position:absolute;inset:0;width:100%;height:60%;top:10%;opacity:0.2;z-index:0;" viewBox="0 0 300 150" preserveAspectRatio="none">
+        <polyline points="0,100 30,80 60,90 90,50 120,70 150,40 180,55 210,30 240,45 270,20 300,35"
+          fill="none" stroke="#4ab8e8" stroke-width="2">
+          <animate attributeName="stroke-dashoffset" from="600" to="0" dur="3s" fill="freeze"/>
+        </polyline>
+        <polyline points="0,130 30,110 60,120 90,90 120,100 150,75 180,85 210,65 240,75 270,50 300,60"
+          fill="none" stroke="#e8c84a" stroke-width="1.5" opacity="0.6">
+          <animate attributeName="stroke-dashoffset" from="600" to="0" dur="3s" fill="freeze" begin="0.5s"/>
+        </polyline>
+      </svg>
+
+      <span class="card-num">03</span>
+      <div class="card-border"></div>
+
+      <div class="card-content">
+        <div class="card-tag">Performance</div>
+        <h2 class="card-title">Karting<br>Telemetry</h2>
+        <p class="card-desc">Full session dashboard with lap-by-lap analysis, personal bests, trend tracking, and video replay.</p>
+        <div class="card-cta">
+          Open Dashboard
+          <span class="card-cta-arrow"></span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <span class="footer-logo">Helmet Cam Heroes</span>
+  <div class="footer-links">
+    <a href="https://www.instagram.com/helmet.cam.heroes/" target="_blank" class="footer-link">Instagram</a>
+    <a href="https://www.facebook.com/Helmet.Cam.Heroes" target="_blank" class="footer-link">Facebook</a>
+    <a href="https://www.youtube.com/@HelmetCamHeroes" target="_blank" class="footer-link">YouTube</a>
+    <a href="manage.html" class="footer-link">+ Add Session</a>
+  </div>
+</footer>
+
+</body>
+</html>
