@@ -709,7 +709,6 @@
       <button class="year-btn" data-year="2025">2025</button>
       <button class="year-btn active" data-year="2026">2026</button>
       <button class="year-btn" data-year="2027">2027</button>
-      <!-- Add each new year here: <button class="year-btn" data-year="2028">2028</button> -->
     </div>
 
     <div class="topbar-tag" id="topbar-tag">2026</div>
@@ -720,6 +719,7 @@
       <a href="map.html" class="nav-pill">MAP</a>
     </nav>
   </div>
+
   <!-- ═══════════════ 2025 PANEL ═══════════════ -->
   <div class="season-panel" id="panel-2025">
     <div class="champ-wrap">
@@ -747,28 +747,30 @@
       <div class="table-scroll">
         <table>
           <colgroup>
-            <col style="width:44px">
-            <col>
-            <col style="width:104px">
-            <col style="width:104px">
-            <col style="width:104px">
-            <col style="width:110px">
-            <col style="width:96px">
-            <col style="width:84px">
-            <col style="width:96px">
+            <col style="width:44px"> <!-- # -->
+            <col> <!-- Driver -->
+            <col style="width:104px"> <!-- Kartlandas Max -->
+            <col style="width:104px"> <!-- Kartlandas Vilnius -->
+            <col style="width:104px"> <!-- Speedway -->
+            <col style="width:104px"> <!-- Plytinė -->
+            <col style="width:110px"> <!-- Total -->
+            <col style="width:96px"> <!-- Gap -->
+            <col style="width:84px"> <!-- Interval -->
+            <col style="width:96px"> <!-- Pace -->
           </colgroup>
           <thead>
             <tr class="thead-group">
               <th colspan="2"></th>
               <th class="th-ses-label" style="color:var(--gold);border-color:#e8c84a44">Kartlandas Max</th>
-              <th class="th-ses-label" style="color:var(--gold);border-color:#e87a2044">Kartlandas Vilnius</th>
-              <th class="th-ses-label" style="color:var(--blue);border-color:hsla(147, 77%, 60%, 0.133)">Speedway</th>
+              <th class="th-ses-label" style="color:var(--green);border-color:#4ae8a044">Kartlandas Vilnius</th>
+              <th class="th-ses-label" style="color:var(--blue);border-color:#4ab8e822">Speedway</th>
               <th class="th-ses-label" style="color:var(--purple);border-color:#a84ae822">Plytinė</th>
               <th class="th-results-label" colspan="4">Championship</th>
             </tr>
             <tr class="thead-sub">
               <th class="ac">#</th>
               <th class="al">Driver</th>
+              <th class="ac">Best Lap</th>
               <th class="ac">Best Lap</th>
               <th class="ac">Best Lap</th>
               <th class="ac">Best Lap</th>
@@ -782,8 +784,7 @@
         </table>
       </div>
       <div class="champ-footer">Kartlandas Max &nbsp;·&nbsp; Kartlandas Vilnius &nbsp;·&nbsp; Speedway &nbsp;·&nbsp;
-        Plytinė &nbsp;·&nbsp; Best lap sum
-        &nbsp;·&nbsp; Lowest total wins</div>
+        Plytinė &nbsp;·&nbsp; Best lap sum &nbsp;·&nbsp; Lowest total wins</div>
     </div>
   </div>
 
@@ -849,7 +850,6 @@
     </div>
   </div>
 
-
   <!-- ═══════════════ 2027 PANEL ═══════════════ -->
   <div class="season-panel" id="panel-2027">
     <div class="champ-wrap">
@@ -872,25 +872,6 @@
       </div>
     </div>
   </div>
-
-  <!--
-  ═══════════════════════════════════════════════════════
-  HOW TO ADD A NEW YEAR (e.g. 2028):
-
-  1. Add a button in the year-switcher:
-       <button class="year-btn" data-year="2028">2028</button>
-
-  2. Copy the 2027 panel block, change id to "panel-2028"
-     and fill in the real status-bar / table / tbody id.
-
-  3. In the <script> below, copy the sessions2026 block,
-     rename to sessions2028 / drivers2028 / tbody-2028,
-     and call: buildSeason(sessions2028, drivers2028, 'tbody-2028');
-
-  That's it — no other changes needed.
-  ═══════════════════════════════════════════════════════
--->
-
 
   <script>
     // ── HELPERS ──────────────────────────────────────────────────
@@ -981,6 +962,7 @@
         tbody.appendChild(tr);
       });
     }
+
     // 2025
     buildSeason(
       [
@@ -1036,11 +1018,8 @@
       ['Kęstas Č.', 'Povilas L.', 'Ignas M.', 'Ignas I.', 'Vaidas R.', 'Julius B.', 'Justas Ž.'],
       'tbody-2025'
     );
-    // ════════════════════════════════════════════════════════════════
-    //  2026 DATA
-    //  • Set done: true and fill times{} after each round completes.
-    //  • Omit a driver's name from times{} to mark them DNS.
-    // ════════════════════════════════════════════════════════════════
+
+    // 2026
     buildSeason(
       [
         {
@@ -1086,21 +1065,6 @@
       ['Kęstas Č.', 'Povilas L.', 'Ignas M.', 'Ignas I.', 'Vaidas R.', 'Romualdas P.', 'Justas Ž.', 'Ernest S.'],
       'tbody-2026'
     );
-
-    // ════════════════════════════════════════════════════════════════
-    //  2027 DATA — uncomment and fill when the season starts
-    //
-    // buildSeason(
-    //   [
-    //     { done: false, label: 'Venue 1', times: {} },
-    //     { done: false, label: 'Venue 2', times: {} },
-    //     { done: false, label: 'Venue 3', times: {} },
-    //   ],
-    //   ['Driver A', 'Driver B', ...],
-    //   'tbody-2027'
-    // );
-    // ════════════════════════════════════════════════════════════════
-
 
     // ── YEAR SWITCHER ─────────────────────────────────────────────
     document.querySelectorAll('.year-btn').forEach(btn => {
