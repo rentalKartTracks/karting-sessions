@@ -20,40 +20,40 @@ STATIC_TRACKS = {
     },
     "Plytinės Kartodromas": {
         "id": "plytines",
-        "lat": 54.6650,
-        "lng": 25.2100,
+        "lat": 54.724858099752225,
+        "lng": 25.349237826984915,
         "mapsLink": "https://maps.app.goo.gl/AmF51NGm8bysceeN9",
         "color": "#a84ae8",
         "note": "Professional karting circuit"
     },
     "Vilko Kartodromas": {
         "id": "vilko",
-        "lat": 54.7200,
-        "lng": 25.3200,
+        "lat": 54.88831631453673,
+        "lng": 23.922075279103808,
         "mapsLink": "https://maps.app.goo.gl/9erykKE9f58EYZ9TA",
         "color": "#e84a4a",
         "note": "Technical indoor circuit"
     },
     "Kartlandas Max": {
         "id": "kartlandas_max",
-        "lat": 54.6548,
-        "lng": 25.2135,
+        "lat": 54.65066751187685,
+        "lng": 25.219812673115587,
         "mapsLink": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7",
         "color": "#e87a4a",
         "note": "Technical indoor circuit"
     },
     "Kartlandas Kaunas": {
         "id": "kartlandas",
-        "lat": 54.8985,
-        "lng": 23.9036,
+        "lat": 54.91482127742085,
+        "lng": 23.84298728162076,
         "mapsLink": "https://maps.app.goo.gl/7Q9SbwwcmwyNqUH56",
         "color": "#e8c84a",
         "note": "High-speed Kaunas circuit"
     },
     "GOKARTING CENTER KRAKOW": {
         "id": "gokarting_center_krakow",
-        "lat": 50.0205,
-        "lng": 20.0384,
+        "lat": 50.02719152362129,
+        "lng": 20.050499873015085,
         "mapsLink": "https://maps.app.goo.gl/fbAaPCaugyx4FDjYA",
         "color": "#4a4ae8",
         "note": "Major Polish venue"
