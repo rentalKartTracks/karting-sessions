@@ -17,15 +17,15 @@
     {
         "id": "speedway",
         "name": "Speedway",
-        "lat": 54.7663,
-        "lng": 24.5821,
+        "lat": 54.7974894630313,
+        "lng": 24.56925536425135,
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "#4ab8e8",
         "note": "Outdoor circuit · Elektrėnai",
         "configs": [
             "3 konfiguracija",
-            "Rain",
-            "Winter 2026"
+            "Winter 2026",
+            "Rain"
         ],
         "sessions": 14,
         "bestLap": "00:44.327",
@@ -40,8 +40,8 @@
         "color": "#a84ae8",
         "note": "Professional karting circuit",
         "configs": [
-            "Winter",
-            "Summer"
+            "Summer",
+            "Winter"
         ],
         "sessions": 11,
         "bestLap": "00:44.030",
