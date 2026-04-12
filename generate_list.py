@@ -12,11 +12,11 @@ TRACKS_OUTPUT_FILE = SESSIONS_DIR / "tracks-list.json"
 STATIC_TRACKS = {
     "Speedway": {
         "id": "speedway",
-        "lat": 54.6770,
-        "lng": 25.2800,
+        "lat": 54.7663,
+        "lng": 24.5821,
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "#4ab8e8",
-        "note": "Outdoor circuit · Vilnius area"
+        "note": "Outdoor circuit · Elektrėnai"
     },
     "Plytinės Kartodromas": {
         "id": "plytines",
