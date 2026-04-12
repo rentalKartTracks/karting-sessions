@@ -9,6 +9,7 @@
   <meta http-equiv="X-XSS-Protection" content="1; mode=block">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <title>Karting Session Viewer</title>
+  <meta name="description" content="View individual karting session telemetry, lap times, compare video feeds, and dive into driver performance.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://www.youtube.com">
@@ -17,8 +18,8 @@
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/session.css">
-  <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
 </head>
 
 <body>
@@ -72,7 +73,7 @@
         <div class="header-actions">
           <!-- Site navigation pills -->
           <nav class="header-nav" aria-label="Site navigation">
-            <a href="hub.html"          class="nav-pill">HUB</a>
+            <a href="index.html"          class="nav-pill">HUB</a>
             <a href="sessions.html"     class="nav-pill">SESSIONS</a>
             <a href="map.html"          class="nav-pill">MAP</a>
             <a href="championship.html" class="nav-pill">CHAMPIONSHIP</a>
