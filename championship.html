@@ -1,289 +1,879 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spring Challenge Championship — Helmet Cam Heroes</title>
-<meta name="description" content="View full championship standings, best lap scoring, gaps, intervals, and pace ratings across all our racing venues.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,400&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --gold:   #e8c84a;
-    --silver: #b8b8c8;
-    --bronze: #cd7f32;
-    --red:    #e84a4a;
-    --green:  #4ae8a0;
-    --blue:   #4ab8e8;
-    --purple: #a84ae8;
-    --bg:     #08080e;
-    --surface: #0f0f1a;
-    --line:   #1c1c2a;
-    --dim:    #444455;
-    --muted:  #666677;
-    --text:   #e0e0ee;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); font-family: 'Barlow', sans-serif; color: var(--text); min-height: 100vh; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spring Challenge Championship — Helmet Cam Heroes</title>
+  <meta name="description"
+    content="View full championship standings, best lap scoring, gaps, intervals, and pace ratings across all our racing venues.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,400&family=Barlow:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --gold: #e8c84a;
+      --silver: #b8b8c8;
+      --bronze: #cd7f32;
+      --red: #e84a4a;
+      --green: #4ae8a0;
+      --blue: #4ab8e8;
+      --purple: #a84ae8;
+      --bg: #08080e;
+      --surface: #0f0f1a;
+      --line: #1c1c2a;
+      --dim: #444455;
+      --muted: #666677;
+      --text: #e0e0ee;
+    }
 
-  /* TOPBAR */
-  .topbar {
-    background: var(--surface); border-bottom: 1px solid var(--line);
-    padding: 0 24px; height: 56px;
-    display: flex; align-items: center; gap: 16px;
-    position: sticky; top: 0; z-index: 100;
-  }
-  .back-btn {
-    display: flex; align-items: center; gap: 6px; text-decoration: none;
-    color: var(--muted); font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
-    transition: color .2s; flex-shrink: 0;
-  }
-  .back-btn:hover { color: var(--text); }
-  .topbar-title { font-family: 'Bebas Neue', cursive; font-size: 22px; letter-spacing: 3px; color: #fff; flex: 1; }
-  .topbar-tag {
-    font-family: 'Barlow Condensed', sans-serif; font-size: 9px; font-weight: 700;
-    letter-spacing: 3px; text-transform: uppercase; color: var(--gold);
-    background: rgba(232,200,74,.1); border: 1px solid rgba(232,200,74,.2);
-    padding: 4px 10px; border-radius: 3px; flex-shrink: 0;
-  }
-  .header-nav { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
-  .nav-pill {
-    background: rgba(255,255,255,.06); backdrop-filter: blur(8px);
-    color: var(--muted); text-decoration: none; padding: 5px 12px;
-    border-radius: 6px; font-family: 'Barlow Condensed', sans-serif;
-    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
-    text-transform: uppercase; transition: all .2s;
-    border: 1px solid var(--line); white-space: nowrap;
-  }
-  .nav-pill:hover {
-    background: rgba(232,200,74,.15); border-color: rgba(232,200,74,.4);
-    color: var(--gold); transform: translateY(-2px);
-  }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  /* YEAR SWITCHER */
-  .year-switcher {
-    display: flex; align-items: center; gap: 2px;
-    background: rgba(255,255,255,.04); border: 1px solid var(--line);
-    border-radius: 6px; padding: 3px; flex-shrink: 0;
-  }
-  .year-btn {
-    font-family: 'Bebas Neue', cursive; font-size: 16px; letter-spacing: 2px;
-    color: var(--muted); background: none; border: none; cursor: pointer;
-    padding: 4px 12px; border-radius: 4px; transition: all .2s ease; white-space: nowrap;
-  }
-  .year-btn:hover { color: var(--text); background: rgba(255,255,255,.06); }
-  .year-btn.active { color: var(--bg); background: var(--gold); }
+    body {
+      background: var(--bg);
+      font-family: 'Barlow', sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+    }
 
-  /* PANELS */
-  .season-panel { display: none; }
-  .season-panel.active { display: block; }
-  .champ-wrap { padding: 28px 14px 40px; }
+    /* TOPBAR */
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
 
-  /* HEADER */
-  .header { text-align: center; margin-bottom: 26px; }
-  .season-pill {
-    display: inline-block; background: var(--gold); color: #111;
-    font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
-    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
-    padding: 3px 12px; border-radius: 20px; margin-bottom: 10px;
-  }
-  h2.champ-title {
-    font-family: 'Bebas Neue', cursive; font-size: clamp(30px, 7vw, 56px);
-    letter-spacing: 4px; color: #fff; line-height: 1;
-    text-shadow: 0 0 60px rgba(232,200,74,.25);
-  }
-  .subtitle {
-    font-family: 'Barlow Condensed', sans-serif; font-size: 12px;
-    letter-spacing: 2.5px; color: var(--dim); text-transform: uppercase; margin-top: 7px;
-  }
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: var(--muted);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: color .2s;
+      flex-shrink: 0;
+    }
 
-  /* UPCOMING */
-  .upcoming-placeholder { text-align: center; padding: 80px 20px; max-width: 480px; margin: 0 auto; }
-  .upcoming-icon { font-size: 64px; margin-bottom: 20px; opacity: 0.6; display: block; }
-  .upcoming-title { font-family: 'Bebas Neue', cursive; font-size: 36px; letter-spacing: 4px; color: #fff; margin-bottom: 12px; }
-  .upcoming-sub { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; line-height: 1.7; }
-  .upcoming-badge {
-    display: inline-flex; align-items: center; gap: 8px; margin-top: 24px;
-    padding: 8px 20px; border-radius: 4px;
-    font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700;
-    letter-spacing: 2.5px; text-transform: uppercase;
-    background: rgba(232,200,74,.1); border: 1px solid rgba(232,200,74,.25); color: var(--gold);
-  }
-  .upcoming-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); animation: pulse 1.4s ease-in-out infinite; }
+    .back-btn:hover {
+      color: var(--text);
+    }
 
-  /* STATUS BAR */
-  .status-bar { display: flex; justify-content: center; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
-  .status-chip {
-    display: flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 4px;
-    font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 600;
-    letter-spacing: 1.5px; text-transform: uppercase;
-  }
-  .status-done { background:#1a2a1a; color:#6ec86e; border:1px solid #2a4a2a; }
-  .status-next { background:#2a1a0a; color:var(--gold); border:1px solid #4a3010; }
-  .status-pend { background:#1a1a2a; color:var(--dim); border:1px solid var(--line); }
-  .status-dot { width:7px; height:7px; border-radius:50%; }
-  .dot-done { background:#6ec86e; }
-  .dot-next { background:var(--gold); animation:pulse 1.4s infinite; }
-  .dot-pend { background:var(--dim); }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .topbar-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 22px;
+      letter-spacing: 3px;
+      color: #fff;
+      flex: 1;
+    }
 
-  /* RULE */
-  .rule-note {
-    text-align: center; font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; color: var(--dim); letter-spacing: 1.5px;
-    text-transform: uppercase; margin-bottom: 20px;
-  }
-  .rule-note span { color: var(--gold); }
+    .topbar-tag {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: rgba(232, 200, 74, .1);
+      border: 1px solid rgba(232, 200, 74, .2);
+      padding: 4px 10px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
 
-  /* TABLE */
-  .table-scroll { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; min-width: 820px; }
-  thead tr.thead-group th {
-    font-family: 'Barlow Condensed', sans-serif; font-size: 9px; font-weight: 700;
-    letter-spacing: 2px; text-transform: uppercase; padding: 0 8px 5px; color: var(--dim);
-  }
-  thead tr.thead-group th.th-ses-label { text-align: center; border-bottom: 2px solid var(--line); padding-bottom: 6px; }
-  thead tr.thead-group th.th-results-label { text-align: center; border-bottom: 2px solid #e8c84a33; color: var(--gold); padding-bottom: 6px; }
-  thead tr.thead-sub th {
-    font-family: 'Barlow Condensed', sans-serif; font-size: 9px; font-weight: 600;
-    letter-spacing: 2px; text-transform: uppercase; color: #444;
-    padding: 5px 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap;
-  }
-  thead tr.thead-sub th.al { text-align: left; }
-  thead tr.thead-sub th.ac { text-align: center; }
-  thead tr.thead-sub th.ar { text-align: right; }
-  thead tr.thead-sub th.gold { color: var(--gold); text-align: right; }
-  tbody tr { border-bottom: 1px solid var(--line); transition: background .15s; animation: rowIn .45s ease both; }
-  tbody tr:hover { background: #12121e; }
-  @keyframes rowIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-  tbody tr:nth-child(1){animation-delay:.04s} tbody tr:nth-child(2){animation-delay:.08s}
-  tbody tr:nth-child(3){animation-delay:.12s} tbody tr:nth-child(4){animation-delay:.16s}
-  tbody tr:nth-child(5){animation-delay:.20s} tbody tr:nth-child(6){animation-delay:.24s}
-  tbody tr:nth-child(7){animation-delay:.28s} tbody tr:nth-child(8){animation-delay:.32s}
-  td { padding: 11px 8px; vertical-align: middle; }
-  td.pos { text-align:center; padding:11px 4px; width:44px; }
-  .pos-badge { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:5px; font-family:'Bebas Neue',cursive; font-size:16px; }
-  .p1{background:linear-gradient(135deg,#e8c84a,#b89020);color:#111}
-  .p2{background:linear-gradient(135deg,#c0c0c0,#888);color:#111}
-  .p3{background:linear-gradient(135deg,#cd7f32,#8a5010);color:#fff}
-  .px{background:#16161f;color:#666;border:1px solid #222}
-  td.driver { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:15px; letter-spacing:.4px; color:#eee; white-space:nowrap; }
-  tr:first-child td.driver { color:var(--gold); }
-  td.ses { text-align:center; font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:600; color:#aaa; letter-spacing:.4px; width:100px; }
-  td.ses.pending { color:var(--dim); font-style:italic; font-size:11px; letter-spacing:1px; }
-  td.ses .pos-mini { display:block; font-size:9px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; margin-top:2px; }
-  .pm-1{color:var(--gold)} .pm-2{color:var(--silver)} .pm-3{color:var(--bronze)} .pm-x{color:#444}
-  td.total { text-align:right; font-family:'Bebas Neue',cursive; font-size:17px; letter-spacing:1px; color:var(--gold); padding-right:10px; white-space:nowrap; }
-  td.total.pending { color:var(--dim); font-size:11px; font-family:'Barlow Condensed',sans-serif; font-style:italic; }
-  td.gap-leader { text-align:right; font-family:'Barlow Condensed',sans-serif; font-size:13px; color:#777; padding-right:8px; white-space:nowrap; }
-  td.interval { text-align:right; font-family:'Barlow Condensed',sans-serif; font-size:13px; color:#555; padding-right:8px; white-space:nowrap; }
-  td.pace { width:96px; padding-right:12px; }
-  .pace-wrap { display:flex; align-items:center; gap:6px; justify-content:flex-end; }
-  .pace-bg { width:56px; height:5px; background:#1c1c2a; border-radius:3px; overflow:hidden; }
-  .pace-fill { height:100%; border-radius:3px; background:linear-gradient(90deg,#e8c84a,#e87a20); }
-  .pace-val { font-family:'Barlow Condensed',sans-serif; font-size:10px; color:#555; letter-spacing:.5px; min-width:30px; text-align:right; }
-  .leader-badge { display:inline-flex; align-items:center; gap:4px; background:#e8c84a18; border:1px solid #e8c84a44; color:var(--gold); font-size:9px; font-weight:700; letter-spacing:2px; padding:2px 8px; border-radius:3px; font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; }
-  tr.incomplete td { opacity:.75; }
-  .champ-footer { margin-top:28px; text-align:center; font-family:'Barlow Condensed',sans-serif; font-size:10px; color:#2a2a3a; letter-spacing:2px; text-transform:uppercase; }
+    .header-nav {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-left: auto;
+    }
 
-  @media (max-width:520px) {
-    td, th { padding-left:5px; padding-right:5px; }
-    .topbar-title { font-size: 16px; }
-    .year-btn { font-size: 13px; padding: 4px 8px; }
-    .nav-pill { font-size: 9px; padding: 4px 8px; }
-  }
-</style>
+    .nav-pill {
+      background: rgba(255, 255, 255, .06);
+      backdrop-filter: blur(8px);
+      color: var(--muted);
+      text-decoration: none;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: all .2s;
+      border: 1px solid var(--line);
+      white-space: nowrap;
+    }
+
+    .nav-pill:hover {
+      background: rgba(232, 200, 74, .15);
+      border-color: rgba(232, 200, 74, .4);
+      color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    /* YEAR SWITCHER */
+    .year-switcher {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 3px;
+      flex-shrink: 0;
+    }
+
+    .year-btn {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 16px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 12px;
+      border-radius: 4px;
+      transition: all .2s ease;
+      white-space: nowrap;
+    }
+
+    .year-btn:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, .06);
+    }
+
+    .year-btn.active {
+      color: var(--bg);
+      background: var(--gold);
+    }
+
+    /* PANELS */
+    .season-panel {
+      display: none;
+    }
+
+    .season-panel.active {
+      display: block;
+    }
+
+    .champ-wrap {
+      padding: 28px 14px 40px;
+    }
+
+    /* HEADER */
+    .header {
+      text-align: center;
+      margin-bottom: 26px;
+    }
+
+    .season-pill {
+      display: inline-block;
+      background: var(--gold);
+      color: #111;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 3px 12px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+
+    h2.champ-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(30px, 7vw, 56px);
+      letter-spacing: 4px;
+      color: #fff;
+      line-height: 1;
+      text-shadow: 0 0 60px rgba(232, 200, 74, .25);
+    }
+
+    .subtitle {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      letter-spacing: 2.5px;
+      color: var(--dim);
+      text-transform: uppercase;
+      margin-top: 7px;
+    }
+
+    /* UPCOMING */
+    .upcoming-placeholder {
+      text-align: center;
+      padding: 80px 20px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .upcoming-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      opacity: 0.6;
+      display: block;
+    }
+
+    .upcoming-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 36px;
+      letter-spacing: 4px;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .upcoming-sub {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+      line-height: 1.7;
+    }
+
+    .upcoming-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 24px;
+      padding: 8px 20px;
+      border-radius: 4px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      background: rgba(232, 200, 74, .1);
+      border: 1px solid rgba(232, 200, 74, .25);
+      color: var(--gold);
+    }
+
+    .upcoming-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+
+    /* STATUS BAR */
+    .status-bar {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .status-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 4px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .status-done {
+      background: #1a2a1a;
+      color: #6ec86e;
+      border: 1px solid #2a4a2a;
+    }
+
+    .status-next {
+      background: #2a1a0a;
+      color: var(--gold);
+      border: 1px solid #4a3010;
+    }
+
+    .status-pend {
+      background: #1a1a2a;
+      color: var(--dim);
+      border: 1px solid var(--line);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+
+    .dot-done {
+      background: #6ec86e;
+    }
+
+    .dot-next {
+      background: var(--gold);
+      animation: pulse 1.4s infinite;
+    }
+
+    .dot-pend {
+      background: var(--dim);
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .3
+      }
+    }
+
+    /* RULE */
+    .rule-note {
+      text-align: center;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      color: var(--dim);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .rule-note span {
+      color: var(--gold);
+    }
+
+    /* TABLE */
+    .table-scroll {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 820px;
+    }
+
+    thead tr.thead-group th {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0 8px 5px;
+      color: var(--dim);
+    }
+
+    thead tr.thead-group th.th-ses-label {
+      text-align: center;
+      border-bottom: 2px solid var(--line);
+      padding-bottom: 6px;
+    }
+
+    thead tr.thead-group th.th-results-label {
+      text-align: center;
+      border-bottom: 2px solid #e8c84a33;
+      color: var(--gold);
+      padding-bottom: 6px;
+    }
+
+    thead tr.thead-sub th {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #444;
+      padding: 5px 8px 10px;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+    }
+
+    thead tr.thead-sub th.al {
+      text-align: left;
+    }
+
+    thead tr.thead-sub th.ac {
+      text-align: center;
+    }
+
+    thead tr.thead-sub th.ar {
+      text-align: right;
+    }
+
+    thead tr.thead-sub th.gold {
+      color: var(--gold);
+      text-align: right;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--line);
+      transition: background .15s;
+      animation: rowIn .45s ease both;
+    }
+
+    tbody tr:hover {
+      background: #12121e;
+    }
+
+    @keyframes rowIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    tbody tr:nth-child(1) {
+      animation-delay: .04s
+    }
+
+    tbody tr:nth-child(2) {
+      animation-delay: .08s
+    }
+
+    tbody tr:nth-child(3) {
+      animation-delay: .12s
+    }
+
+    tbody tr:nth-child(4) {
+      animation-delay: .16s
+    }
+
+    tbody tr:nth-child(5) {
+      animation-delay: .20s
+    }
+
+    tbody tr:nth-child(6) {
+      animation-delay: .24s
+    }
+
+    tbody tr:nth-child(7) {
+      animation-delay: .28s
+    }
+
+    tbody tr:nth-child(8) {
+      animation-delay: .32s
+    }
+
+    td {
+      padding: 11px 8px;
+      vertical-align: middle;
+    }
+
+    td.pos {
+      text-align: center;
+      padding: 11px 4px;
+      width: 44px;
+    }
+
+    .pos-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 5px;
+      font-family: 'Bebas Neue', cursive;
+      font-size: 16px;
+    }
+
+    .p1 {
+      background: linear-gradient(135deg, #e8c84a, #b89020);
+      color: #111
+    }
+
+    .p2 {
+      background: linear-gradient(135deg, #c0c0c0, #888);
+      color: #111
+    }
+
+    .p3 {
+      background: linear-gradient(135deg, #cd7f32, #8a5010);
+      color: #fff
+    }
+
+    .px {
+      background: #16161f;
+      color: #666;
+      border: 1px solid #222
+    }
+
+    td.driver {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: .4px;
+      color: #eee;
+      white-space: nowrap;
+    }
+
+    tr:first-child td.driver {
+      color: var(--gold);
+    }
+
+    td.ses {
+      text-align: center;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: #aaa;
+      letter-spacing: .4px;
+      width: 100px;
+    }
+
+    td.ses.pending {
+      color: var(--dim);
+      font-style: italic;
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    td.ses .pos-mini {
+      display: block;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .pm-1 {
+      color: var(--gold)
+    }
+
+    .pm-2 {
+      color: var(--silver)
+    }
+
+    .pm-3 {
+      color: var(--bronze)
+    }
+
+    .pm-x {
+      color: #444
+    }
+
+    td.total {
+      text-align: right;
+      font-family: 'Bebas Neue', cursive;
+      font-size: 17px;
+      letter-spacing: 1px;
+      color: var(--gold);
+      padding-right: 10px;
+      white-space: nowrap;
+    }
+
+    td.total.pending {
+      color: var(--dim);
+      font-size: 11px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-style: italic;
+    }
+
+    td.gap-leader {
+      text-align: right;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      color: #777;
+      padding-right: 8px;
+      white-space: nowrap;
+    }
+
+    td.interval {
+      text-align: right;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      color: #555;
+      padding-right: 8px;
+      white-space: nowrap;
+    }
+
+    td.pace {
+      width: 96px;
+      padding-right: 12px;
+    }
+
+    .pace-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+
+    .pace-bg {
+      width: 56px;
+      height: 5px;
+      background: #1c1c2a;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .pace-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, #e8c84a, #e87a20);
+    }
+
+    .pace-val {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 10px;
+      color: #555;
+      letter-spacing: .5px;
+      min-width: 30px;
+      text-align: right;
+    }
+
+    .leader-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #e8c84a18;
+      border: 1px solid #e8c84a44;
+      color: var(--gold);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-family: 'Barlow Condensed', sans-serif;
+      text-transform: uppercase;
+    }
+
+    tr.incomplete td {
+      opacity: .75;
+    }
+
+    .champ-footer {
+      margin-top: 28px;
+      text-align: center;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 10px;
+      color: #2a2a3a;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    @media (max-width:520px) {
+
+      td,
+      th {
+        padding-left: 5px;
+        padding-right: 5px;
+      }
+
+      .topbar-title {
+        font-size: 16px;
+      }
+
+      .year-btn {
+        font-size: 13px;
+        padding: 4px 8px;
+      }
+
+      .nav-pill {
+        font-size: 9px;
+        padding: 4px 8px;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="topbar">
-  <div class="topbar-title">Spring Challenge</div>
+  <div class="topbar">
+    <div class="topbar-title">Spring Challenge</div>
 
-  <div class="year-switcher" id="year-switcher">
-    <button class="year-btn active" data-year="2026">2026</button>
-    <button class="year-btn" data-year="2027">2027</button>
-    <!-- Add each new year here: <button class="year-btn" data-year="2028">2028</button> -->
-  </div>
-
-  <div class="topbar-tag" id="topbar-tag">2026</div>
-
-  <nav class="header-nav">
-    <a href="index.html"          class="nav-pill">HUB</a>
-    <a href="sessions.html"     class="nav-pill">SESSIONS</a>
-    <a href="map.html"          class="nav-pill">MAP</a>
-  </nav>
-</div>
-
-
-<!-- ═══════════════ 2026 PANEL ═══════════════ -->
-<div class="season-panel active" id="panel-2026">
-<div class="champ-wrap">
-  <div class="header">
-    <div class="season-pill">2026 Season</div>
-    <h2 class="champ-title">Spring Challenge</h2>
-    <div class="subtitle">GoKart Championship &nbsp;·&nbsp; 3 Venues</div>
-  </div>
-  <div class="status-bar">
-    <div class="status-chip status-done"><div class="status-dot dot-done"></div>Kartlandas Max — Done</div>
-    <div class="status-chip status-done"><div class="status-dot dot-done"></div>Speedway — Done</div>
-    <div class="status-chip status-done"><div class="status-dot dot-done"></div>Plytinė — Done</div>
-  </div>
-  <div class="rule-note">Scoring: <span>Sum of best lap</span> per session &nbsp;·&nbsp; Lowest total wins &nbsp;·&nbsp; DNS = slowest time of that session</div>
-  <div class="table-scroll">
-    <table>
-      <colgroup>
-        <col style="width:44px"><col>
-        <col style="width:104px"><col style="width:104px"><col style="width:104px">
-        <col style="width:110px"><col style="width:96px"><col style="width:84px"><col style="width:96px">
-      </colgroup>
-      <thead>
-        <tr class="thead-group">
-          <th colspan="2"></th>
-          <th class="th-ses-label" style="color:var(--gold);border-color:#e8c84a44">Kartlandas Max</th>
-          <th class="th-ses-label" style="color:var(--blue);border-color:#4ab8e822">Speedway</th>
-          <th class="th-ses-label" style="color:var(--purple);border-color:#a84ae822">Plytinė</th>
-          <th class="th-results-label" colspan="4">Championship</th>
-        </tr>
-        <tr class="thead-sub">
-          <th class="ac">#</th><th class="al">Driver</th>
-          <th class="ac">Best Lap</th><th class="ac">Best Lap</th><th class="ac">Best Lap</th>
-          <th class="gold">Total</th><th class="ar">Gap to Leader</th><th class="ar">Interval</th><th class="ar">Pace</th>
-        </tr>
-      </thead>
-      <tbody id="tbody-2026"></tbody>
-    </table>
-  </div>
-  <div class="champ-footer">Kartlandas &nbsp;·&nbsp; Speedway &nbsp;·&nbsp; Plytinė &nbsp;·&nbsp; Best lap sum &nbsp;·&nbsp; Lowest total wins</div>
-</div>
-</div>
-
-
-<!-- ═══════════════ 2027 PANEL ═══════════════ -->
-<div class="season-panel" id="panel-2027">
-<div class="champ-wrap">
-  <div class="header">
-    <div class="season-pill">2027 Season</div>
-    <h2 class="champ-title">Spring Challenge</h2>
-    <div class="subtitle">GoKart Championship &nbsp;·&nbsp; Coming Soon</div>
-  </div>
-  <div class="upcoming-placeholder">
-    <span class="upcoming-icon">🏁</span>
-    <div class="upcoming-title">Season Not Yet Started</div>
-    <div class="upcoming-sub">
-      Venues, dates and drivers for the 2027 Spring Challenge<br>
-      will be announced closer to the season opener.
+    <div class="year-switcher" id="year-switcher">
+      <button class="year-btn" data-year="2025">2025</button>
+      <button class="year-btn active" data-year="2026">2026</button>
+      <button class="year-btn" data-year="2027">2027</button>
+      <!-- Add each new year here: <button class="year-btn" data-year="2028">2028</button> -->
     </div>
-    <div class="upcoming-badge">
-      <div class="upcoming-dot"></div>
-      Stay tuned for updates
+
+    <div class="topbar-tag" id="topbar-tag">2026</div>
+
+    <nav class="header-nav">
+      <a href="index.html" class="nav-pill">HUB</a>
+      <a href="sessions.html" class="nav-pill">SESSIONS</a>
+      <a href="map.html" class="nav-pill">MAP</a>
+    </nav>
+  </div>
+  <!-- ═══════════════ 2025 PANEL ═══════════════ -->
+  <div class="season-panel active" id="panel-2026">
+    <div class="champ-wrap">
+      <div class="header">
+        <div class="season-pill">2025 Season</div>
+        <h2 class="champ-title">Spring Challenge</h2>
+        <div class="subtitle">GoKart Championship &nbsp;·&nbsp; 4 Venues</div>
+      </div>
+      <div class="status-bar">
+        <div class="status-chip status-done">
+          <div class="status-dot dot-done"></div>Kartlandas Max — Done
+        </div>
+        <div class="status-chip status-done">
+          <div class="status-dot dot-done"></div>Kartlandas Vilnius — Done
+        </div>
+        <div class="status-chip status-done">
+          <div class="status-dot dot-done"></div>Speedway — Done
+        </div>
+        <div class="status-chip status-done">
+          <div class="status-dot dot-done"></div>Plytinė — Done
+        </div>
+      </div>
+      <div class="rule-note">Scoring: <span>Sum of best lap</span> per session &nbsp;·&nbsp; Lowest total wins
+        &nbsp;·&nbsp; DNS = slowest time of that session</div>
+      <div class="table-scroll">
+        <table>
+          <colgroup>
+            <col style="width:44px">
+            <col>
+            <col style="width:104px">
+            <col style="width:104px">
+            <col style="width:104px">
+            <col style="width:110px">
+            <col style="width:96px">
+            <col style="width:84px">
+            <col style="width:96px">
+          </colgroup>
+          <thead>
+            <tr class="thead-group">
+              <th colspan="2"></th>
+              <th class="th-ses-label" style="color:var(--gold);border-color:#e8c84a44">Kartlandas Max</th>
+              <th class="th-ses-label" style="color:var(--gold);border-color:#e87a2044">Kartlandas Vilnius</th>
+              <th class="th-ses-label" style="color:var(--blue);border-color:hsla(147, 77%, 60%, 0.133)">Speedway</th>
+              <th class="th-ses-label" style="color:var(--purple);border-color:#a84ae822">Plytinė</th>
+              <th class="th-results-label" colspan="4">Championship</th>
+            </tr>
+            <tr class="thead-sub">
+              <th class="ac">#</th>
+              <th class="al">Driver</th>
+              <th class="ac">Best Lap</th>
+              <th class="ac">Best Lap</th>
+              <th class="ac">Best Lap</th>
+              <th class="gold">Total</th>
+              <th class="ar">Gap to Leader</th>
+              <th class="ar">Interval</th>
+              <th class="ar">Pace</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-2026"></tbody>
+        </table>
+      </div>
+      <div class="champ-footer">Kartlandas Max &nbsp;·&nbsp; Kartlandas Vilnius &nbsp;·&nbsp; Speedway &nbsp;·&nbsp;
+        Plytinė &nbsp;·&nbsp; Best lap sum
+        &nbsp;·&nbsp; Lowest total wins</div>
     </div>
   </div>
-</div>
-</div>
 
-<!--
+  <!-- ═══════════════ 2026 PANEL ═══════════════ -->
+  <div class="season-panel active" id="panel-2026">
+    <div class="champ-wrap">
+      <div class="header">
+        <div class="season-pill">2026 Season</div>
+        <h2 class="champ-title">Spring Challenge</h2>
+        <div class="subtitle">GoKart Championship &nbsp;·&nbsp; 3 Venues</div>
+      </div>
+      <div class="status-bar">
+        <div class="status-chip status-done">
+          <div class="status-dot dot-done"></div>Kartlandas Max — Done
+        </div>
+        <div class="status-chip status-done">
+          <div class="status-dot dot-done"></div>Speedway — Done
+        </div>
+        <div class="status-chip status-done">
+          <div class="status-dot dot-done"></div>Plytinė — Done
+        </div>
+      </div>
+      <div class="rule-note">Scoring: <span>Sum of best lap</span> per session &nbsp;·&nbsp; Lowest total wins
+        &nbsp;·&nbsp; DNS = slowest time of that session</div>
+      <div class="table-scroll">
+        <table>
+          <colgroup>
+            <col style="width:44px">
+            <col>
+            <col style="width:104px">
+            <col style="width:104px">
+            <col style="width:104px">
+            <col style="width:110px">
+            <col style="width:96px">
+            <col style="width:84px">
+            <col style="width:96px">
+          </colgroup>
+          <thead>
+            <tr class="thead-group">
+              <th colspan="2"></th>
+              <th class="th-ses-label" style="color:var(--gold);border-color:#e8c84a44">Kartlandas Max</th>
+              <th class="th-ses-label" style="color:var(--blue);border-color:#4ab8e822">Speedway</th>
+              <th class="th-ses-label" style="color:var(--purple);border-color:#a84ae822">Plytinė</th>
+              <th class="th-results-label" colspan="4">Championship</th>
+            </tr>
+            <tr class="thead-sub">
+              <th class="ac">#</th>
+              <th class="al">Driver</th>
+              <th class="ac">Best Lap</th>
+              <th class="ac">Best Lap</th>
+              <th class="ac">Best Lap</th>
+              <th class="gold">Total</th>
+              <th class="ar">Gap to Leader</th>
+              <th class="ar">Interval</th>
+              <th class="ar">Pace</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-2026"></tbody>
+        </table>
+      </div>
+      <div class="champ-footer">Kartlandas &nbsp;·&nbsp; Speedway &nbsp;·&nbsp; Plytinė &nbsp;·&nbsp; Best lap sum
+        &nbsp;·&nbsp; Lowest total wins</div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════ 2027 PANEL ═══════════════ -->
+  <div class="season-panel" id="panel-2027">
+    <div class="champ-wrap">
+      <div class="header">
+        <div class="season-pill">2027 Season</div>
+        <h2 class="champ-title">Spring Challenge</h2>
+        <div class="subtitle">GoKart Championship &nbsp;·&nbsp; Coming Soon</div>
+      </div>
+      <div class="upcoming-placeholder">
+        <span class="upcoming-icon">🏁</span>
+        <div class="upcoming-title">Season Not Yet Started</div>
+        <div class="upcoming-sub">
+          Venues, dates and drivers for the 2027 Spring Challenge<br>
+          will be announced closer to the season opener.
+        </div>
+        <div class="upcoming-badge">
+          <div class="upcoming-dot"></div>
+          Stay tuned for updates
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--
   ═══════════════════════════════════════════════════════
   HOW TO ADD A NEW YEAR (e.g. 2028):
 
@@ -302,173 +892,228 @@
 -->
 
 
-<script>
-// ── HELPERS ──────────────────────────────────────────────────
-function toMs(str) {
-  const [minSec, frac] = str.split('.');
-  const [min, sec] = minSec.split(':').map(Number);
-  return min * 60000 + sec * 1000 + Number((frac || '0').padEnd(3, '0'));
-}
-function fmtMs(ms) {
-  if (ms == null) return '—';
-  const min = Math.floor(ms / 60000);
-  const sec = Math.floor((ms % 60000) / 1000);
-  return `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}.${String(ms%1000).padStart(3,'0')}`;
-}
-function fmtGap(ms) {
-  if (ms == null || ms <= 0) return null;
-  return `+${Math.floor(ms/1000)}.${String(ms%1000).padStart(3,'0')}`;
-}
-function badgeClass(i) { return ['p1','p2','p3'][i] ?? 'px'; }
-function posClass(p)   { return {1:'pm-1',2:'pm-2',3:'pm-3'}[p] ?? 'pm-x'; }
-function posSuffix(p)  { return {1:'st',2:'nd',3:'rd'}[p] ?? 'th'; }
+  <script>
+    // ── HELPERS ──────────────────────────────────────────────────
+    function toMs(str) {
+      const [minSec, frac] = str.split('.');
+      const [min, sec] = minSec.split(':').map(Number);
+      return min * 60000 + sec * 1000 + Number((frac || '0').padEnd(3, '0'));
+    }
+    function fmtMs(ms) {
+      if (ms == null) return '—';
+      const min = Math.floor(ms / 60000);
+      const sec = Math.floor((ms % 60000) / 1000);
+      return `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}.${String(ms % 1000).padStart(3, '0')}`;
+    }
+    function fmtGap(ms) {
+      if (ms == null || ms <= 0) return null;
+      return `+${Math.floor(ms / 1000)}.${String(ms % 1000).padStart(3, '0')}`;
+    }
+    function badgeClass(i) { return ['p1', 'p2', 'p3'][i] ?? 'px'; }
+    function posClass(p) { return { 1: 'pm-1', 2: 'pm-2', 3: 'pm-3' }[p] ?? 'pm-x'; }
+    function posSuffix(p) { return { 1: 'st', 2: 'nd', 3: 'rd' }[p] ?? 'th'; }
 
-// ── RENDERER ─────────────────────────────────────────────────
-function buildSeason(sessions, drivers, tbodyId) {
-  const slowestOf = ses => Math.max(...Object.values(ses.times), 0);
+    // ── RENDERER ─────────────────────────────────────────────────
+    function buildSeason(sessions, drivers, tbodyId) {
+      const slowestOf = ses => Math.max(...Object.values(ses.times), 0);
 
-  const ranks = sessions.map(ses => {
-    if (!ses.done) return {};
-    const sorted = Object.entries(ses.times).sort((a,b) => a[1]-b[1]);
-    return Object.fromEntries(sorted.map(([n],i) => [n, i+1]));
-  });
+      const ranks = sessions.map(ses => {
+        if (!ses.done) return {};
+        const sorted = Object.entries(ses.times).sort((a, b) => a[1] - b[1]);
+        return Object.fromEntries(sorted.map(([n], i) => [n, i + 1]));
+      });
 
-  const rows = drivers.map(name => {
-    let partialTotal = 0, allDone = true;
-    const laps = sessions.map(ses => {
-      if (!ses.done) { allDone = false; return { ms: null, pending: true }; }
-      const t = ses.times[name];
-      if (t == null) { const pen = slowestOf(ses); partialTotal += pen; return { ms: pen, dns: true }; }
-      partialTotal += t;
-      return { ms: t };
-    });
-    return { name, laps, total: allDone ? partialTotal : null, partialTotal };
-  }).sort((a, b) => {
-    if ((a.total!==null) !== (b.total!==null)) return a.total!==null ? -1 : 1;
-    return (a.total??a.partialTotal) - (b.total??b.partialTotal);
-  });
+      const rows = drivers.map(name => {
+        let partialTotal = 0, allDone = true;
+        const laps = sessions.map(ses => {
+          if (!ses.done) { allDone = false; return { ms: null, pending: true }; }
+          const t = ses.times[name];
+          if (t == null) { const pen = slowestOf(ses); partialTotal += pen; return { ms: pen, dns: true }; }
+          partialTotal += t;
+          return { ms: t };
+        });
+        return { name, laps, total: allDone ? partialTotal : null, partialTotal };
+      }).sort((a, b) => {
+        if ((a.total !== null) !== (b.total !== null)) return a.total !== null ? -1 : 1;
+        return (a.total ?? a.partialTotal) - (b.total ?? b.partialTotal);
+      });
 
-  const leaderRef  = rows[0].total ?? rows[0].partialTotal;
-  const slowestRef = rows[rows.length-1].total ?? rows[rows.length-1].partialTotal;
-  const paceRange  = slowestRef - leaderRef || 1;
-  const pct = row => Math.max(4, Math.round(100 - ((( row.total??row.partialTotal) - leaderRef) / paceRange) * 94));
+      const leaderRef = rows[0].total ?? rows[0].partialTotal;
+      const slowestRef = rows[rows.length - 1].total ?? rows[rows.length - 1].partialTotal;
+      const paceRange = slowestRef - leaderRef || 1;
+      const pct = row => Math.max(4, Math.round(100 - (((row.total ?? row.partialTotal) - leaderRef) / paceRange) * 94));
 
-  const tbody   = document.getElementById(tbodyId);
-  const doneCnt = sessions.filter(s => s.done).length;
+      const tbody = document.getElementById(tbodyId);
+      const doneCnt = sessions.filter(s => s.done).length;
 
-  rows.forEach((row, i) => {
-    const tr = document.createElement('tr');
-    if (row.total === null) tr.classList.add('incomplete');
+      rows.forEach((row, i) => {
+        const tr = document.createElement('tr');
+        if (row.total === null) tr.classList.add('incomplete');
 
-    tr.innerHTML = `<td class="pos"><span class="pos-badge ${badgeClass(i)}">${i+1}</span></td>
+        tr.innerHTML = `<td class="pos"><span class="pos-badge ${badgeClass(i)}">${i + 1}</span></td>
                     <td class="driver">${row.name}</td>`;
 
-    sessions.forEach((ses, si) => {
-      const lap = row.laps[si];
-      if (lap.pending) { tr.innerHTML += `<td class="ses pending">TBD</td>`; return; }
-      const r = ranks[si][row.name] ?? '—';
-      tr.innerHTML += `<td class="ses">${fmtMs(lap.ms)}${lap.dns?` <span style="color:var(--red);font-size:9px">DNS</span>`:''}<span class="pos-mini ${posClass(r)}">${r}${posSuffix(r)}</span></td>`;
-    });
+        sessions.forEach((ses, si) => {
+          const lap = row.laps[si];
+          if (lap.pending) { tr.innerHTML += `<td class="ses pending">TBD</td>`; return; }
+          const r = ranks[si][row.name] ?? '—';
+          tr.innerHTML += `<td class="ses">${fmtMs(lap.ms)}${lap.dns ? ` <span style="color:var(--red);font-size:9px">DNS</span>` : ''}<span class="pos-mini ${posClass(r)}">${r}${posSuffix(r)}</span></td>`;
+        });
 
-    const curT  = row.total ?? row.partialTotal;
-    const gapMs = curT - leaderRef;
+        const curT = row.total ?? row.partialTotal;
+        const gapMs = curT - leaderRef;
 
-    tr.innerHTML += row.total !== null
-      ? `<td class="total">${fmtMs(row.total)}</td>`
-      : `<td class="total pending">${doneCnt}/${sessions.length} done</td>`;
+        tr.innerHTML += row.total !== null
+          ? `<td class="total">${fmtMs(row.total)}</td>`
+          : `<td class="total pending">${doneCnt}/${sessions.length} done</td>`;
 
-    tr.innerHTML += gapMs === 0
-      ? `<td class="gap-leader"><span class="leader-badge">✓ Leader</span></td>`
-      : `<td class="gap-leader">${fmtGap(gapMs)??'—'}</td>`;
+        tr.innerHTML += gapMs === 0
+          ? `<td class="gap-leader"><span class="leader-badge">✓ Leader</span></td>`
+          : `<td class="gap-leader">${fmtGap(gapMs) ?? '—'}</td>`;
 
-    tr.innerHTML += i === 0
-      ? `<td class="interval" style="color:var(--dim)">—</td>`
-      : `<td class="interval">${fmtGap(curT - (rows[i-1].total??rows[i-1].partialTotal))??'—'}</td>`;
+        tr.innerHTML += i === 0
+          ? `<td class="interval" style="color:var(--dim)">—</td>`
+          : `<td class="interval">${fmtGap(curT - (rows[i - 1].total ?? rows[i - 1].partialTotal)) ?? '—'}</td>`;
 
-    const p = pct(row);
-    tr.innerHTML += `<td class="pace"><div class="pace-wrap"><div class="pace-bg"><div class="pace-fill" style="width:${p}%"></div></div><span class="pace-val">${p}%</span></div></td>`;
+        const p = pct(row);
+        tr.innerHTML += `<td class="pace"><div class="pace-wrap"><div class="pace-bg"><div class="pace-fill" style="width:${p}%"></div></div><span class="pace-val">${p}%</span></div></td>`;
 
-    tbody.appendChild(tr);
-  });
-}
-
-// ════════════════════════════════════════════════════════════════
-//  2026 DATA
-//  • Set done: true and fill times{} after each round completes.
-//  • Omit a driver's name from times{} to mark them DNS.
-// ════════════════════════════════════════════════════════════════
-buildSeason(
-  [
-    {
-      done: true, label: 'Kartlandas Max',
-      times: {
-        'Kęstas Č.':    toMs('00:38.361'),
-        'Povilas L.':   toMs('00:38.565'),
-        'Ignas M.':     toMs('00:38.614'),
-        'Ignas I.':     toMs('00:38.655'),
-        'Vaidas R.':    toMs('00:38.701'),
-        'Romualdas P.': toMs('00:38.787'),
-        'Justas Ž.':    toMs('00:39.566'),
-        'Ernest S.':    toMs('00:40.142'),
-      }
-    },
-    {
-      done: true, label: 'Speedway',
-      times: {
-        'Kęstas Č.':    toMs('00:59.196'),
-        'Povilas L.':   toMs('00:59.598'),
-        'Ignas M.':     toMs('00:59.463'),
-        'Ignas I.':     toMs('01:01.978'),
-        'Vaidas R.':    toMs('01:01.504'),
-        'Romualdas P.': toMs('01:00.764'),
-        'Justas Ž.':    toMs('01:00.941'),
-        'Ernest S.':    toMs('01:01.715'),
-      }
-    },
-    {
-      done: true, label: 'Plytinė',
-      times: {
-        'Kęstas Č.':    toMs('00:43.590'),
-        'Povilas L.':   toMs('00:44.341'),
-        'Ignas M.':     toMs('00:44.055'),
-        'Ignas I.':     toMs('00:44.480'),
-        'Vaidas R.':    toMs('00:43.810'),
-        'Romualdas P.': toMs('00:45.092'),
-        'Justas Ž.':    toMs('00:43.735'),
-        'Ernest S.':    toMs('00:47.800'),
-      }
+        tbody.appendChild(tr);
+      });
     }
-  ],
-  ['Kęstas Č.','Povilas L.','Ignas M.','Ignas I.','Vaidas R.','Romualdas P.','Justas Ž.','Ernest S.'],
-  'tbody-2026'
-);
+    // 2025
+    buildSeason(
+      [
+        {
+          done: true, label: 'Kartlandas Max',
+          times: {
+            'Kęstas Č.': toMs('00:44.169'),
+            'Povilas L.': toMs('00:44.577'),
+            'Ignas M.': toMs('00:44.997'),
+            'Ignas I.': toMs('00:45.622'),
+            'Vaidas R.': toMs('00:44.914'),
+            'Julius B.': toMs('00:46.122'),
+            'Justas Ž.': toMs('00:45.421'),
+          }
+        },
+        {
+          done: true, label: 'Kartlandas Vilnius',
+          times: {
+            'Kęstas Č.': toMs('00:29.591'),
+            'Povilas L.': toMs('00:30.216'),
+            'Ignas M.': toMs('00:30.213'),
+            'Ignas I.': toMs('00:30.487'),
+            'Vaidas R.': toMs('00:30.887'),
+            'Julius B.': toMs('00:31.523'),
+            'Justas Ž.': toMs('00:31.323'),
+          }
+        },
+        {
+          done: true, label: 'Speedway',
+          times: {
+            'Kęstas Č.': toMs('00:56.804'),
+            'Povilas L.': toMs('00:57.530'),
+            'Ignas M.': toMs('00:59.539'),
+            'Ignas I.': toMs('00:58.315'),
+            'Vaidas R.': toMs('00:58.572'),
+            'Julius B.': toMs('00:59.739'),
+            'Justas Ž.': toMs('00:58.152'),
+          }
+        },
+        {
+          done: true, label: 'Plytinė',
+          times: {
+            'Kęstas Č.': toMs('00:44.396'),
+            'Povilas L.': toMs('00:43.822'),
+            'Ignas M.': toMs('00:43.978'),
+            'Ignas I.': toMs('00:44.468'),
+            'Vaidas R.': toMs('00:45.676'),
+            'Julius B.': toMs('00:45.876'),
+            'Justas Ž.': toMs('00:44.491'),
+          }
+        }
+      ],
+      ['Kęstas Č.', 'Povilas L.', 'Ignas M.', 'Ignas I.', 'Vaidas R.', 'Julius B.', 'Justas Ž.'],
+      'tbody-2025'
+    );
+    // ════════════════════════════════════════════════════════════════
+    //  2026 DATA
+    //  • Set done: true and fill times{} after each round completes.
+    //  • Omit a driver's name from times{} to mark them DNS.
+    // ════════════════════════════════════════════════════════════════
+    buildSeason(
+      [
+        {
+          done: true, label: 'Kartlandas Max',
+          times: {
+            'Kęstas Č.': toMs('00:38.361'),
+            'Povilas L.': toMs('00:38.565'),
+            'Ignas M.': toMs('00:38.614'),
+            'Ignas I.': toMs('00:38.655'),
+            'Vaidas R.': toMs('00:38.701'),
+            'Romualdas P.': toMs('00:38.787'),
+            'Justas Ž.': toMs('00:39.566'),
+            'Ernest S.': toMs('00:40.142'),
+          }
+        },
+        {
+          done: true, label: 'Speedway',
+          times: {
+            'Kęstas Č.': toMs('00:59.196'),
+            'Povilas L.': toMs('00:59.598'),
+            'Ignas M.': toMs('00:59.463'),
+            'Ignas I.': toMs('01:01.978'),
+            'Vaidas R.': toMs('01:01.504'),
+            'Romualdas P.': toMs('01:00.764'),
+            'Justas Ž.': toMs('01:00.941'),
+            'Ernest S.': toMs('01:01.715'),
+          }
+        },
+        {
+          done: true, label: 'Plytinė',
+          times: {
+            'Kęstas Č.': toMs('00:43.590'),
+            'Povilas L.': toMs('00:44.341'),
+            'Ignas M.': toMs('00:44.055'),
+            'Ignas I.': toMs('00:44.480'),
+            'Vaidas R.': toMs('00:43.810'),
+            'Romualdas P.': toMs('00:45.092'),
+            'Justas Ž.': toMs('00:43.735'),
+            'Ernest S.': toMs('00:47.800'),
+          }
+        }
+      ],
+      ['Kęstas Č.', 'Povilas L.', 'Ignas M.', 'Ignas I.', 'Vaidas R.', 'Romualdas P.', 'Justas Ž.', 'Ernest S.'],
+      'tbody-2026'
+    );
 
-// ════════════════════════════════════════════════════════════════
-//  2027 DATA — uncomment and fill when the season starts
-//
-// buildSeason(
-//   [
-//     { done: false, label: 'Venue 1', times: {} },
-//     { done: false, label: 'Venue 2', times: {} },
-//     { done: false, label: 'Venue 3', times: {} },
-//   ],
-//   ['Driver A', 'Driver B', ...],
-//   'tbody-2027'
-// );
-// ════════════════════════════════════════════════════════════════
+    // ════════════════════════════════════════════════════════════════
+    //  2027 DATA — uncomment and fill when the season starts
+    //
+    // buildSeason(
+    //   [
+    //     { done: false, label: 'Venue 1', times: {} },
+    //     { done: false, label: 'Venue 2', times: {} },
+    //     { done: false, label: 'Venue 3', times: {} },
+    //   ],
+    //   ['Driver A', 'Driver B', ...],
+    //   'tbody-2027'
+    // );
+    // ════════════════════════════════════════════════════════════════
 
 
-// ── YEAR SWITCHER ─────────────────────────────────────────────
-document.querySelectorAll('.year-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const year = btn.dataset.year;
-    document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.season-panel').forEach(p => p.classList.remove('active'));
-    document.getElementById(`panel-${year}`)?.classList.add('active');
-    document.getElementById('topbar-tag').textContent = year;
-  });
-});
-</script>
+    // ── YEAR SWITCHER ─────────────────────────────────────────────
+    document.querySelectorAll('.year-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const year = btn.dataset.year;
+        document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.season-panel').forEach(p => p.classList.remove('active'));
+        document.getElementById(`panel-${year}`)?.classList.add('active');
+        document.getElementById('topbar-tag').textContent = year;
+      });
+    });
+  </script>
 </body>
+
 </html>
