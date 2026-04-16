@@ -23,9 +23,9 @@
         "color": "#4ab8e8",
         "note": "Outdoor circuit · Elektrėnai",
         "configs": [
+            "3 konfiguracija",
             "Winter 2026",
-            "Rain",
-            "3 konfiguracija"
+            "Rain"
         ],
         "sessions": 14,
         "bestLap": "00:44.327",
