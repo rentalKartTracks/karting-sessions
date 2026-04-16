@@ -24,8 +24,8 @@
         "note": "Outdoor circuit · Elektrėnai",
         "configs": [
             "Winter 2026",
-            "3 konfiguracija",
-            "Rain"
+            "Rain",
+            "3 konfiguracija"
         ],
         "sessions": 14,
         "bestLap": "00:44.327",
@@ -40,12 +40,12 @@
         "color": "#a84ae8",
         "note": "Professional karting circuit",
         "configs": [
-            "Summer",
-            "Winter"
+            "Winter",
+            "Summer"
         ],
-        "sessions": 11,
-        "bestLap": "00:44.030",
-        "bestDriver": "Povilas L."
+        "sessions": 12,
+        "bestLap": "00:43.590",
+        "bestDriver": "Kęstas Č."
     },
     {
         "id": "vilko",
