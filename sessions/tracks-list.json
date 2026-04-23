@@ -1,37 +1,5 @@
 [
     {
-        "id": "kartlandas_max",
-        "name": "Kartlandas Max",
-        "lat": 54.65066751187685,
-        "lng": 25.219812673115587,
-        "mapsLink": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7",
-        "color": "#e87a4a",
-        "note": "Technical indoor circuit",
-        "configs": [
-            "Kartlandas Max 2026"
-        ],
-        "sessions": 6,
-        "bestLap": "00:38.361",
-        "bestDriver": "Kęstas Č."
-    },
-    {
-        "id": "speedway",
-        "name": "Speedway",
-        "lat": 54.7974894630313,
-        "lng": 24.56925536425135,
-        "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
-        "color": "#4ab8e8",
-        "note": "Outdoor circuit · Elektrėnai",
-        "configs": [
-            "Winter 2026",
-            "3 konfiguracija",
-            "Rain"
-        ],
-        "sessions": 14,
-        "bestLap": "00:44.327",
-        "bestDriver": "Povilas L."
-    },
-    {
         "id": "plytines",
         "name": "Plytinės Kartodromas",
         "lat": 54.724858099752225,
@@ -43,23 +11,8 @@
             "Summer",
             "Winter"
         ],
-        "sessions": 12,
+        "sessions": 13,
         "bestLap": "00:43.590",
-        "bestDriver": "Kęstas Č."
-    },
-    {
-        "id": "vilko",
-        "name": "Vilko Kartodromas",
-        "lat": 54.88831631453673,
-        "lng": 23.922075279103808,
-        "mapsLink": "https://maps.app.goo.gl/9erykKE9f58EYZ9TA",
-        "color": "#e84a4a",
-        "note": "Technical indoor circuit",
-        "configs": [
-            "wolf 2025"
-        ],
-        "sessions": 2,
-        "bestLap": "00:18.050",
         "bestDriver": "Kęstas Č."
     },
     {
@@ -78,6 +31,23 @@
         "bestDriver": "Povilas L."
     },
     {
+        "id": "speedway",
+        "name": "Speedway",
+        "lat": 54.7974894630313,
+        "lng": 24.56925536425135,
+        "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
+        "color": "#4ab8e8",
+        "note": "Outdoor circuit · Elektrėnai",
+        "configs": [
+            "Rain",
+            "Winter 2026",
+            "3 konfiguracija"
+        ],
+        "sessions": 14,
+        "bestLap": "00:44.327",
+        "bestDriver": "Povilas L."
+    },
+    {
         "id": "gokarting_center_krakow",
         "name": "GOKARTING CENTER KRAKOW",
         "lat": 50.02719152362129,
@@ -91,5 +61,35 @@
         "sessions": 1,
         "bestLap": "00:28.790",
         "bestDriver": "Ignas M."
+    },
+    {
+        "id": "kartlandas_max",
+        "name": "Kartlandas Max",
+        "lat": 54.65066751187685,
+        "lng": 25.219812673115587,
+        "mapsLink": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7",
+        "color": "#e87a4a",
+        "note": "Technical indoor circuit",
+        "configs": [
+            "Kartlandas Max 2026"
+        ],
+        "sessions": 6,
+        "bestLap": "00:38.361",
+        "bestDriver": "Kęstas Č."
+    },
+    {
+        "id": "vilko",
+        "name": "Vilko Kartodromas",
+        "lat": 54.88831631453673,
+        "lng": 23.922075279103808,
+        "mapsLink": "https://maps.app.goo.gl/9erykKE9f58EYZ9TA",
+        "color": "#e84a4a",
+        "note": "Technical indoor circuit",
+        "configs": [
+            "wolf 2025"
+        ],
+        "sessions": 2,
+        "bestLap": "00:18.050",
+        "bestDriver": "Kęstas Č."
     }
 ]
