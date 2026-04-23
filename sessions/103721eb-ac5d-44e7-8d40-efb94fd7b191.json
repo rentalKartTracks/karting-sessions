@@ -1,0 +1,68 @@
+{
+  "session_id": "103721eb-ac5d-44e7-8d40-efb94fd7b191",
+  "driver": "Justas Ž.",
+  "fastest_lap": "00:43.735",
+  "track": {
+    "name": "Plytinės Kartodromas",
+    "configuration": "Summer",
+    "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "00:27",
+  "video_url": "https://youtu.be/vcDoLs1mqy8",
+  "session_date": "2026-04-10",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "00:48.795"
+    },
+    {
+      "lap": 2,
+      "time": " 00:45.710"
+    },
+    {
+      "lap": 3,
+      "time": "00:45.265"
+    },
+    {
+      "lap": 4,
+      "time": "00:44.695"
+    },
+    {
+      "lap": 5,
+      "time": "00:44.469"
+    },
+    {
+      "lap": 6,
+      "time": "00:44.056"
+    },
+    {
+      "lap": 7,
+      "time": "00:43.872"
+    },
+    {
+      "lap": 8,
+      "time": "00:43.735"
+    },
+    {
+      "lap": 9,
+      "time": "00:44.204"
+    },
+    {
+      "lap": 10,
+      "time": "00:43.856"
+    },
+    {
+      "lap": 11,
+      "time": "00:44.014"
+    },
+    {
+      "lap": 12,
+      "time": "00:43.806"
+    },
+    {
+      "lap": 13,
+      "time": "00:43.887"
+    }
+  ]
+}
