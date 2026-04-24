@@ -276,10 +276,10 @@ function calculateTrends() {
 
         const improvement = ((avgPrevious - currentTime) / avgPrevious) * 100;
 
-        if (improvement > 1) {
+        if (improvement > 2) {
           session.trend = 'improving';
           session.trendValue = improvement.toFixed(1);
-        } else if (improvement < -1) {
+        } else if (improvement < -2) {
           session.trend = 'declining';
           session.trendValue = Math.abs(improvement).toFixed(1);
         } else {
@@ -332,10 +332,10 @@ function updateLegendWithRealData() {
       if (firstTime !== Infinity && lastTime !== Infinity) {
         const improvement = ((firstTime - lastTime) / firstTime) * 100;
 
-        if (improvement > 0.1) {
+        if (improvement > 2) {
           totalImprovement += improvement;
           countImprovement++;
-        } else if (improvement < -0.1) {
+        } else if (improvement < -2) {
           totalDecline += Math.abs(improvement);
           countDecline++;
         }
