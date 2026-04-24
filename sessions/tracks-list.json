@@ -24,8 +24,8 @@
         "note": "Outdoor circuit · Elektrėnai",
         "configs": [
             "3 konfiguracija",
-            "Winter 2026",
-            "Rain"
+            "Rain",
+            "Winter 2026"
         ],
         "sessions": 14,
         "bestLap": "00:44.327",
@@ -43,7 +43,7 @@
             "Winter",
             "Summer"
         ],
-        "sessions": 17,
+        "sessions": 18,
         "bestLap": "00:43.590",
         "bestDriver": "Kęstas Č."
     },
