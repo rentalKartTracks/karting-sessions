@@ -947,14 +947,14 @@
           <div class="legend-icon"><span class="badge pb-badge">⭐ PB</span></div>
           <div class="legend-text">
             <div class="legend-text-title">Personal Best</div>
-            <div class="legend-text-desc">Your fastest lap time for a specific driver on a specific track configuration.</div>
+            <div class="legend-text-desc">Dynamically calculated by evaluating all your loaded sessions. It represents the single fastest lap time achieved by a specific driver on a unique track and configuration.</div>
           </div>
         </div>
         <div class="legend-item">
           <div class="legend-icon"><span class="badge track-pb-badge">🎯 Track PB</span></div>
           <div class="legend-text">
             <div class="legend-text-title">Track Record</div>
-            <div class="legend-text-desc">The fastest lap time recorded across ALL drivers on a specific track configuration.</div>
+            <div class="legend-text-desc">Evaluated across the entire dataset. It represents the absolute fastest lap time ever recorded by ANY driver on a specific track and configuration.</div>
           </div>
         </div>
       </div>
@@ -965,34 +965,21 @@
           <div class="legend-icon"><span class="trend-indicator trend-improving">📈 2.5% faster</span></div>
           <div class="legend-text">
             <div class="legend-text-title">Improving Performance</div>
-            <div class="legend-text-desc">Your lap times are improving compared to your recent history (last 3 sessions on this track). Shows percentage of improvement.</div>
+            <div class="legend-text-desc">On session cards, this shows improvement (>1%) compared to the average of your 3 immediately preceding sessions. The percentage shown here in the legend is a dynamic summary: it compares your oldest and newest sessions within the current filters (grouped by driver and track) to show your overall progression.</div>
           </div>
         </div>
         <div class="legend-item">
           <div class="legend-icon"><span class="trend-indicator trend-declining">📉 1.8% slower</span></div>
           <div class="legend-text">
             <div class="legend-text-title">Declining Performance</div>
-            <div class="legend-text-desc">Your lap times are slower than recent sessions — more than 1% compared to your last 3 sessions on this track.</div>
+            <div class="legend-text-desc">Indicates a drop in performance. On session cards, it means the lap time is >1% slower than the average of the 3 prior sessions. The legend summary reflects the overall decline from the oldest to newest session in the filtered group.</div>
           </div>
         </div>
         <div class="legend-item">
           <div class="legend-icon"><span class="trend-indicator trend-stable">➡️ Stable</span></div>
           <div class="legend-text">
             <div class="legend-text-title">Consistent Performance</div>
-            <div class="legend-text-desc">Your lap times are consistent with recent sessions (within ±1%). You're maintaining a steady performance level.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="legend-section">
-        <div class="legend-section-title">Performance</div>
-        <div class="legend-item">
-          <div class="legend-text">
-            <div class="legend-text-desc">
-              Optimised to handle 1000+ sessions efficiently with pagination (50 per page),
-              Map-based indexing for trend calculations, and lazy data processing.
-              Filtering and sorting are performed in memory for instant results.
-            </div>
+            <div class="legend-text-desc">Your lap times are remaining consistent with recent history (fluctuating within a tight ±1% margin).</div>
           </div>
         </div>
       </div>
