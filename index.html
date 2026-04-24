@@ -714,24 +714,20 @@
 <!-- ── STATS STRIP ── -->
 <div class="stats-strip">
   <div class="stat-item">
-    <span class="stat-val">4</span>
+    <span class="stat-val" id="hub-tracks-count">-</span>
     <span class="stat-label">Tracks Driven</span>
   </div>
   <div class="stat-item">
-    <span class="stat-val">8</span>
+    <span class="stat-val" id="hub-drivers-count">-</span>
     <span class="stat-label">Drivers</span>
   </div>
   <div class="stat-item">
-    <span class="stat-val">18</span>
+    <span class="stat-val" id="hub-sessions-count">-</span>
     <span class="stat-label">Sessions</span>
   </div>
   <div class="stat-item">
-    <span class="stat-val">3</span>
+    <span class="stat-val" id="hub-championships-count">-</span>
     <span class="stat-label">Championship Rounds</span>
-  </div>
-  <div class="stat-item">
-    <span class="stat-val">00:18</span>
-    <span class="stat-label">Track Record</span>
   </div>
 </div>
 
@@ -870,5 +866,48 @@
   </div>
 </footer>
 
+<script>
+  async function loadHubStats() {
+    try {
+      // 1. Fetch sessions
+      const sessionsRes = await fetch('sessions/sessions-list.json');
+      if (sessionsRes.ok) {
+        const data = await sessionsRes.json();
+        const sessions = data.sessions || [];
+        
+        const uniqueTracks = new Set();
+        const uniqueDrivers = new Set();
+        
+        sessions.forEach(s => {
+          if (s.track && s.track.name) uniqueTracks.add(s.track.name);
+          if (s.driver) uniqueDrivers.add(s.driver);
+        });
+        
+        document.getElementById('hub-tracks-count').textContent = uniqueTracks.size;
+        document.getElementById('hub-drivers-count').textContent = uniqueDrivers.size;
+        document.getElementById('hub-sessions-count').textContent = sessions.length;
+      }
+      
+      // 2. Fetch championship rounds
+      const champRes = await fetch('championship.html');
+      if (champRes.ok) {
+        const champHtml = await champRes.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(champHtml, 'text/html');
+        const roundsCount = doc.querySelectorAll('.season-panel.active .status-chip').length;
+        if (roundsCount > 0) {
+          document.getElementById('hub-championships-count').textContent = roundsCount;
+        } else {
+          // Fallback if no active panel or chips
+          document.getElementById('hub-championships-count').textContent = '-';
+        }
+      }
+    } catch (e) {
+      console.error('Error loading hub stats:', e);
+    }
+  }
+  
+  document.addEventListener('DOMContentLoaded', loadHubStats);
+</script>
 </body>
 </html>
