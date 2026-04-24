@@ -1,68 +1,68 @@
 {
-  "session_id": "a9663237-6649-486e-b5e9-08931eab826c",
-  "driver": "Ignas I.",
-  "fastest_lap": " 00:44.480",
+  "session_id": "0268bcc5-f6c6-4113-be17-1b1c3922eecf",
+  "driver": "Ignas M.",
+  "fastest_lap": "00:44.055",
   "track": {
     "name": "Plytinės Kartodromas",
     "configuration": "Summer",
     "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
   },
   "kart": "9 Ag",
-  "video_start_time": "00:38",
-  "video_url": "https://youtu.be/JeYxGhWCaPw",
-  "session_date": "2026-04-24",
+  "video_start_time": "00:37",
+  "video_url": "https://youtu.be/sNBX2GQkdBw",
+  "session_date": "2026-04-10",
   "laps": [
     {
       "lap": 1,
-      "time": "00:49.892"
+      "time": " 00:49.042"
     },
     {
       "lap": 2,
-      "time": "00:46.282"
+      "time": "00:46.264"
     },
     {
       "lap": 3,
-      "time": "00:45.873"
+      "time": "00:46.122"
     },
     {
       "lap": 4,
-      "time": "00:45.469"
+      "time": "00:45.607"
     },
     {
       "lap": 5,
-      "time": "00:46.764"
+      "time": "00:44.938"
     },
     {
       "lap": 6,
-      "time": "00:45.682"
+      "time": "00:44.704"
     },
     {
       "lap": 7,
-      "time": " 00:44.953"
+      "time": "00:44.653"
     },
     {
       "lap": 8,
-      "time": "00:45.078"
+      "time": "00:44.329"
     },
     {
       "lap": 9,
-      "time": "00:44.919"
+      "time": "00:44.378"
     },
     {
       "lap": 10,
-      "time": " 00:44.853"
+      "time": "00:44.859"
     },
     {
       "lap": 11,
-      "time": " 00:44.480"
+      "time": "00:44.766"
     },
     {
       "lap": 12,
-      "time": "00:44.815"
+      "time": " 00:44.823"
     },
     {
       "lap": 13,
-      "time": "00:45.028"
+      "time": "00:44.055"
     }
   ]
 }
