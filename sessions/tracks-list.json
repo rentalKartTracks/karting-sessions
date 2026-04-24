@@ -1,34 +1,18 @@
 [
     {
-        "id": "plytines",
-        "name": "Plytinės Kartodromas",
-        "lat": 54.724858099752225,
-        "lng": 25.349237826984915,
-        "mapsLink": "https://maps.app.goo.gl/AmF51NGm8bysceeN9",
-        "color": "#a84ae8",
-        "note": "Professional karting circuit",
+        "id": "kartlandas_max",
+        "name": "Kartlandas Max",
+        "lat": 54.65066751187685,
+        "lng": 25.219812673115587,
+        "mapsLink": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7",
+        "color": "#e87a4a",
+        "note": "Technical indoor circuit",
         "configs": [
-            "Summer",
-            "Winter"
+            "Kartlandas Max 2026"
         ],
-        "sessions": 14,
-        "bestLap": "00:43.590",
+        "sessions": 6,
+        "bestLap": "00:38.361",
         "bestDriver": "Kęstas Č."
-    },
-    {
-        "id": "kartlandas",
-        "name": "Kartlandas Kaunas",
-        "lat": 54.91482127742085,
-        "lng": 23.84298728162076,
-        "mapsLink": "https://maps.app.goo.gl/7Q9SbwwcmwyNqUH56",
-        "color": "#e8c84a",
-        "note": "High-speed Kaunas circuit",
-        "configs": [
-            "2025"
-        ],
-        "sessions": 3,
-        "bestLap": "00:25.906",
-        "bestDriver": "Povilas L."
     },
     {
         "id": "speedway",
@@ -48,33 +32,19 @@
         "bestDriver": "Povilas L."
     },
     {
-        "id": "gokarting_center_krakow",
-        "name": "GOKARTING CENTER KRAKOW",
-        "lat": 50.02719152362129,
-        "lng": 20.050499873015085,
-        "mapsLink": "https://maps.app.goo.gl/fbAaPCaugyx4FDjYA",
-        "color": "#4a4ae8",
-        "note": "Major Polish venue",
+        "id": "plytines",
+        "name": "Plytinės Kartodromas",
+        "lat": 54.724858099752225,
+        "lng": 25.349237826984915,
+        "mapsLink": "https://maps.app.goo.gl/AmF51NGm8bysceeN9",
+        "color": "#a84ae8",
+        "note": "Professional karting circuit",
         "configs": [
-            "2025"
+            "Winter",
+            "Summer"
         ],
-        "sessions": 1,
-        "bestLap": "00:28.790",
-        "bestDriver": "Ignas M."
-    },
-    {
-        "id": "kartlandas_max",
-        "name": "Kartlandas Max",
-        "lat": 54.65066751187685,
-        "lng": 25.219812673115587,
-        "mapsLink": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7",
-        "color": "#e87a4a",
-        "note": "Technical indoor circuit",
-        "configs": [
-            "Kartlandas Max 2026"
-        ],
-        "sessions": 6,
-        "bestLap": "00:38.361",
+        "sessions": 15,
+        "bestLap": "00:43.590",
         "bestDriver": "Kęstas Č."
     },
     {
@@ -91,5 +61,35 @@
         "sessions": 2,
         "bestLap": "00:18.050",
         "bestDriver": "Kęstas Č."
+    },
+    {
+        "id": "kartlandas",
+        "name": "Kartlandas Kaunas",
+        "lat": 54.91482127742085,
+        "lng": 23.84298728162076,
+        "mapsLink": "https://maps.app.goo.gl/7Q9SbwwcmwyNqUH56",
+        "color": "#e8c84a",
+        "note": "High-speed Kaunas circuit",
+        "configs": [
+            "2025"
+        ],
+        "sessions": 3,
+        "bestLap": "00:25.906",
+        "bestDriver": "Povilas L."
+    },
+    {
+        "id": "gokarting_center_krakow",
+        "name": "GOKARTING CENTER KRAKOW",
+        "lat": 50.02719152362129,
+        "lng": 20.050499873015085,
+        "mapsLink": "https://maps.app.goo.gl/fbAaPCaugyx4FDjYA",
+        "color": "#4a4ae8",
+        "note": "Major Polish venue",
+        "configs": [
+            "2025"
+        ],
+        "sessions": 1,
+        "bestLap": "00:28.790",
+        "bestDriver": "Ignas M."
     }
 ]
