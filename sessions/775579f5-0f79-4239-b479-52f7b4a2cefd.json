@@ -1,0 +1,68 @@
+{
+  "session_id": "775579f5-0f79-4239-b479-52f7b4a2cefd",
+  "driver": "Povilas L.",
+  "fastest_lap": " 00:43.506",
+  "track": {
+    "name": "Plytinės Kartodromas",
+    "configuration": "Summer",
+    "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "00:24",
+  "video_url": "https://youtu.be/_JksvSvfgKE",
+  "session_date": "2026-04-30",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "00:46.598"
+    },
+    {
+      "lap": 2,
+      "time": "00:44.272"
+    },
+    {
+      "lap": 3,
+      "time": "00:43.666"
+    },
+    {
+      "lap": 4,
+      "time": "00:43.677"
+    },
+    {
+      "lap": 5,
+      "time": " 00:43.903"
+    },
+    {
+      "lap": 6,
+      "time": "00:43.904"
+    },
+    {
+      "lap": 7,
+      "time": "00:43.759"
+    },
+    {
+      "lap": 8,
+      "time": "00:43.853"
+    },
+    {
+      "lap": 9,
+      "time": " 00:43.506"
+    },
+    {
+      "lap": 10,
+      "time": "00:43.743"
+    },
+    {
+      "lap": 11,
+      "time": "00:43.649"
+    },
+    {
+      "lap": 12,
+      "time": "00:44.483"
+    },
+    {
+      "lap": 13,
+      "time": "00:43.668"
+    }
+  ]
+}
