@@ -10,7 +10,7 @@
         "configs": [
             "Kartlandas Max 2026"
         ],
-        "sessions": 6,
+        "sessions": 7,
         "bestLap": "00:38.361",
         "bestDriver": "Kęstas Č."
     },
@@ -40,8 +40,8 @@
         "color": "#a84ae8",
         "note": "Professional karting circuit",
         "configs": [
-            "Summer",
-            "Winter"
+            "Winter",
+            "Summer"
         ],
         "sessions": 21,
         "bestLap": "00:43.506",
