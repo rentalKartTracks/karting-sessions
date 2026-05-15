@@ -1,37 +1,5 @@
 [
     {
-        "id": "kartlandas_max",
-        "name": "Kartlandas Max",
-        "lat": 54.65066751187685,
-        "lng": 25.219812673115587,
-        "mapsLink": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7",
-        "color": "#e87a4a",
-        "note": "Technical indoor circuit",
-        "configs": [
-            "Kartlandas Max 2026"
-        ],
-        "sessions": 7,
-        "bestLap": "00:38.361",
-        "bestDriver": "Kęstas Č."
-    },
-    {
-        "id": "speedway",
-        "name": "Speedway",
-        "lat": 54.7974894630313,
-        "lng": 24.56925536425135,
-        "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
-        "color": "#4ab8e8",
-        "note": "Outdoor circuit · Elektrėnai",
-        "configs": [
-            "Rain",
-            "3 konfiguracija",
-            "Winter 2026"
-        ],
-        "sessions": 14,
-        "bestLap": "00:44.327",
-        "bestDriver": "Povilas L."
-    },
-    {
         "id": "plytines",
         "name": "Plytinės Kartodromas",
         "lat": 54.724858099752225,
@@ -40,10 +8,10 @@
         "color": "#a84ae8",
         "note": "Professional karting circuit",
         "configs": [
-            "Summer",
-            "Winter"
+            "Winter",
+            "Summer"
         ],
-        "sessions": 22,
+        "sessions": 23,
         "bestLap": "00:43.150",
         "bestDriver": "Ignas M."
     },
@@ -60,6 +28,38 @@
         ],
         "sessions": 2,
         "bestLap": "00:18.050",
+        "bestDriver": "Kęstas Č."
+    },
+    {
+        "id": "speedway",
+        "name": "Speedway",
+        "lat": 54.7974894630313,
+        "lng": 24.56925536425135,
+        "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
+        "color": "#4ab8e8",
+        "note": "Outdoor circuit · Elektrėnai",
+        "configs": [
+            "Winter 2026",
+            "3 konfiguracija",
+            "Rain"
+        ],
+        "sessions": 14,
+        "bestLap": "00:44.327",
+        "bestDriver": "Povilas L."
+    },
+    {
+        "id": "kartlandas_max",
+        "name": "Kartlandas Max",
+        "lat": 54.65066751187685,
+        "lng": 25.219812673115587,
+        "mapsLink": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7",
+        "color": "#e87a4a",
+        "note": "Technical indoor circuit",
+        "configs": [
+            "Kartlandas Max 2026"
+        ],
+        "sessions": 7,
+        "bestLap": "00:38.361",
         "bestDriver": "Kęstas Č."
     },
     {
