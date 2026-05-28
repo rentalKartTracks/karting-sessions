@@ -1,0 +1,1799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brake Detection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0c10;
+    --panel:#12161d;
+    --panel-2:#161b24;
+    --line:#232c3a;
+    --txt:#e7edf5;
+    --muted:#7d8a9c;
+    --brake:#ff2233;
+    --brake-glow:#ff4455;
+    --accent:#2de1c2;
+    --amber:#ffb020;
+    --mono:'IBM Plex Mono',monospace;
+    --disp:'Saira Condensed',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:
+      radial-gradient(1200px 600px at 80% -10%, #16202c 0%, transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, #1a1216 0%, transparent 55%),
+      var(--bg);
+    color:var(--txt);
+    font-family:var(--mono);
+    min-height:100vh;
+    padding:24px;
+    background-attachment:fixed;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.015) 0 1px,transparent 1px 3px);
+    mix-blend-mode:overlay;opacity:.5;
+  }
+  .wrap{max-width:1180px;margin:0 auto;position:relative;z-index:1}
+
+  header{
+    display:flex;align-items:baseline;justify-content:space-between;
+    border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:22px;
+    flex-wrap:wrap;gap:10px;
+  }
+  .brand{display:flex;align-items:baseline;gap:14px}
+  .brand h1{
+    font-family:var(--disp);font-weight:800;font-size:38px;letter-spacing:2px;
+    line-height:.9;text-transform:uppercase;
+  }
+  .brand h1 b{color:var(--brake)}
+  .brand .tag{
+    font-size:11px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;
+  }
+  .status{
+    font-size:12px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;
+    display:flex;align-items:center;gap:8px;
+  }
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);box-shadow:0 0 0 0 transparent}
+  .dot.live{background:var(--brake);animation:pulse 1s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,34,51,.6)}70%{box-shadow:0 0 0 9px rgba(255,34,51,0)}100%{box-shadow:0 0 0 0 rgba(255,34,51,0)}}
+
+  /* upload */
+  .drop{
+    border:2px dashed var(--line);border-radius:14px;background:var(--panel);
+    padding:54px 24px;text-align:center;cursor:pointer;transition:.18s;
+  }
+  .drop:hover,.drop.over{border-color:var(--accent);background:var(--panel-2)}
+  .drop .big{font-family:var(--disp);font-weight:700;font-size:26px;letter-spacing:1px;text-transform:uppercase}
+  .drop .sub{color:var(--muted);font-size:13px;margin-top:8px}
+  .drop svg{margin-bottom:14px;opacity:.8}
+
+  .hidden{display:none!important}
+
+  /* stage */
+  .stage{position:relative;background:#000;border-radius:14px;overflow:hidden;border:1px solid var(--line);box-shadow:0 24px 60px -20px rgba(0,0,0,.7)}
+  video{display:block;width:100%;max-height:62vh;background:#000}
+
+  /* OVERLAY */
+  .overlay{position:absolute;inset:0;pointer-events:none}
+  .brake-light{
+    position:absolute;top:18px;left:18px;display:flex;align-items:center;gap:12px;
+    padding:10px 16px 10px 12px;border-radius:10px;
+    background:rgba(8,10,14,.55);backdrop-filter:blur(4px);
+    border:1px solid rgba(255,255,255,.08);
+    transition:.08s;
+  }
+  .brake-light .led{
+    width:18px;height:18px;border-radius:50%;background:#3a1015;
+    box-shadow:inset 0 0 6px #000;transition:.06s;
+  }
+  .brake-light .lbl{font-family:var(--disp);font-weight:800;font-size:24px;letter-spacing:3px;color:#5a3035;transition:.06s}
+  .stage.braking .brake-light{background:rgba(40,0,4,.6);border-color:var(--brake)}
+  .stage.braking .brake-light .led{background:var(--brake);box-shadow:0 0 18px var(--brake-glow),0 0 40px var(--brake-glow)}
+  .stage.braking .brake-light .lbl{color:#fff;text-shadow:0 0 14px var(--brake-glow)}
+  .stage.braking .overlay{box-shadow:inset 0 0 0 4px var(--brake), inset 0 0 60px rgba(255,34,51,.25)}
+
+  /* lift state: teal accent, dimmer than braking */
+  .stage.lifting .brake-light{background:rgba(0,30,26,.55);border-color:var(--accent)}
+  .stage.lifting .brake-light .led{background:var(--accent);box-shadow:0 0 14px var(--accent)}
+  .stage.lifting .brake-light .lbl{color:#fff;text-shadow:0 0 12px var(--accent);font-size:0}
+  .stage.lifting .brake-light .lbl::after{content:"LIFT";font-size:24px}
+  .stage.lifting .overlay{box-shadow:inset 0 0 0 3px var(--accent), inset 0 0 50px rgba(45,225,194,.18)}
+  .stage.lifting .brake-bar .fill{height:55%;background:linear-gradient(0deg,var(--accent),#7df0dd)}
+
+  /* vertical brake bar */
+  .brake-bar{
+    position:absolute;right:18px;top:18px;bottom:18px;width:14px;
+    background:rgba(8,10,14,.5);border:1px solid rgba(255,255,255,.08);border-radius:7px;overflow:hidden;
+  }
+  .brake-bar .fill{position:absolute;left:0;right:0;bottom:0;height:0%;
+    background:linear-gradient(0deg,var(--brake),var(--brake-glow));transition:height .06s}
+  .stage.braking .brake-bar .fill{height:100%}
+
+  .rec-flag{
+    position:absolute;bottom:16px;left:18px;font-family:var(--disp);font-weight:800;
+    letter-spacing:3px;font-size:15px;color:var(--brake);display:none;align-items:center;gap:8px
+  }
+  .rec-flag .d{width:9px;height:9px;border-radius:50%;background:var(--brake);animation:pulse 1s infinite}
+  body.recording .rec-flag{display:flex}
+
+  /* timeline */
+  .tl-wrap{margin-top:14px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .tl-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .tl-head .t{font-family:var(--disp);font-weight:700;letter-spacing:2px;text-transform:uppercase;font-size:14px;color:var(--muted)}
+  .tl-head .time{font-size:13px;color:var(--accent)}
+  .timeline{position:relative;height:46px;background:var(--panel-2);border-radius:8px;cursor:pointer;overflow:hidden;border:1px solid var(--line)}
+  .timeline .seg{position:absolute;top:0;bottom:0;background:linear-gradient(180deg,var(--brake),#b3121f);opacity:.85;border-left:1px solid #ff8088;border-right:1px solid #ff8088}
+  .timeline .ghost{position:absolute;top:0;bottom:0;background:rgba(255,176,32,.4);border-left:2px solid var(--amber)}
+  .timeline .playhead{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--accent);box-shadow:0 0 8px var(--accent);z-index:3}
+  .timeline .playhead::before{content:"";position:absolute;top:-2px;left:-4px;width:10px;height:10px;background:var(--accent);transform:rotate(45deg);border-radius:2px}
+
+  /* controls */
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+  button{
+    font-family:var(--disp);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+    background:var(--panel-2);color:var(--txt);border:1px solid var(--line);
+    padding:11px 16px;border-radius:9px;cursor:pointer;font-size:14px;transition:.14s;
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  button:hover{border-color:var(--accent);color:#fff;transform:translateY(-1px)}
+  button:active{transform:translateY(0)}
+  button.primary{background:var(--brake);border-color:var(--brake);color:#fff}
+  button.primary:hover{background:var(--brake-glow);box-shadow:0 8px 24px -8px var(--brake)}
+  button.rec.on{background:var(--brake);border-color:var(--brake);color:#fff;animation:pulse 1.2s infinite}
+  button.ghost{background:transparent}
+  button:disabled{opacity:.35;cursor:not-allowed;transform:none}
+  select{
+    font-family:var(--mono);background:var(--panel-2);color:var(--txt);border:1px solid var(--line);
+    padding:10px;border-radius:9px;font-size:13px;cursor:pointer
+  }
+  .spacer{flex:1}
+
+  /* stats + brake pad + segments */
+  .grid{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-top:16px}
+  @media(max-width:820px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .card h3{font-family:var(--disp);font-weight:700;letter-spacing:2px;text-transform:uppercase;font-size:14px;color:var(--muted);margin-bottom:12px;display:flex;justify-content:space-between}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .stat{background:var(--panel-2);border:1px solid var(--line);border-radius:9px;padding:12px}
+  .stat .n{font-family:var(--disp);font-weight:800;font-size:30px;line-height:1;color:var(--accent)}
+  .stat .n.red{color:var(--brake)}
+  .stat .l{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:6px}
+
+  .pad{
+    margin-top:12px;height:92px;border-radius:10px;border:1px solid var(--line);
+    background:var(--panel-2);display:flex;align-items:center;justify-content:center;
+    font-family:var(--disp);font-weight:800;letter-spacing:3px;font-size:20px;color:var(--muted);
+    cursor:pointer;user-select:none;text-transform:uppercase;transition:.06s
+  }
+  .pad.armed{color:#fff;border-color:var(--brake);background:#1a0d10}
+  .pad.down{background:var(--brake);color:#fff;border-color:var(--brake-glow);box-shadow:inset 0 0 40px rgba(255,255,255,.25)}
+  .pad small{display:block;font-family:var(--mono);font-weight:400;letter-spacing:1px;font-size:11px;text-transform:none;color:inherit;opacity:.7;margin-top:4px}
+
+  .seglist{max-height:230px;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
+  .seglist::-webkit-scrollbar{width:8px}.seglist::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+  .segrow{display:flex;align-items:center;gap:10px;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px}
+  .segrow .idx{color:var(--brake);font-weight:600;width:26px}
+  .segrow .rng{flex:1;color:var(--txt)}
+  .segrow .dur{color:var(--muted)}
+  .segrow button{padding:5px 9px;font-size:11px}
+  .segrow:hover{border-color:var(--accent)}
+  .empty{color:var(--muted);font-size:13px;text-align:center;padding:20px 0}
+
+  .segrow .evtog{font-family:var(--disp);font-weight:700;letter-spacing:1px;font-size:11px;padding:4px 8px;border-radius:5px;cursor:pointer;border:1px solid transparent}
+  .segrow .evtog.isbrake{background:var(--brake);color:#fff;border-color:var(--brake)}
+  .segrow .evtog.islift{background:transparent;color:var(--accent);border-color:var(--accent)}
+  .segrow.liftrow .idx{color:var(--accent)}
+
+  /* timeline: lift zones drawn teal/striped to distinguish from red braking */
+  .timeline .seg.lift{background:repeating-linear-gradient(45deg,#1f8f7e 0 6px,#15695d 6px 12px);border-color:var(--accent);opacity:.85}
+
+  /* detect panel */
+  .detect{margin-top:12px;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:12px}
+  .gpsbox{background:linear-gradient(180deg,rgba(45,225,194,.07),transparent);border:1px solid #1f5249;border-radius:9px;padding:11px}
+  .gpsrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  button.go.gps{background:var(--accent);color:#062c26}
+  button.go.gps:hover{background:#54ead0}
+  .orline{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:11px;letter-spacing:2px;text-transform:uppercase;margin:14px 2px 4px}
+  .orline::before,.orline::after{content:"";flex:1;height:1px;background:var(--line)}
+  .gpsmap-wrap{position:relative;margin:4px 0 12px;background:#0c1014;border:1px solid var(--line);border-radius:9px;overflow:hidden;height:240px}
+  #gpsMap{width:100%;height:100%;display:block}
+  .gpsmap-hud{position:absolute;top:8px;left:10px;font-family:var(--disp);font-weight:800;font-size:20px;letter-spacing:1px;color:#fff;text-shadow:0 1px 4px #000;pointer-events:none}
+  .synchint{font-size:11.5px;color:var(--muted);line-height:1.6;margin-top:8px}
+  .synchint b{color:var(--accent)}
+  button.go.snd{background:var(--amber);color:#1a1206}
+  button.go.snd:hover{background:#ffc650}
+  .fusebox{background:linear-gradient(180deg,rgba(45,225,194,.10),transparent);border:1px solid #2a6d62;border-radius:9px;padding:11px;margin-bottom:4px}
+  button.go.fuse{background:linear-gradient(90deg,#2de1c2,#5bd1ff);color:#06231f;width:100%;font-size:15px}
+  button.go.fuse:hover{filter:brightness(1.08)}
+  .wave-wrap{position:relative;margin:4px 0 12px;background:#0c1014;border:1px solid var(--line);border-radius:9px;overflow:hidden;height:140px}
+  #waveSvg{width:100%;height:100%;display:block}
+  .wave-hud{position:absolute;top:6px;left:10px;font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--amber);text-transform:uppercase;pointer-events:none}
+  .detect .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .detect button{padding:10px 14px;font-size:13px}
+  .detect button.go{background:var(--amber);border-color:var(--amber);color:#1a1206}
+  .detect button.go:hover{background:#ffc34d}
+  .audiostat{font-size:11px;letter-spacing:1px;color:var(--muted);display:flex;align-items:center;gap:7px}
+  .audiostat .d{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+  .audiostat.ready .d{background:var(--accent)}
+  .audiostat.busy .d{background:var(--amber);animation:pulse 1s infinite}
+  .sens{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:12px;color:var(--muted)}
+  .sens input[type=range]{flex:1;accent-color:var(--amber)}
+  .sens .val{font-family:var(--disp);font-weight:700;color:var(--amber);font-size:16px;width:38px;text-align:right}
+  .bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:10px;display:none}
+  .bar.show{display:block}
+  .bar i{display:block;height:100%;width:0;background:var(--amber);transition:width .1s}
+
+  .hint{font-size:12px;color:var(--muted);line-height:1.7;margin-top:10px}
+  .hint b{color:var(--amber)}
+  kbd{background:var(--panel-2);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:2px 7px;font-family:var(--mono);font-size:12px;color:var(--txt)}
+  .foot{margin-top:24px;text-align:center;color:var(--muted);font-size:11px;letter-spacing:2px;text-transform:uppercase}
+  .header-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .nav-pill {
+    background: rgba(255, 255, 255, .05);
+    backdrop-filter: blur(8px);
+    color: var(--muted);
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 9px;
+    font-family: var(--disp);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: all .14s;
+    border: 1px solid var(--line);
+    white-space: nowrap;
+  }
+  .nav-pill:hover {
+    background: rgba(45, 225, 194, .15);
+    border-color: var(--accent);
+    color: #fff;
+    transform: translateY(-2px);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <h1>BRAKE<b>·</b>detection</h1>
+      <span class="tag">Kart Brake Telemetry Overlay</span>
+    </div>
+    <nav class="header-nav">
+      <a href="index.html" class="nav-pill">HUB</a>
+      <a href="sessions.html" class="nav-pill">SESSIONS</a>
+      <a href="map.html" class="nav-pill">MAP</a>
+      <a href="championship.html" class="nav-pill">CHAMPIONSHIP</a>
+    </nav>
+    <div class="status"><span class="dot" id="statusDot"></span><span id="statusTxt">No clip loaded</span></div>
+  </header>
+
+  <!-- UPLOAD -->
+  <div class="drop" id="drop">
+    <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#2de1c2" stroke-width="1.6">
+      <path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>
+    </svg>
+    <div class="big">Drop kart footage here</div>
+    <div class="sub">or click to browse — MP4 / WebM / MOV. Everything runs locally in your browser.</div>
+    <input type="file" id="file" accept="video/*" class="hidden">
+  </div>
+
+  <!-- WORKSPACE -->
+  <div id="ws" class="hidden">
+    <div class="stage" id="stage">
+      <video id="vid" playsinline></video>
+      <div class="overlay">
+        <div class="brake-light"><span class="led"></span><span class="lbl">BRAKE</span></div>
+        <div class="brake-bar"><div class="fill"></div></div>
+        <div class="rec-flag"><span class="d"></span> REC — HOLD SPACE WHEN ON THE BRAKES</div>
+      </div>
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="tl-wrap">
+      <div class="tl-head">
+        <span class="t">Brake Map</span>
+        <span class="time" id="clock">00:00.0 / 00:00.0</span>
+      </div>
+      <div class="timeline" id="timeline"><div class="playhead" id="playhead"></div></div>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="controls">
+      <button class="primary" id="play">▶ Play</button>
+      <button id="back">« 5s</button>
+      <button id="fwd">5s »</button>
+      <button class="rec" id="rec">● Record Brakes</button>
+      <button class="ghost" id="clearBtn">🗑 Remove Zones</button>
+      <select id="speed" title="Playback speed">
+        <option value="0.25">0.25×</option>
+        <option value="0.5">0.5×</option>
+        <option value="1" selected>1×</option>
+        <option value="1.5">1.5×</option>
+        <option value="2">2×</option>
+      </select>
+      <div class="spacer"></div>
+      <button class="ghost" id="export">⤓ Export</button>
+      <button class="ghost" id="import">⤒ Import</button>
+      <button class="ghost" id="newclip">↺ New Clip</button>
+      <input type="file" id="importFile" accept="application/json" class="hidden">
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Telemetry</h3>
+        <div class="stats">
+          <div class="stat"><div class="n red" id="sCount">0</div><div class="l">Brake Zones</div></div>
+          <div class="stat"><div class="n" id="sTime">0.0s</div><div class="l">Time on Brakes</div></div>
+          <div class="stat"><div class="n" id="sPct">0%</div><div class="l">% of Lap</div></div>
+        </div>
+        <div class="pad" id="pad">ARM TO RECORD<small>Click to arm, then press &amp; hold to brake</small></div>
+        <div class="hint">
+          <b>How to record:</b> hit <kbd>● Record Brakes</kbd>, let the clip play, and <b>hold <kbd>Space</kbd></b>
+          (or press &amp; hold the pad above / your mouse) for as long as the brakes are applied. Release when you come off them.
+          Use slow-mo for precision. Each hold becomes a red zone. Play it back and the overlay lights up on the brakes.
+        </div>
+
+        <div class="detect" id="detect" style="display:none">
+
+          <div class="fusebox">
+            <button class="go fuse" id="fuseBtn">✦ Smart Auto-Detect (combine all methods)</button>
+            <span class="audiostat" id="fuseStat"><span class="d"></span><span id="fuseStatTxt">runs video + sound (+ GPS if loaded), keeps only agreed zones</span></span>
+          </div>
+          <div class="orline"><span>or use one method</span></div>
+
+          <div class="gpsbox" id="gpsbox">
+            <div class="gpsrow">
+              <button class="go gps" id="gpsImportBtn">★ Import GPS track (exact)</button>
+              <input type="file" id="gpsFile" accept=".nmea,.gpx,.csv,.txt" class="hidden">
+              <span class="audiostat" id="gpsStat"><span class="d"></span><span id="gpsStatTxt">best accuracy — uses real speed</span></span>
+            </div>
+            <div id="gpsControls" style="display:none">
+              <div class="gpsmap-wrap" id="gpsMapWrap">
+                <svg id="gpsMap" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+                  <path id="gpsPath" fill="none" stroke="#3a4658" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round"/>
+                  <path id="gpsPathDone" fill="none" stroke="#2de1c2" stroke-width="0.8" stroke-linejoin="round" stroke-linecap="round" opacity="0.5"/>
+                  <g id="gpsBrakeMarks"></g>
+                  <circle id="gpsDot" r="1.8" fill="#ff2233" stroke="#fff" stroke-width="0.5"/>
+                </svg>
+                <div class="gpsmap-hud"><span id="gpsSpeed">– km/h</span></div>
+              </div>
+              <div class="sens">
+                <span>Decel threshold</span>
+                <input type="range" id="gpsThr" min="15" max="70" value="30">
+                <span class="val" id="gpsThrVal">3.0</span>
+              </div>
+              <div class="sens">
+                <span>Min speed drop</span>
+                <input type="range" id="gpsDrop" min="3" max="40" value="12">
+                <span class="val" id="gpsDropVal">12</span>
+              </div>
+              <div class="sens">
+                <span>Sync offset</span>
+                <input type="range" id="gpsSync" min="-100" max="100" value="0">
+                <span class="val" id="gpsSyncVal">0.0s</span>
+              </div>
+              <div class="synchint" id="synchint">Play the video and watch the dot. Slide <b>Sync offset</b> until the dot reaches each corner exactly when the video does. <b>Min speed drop</b> rejects kerbs/bumps — raise it if kerbs still show as braking, since a kerb barely changes speed while real braking sheds km/h. Then detect.</div>
+              <button class="go" id="gpsDetectBtn" style="margin-top:8px">★ Detect Braking from GPS</button>
+            </div>
+            <div class="hint" style="margin-top:10px">
+              <b>GPS telemetry = exact braking.</b> Your Action 5 stores GPS inside the MP4. Convert it to a track file
+              once with <a href="https://martinmht.github.io/dji2racechrono_web/" target="_blank" style="color:#2de1c2">dji2racechrono</a>
+              (outputs <b>.nmea</b>) — or any tool that gives <b>.gpx</b>/<b>.csv</b> — then import it here. Braking is
+              detected from real deceleration (m/s²), so corners, kerbs and traffic <i>don't</i> trigger it. Lower the
+              threshold to catch lighter braking; use sync offset if zones land slightly early/late vs the video.
+            </div>
+          </div>
+
+          <div class="orline"><span>or detect from video</span></div>
+
+          <div class="top">
+            <button class="go" id="detectBtn">⚡ Detect Braking</button>
+            <span class="audiostat" id="audioStat"><span class="d"></span><span id="audioStatTxt">ready</span></span>
+          </div>
+          <div class="sens">
+            <span>Sensitivity</span>
+            <input type="range" id="sens" min="20" max="95" value="68">
+            <span class="val" id="sensVal">68</span>
+          </div>
+          <div class="bar" id="scanBar"><i id="scanFill"></i></div>
+          <div class="hint" id="detectHint" style="margin-top:10px">
+            <b>Optical-flow braking detection (no telemetry):</b> plays the clip through once and measures the
+            <b>divergence</b> of the image's motion field (forward speed), ignoring head movement and cornering.
+            <b>Braking = the field collapsing.</b> Less exact than GPS — it can mistake corners/kerbs for braking —
+            so prefer the GPS import above when you have a track. Auto-zones are editable.
+          </div>
+
+          <div class="orline"><span>or detect from engine sound</span></div>
+
+          <div class="top">
+            <button class="go snd" id="sndScanBtn">♪ Scan audio</button>
+            <span class="audiostat" id="sndStat"><span class="d"></span><span id="sndStatTxt">tracks engine pitch (RPM)</span></span>
+          </div>
+          <div class="bar" id="sndScanBar"><i id="sndScanFill"></i></div>
+          <div id="sndControls" style="display:none">
+            <div class="wave-wrap" id="waveWrap">
+              <svg id="waveSvg" viewBox="0 0 1000 140" preserveAspectRatio="none">
+                <path id="wavePath" fill="#2b3340" stroke="none"/>
+                <g id="waveZones"></g>
+                <line id="waveThr" x1="0" x2="1000" stroke="#ffb020" stroke-width="2" stroke-dasharray="6 4"/>
+                <line id="wavePlayhead" y1="0" y2="140" stroke="#2de1c2" stroke-width="1.5"/>
+              </svg>
+              <div class="wave-hud"><span id="waveThrLbl">threshold</span></div>
+            </div>
+            <div class="sens">
+              <span>Drop sensitivity</span>
+              <input type="range" id="sndThr" min="2" max="98" value="60">
+              <span class="val" id="sndThrVal">60</span>
+            </div>
+            <div class="sens">
+              <span>Min duration</span>
+              <input type="range" id="sndDur" min="1" max="20" value="4">
+              <span class="val" id="sndDurVal">0.4s</span>
+            </div>
+            <button class="go snd" id="sndDetectBtn" style="margin-top:8px">♪ Detect braking from engine pitch</button>
+          </div>
+          <div class="hint" style="margin-top:10px">
+            <b>Engine-pitch detection:</b> brakes are quiet, but braking means lifting the throttle, so the
+            <b>engine note drops</b>. The scan tracks the engine's <b>harmonic signature</b> (fundamental + overtones),
+            which separates it from <b>wind</b> (broadband, no harmonics) and <b>voices</b> (wrong band, weak harmonics),
+            and follows it continuously so a gust or shout can't yank it. The line is <b style="color:#5bd1ff">bright</b>
+            where the engine is confidently locked and <b style="color:#3a4658">grey</b> where it isn't — drops are only
+            counted in locked sections. <b>Drop sensitivity</b> sets how big a pitch fall counts. Brief dips that
+            rebound are ignored.
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Brake Zones <span style="display:flex;gap:6px"><button class="ghost" id="clearAuto" style="padding:5px 10px;font-size:11px">Clear auto</button><button class="ghost" id="clear" style="padding:5px 10px;font-size:11px">Clear all</button></span></h3>
+        <div class="seglist" id="seglist"><div class="empty">No brake zones recorded yet.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">Local-only · No upload to any server · Your footage never leaves this device</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s)};
+  var drop=$("#drop"), fileInput=$("#file"), ws=$("#ws"), vid=$("#vid"), stage=$("#stage");
+  var timeline=$("#timeline"), playhead=$("#playhead"), clock=$("#clock");
+  var playBtn=$("#play"), recBtn=$("#rec"), pad=$("#pad");
+  var seglist=$("#seglist"), statusDot=$("#statusDot"), statusTxt=$("#statusTxt");
+  var sCount=$("#sCount"), sTime=$("#sTime"), sPct=$("#sPct");
+  var detect=$("#detect"), detectBtn=$("#detectBtn"), audioStat=$("#audioStat"),
+      audioStatTxt=$("#audioStatTxt"), sens=$("#sens"), sensVal=$("#sensVal"),
+      scanBar=$("#scanBar"), scanFill=$("#scanFill");
+
+  var segments=[];      // {start,end,auto?,ref?}
+  var recording=false;  // record mode armed
+  var braking=false;    // currently holding brake
+  var pressStart=0;
+  var clipKey=null;     // localStorage key for this clip
+  var currentFile=null; // the loaded File
+  var scanning=false;
+
+  /* ---------- file load ---------- */
+  drop.addEventListener("click",function(){fileInput.click()});
+  drop.addEventListener("dragover",function(e){e.preventDefault();drop.classList.add("over")});
+  drop.addEventListener("dragleave",function(){drop.classList.remove("over")});
+  drop.addEventListener("drop",function(e){e.preventDefault();drop.classList.remove("over");
+    if(e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);});
+  fileInput.addEventListener("change",function(e){if(e.target.files[0])loadFile(e.target.files[0])});
+
+  function loadFile(f){
+    if(!f.type.startsWith("video/")){alert("Please choose a video file.");return;}
+    currentFile=f; captured=[];
+    vid.src=URL.createObjectURL(f);
+    drop.classList.add("hidden"); ws.classList.remove("hidden");
+    statusTxt.textContent=f.name.length>34?f.name.slice(0,32)+"…":f.name;
+    vid.addEventListener("loadedmetadata",function once(){
+      clipKey="apexbrake:"+f.name+":"+f.size+":"+Math.round(vid.duration);
+      segments=loadSaved(clipKey);
+      render();
+      refreshDetectUI();
+      vid.removeEventListener("loadedmetadata",once);
+    });
+  }
+
+  /* ---------- persistence (graceful) ---------- */
+  function save(){
+    if(!clipKey) return;
+    try{localStorage.setItem(clipKey,JSON.stringify(segments));}catch(e){}
+  }
+  function loadSaved(k){
+    try{var s=localStorage.getItem(k);return s?JSON.parse(s):[];}catch(e){return [];}
+  }
+
+  /* ---------- playback ---------- */
+  playBtn.addEventListener("click",togglePlay);
+  function togglePlay(){ if(vid.paused) vid.play(); else vid.pause(); }
+  vid.addEventListener("play",function(){playBtn.innerHTML="❚❚ Pause"});
+  vid.addEventListener("pause",function(){playBtn.innerHTML="▶ Play";
+    if(braking) endBrake(); // safety: stop a zone if paused mid-press
+  });
+  $("#back").addEventListener("click",function(){vid.currentTime=Math.max(0,vid.currentTime-5)});
+  $("#fwd").addEventListener("click",function(){vid.currentTime=Math.min(vid.duration,vid.currentTime+5)});
+  $("#speed").addEventListener("change",function(e){vid.playbackRate=parseFloat(e.target.value)});
+
+  vid.addEventListener("timeupdate",tick);
+  function tick(){
+    var d=vid.duration||0, t=vid.currentTime;
+    playhead.style.left=(d?(t/d*100):0)+"%";
+    clock.textContent=fmt(t)+" / "+fmt(d);
+    var ev=eventAt(t);
+    var braveNow = braking || ev==="braking";
+    stage.classList.toggle("braking", braveNow);
+    stage.classList.toggle("lifting", !braveNow && ev==="lift");
+    if(gpsTrack && detect.style.display!=="none") updateMapDot();
+    if(sndEnv.length && detect.style.display!=="none") updateWavePlayhead();
+  }
+
+  // returns "braking" | "lift" | null for the current time
+  function eventAt(t){
+    var hit=null;
+    for(var i=0;i<segments.length;i++){
+      if(t>=segments[i].start && t<=segments[i].end){
+        if(segments[i].event!=="lift") return "braking"; // braking wins if overlapping
+        hit="lift";
+      }
+    }
+    return hit;
+  }
+  function isBrakingAt(t){ return eventAt(t)!==null; }
+
+  /* ---------- recording ---------- */
+  recBtn.addEventListener("click",function(){
+    recording=!recording;
+    recBtn.classList.toggle("on",recording);
+    document.body.classList.toggle("recording",recording);
+    pad.classList.toggle("armed",recording);
+    pad.firstChild.textContent=recording?"BRAKE PAD — HOLD":"ARM TO RECORD";
+    statusDot.classList.toggle("live",recording);
+    if(recording && vid.paused) vid.play();
+  });
+
+  function startBrake(){
+    if(!recording||braking) return;
+    braking=true; pressStart=vid.currentTime;
+    pad.classList.add("down"); stage.classList.add("braking");
+  }
+  function endBrake(){
+    if(!braking) return;
+    braking=false; pad.classList.remove("down");
+    var a=Math.min(pressStart,vid.currentTime), b=Math.max(pressStart,vid.currentTime);
+    if(b-a>0.05){
+      segments.push({start:a,end:b,auto:false,event:"braking"});
+      mergeSegments(); save(); render();
+      refreshDetectUI();
+    }
+  }
+
+  function refreshDetectUI(){
+    if(currentFile){
+      detect.style.display="block";
+      if(!capturing && !scanning){
+        audioStat.className="audiostat ready";
+        audioStatTxt.textContent="ready — click to scan";
+      }
+    } else {
+      detect.style.display="none";
+    }
+  }
+
+  function mergeSegments(){
+    segments.sort(function(x,y){return x.start-y.start});
+    var out=[];
+    for(var i=0;i<segments.length;i++){
+      var s=segments[i];
+      var ev=(s.event==="lift")?"lift":"braking";
+      if(out.length && s.start<=out[out.length-1].end+0.08){
+        var p=out[out.length-1];
+        p.end=Math.max(p.end,s.end);
+        if(!s.auto) p.auto=false;        // a manual zone overrides an auto one
+        if(ev==="braking") p.event="braking"; // braking takes precedence when merging mixed zones
+      } else out.push({start:s.start,end:s.end,auto:!!s.auto,event:ev});
+    }
+    segments=out;
+  }
+
+  /* keyboard: SPACE = brake (record) or play/pause */
+  document.addEventListener("keydown",function(e){
+    if(e.code==="Space"){
+      e.preventDefault();
+      if(recording) startBrake(); else togglePlay();
+    }
+    if(e.code==="KeyR") recBtn.click();
+  });
+  document.addEventListener("keyup",function(e){
+    if(e.code==="Space" && recording){ e.preventDefault(); endBrake(); }
+  });
+
+  /* on-screen pad + mouse */
+  pad.addEventListener("mousedown",function(){if(recording)startBrake()});
+  pad.addEventListener("mouseup",endBrake);
+  pad.addEventListener("mouseleave",endBrake);
+  pad.addEventListener("touchstart",function(e){e.preventDefault();if(recording)startBrake()},{passive:false});
+  pad.addEventListener("touchend",function(e){e.preventDefault();endBrake()},{passive:false});
+
+  /* ---------- timeline interactions ---------- */
+  timeline.addEventListener("click",function(e){
+    if(!vid.duration) return;
+    var r=timeline.getBoundingClientRect();
+    vid.currentTime=((e.clientX-r.left)/r.width)*vid.duration;
+  });
+
+  /* ---------- render ---------- */
+  function render(){
+    // timeline segments
+    timeline.querySelectorAll(".seg").forEach(function(n){n.remove()});
+    var d=vid.duration||1;
+    segments.forEach(function(s){
+      var isLift=(s.event==="lift");
+      var el=document.createElement("div");el.className="seg"+(isLift?" lift":"");
+      el.style.left=(s.start/d*100)+"%";
+      el.style.width=Math.max(0.4,(s.end-s.start)/d*100)+"%";
+      el.title=(isLift?"Lift":"Braking")+" · "+(s.auto?"auto":"manual")+": "+fmt(s.start)+" → "+fmt(s.end);
+      timeline.appendChild(el);
+    });
+    // list
+    if(!segments.length){
+      seglist.innerHTML='<div class="empty">No brake zones recorded yet.</div>';
+    } else {
+      seglist.innerHTML="";
+      segments.forEach(function(s,i){
+        var isLift=(s.event==="lift");
+        var row=document.createElement("div");row.className="segrow"+(isLift?" liftrow":"");
+        row.innerHTML='<span class="idx">'+(i+1)+'</span>'+
+          '<span class="rng">'+fmt(s.start)+' → '+fmt(s.end)+'</span>'+
+          '<span class="dur">'+(s.end-s.start).toFixed(1)+'s</span>';
+        // braking/lift toggle
+        var ev=document.createElement("button");
+        ev.className="evtog "+(isLift?"islift":"isbrake");
+        ev.textContent=isLift?"LIFT":"BRAKE";
+        ev.title="Click to switch braking / lift";
+        ev.onclick=function(){ s.event=isLift?"braking":"lift"; save(); render(); };
+        var jump=document.createElement("button");jump.className="ghost";jump.textContent="▶";
+        jump.title="Jump here";jump.onclick=function(){vid.currentTime=s.start;};
+        var del=document.createElement("button");del.textContent="✕";
+        del.onclick=function(){segments.splice(i,1);save();render();refreshDetectUI();};
+        row.appendChild(ev);row.appendChild(jump);row.appendChild(del);
+        seglist.appendChild(row);
+      });
+    }
+    // stats
+    var total=segments.reduce(function(a,s){return a+(s.end-s.start)},0);
+    sCount.textContent=segments.length;
+    sTime.textContent=total.toFixed(1)+"s";
+    sPct.textContent=(d?Math.round(total/d*100):0)+"%";
+  }
+
+  /* ================= AUDIO AUTO-DETECT (real-time capture) =================
+     Large 4K/HEVC files (e.g. 11 GB) can't be loaded into memory and decoded
+     offline. Instead we tap the <video> element's audio through a Web Audio
+     AnalyserNode and capture a spectral fingerprint timeline by fast-playing
+     the clip once. Works at any size/codec because the element does the decode. */
+  var captured=[];        // [{t, motion:Number}]
+  var lastMotionZones=[], lastGpsZones=[], lastSndZones=[];  // for Smart Auto-Detect fusion
+  var capturing=false, captureRAF=0, restoreState=null;
+  var CAPTURE_RATE=3;     // fast-forward speed during the optical-flow analysis pass
+  var SND_RATE=1.5;       // audio scan runs slower: time-stretch artifacts & coarse sampling hurt low-freq engine tracking
+
+  // motion sampling canvas (downscaled frame -> optical-flow speed proxy)
+  var mCanvas=document.createElement("canvas"), mCtx=null, prevLuma=null;
+  var MW=96, MH=54;
+  mCanvas.width=MW; mCanvas.height=MH;
+  try{ mCtx=mCanvas.getContext("2d",{willReadFrequently:true}); }catch(e){ mCtx=mCanvas.getContext("2d"); }
+
+  // Block-matching optical flow -> DIVERGENCE of the flow field (∂u/∂x + ∂v/∂y).
+  // Why divergence: on a HELMET cam the heading point swings as the rider looks
+  // around, so "expansion about the image centre" is unreliable. Divergence is
+  // invariant to where the focus-of-expansion sits and to pure head rotation/pan
+  // (both have ~zero divergence) — only genuine FORWARD motion makes the whole
+  // field spread apart. So a drop in divergence specifically means deceleration.
+  // We also estimate and subtract the global flow (head pan/tilt) before measuring,
+  // and ignore the top of the frame (sky) which carries little speed cue.
+  function grabMotion(){
+    if(!mCtx) return 0;
+    try{ mCtx.drawImage(vid,0,0,MW,MH); }catch(e){ return 0; }
+    var img=mCtx.getImageData(0,0,MW,MH).data;
+    var n=MW*MH, gray=new Float32Array(n);
+    for(var i=0,p=0;i<n;i++,p+=4) gray[i]=0.299*img[p]+0.587*img[p+1]+0.114*img[p+2];
+    if(!prevLuma){ prevLuma=gray; return 0; }
+
+    var B=8, R=7;
+    // build a dense grid of flow vectors U[r][c], V[r][c]
+    var U=[], V=[];
+    for(var by=R; by<=MH-B-R; by+=B){
+      var Ur=[], Vr=[];
+      for(var bx=R; bx<=MW-B-R; bx+=B){
+        var best=1e18, bdx=0, bdy=0;
+        for(var dy=-R; dy<=R; dy++){
+          for(var dx=-R; dx<=R; dx++){
+            var sad=0;
+            for(var yy=0; yy<B; yy++){
+              var pr=(by+yy)*MW+bx;
+              var cr=(by+yy+dy)*MW+(bx+dx);
+              for(var xx=0; xx<B; xx++){
+                var df=prevLuma[pr+xx]-gray[cr+xx];
+                sad += df<0?-df:df;
+              }
+            }
+            if(sad<best){ best=sad; bdx=dx; bdy=dy; }
+          }
+        }
+        Ur.push(bdx); Vr.push(bdy);
+      }
+      U.push(Ur); V.push(Vr);
+    }
+    prevLuma=gray;
+    var rows=U.length, cols=rows?U[0].length:0;
+    if(rows<3 || cols<3) return 0;
+
+    // subtract global translation (head pan/tilt = median flow) so it doesn't bias divergence
+    var allU=[], allV=[];
+    for(var r=0;r<rows;r++) for(var c=0;c<cols;c++){ allU.push(U[r][c]); allV.push(V[r][c]); }
+    allU.sort(function(a,b){return a-b}); allV.sort(function(a,b){return a-b});
+    var mU=allU[allU.length>>1], mV=allV[allV.length>>1];
+
+    // divergence via central differences, skip the top 30% (sky/horizon)
+    var rStart=Math.max(1, Math.floor(rows*0.30));
+    var sumDiv=0, dcnt=0;
+    for(var rr=rStart; rr<rows-1; rr++){
+      for(var cc=1; cc<cols-1; cc++){
+        var dudx=((U[rr][cc+1]-mU)-(U[rr][cc-1]-mU));
+        var dvdy=((V[rr+1][cc]-mV)-(V[rr-1][cc]-mV));
+        sumDiv += dudx+dvdy;
+        dcnt++;
+      }
+    }
+    if(!dcnt) return 0;
+    var div=sumDiv/dcnt;
+    return Math.max(0, div);   // forward speed proxy (>=0)
+  }
+
+  /* ================= GPS TELEMETRY (exact braking from real speed) =================
+     The Action 5 embeds GPS in the MP4. The user converts it once (e.g. with
+     dji2racechrono -> .nmea, or any .gpx/.csv) and imports the track here.
+     Braking = real deceleration (-dv/dt) above a threshold, so corners/kerbs/
+     traffic don't trigger it. */
+  var gpsTrack=null; // [{t, v}] seconds + m/s
+  var gpsImportBtn=$("#gpsImportBtn"), gpsFile=$("#gpsFile"), gpsStat=$("#gpsStat"),
+      gpsStatTxt=$("#gpsStatTxt"), gpsControls=$("#gpsControls"),
+      gpsThr=$("#gpsThr"), gpsThrVal=$("#gpsThrVal"), gpsSync=$("#gpsSync"),
+      gpsDrop=$("#gpsDrop"), gpsDropVal=$("#gpsDropVal"),
+      gpsSyncVal=$("#gpsSyncVal"), gpsDetectBtn=$("#gpsDetectBtn");
+  var gpsMap=$("#gpsMap"), gpsPath=$("#gpsPath"), gpsPathDone=$("#gpsPathDone"),
+      gpsDot=$("#gpsDot"), gpsSpeed=$("#gpsSpeed"), gpsBrakeMarks=$("#gpsBrakeMarks");
+  var gpsProj=null; // {minLat,maxLat,minLon,maxLon,scale,...} for lat/lon -> svg
+  var gpsHasCoords=false;
+
+  function hmsToSec(s){
+    if(!s) return null;
+    s=s.trim();
+    if(s.length<6) return null;
+    var h=+s.slice(0,2), m=+s.slice(2,4), sec=parseFloat(s.slice(4));
+    if(isNaN(h)||isNaN(m)||isNaN(sec)) return null;
+    return h*3600+m*60+sec;
+  }
+
+  // ---- NMEA: read RMC (speed in knots) or derive from GGA positions ----
+  function parseNMEA(text){
+    var lines=text.split(/\r?\n/), pts=[], t0=null, lastGGA=null;
+    for(var i=0;i<lines.length;i++){
+      var ln=lines[i].trim();
+      if(ln.indexOf("$")!==0) continue;
+      var star=ln.indexOf("*"); if(star>=0) ln=ln.slice(0,star);
+      var f=ln.split(",");
+      var type=f[0].slice(3);
+      if(type==="RMC"){
+        var tt=hmsToSec(f[1]); var spd=parseFloat(f[7]);
+        if(tt==null||isNaN(spd)) continue;
+        if(t0==null)t0=tt; var t=tt-t0; if(t<0)t+=86400;
+        // lat: f[3]=ddmm.mmmm f[4]=N/S ; lon: f[5]=dddmm.mmmm f[6]=E/W
+        var la=nmeaDeg(f[3],f[4],2), lo=nmeaDeg(f[5],f[6],3);
+        pts.push({t:t, v:spd*0.514444, lat:la, lon:lo});
+      }
+    }
+    return pts;
+  }
+
+  // ddmm.mmmm / dddmm.mmmm -> signed decimal degrees
+  function nmeaDeg(val,hemi,degDigits){
+    if(!val) return null;
+    var num=parseFloat(val); if(isNaN(num)) return null;
+    var deg=Math.floor(num/100), min=num-deg*100;
+    var d=deg+min/60;
+    if(hemi==="S"||hemi==="W") d=-d;
+    return d;
+  }
+
+  // ---- GPX: <trkpt> with <time> and optional <speed>; derive speed from lat/lon if absent ----
+  function parseGPX(text){
+    var pts=[];
+    try{
+      var doc=new DOMParser().parseFromString(text,"application/xml");
+      var trk=doc.getElementsByTagName("trkpt");
+      var t0=null, prev=null;
+      for(var i=0;i<trk.length;i++){
+        var pt=trk[i];
+        var timeEl=pt.getElementsByTagName("time")[0];
+        var spdEl=pt.getElementsByTagName("speed")[0];
+        var lat=parseFloat(pt.getAttribute("lat")), lon=parseFloat(pt.getAttribute("lon"));
+        var tt=timeEl?Date.parse(timeEl.textContent)/1000:null;
+        if(tt==null||isNaN(tt)) continue;
+        if(t0==null)t0=tt;
+        var t=tt-t0;
+        var v;
+        if(spdEl){ v=parseFloat(spdEl.textContent); }
+        else if(prev){ v=haversine(prev.lat,prev.lon,lat,lon)/Math.max(0.001,t-prev.t); }
+        else v=0;
+        pts.push({t:t,v:v,lat:lat,lon:lon});
+        prev={t:t,lat:lat,lon:lon};
+      }
+    }catch(e){}
+    return pts;
+  }
+
+  function haversine(la1,lo1,la2,lo2){
+    var R=6371000, d2r=Math.PI/180;
+    var dLa=(la2-la1)*d2r, dLo=(lo2-lo1)*d2r;
+    var a=Math.sin(dLa/2)*Math.sin(dLa/2)+Math.cos(la1*d2r)*Math.cos(la2*d2r)*Math.sin(dLo/2)*Math.sin(dLo/2);
+    return 2*R*Math.asin(Math.min(1,Math.sqrt(a)));
+  }
+
+  // ---- CSV: find time + speed columns by header name ----
+  function parseCSV(text){
+    var lines=text.split(/\r?\n/).filter(function(l){return l.trim().length;});
+    if(lines.length<2) return [];
+    var head=lines[0].split(/[,;\t]/).map(function(h){return h.trim().toLowerCase();});
+    function findCol(names){ for(var i=0;i<head.length;i++){ for(var j=0;j<names.length;j++){ if(head[i].indexOf(names[j])>=0) return i; } } return -1; }
+    var ti=findCol(["time","timestamp","seconds","sec","elapsed"]);
+    var si=findCol(["speed","velocity","gps_speed","spd","kph","km/h","mph","m/s"]);
+    var lai=findCol(["lat"]), loi=findCol(["lon","lng"]);
+    var spdHeaderHasKph=si>=0 && /k(m\/h|ph)/.test(head[si]);
+    var spdHeaderHasMph=si>=0 && /mph/.test(head[si]);
+    var pts=[], t0=null, prev=null;
+    for(var r=1;r<lines.length;r++){
+      var c=lines[r].split(/[,;\t]/);
+      var tRaw=ti>=0?c[ti]:null;
+      var t;
+      if(tRaw!=null){ var num=parseFloat(tRaw); t=isNaN(num)?(Date.parse(tRaw)/1000):num; }
+      else t=r*0.1;
+      if(isNaN(t)) continue;
+      if(t0==null && ti>=0 && t>1e6) t0=t;     // absolute epoch -> relative
+      var tt=(t0!=null)?t-t0:t;
+      var v=null;
+      if(si>=0){ v=parseFloat(c[si]);
+        if(!isNaN(v)){ if(spdHeaderHasKph)v/=3.6; else if(spdHeaderHasMph)v*=0.44704; }
+      }
+      var la2=lai>=0?parseFloat(c[lai]):null, lo2=loi>=0?parseFloat(c[loi]):null;
+      if((v==null||isNaN(v)) && lai>=0 && loi>=0 && prev){
+        v=haversine(prev.la,prev.lo,la2,lo2)/Math.max(0.001,tt-prev.t);
+        prev={t:tt,la:la2,lo:lo2};
+      } else if(lai>=0&&loi>=0){ prev={t:tt,la:la2,lo:lo2}; }
+      if(v!=null && !isNaN(v)) pts.push({t:tt,v:v,lat:(la2!=null&&!isNaN(la2))?la2:null,lon:(lo2!=null&&!isNaN(lo2))?lo2:null});
+    }
+    return pts;
+  }
+
+  function loadGPSText(name,text){
+    var pts=[];
+    if(/\.gpx$/i.test(name) || /<gpx/i.test(text)) pts=parseGPX(text);
+    else if(/\.csv$/i.test(name) || (text.split("\n")[0]||"").indexOf(",")>=0 && !/^\$G/.test(text)) pts=parseCSV(text);
+    if(!pts.length && /\$G[PNLA]/.test(text)) pts=parseNMEA(text);
+    if(!pts.length) pts=parseCSV(text); // last resort
+    // sanitise: sort, dedupe times, drop NaNs
+    pts=pts.filter(function(p){return isFinite(p.t)&&isFinite(p.v);}).sort(function(a,b){return a.t-b.t;});
+    if(pts.length<5){ gpsStat.className="audiostat"; gpsStatTxt.textContent="couldn't find speed data in that file"; gpsTrack=null; return; }
+    gpsTrack=pts;
+    var dur=pts[pts.length-1].t-pts[0].t, vmax=0; pts.forEach(function(p){if(p.v>vmax)vmax=p.v;});
+    gpsStat.className="audiostat ready";
+    gpsStatTxt.textContent="loaded "+pts.length+" pts · "+Math.round(dur)+"s · vmax "+(vmax*3.6).toFixed(0)+" km/h";
+    gpsControls.style.display="block";
+    buildMap();
+    updateMapDot();
+  }
+
+  // project lat/lon track into the 0..100 SVG box (equirectangular, aspect-corrected)
+  function buildMap(){
+    gpsBrakeMarks.innerHTML="";
+    var pts=gpsTrack.filter(function(p){return p.lat!=null&&p.lon!=null&&isFinite(p.lat)&&isFinite(p.lon);});
+    gpsHasCoords = pts.length>=2;
+    if(!gpsHasCoords){
+      gpsProj=null; gpsPath.setAttribute("d",""); gpsPathDone.setAttribute("d","");
+      gpsDot.style.display="none";
+      $("#gpsMapWrap").style.display="none";   // no coords -> hide map, slider still works
+      return;
+    }
+    $("#gpsMapWrap").style.display="block"; gpsDot.style.display="";
+    var minLa=1e9,maxLa=-1e9,minLo=1e9,maxLo=-1e9;
+    pts.forEach(function(p){ if(p.lat<minLa)minLa=p.lat; if(p.lat>maxLa)maxLa=p.lat; if(p.lon<minLo)minLo=p.lon; if(p.lon>maxLo)maxLo=p.lon; });
+    var midLa=(minLa+maxLa)/2;
+    var mPerLat=111320, mPerLon=111320*Math.cos(midLa*Math.PI/180);
+    var w=(maxLo-minLo)*mPerLon, h=(maxLa-minLa)*mPerLat;
+    var pad=8, span=Math.max(w,h)||1, scale=(100-2*pad)/span;
+    gpsProj={minLo:minLo,maxLa:maxLa,mPerLon:mPerLon,mPerLat:mPerLat,scale:scale,pad:pad,
+             offX:(100-2*pad-w*scale)/2, offY:(100-2*pad-h*scale)/2};
+    // full track path
+    var d="";
+    for(var i=0;i<pts.length;i++){ var xy=projXY(pts[i].lat,pts[i].lon); d+=(i?"L":"M")+xy.x.toFixed(2)+" "+xy.y.toFixed(2); }
+    gpsPath.setAttribute("d",d);
+    gpsPathDone.setAttribute("d","");
+  }
+  function projXY(lat,lon){
+    var P=gpsProj;
+    var x=P.pad+P.offX+((lon-P.minLo)*P.mPerLon)*P.scale;
+    var y=P.pad+P.offY+((P.maxLa-lat)*P.mPerLat)*P.scale; // invert Y
+    return {x:x,y:y};
+  }
+
+  // sample track at a given GPS time -> {v, lat, lon}
+  function sampleTrack(tg){
+    var p=gpsTrack; if(!p||!p.length) return null;
+    if(tg<=p[0].t) return p[0];
+    if(tg>=p[p.length-1].t) return p[p.length-1];
+    var lo=0,hi=p.length-1;
+    while(hi-lo>1){ var mid=(lo+hi)>>1; if(p[mid].t<tg) lo=mid; else hi=mid; }
+    var a=p[lo],b=p[hi],f=(b.t>a.t)?(tg-a.t)/(b.t-a.t):0;
+    var r={t:tg,v:a.v+(b.v-a.v)*f};
+    if(a.lat!=null&&b.lat!=null){ r.lat=a.lat+(b.lat-a.lat)*f; r.lon=a.lon+(b.lon-a.lon)*f; }
+    return r;
+  }
+
+  // map current video time -> gps time via offset, move dot + show speed + grey-out travelled path
+  function updateMapDot(){
+    if(!gpsTrack) return;
+    var off=parseInt(gpsSync.value,10)/10;       // video = gps + off  => gps = video - off
+    var tg=(vid.currentTime||0)-off;
+    var s=sampleTrack(tg);
+    if(!s){ return; }
+    gpsSpeed.textContent=(s.v*3.6).toFixed(0)+" km/h";
+    if(gpsHasCoords && s.lat!=null){
+      var xy=projXY(s.lat,s.lon);
+      gpsDot.setAttribute("cx",xy.x.toFixed(2));
+      gpsDot.setAttribute("cy",xy.y.toFixed(2));
+      // travelled path up to tg
+      var d="", started=false;
+      for(var i=0;i<gpsTrack.length;i++){
+        var p=gpsTrack[i]; if(p.lat==null) continue;
+        if(p.t>tg) break;
+        var q=projXY(p.lat,p.lon); d+=(started?"L":"M")+q.x.toFixed(2)+" "+q.y.toFixed(2); started=true;
+      }
+      gpsPathDone.setAttribute("d",d);
+    }
+  }
+
+  gpsImportBtn.addEventListener("click",function(){ gpsFile.click(); });
+  gpsFile.addEventListener("change",function(e){
+    var f=e.target.files[0]; if(!f) return;
+    var r=new FileReader();
+    r.onload=function(){ loadGPSText(f.name, String(r.result)); };
+    r.readAsText(f);
+  });
+  gpsThr.addEventListener("input",function(){ gpsThrVal.textContent=(gpsThr.value/10).toFixed(1); });
+  gpsDrop.addEventListener("input",function(){ gpsDropVal.textContent=gpsDrop.value; });
+  gpsSync.addEventListener("input",function(){ gpsSyncVal.textContent=(gpsSync.value/10).toFixed(1)+"s"; updateMapDot(); });
+
+  function detectGPS(){
+    if(!gpsTrack){ return; }
+    var thr=parseInt(gpsThr.value,10)/10;        // m/s^2 entry threshold
+    var off=parseInt(gpsSync.value,10)/10;       // seconds, video = gps.t + off
+    var minDropKmh=parseInt(gpsDrop.value,10);   // require this much real speed loss (km/h)
+    var minDrop=minDropKmh/3.6;                  // -> m/s
+
+    // resample to uniform 10 Hz for stable derivative
+    var p=gpsTrack, T0=p[0].t, T1=p[p.length-1].t, step=0.1;
+    var n=Math.max(2,Math.round((T1-T0)/step)+1);
+    var v=new Float32Array(n), ti=0;
+    for(var i=0;i<n;i++){
+      var tt=T0+i*step;
+      while(ti<p.length-2 && p[ti+1].t<tt) ti++;
+      var a=p[ti], b=p[Math.min(p.length-1,ti+1)];
+      var f=(b.t>a.t)?(tt-a.t)/(b.t-a.t):0;
+      v[i]=a.v+(b.v-a.v)*Math.max(0,Math.min(1,f));
+    }
+    // smooth speed (~0.3s) to ride over single-sample kerb noise
+    var sv=new Float32Array(n);
+    for(var k=0;k<n;k++){ var lo=Math.max(0,k-3),hi=Math.min(n-1,k+3),s=0,c=0; for(var j=lo;j<=hi;j++){s+=v[j];c++;} sv[k]=s/c; }
+
+    // candidate decel runs (entered at thr, held while still meaningfully decelerating)
+    var hold=thr*0.4;                            // stay in zone while decel above this
+    var raw=[], cur=null;
+    for(var k2=1;k2<n;k2++){
+      var dec=-(sv[k2]-sv[k2-1])/step;
+      if(dec>=thr){ if(!cur)cur={i0:k2-1,i1:k2}; else cur.i1=k2; }
+      else if(cur && dec>=hold){ cur.i1=k2; }    // allow the tail to keep extending
+      else { if(cur) raw.push(cur); cur=null; }
+    }
+    if(cur) raw.push(cur);
+
+    // VALIDATE each run as real braking, not a kerb jolt:
+    //  - actual speed lost (vStart - vMin) must exceed minDrop
+    //  - speed must STAY down after (kerb spikes rebound; braking doesn't)
+    //  - duration must be sustained
+    var zones=[];
+    raw.forEach(function(z){
+      var i0=z.i0, i1=z.i1;
+      var vStart=sv[i0], vMin=sv[i1];
+      for(var q=i0;q<=i1;q++) if(sv[q]<vMin) vMin=sv[q];
+      var lost=vStart-vMin;
+      if(lost<minDrop) return;                   // not enough real speed bled off -> kerb/noise
+
+      // rebound test: average speed in the ~0.6s after the zone vs vMin.
+      var aEnd=Math.min(n-1,i1+6), s=0,c=0;
+      for(var r=i1; r<=aEnd; r++){ s+=sv[r]; c++; }
+      var after=c?s/c:vMin;
+      // if speed bounced back up by more than half of what was "lost", it was a dip (kerb), not braking
+      if(after - vMin > 0.5*lost) return;
+
+      var dur=(i1-i0)*step;
+      if(dur<0.25) return;                        // braking is sustained, not a 1-2 sample blip
+
+      var peak=0;
+      for(var d=i0+1;d<=i1;d++){ var dd=-(sv[d]-sv[d-1])/step; if(dd>peak)peak=dd; }
+      zones.push({start:T0+i0*step+off, end:T0+i1*step+off, score:peak, lost:lost});
+    });
+
+    // clamp to clip and merge close ones
+    var dur=vid.duration||T1;
+    zones=zones.map(function(z){return {start:Math.max(0,z.start),end:Math.min(dur,z.end),score:z.score};})
+               .filter(function(z){return z.end>z.start;});
+    zones.sort(function(a,b){return a.start-b.start;});
+    var merged=[];
+    zones.forEach(function(z){
+      if(merged.length && z.start<=merged[merged.length-1].end+0.3){
+        merged[merged.length-1].end=Math.max(merged[merged.length-1].end,z.end);
+        merged[merged.length-1].score=Math.max(merged[merged.length-1].score,z.score);
+      } else merged.push(z);
+    });
+    lastGpsZones = merged.slice();
+    if(!merged.length){
+      gpsStat.className="audiostat"; gpsStatTxt.textContent="no sustained braking found — lower threshold or min speed drop";
+      return;
+    }
+    applyHits(merged, {gps:true, maxDecel:Math.max.apply(null,merged.map(function(z){return z.score;}))});
+    gpsStat.className="audiostat ready";
+    gpsStatTxt.textContent=merged.length+" braking zone"+(merged.length===1?"":"s")+" from GPS";
+    // mark brake zones on the map (red segments along the track)
+    if(gpsHasCoords){
+      gpsBrakeMarks.innerHTML="";
+      var off2=parseInt(gpsSync.value,10)/10;
+      merged.forEach(function(z){
+        var d="", started=false;
+        for(var i=0;i<gpsTrack.length;i++){
+          var p=gpsTrack[i]; if(p.lat==null) continue;
+          var tv=p.t+off2;                    // this point's video time
+          if(tv<z.start||tv>z.end) continue;
+          var q=projXY(p.lat,p.lon); d+=(started?"L":"M")+q.x.toFixed(2)+" "+q.y.toFixed(2); started=true;
+        }
+        if(d){ var el=document.createElementNS("http://www.w3.org/2000/svg","path");
+          el.setAttribute("d",d); el.setAttribute("fill","none"); el.setAttribute("stroke","#ff2233");
+          el.setAttribute("stroke-width","2.4"); el.setAttribute("stroke-linecap","round");
+          gpsBrakeMarks.appendChild(el); }
+      });
+    }
+  }
+  gpsDetectBtn.addEventListener("click",detectGPS);
+
+  /* ================= SOUND WAVEFORM DETECTION =================
+     Capture the audio loudness envelope across the clip via an AnalyserNode
+     during one muted fast play-through, draw it as a waveform, and let the user
+     drag a loudness threshold; zones are stretches where the envelope exceeds it. */
+  var audioCtx=null, mediaSrc=null, sndAnalyser=null, sndGain=null, sndTime=null;
+  var sndEnv=[];           // [{t, f, e}] engine pitch (Hz) + loudness per frame
+  var sndCapturing=false, sndRAF=0, sndRestore=null, sndFreqMin=0, sndFreqMax=1;
+  var sndFreqData=null;
+  var sndScanBtn=$("#sndScanBtn"), sndStat=$("#sndStat"), sndStatTxt=$("#sndStatTxt"),
+      sndScanBar=$("#sndScanBar"), sndScanFill=$("#sndScanFill"), sndControls=$("#sndControls"),
+      sndThr=$("#sndThr"), sndThrVal=$("#sndThrVal"), sndDur=$("#sndDur"), sndDurVal=$("#sndDurVal"),
+      sndDetectBtn=$("#sndDetectBtn"),
+      waveSvg=$("#waveSvg"), wavePath=$("#wavePath"), waveZones=$("#waveZones"),
+      waveThr=$("#waveThr"), wavePlayhead=$("#wavePlayhead");
+
+  function ensureAudioGraph(){
+    if(audioCtx) return true;
+    try{
+      var AC=window.AudioContext||window.webkitAudioContext;
+      audioCtx=new AC();
+      mediaSrc=audioCtx.createMediaElementSource(vid);
+      sndAnalyser=audioCtx.createAnalyser();
+      sndAnalyser.fftSize=16384;           // ~2.9 Hz bins @48k — verified sufficient to resolve the ~85-135 Hz rental-engine note
+      sndAnalyser.smoothingTimeConstant=0.6;
+      sndGain=audioCtx.createGain(); sndGain.gain.value=1;
+      mediaSrc.connect(sndAnalyser);
+      mediaSrc.connect(sndGain);
+      sndGain.connect(audioCtx.destination); // keep normal playback audible
+      sndTime=new Float32Array(sndAnalyser.fftSize);
+      sndFreqData=new Float32Array(sndAnalyser.frequencyBinCount);
+      return true;
+    }catch(e){ sndStat.className="audiostat"; sndStatTxt.textContent="audio unavailable in this browser"; return false; }
+  }
+
+  // Engine fundamental search bands (Hz) per type. Harmonic structure is what
+  // separates the engine from wind (broadband, no harmonics) and voice (weak/odd
+  // harmonics, fixed band). We search for the fundamental whose harmonic stack
+  // (f,2f,3f,4f,5f) has the most combined energy = harmonic product spectrum.
+  // Engine search band. The pitch tracker hunts for the fundamental whose harmonic
+  // stack has the most combined energy. A single wide band covers kart engines
+  // (verified ~85-135 Hz on a rental 4-stroke; wider range catches others too).
+  var ENG_BAND={lo:55, hi:400};
+  var sndPrevF=0;                    // continuity: last locked engine pitch
+
+  // returns {f, conf} — fundamental Hz (in REAL clip terms) + 0..1 confidence
+  function grabEngine(){
+    sndAnalyser.getFloatFrequencyData(sndFreqData); // dB
+    var sr=audioCtx.sampleRate, N=sndAnalyser.fftSize, binHz=sr/N, nb=sndFreqData.length;
+    // When pitch preservation is off, the audio is resampled: real frequencies
+    // appear multiplied by the playback rate. Search the SHIFTED band, then divide back.
+    var shift=(('preservesPitch' in vid) && vid.preservesPitch===false) ? (vid.playbackRate||1) : 1;
+    var band=ENG_BAND;
+    var k0=Math.max(2,Math.floor((band.lo*shift)/binHz)), k1=Math.min(nb-1,Math.ceil((band.hi*shift)/binHz));
+    var HARM=6;   // matches verified pitch-tracking analysis of real engine audio
+    var bestScore=-1, bestK=k0, peakDb=-1e9;
+    function magAt(k){ return k<nb ? Math.pow(10, sndFreqData[k]/20) : 0; }
+    // DIAGNOSTIC: strongest tonal bin across the whole audible range (20 Hz–8 kHz),
+    // independent of the engine band — tells us where the energy really is.
+    var dk0=Math.max(2,Math.floor((20*shift)/binHz)), dk1=Math.min(nb-1,Math.floor((8000*shift)/binHz));
+    var rawPeak=-1e9, rawK=dk0;
+    for(var rk=dk0;rk<=dk1;rk++){ if(sndFreqData[rk]>rawPeak){ rawPeak=sndFreqData[rk]; rawK=rk; } }
+    var rawHz=(rawK*binHz)/shift;
+    for(var k=k0;k<=k1;k++){
+      // sum of linear magnitudes across harmonics (robust HPS; avoids subharmonic lock)
+      var hp=0, used=0;
+      for(var h=1;h<=HARM;h++){
+        var kk=k*h; if(kk>=nb) break;
+        hp += magAt(kk); used++;
+      }
+      // continuity bonus: prefer fundamentals near the previous locked pitch (real-Hz)
+      var fReal=(k*binHz)/shift;
+      if(sndPrevF>0){
+        var rel=Math.abs(fReal-sndPrevF)/sndPrevF;
+        hp *= Math.max(0.4, 1-rel);     // scale down candidates far from last lock
+      }
+      if(hp>bestScore){ bestScore=hp; bestK=k; }
+      if(sndFreqData[k]>peakDb) peakDb=sndFreqData[k];
+    }
+    // refine fundamental with weighted centroid around bestK
+    var lo=Math.max(k0,bestK-3), hi=Math.min(k1,bestK+3), num=0, den=0;
+    for(var j=lo;j<=hi;j++){ var m=magAt(j); num+=j*m; den+=m; }
+    var fbin=den>0?num/den:bestK;
+    var f0=(fbin*binHz)/shift;     // back to real clip Hz
+
+    // CONFIDENCE: a real engine note has several harmonics that each stand out
+    // as LOCAL peaks above their immediate neighbourhood. Counting how many of the
+    // first HARM harmonics are genuine local peaks is robust to overall loudness
+    // (unlike comparing to the whole-band average, which fails in noisy audio).
+    var hits=0, checked=0;
+    for(var h2=1;h2<=HARM;h2++){
+      var kc=Math.round(fbin*h2); if(kc<3||kc>=nb-3) continue;
+      checked++;
+      var here=sndFreqData[kc];
+      // local floor = mean dB of bins ~8-16 away on both sides
+      var fl=0, fc=0;
+      for(var off=8;off<=16;off++){ if(kc-off>0){fl+=sndFreqData[kc-off];fc++;} if(kc+off<nb){fl+=sndFreqData[kc+off];fc++;} }
+      fl=fc?fl/fc:-120;
+      if(here - fl > 6) hits++;     // >6 dB above local floor = a real harmonic peak
+    }
+    var conf = checked? hits/checked : 0;
+
+    // update continuity only when confident, so wind/voice can't drag the lock
+    if(conf>=0.3) sndPrevF = sndPrevF? (sndPrevF*0.6+f0*0.4) : f0;
+    return { f: f0, conf: conf, e: peakDb, raw: rawHz };
+  }
+
+  function sndScan(){
+    if(sndCapturing || capturing || scanning) return;
+    if(!currentFile) return;
+    if(!ensureAudioGraph()) return;
+    if(audioCtx.state==="suspended") audioCtx.resume();
+
+    sndCapturing=true; sndScanBtn.disabled=true;
+    sndStat.className="audiostat busy"; sndStatTxt.textContent="listening to clip…";
+    sndScanBar.classList.add("show"); sndScanFill.style.width="0%";
+
+    sndRestore={t:vid.currentTime, rate:vid.playbackRate, paused:vid.paused, muted:vid.muted, gain:sndGain.gain.value,
+                pp:('preservesPitch' in vid)?vid.preservesPitch:null};
+    sndEnv=[]; sndPrevF=0;
+    var dur=vid.duration||0, silent=0, total=0;
+
+    sndGain.gain.value=0;            // mute the scan pass
+    // Disable time-stretch so the analyser sees the real spectrum. With pitch
+    // preservation OFF, audio is resampled — the engine note shifts UP by the
+    // playback-rate factor, but uniformly, so relative drops (braking) are
+    // preserved. We divide measured frequencies back down by SND_RATE.
+    try{ if('preservesPitch' in vid) vid.preservesPitch=false; }catch(e){}
+    vid.playbackRate=SND_RATE;
+    var go=function(){ vid.play().then(loop).catch(loop); };
+    if(vid.currentTime<0.05){ go(); }
+    else { var sk=function(){ vid.removeEventListener("seeked",sk); go(); }; vid.addEventListener("seeked",sk); vid.currentTime=0; }
+
+    function loop(){
+      if(!sndCapturing) return;
+      var g=grabEngine();
+      var audible = g.e > -90;               // peak louder than ~-90 dB
+      if(!audible) silent++; total++;
+      sndEnv.push({t:vid.currentTime, f:g.f, e:g.e, conf:g.conf, raw:g.raw, audible:audible});
+      if(dur) sndScanFill.style.width=Math.min(99,Math.round(vid.currentTime/dur*100))+"%";
+      if(total>40 && silent===total){ sndStop(); sndStatTxt.textContent="no audible engine sound in this clip"; sndStat.className="audiostat"; sndScanFill.style.width="0%"; sndScanBar.classList.remove("show"); sndScanBtn.disabled=false; sndCapturing=false; return; }
+      if(vid.ended || (dur && vid.currentTime>=dur-0.05)){ sndStop(); finishSndScan(); return; }
+      sndRAF=requestAnimationFrame(loop);
+    }
+  }
+
+  function sndStop(){
+    if(sndRAF) cancelAnimationFrame(sndRAF);
+    vid.pause();
+    if(sndRestore){
+      vid.playbackRate=sndRestore.rate;
+      sndGain.gain.value=sndRestore.gain;
+      vid.muted=sndRestore.muted;
+      try{ if(sndRestore.pp!=null && 'preservesPitch' in vid) vid.preservesPitch=sndRestore.pp; }catch(e){}
+      vid.currentTime=sndRestore.t;
+      if(!sndRestore.paused) vid.play();
+    }
+  }
+
+  function finishSndScan(){
+    sndCapturing=false; sndScanBtn.disabled=false;
+    sndScanFill.style.width="100%"; setTimeout(function(){sndScanBar.classList.remove("show");},500);
+    // smooth the pitch track (median-ish via moving average) to ride over noise
+    var raw=sndEnv.map(function(p){return p.f;});
+    var nn=sndEnv.length;
+    // pass A: median filter (~7 frames) to kill single-frame octave/bin jumps
+    var med=new Float32Array(nn), mr=3;
+    for(var i=0;i<nn;i++){
+      var a=Math.max(0,i-mr), b=Math.min(nn-1,i+mr), tmp=[];
+      for(var j=a;j<=b;j++) tmp.push(raw[j]);
+      tmp.sort(function(x,y){return x-y;});
+      med[i]=tmp[tmp.length>>1];
+    }
+    // pass B: moving average (~9 frames) for a clean trend
+    for(var k=0;k<nn;k++){
+      var lo=Math.max(0,k-4), hi=Math.min(nn-1,k+4), s=0,c=0;
+      for(var m2=lo;m2<=hi;m2++){ s+=med[m2]; c++; }
+      sndEnv[k].fs=s/c;
+    }
+    // robust min/max of pitch for plotting (5th..95th pct)
+    var band=ENG_BAND;
+    var fs=sndEnv.map(function(p){return p.fs;}).slice().sort(function(a,b){return a-b;});
+    sndFreqMin=fs[Math.floor(fs.length*0.05)]||band.lo;
+    sndFreqMax=fs[Math.floor(fs.length*0.95)]||band.hi;
+    if(sndFreqMax-sndFreqMin<8){ sndFreqMax=sndFreqMin+8; }
+    sndControls.style.display="block";
+    drawWave();
+    previewWaveZones();
+    var lc=0; sndEnv.forEach(function(p){if((p.conf||0)>=0.3)lc++;});
+    var lockPct=sndEnv.length?Math.round(lc/sndEnv.length*100):0;
+    sndStat.className=lockPct>=15?"audiostat ready":"audiostat";
+    if(lockPct>=15){
+      sndStatTxt.textContent="engine "+Math.round(sndFreqMin)+"–"+Math.round(sndFreqMax)+" Hz · locked "+lockPct+"% of clip";
+    } else {
+      // diagnostic: where is the dominant tonal energy actually sitting?
+      var raws=sndEnv.map(function(p){return p.raw||0;}).filter(function(x){return x>0;}).sort(function(a,b){return a-b;});
+      var medRaw=raws.length?Math.round(raws[raws.length>>1]):0;
+      sndStatTxt.textContent="couldn't lock engine (loudest tone ≈ "+medRaw+" Hz) — engine may be inaudible; use GPS or video";
+    }
+  }
+
+  function freqToY(f){
+    var H=140, pad=10;
+    var fr=(f-sndFreqMin)/Math.max(1,(sndFreqMax-sndFreqMin));
+    fr=Math.max(0,Math.min(1,fr));
+    return (H-pad) - fr*(H-2*pad);   // high pitch = high on screen
+  }
+
+  function drawWave(){
+    if(!sndEnv.length) return;
+    var W=1000, n=sndEnv.length;
+    // base (faint) full line
+    var d="";
+    for(var i=0;i<n;i++){
+      var x=(i/(n-1))*W, y=freqToY(sndEnv[i].fs);
+      d+=(i?"L":"M")+x.toFixed(1)+" "+y.toFixed(1);
+    }
+    wavePath.setAttribute("d",d);
+    wavePath.setAttribute("fill","none");
+    wavePath.setAttribute("stroke","#3a4658");   // faint = "engine not confidently locked"
+    wavePath.setAttribute("stroke-width","1.2");
+    // overlay bright segments only where confidence is high (engine locked)
+    var marks=waveZones.parentNode;
+    // remove any prior confidence overlay
+    var old=document.getElementById("waveConf"); if(old) old.remove();
+    var g=document.createElementNS("http://www.w3.org/2000/svg","g"); g.id="waveConf";
+    var seg=null;
+    for(var k=0;k<n;k++){
+      var hi=sndEnv[k].conf>=0.3;
+      if(hi){ var xx=(k/(n-1))*W, yy=freqToY(sndEnv[k].fs);
+        if(!seg){ seg=document.createElementNS("http://www.w3.org/2000/svg","path"); seg.setAttribute("fill","none"); seg.setAttribute("stroke","#5bd1ff"); seg.setAttribute("stroke-width","1.8"); seg.__d="M"+xx.toFixed(1)+" "+yy.toFixed(1); }
+        else seg.__d+=" L"+xx.toFixed(1)+" "+yy.toFixed(1);
+      } else if(seg){ seg.setAttribute("d",seg.__d); g.appendChild(seg); seg=null; }
+    }
+    if(seg){ seg.setAttribute("d",seg.__d); g.appendChild(seg); }
+    waveSvg.insertBefore(g, waveZones);  // under zone rects, over base line
+    waveThr.style.display="none";
+    updateWavePlayhead();
+  }
+
+  function updateWavePlayhead(){
+    if(!sndEnv.length){ return; }
+    var W=1000, dur=vid.duration|| (sndEnv[sndEnv.length-1].t||1);
+    var x=Math.max(0,Math.min(W,(vid.currentTime/dur)*W));
+    wavePlayhead.setAttribute("x1",x.toFixed(1)); wavePlayhead.setAttribute("x2",x.toFixed(1));
+  }
+
+  sndScanBtn.addEventListener("click",sndScan);
+  sndThr.addEventListener("input",function(){ sndThrVal.textContent=sndThr.value; previewWaveZones(); });
+  sndDur.addEventListener("input",function(){ sndDurVal.textContent=(sndDur.value/10).toFixed(1)+"s"; previewWaveZones(); });
+
+  // Braking = sustained DROP in engine pitch (throttle lift). Slider = how big a
+  // drop (as % of the pitch range) counts. Reject brief dips that rebound (gear
+  // blip, bump) by requiring the pitch to stay down afterward.
+  function computeSndZones(){
+    if(!sndEnv.length) return [];
+    var n=sndEnv.length;
+    var fs=sndEnv.map(function(p){return p.fs;});
+    var span=Math.max(1,sndFreqMax-sndFreqMin);
+    var sens=parseInt(sndThr.value,10)/100;          // 0..1
+    var minFracDrop=0.12+(1-sens)*0.5;               // high slider -> smaller drop needed
+    var minDropHz=minFracDrop*span;
+    var minDur=parseInt(sndDur.value,10)/10;
+    var step=(sndEnv[n-1].t-sndEnv[0].t)/Math.max(1,n-1);
+    var minFrames=Math.max(2,Math.round(minDur/step));
+
+    // slope of pitch (Hz/s); braking = strongly negative slope region
+    var zones=[], cur=null;
+    var slopeThr=minDropHz/Math.max(0.2,minDur); // required average fall rate
+    for(var i=1;i<n;i++){
+      var slope=(fs[i]-fs[i-1])/step;  // Hz/s, negative = pitch falling
+      if(slope < -slopeThr*0.5){ if(!cur)cur={i0:i-1,i1:i}; else cur.i1=i; }
+      else { if(cur) finalize(cur); cur=null; }
+    }
+    if(cur) finalize(cur);
+
+    function finalize(z){
+      var i0=z.i0, i1=z.i1;
+      var fStart=fs[i0], fMin=fs[i1];
+      for(var q=i0;q<=i1;q++) if(fs[q]<fMin) fMin=fs[q];
+      var drop=fStart-fMin;
+      if(drop<minDropHz) return;
+      if((i1-i0)<minFrames) return;
+      // require the engine to be confidently tracked across the drop — a dip caused
+      // by wind/voice breaking the lock (low conf) is not a real RPM fall.
+      var cs=0,cc=0; for(var p=i0;p<=i1;p++){ cs+=(sndEnv[p].conf||0); cc++; }
+      if(cc && cs/cc < 0.3) return;
+      // rebound test: pitch must stay down ~0.5s after (else it was a blip)
+      var aEnd=Math.min(n-1,i1+Math.round(0.5/step)), s=0,c=0;
+      for(var r=i1;r<=aEnd;r++){ s+=fs[r]; c++; }
+      var after=c?s/c:fMin;
+      if(after - fMin > 0.5*drop) return;
+      zones.push({start:sndEnv[i0].t, end:sndEnv[i1].t, score:drop});
+    }
+
+    // merge close
+    var merged=[];
+    zones.sort(function(a,b){return a.start-b.start;});
+    zones.forEach(function(z){
+      if(merged.length && z.start<=merged[merged.length-1].end+0.3){
+        merged[merged.length-1].end=Math.max(merged[merged.length-1].end,z.end);
+        merged[merged.length-1].score=Math.max(merged[merged.length-1].score,z.score);
+      } else merged.push({start:z.start,end:z.end,score:z.score});
+    });
+    return merged;
+  }
+
+  function previewWaveZones(){
+    var zones=computeSndZones();
+    var W=1000,H=140, dur=vid.duration||(sndEnv.length?sndEnv[sndEnv.length-1].t:1);
+    waveZones.innerHTML="";
+    zones.forEach(function(z){
+      var x=(z.start/dur)*W, w=Math.max(1,((z.end-z.start)/dur)*W);
+      var r=document.createElementNS("http://www.w3.org/2000/svg","rect");
+      r.setAttribute("x",x.toFixed(1)); r.setAttribute("y","0");
+      r.setAttribute("width",w.toFixed(1)); r.setAttribute("height",H);
+      r.setAttribute("fill","rgba(255,34,51,0.22)"); r.setAttribute("stroke","rgba(255,34,51,0.6)"); r.setAttribute("stroke-width","0.5");
+      waveZones.appendChild(r);
+    });
+  }
+
+  function sndDetect(){
+    var zones=computeSndZones();
+    if(!zones.length){
+      // diagnose: did the engine ever lock?
+      var lockFrac=0; if(sndEnv.length){ var c=0; sndEnv.forEach(function(p){if((p.conf||0)>=0.3)c++;}); lockFrac=c/sndEnv.length; }
+      sndStat.className="audiostat";
+      if(lockFrac<0.15){
+        sndStatTxt.textContent="engine not locked ("+(lockFrac*100|0)+"% of clip) — engine likely inaudible; use GPS or video";
+      } else {
+        sndStatTxt.textContent="engine tracked but no clear drops — raise drop sensitivity / lower min duration";
+      }
+      return;
+    }
+    var dur=vid.duration||1e9;
+    zones=zones.map(function(z){return {start:Math.max(0,z.start),end:Math.min(dur,z.end),score:z.score};}).filter(function(z){return z.end>z.start;});
+    lastSndZones = zones.slice();
+    applyHits(zones, {snd:true});
+    sndStat.className="audiostat ready";
+    sndStatTxt.textContent=zones.length+" braking zone"+(zones.length===1?"":"s")+" from engine pitch";
+  }
+  sndDetectBtn.addEventListener("click",sndDetect);
+
+  /* ================= SMART AUTO-DETECT (fusion) =================
+     Run every available method, then keep only zones CONFIRMED by agreement —
+     this is what cuts false positives. GPS is exact, so a GPS zone stands alone;
+     video and sound are each weak, so they must agree with at least one other
+     method (overlap in time) to be kept. */
+  var fuseBtn=$("#fuseBtn"), fuseStat=$("#fuseStat"), fuseStatTxt=$("#fuseStatTxt");
+
+  function overlaps(a,b){ return a.start < b.end+0.4 && b.start < a.end+0.4; }
+
+  function fuseZones(){
+    // Gather available method outputs (only those that actually ran/loaded)
+    var haveGps = lastGpsZones.length>0;
+    var haveMot = lastMotionZones.length>0;
+    var haveSnd = lastSndZones.length>0;
+    var methods=[];
+    if(haveGps) methods.push(lastGpsZones);
+    if(haveMot) methods.push(lastMotionZones);
+    if(haveSnd) methods.push(lastSndZones);
+    if(!methods.length) return null;
+
+    // GPS is exact → its zones are always kept.
+    var kept=[];
+    if(haveGps) lastGpsZones.forEach(function(z){ kept.push({start:z.start,end:z.end,score:z.score||1,votes:3,gps:true}); });
+
+    // For non-GPS zones, require agreement with at least one OTHER method.
+    var weak=[];
+    if(haveMot) weak.push(lastMotionZones);
+    if(haveSnd) weak.push(lastSndZones);
+    for(var i=0;i<weak.length;i++){
+      for(var a=0;a<weak[i].length;a++){
+        var z=weak[i][a], votes=1, conf=false;
+        // does GPS confirm it?
+        if(haveGps && lastGpsZones.some(function(g){return overlaps(g,z);})) { conf=true; votes++; }
+        // does the OTHER weak method confirm it?
+        for(var j=0;j<weak.length;j++){ if(j===i) continue;
+          if(weak[j].some(function(o){return overlaps(o,z);})){ conf=true; votes++; }
+        }
+        // keep only if confirmed by another method, OR if it's the only method available
+        if(conf || methods.length===1){
+          // avoid duplicating something already kept
+          if(!kept.some(function(k){return overlaps(k,z);}))
+            kept.push({start:z.start,end:z.end,score:z.score||0,votes:votes});
+        }
+      }
+    }
+    // merge overlaps in the final set
+    kept.sort(function(a,b){return a.start-b.start;});
+    var merged=[];
+    kept.forEach(function(z){
+      if(merged.length && z.start<=merged[merged.length-1].end+0.3){
+        merged[merged.length-1].end=Math.max(merged[merged.length-1].end,z.end);
+        merged[merged.length-1].votes=Math.max(merged[merged.length-1].votes,z.votes);
+      } else merged.push(z);
+    });
+    return {zones:merged, methods:methods.length, single:methods.length===1};
+  }
+
+  function runFusion(){
+    // ensure each available method has been computed; run them as needed.
+    // GPS only if a track is loaded; sound only if a scan exists; motion needs a scan too.
+    var pending=[];
+    if(gpsTrack && !lastGpsZones.length){ detectGPS(); }
+    if(sndEnv.length && !lastSndZones.length){ /* compute silently */ var z=computeSndZones(); lastSndZones=z.map(function(x){return {start:x.start,end:x.end,score:x.score};}); }
+
+    var haveAnyScan = (captured.length>0) || sndEnv.length>0 || gpsTrack;
+    if(!haveAnyScan){
+      fuseStat.className="audiostat";
+      fuseStatTxt.textContent="run at least one scan first (video/sound) or import GPS, then Smart Auto-Detect";
+      return;
+    }
+
+    var res=fuseZones();
+    if(!res || !res.zones.length){
+      fuseStat.className="audiostat";
+      fuseStatTxt.textContent="no agreed braking zones — methods didn't confirm each other";
+      return;
+    }
+    applyHits(res.zones, {fused:true});
+    fuseStat.className="audiostat ready";
+    if(res.single){
+      fuseStatTxt.textContent=res.zones.length+" zones (only one method available — run more to cross-check)";
+    } else {
+      fuseStatTxt.textContent=res.zones.length+" confirmed braking zones from "+res.methods+" methods";
+    }
+  }
+  fuseBtn.addEventListener("click",runFusion);
+
+  function runDetect(){
+    if(capturing||scanning) return;
+    if(!currentFile){ return; }
+
+    capturing=true; detectBtn.disabled=true;
+    audioStat.className="audiostat busy";
+    audioStatTxt.textContent="watching clip for braking…";
+    scanBar.classList.add("show"); scanFill.style.width="0%";
+    prevLuma=null;
+
+    // remember playback state to restore afterwards
+    restoreState={t:vid.currentTime, rate:vid.playbackRate, paused:vid.paused, muted:vid.muted};
+    captured=[];
+    var dur=vid.duration||0;
+
+    vid.muted=true;                 // silence the fast-forward pass
+    vid.playbackRate=CAPTURE_RATE;
+    var seekDone=function(){
+      vid.removeEventListener("seeked",seekDone);
+      vid.play().then(loop).catch(loop);
+    };
+    if(vid.currentTime<0.05){
+      vid.play().then(loop).catch(loop);   // already at start: no 'seeked' fires
+    } else {
+      vid.addEventListener("seeked",seekDone);
+      vid.currentTime=0;
+    }
+
+    function loop(){
+      if(!capturing) return;
+      captured.push({t:vid.currentTime, motion:grabMotion()});
+      if(dur) scanFill.style.width=Math.min(99,Math.round(vid.currentTime/dur*100))+"%";
+      if(vid.ended || (dur && vid.currentTime>=dur-0.05)){ endCapture(); return; }
+      captureRAF=requestAnimationFrame(loop);
+    }
+  }
+
+  function stopCapture(){
+    capturing=false;
+    if(captureRAF) cancelAnimationFrame(captureRAF);
+    vid.pause();
+    if(restoreState){
+      vid.playbackRate=restoreState.rate;
+      vid.muted=restoreState.muted;
+      vid.currentTime=restoreState.t;
+      if(!restoreState.paused) vid.play();
+    }
+  }
+
+  function endCapture(){
+    stopCapture();
+    detectMotion();
+  }
+
+  /* ================= MOTION DETECTION (deceleration) =================
+     Speed proxy = optical-flow radial expansion (see grabMotion). Braking is a
+     sharp, sustained drop in that signal: the scene was rushing outward, now it's not.
+     We smooth the signal, find falling edges from a local high to a local low,
+     and emit a zone covering each strong slow-down. No audio, no reference. */
+  function detectMotion(){
+    scanning=true;
+    audioStat.className="audiostat busy"; audioStatTxt.textContent="analysing motion…";
+    var N=captured.length;
+    if(N<10){ finishScan("clip too short to analyse"); return; }
+
+    // raw speed proxy
+    var raw=new Float32Array(N);
+    for(var i=0;i<N;i++) raw[i]=captured[i].motion||0;
+
+    // estimate frame spacing in clip-seconds
+    var span=captured[N-1].t-captured[0].t;
+    var dt=span/Math.max(1,N-1);            // seconds per sample
+    var winFrames=Math.max(2,Math.round(0.45/dt)); // ~0.45s smoothing (helmet cam is jittery)
+
+    // pass A: short median filter to reject head-bob / single-frame flow spikes
+    var med=new Float32Array(N);
+    var mr=Math.max(1,Math.round(0.10/dt));
+    for(var q=0;q<N;q++){
+      var lo2=Math.max(0,q-mr), hi2=Math.min(N-1,q+mr), tmp=[];
+      for(var z=lo2;z<=hi2;z++) tmp.push(raw[z]);
+      tmp.sort(function(a,b){return a-b});
+      med[q]=tmp[tmp.length>>1];
+    }
+    // pass B: moving-average smooth
+    var sp=new Float32Array(N);
+    for(var k=0;k<N;k++){
+      var a=Math.max(0,k-winFrames), b=Math.min(N-1,k+winFrames), s=0,c=0;
+      for(var j=a;j<=b;j++){ s+=med[j]; c++; }
+      sp[k]=s/c;
+    }
+
+    // normalise 0..1 over robust range (ignore extreme spikes)
+    var sorted=Array.prototype.slice.call(sp).sort(function(x,y){return x-y;});
+    var lo=sorted[Math.floor(N*0.05)], hi=sorted[Math.floor(N*0.95)];
+    var rng=Math.max(1e-6,hi-lo);
+    var spn=new Float32Array(N);
+    for(var m=0;m<N;m++) spn[m]=Math.max(0,Math.min(1,(sp[m]-lo)/rng));
+
+    // sensitivity -> how big a drop counts as braking (fraction of full speed range)
+    var sens01=parseInt(sens.value,10)/100;
+    var minDrop=0.12+(1-sens01)*0.5;        // sens 0.95 -> ~0.14 ; sens 0.20 -> ~0.52
+    var minBrakeDur=Math.max(2,Math.round(0.15/dt));
+    var maxBrakeDur=Math.round(5.0/dt);
+
+    // walk the signal: find falling edges (local max -> following local min)
+    var zones=[], maxDrop=0;
+    var k2=1;
+    while(k2<N-1){
+      // is this a local-ish peak (above mid and higher than recent)?
+      var isPeak = spn[k2]>=spn[k2-1] && spn[k2]>=spn[k2+1] && spn[k2]>0.35;
+      if(!isPeak){ k2++; continue; }
+      // descend to the following local minimum
+      var top=k2, j2=k2+1, bottom=k2;
+      while(j2<N && (j2-top)<maxBrakeDur){
+        if(spn[j2]<spn[bottom]) bottom=j2;
+        // stop if speed climbs back up meaningfully past the min (end of braking)
+        if(spn[j2] > spn[bottom]+0.08 && (bottom>top)) break;
+        j2++;
+      }
+      var drop=spn[top]-spn[bottom];
+      if(drop>=minDrop && (bottom-top)>=minBrakeDur){
+        // trim the flat top: start where speed has fallen ~15% into the drop
+        var st=top;
+        while(st<bottom && spn[st] > spn[top]-0.15*drop) st++;
+        if(st>=bottom) st=top;
+        zones.push({start:captured[st].t, end:captured[bottom].t, score:drop});
+        if(drop>maxDrop) maxDrop=drop;
+        k2=bottom+1;          // continue after this brake
+      } else {
+        k2++;
+      }
+    }
+
+    // merge near-touching zones
+    zones.sort(function(a,b){return a.start-b.start;});
+    var merged=[];
+    zones.forEach(function(z){
+      if(merged.length && z.start<=merged[merged.length-1].end+0.25){
+        merged[merged.length-1].end=Math.max(merged[merged.length-1].end,z.end);
+        merged[merged.length-1].score=Math.max(merged[merged.length-1].score,z.score);
+      } else merged.push(z);
+    });
+
+    scanFill.style.width="100%";
+    lastMotionZones = merged.slice();
+    if(!merged.length){
+      finishScan("no clear decelerations found — raise sensitivity, or the cam may be too shaky/static");
+      return;
+    }
+    applyHits(merged, {motion:true, maxDrop:maxDrop});
+  }
+
+  function applyHits(hits, diag){
+    // drop existing auto zones, keep manual
+    segments=segments.filter(function(s){return !s.auto});
+    var added=0;
+    hits.forEach(function(h){
+      if(h.end-h.start<0.10) return;
+      // skip if it basically coincides with a manual zone (incl. the reference)
+      var overlapManual=segments.some(function(s){
+        return !s.auto && h.start<s.end+0.15 && h.end>s.start-0.15;
+      });
+      if(overlapManual) return;
+      segments.push({start:h.start,end:h.end,auto:true,event:"braking"});
+      added++;
+    });
+    mergeSegments(); save(); render();
+    if(diag && (diag.gps||diag.snd||diag.fused)){ return; }  // gps/sound/fusion set their own status line
+    var strength=(diag&&diag.maxDrop)?(" · strongest decel "+(diag.maxDrop*100|0)+"%"):"";
+    if(added===0){
+      finishScan("no new zones at this sensitivity — raise the slider and scan again"+strength);
+    } else {
+      finishScan(added+" auto-zone"+(added===1?"":"s")+" added"+strength);
+    }
+  }
+
+  function finishScan(msg){
+    scanning=false; detectBtn.disabled=false;
+    audioStat.className="audiostat ready";
+    audioStatTxt.textContent=msg;
+    setTimeout(function(){scanBar.classList.remove("show");},600);
+  }
+
+  detectBtn.addEventListener("click",runDetect);
+  sens.addEventListener("input",function(){sensVal.textContent=sens.value;});
+
+  /* ---------- export / import ---------- */
+  $("#export").addEventListener("click",function(){
+    // export schema: each segment is {start, end, event:"braking"|"lift"}
+    var out=segments.map(function(s){
+      return { start:+s.start.toFixed(3), end:+s.end.toFixed(3), event:(s.event==="lift")?"lift":"braking" };
+    });
+    var data={version:2,duration:vid.duration||0,segments:out};
+    var blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+    var a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download="brake-telemetry.json";a.click();
+  });
+  $("#import").addEventListener("click",function(){$("#importFile").click()});
+  $("#importFile").addEventListener("change",function(e){
+    var f=e.target.files[0];if(!f)return;
+    var r=new FileReader();
+    r.onload=function(){
+      try{var d=JSON.parse(r.result);
+        if(Array.isArray(d.segments)){
+          // normalize: accept new {event} or legacy {auto}; default to braking
+          segments=d.segments.map(function(s){
+            var ev=(s.event==="lift")?"lift":"braking";
+            return { start:s.start, end:s.end, auto:!!s.auto, event:ev };
+          });
+          mergeSegments();save();render();refreshDetectUI();
+        }
+      }catch(err){alert("Could not read that file.");}
+    };
+    r.readAsText(f);
+  });
+
+  $("#clear").addEventListener("click",function(){
+    if(segments.length && confirm("Delete all brake zones for this clip?")){
+      segments=[];save();render();refreshDetectUI();
+    }
+  });
+
+  function clearAuto(){
+    var hadAuto=segments.some(function(s){return s.auto});
+    if(!hadAuto){ return; }
+    segments=segments.filter(function(s){return !s.auto});
+    save();render();refreshDetectUI();
+  }
+  $("#clearAuto").addEventListener("click",clearAuto);
+
+  // main toolbar button: asks what to remove
+  $("#clearBtn").addEventListener("click",function(){
+    if(!segments.length){ return; }
+    var hasAuto=segments.some(function(s){return s.auto});
+    var hasManual=segments.some(function(s){return !s.auto});
+    var msg="Remove brake zones?\n\nOK = remove ALL zones";
+    if(hasAuto && hasManual) msg+="\nCancel = keep your recorded zones, remove only auto-detected ones";
+    if(confirm(msg)){
+      segments=[];save();render();refreshDetectUI();
+    } else if(hasAuto && hasManual){
+      clearAuto();
+    }
+  });
+
+  $("#newclip").addEventListener("click",function(){
+    if(braking) endBrake();
+    if(recording) recBtn.click();
+    if(capturing) stopCapture();
+    capturing=false; scanning=false; captured=[];
+    lastMotionZones=[]; lastGpsZones=[]; lastSndZones=[];
+    vid.pause(); vid.removeAttribute("src"); vid.load();
+    segments=[]; clipKey=null; currentFile=null;
+    gpsTrack=null; gpsControls.style.display="none"; gpsProj=null; gpsHasCoords=false;
+    if(gpsBrakeMarks) gpsBrakeMarks.innerHTML="";
+    if(gpsPath){ gpsPath.setAttribute("d",""); gpsPathDone.setAttribute("d",""); }
+    gpsStat.className="audiostat"; gpsStatTxt.textContent="best accuracy — uses real speed";
+    if(sndCapturing) sndStop();
+    sndCapturing=false; sndEnv=[]; sndControls.style.display="none";
+    if(waveZones) waveZones.innerHTML="";
+    var wc=document.getElementById("waveConf"); if(wc) wc.remove();
+    sndStat.className="audiostat"; sndStatTxt.textContent="tracks engine pitch (RPM)";
+    detect.style.display="none";
+    ws.classList.add("hidden"); drop.classList.remove("hidden");
+    fileInput.value=""; statusTxt.textContent="No clip loaded";
+    statusDot.classList.remove("live");
+  });
+
+  /* ---------- util ---------- */
+  function fmt(t){
+    t=t||0; var m=Math.floor(t/60), s=t-m*60;
+    return (m<10?"0":"")+m+":"+(s<10?"0":"")+s.toFixed(1);
+  }
+})();
+</script>
+</body>
+</html>

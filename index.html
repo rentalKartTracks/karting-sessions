@@ -267,10 +267,10 @@
     background: var(--line);
   }
 
-  /* ── MAIN 3-CARD GRID ── */
+  /* ── MAIN 4-CARD GRID ── */
   .cards-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 2px;
   }
 
@@ -372,6 +372,13 @@
   /* Card 3 — Telemetry */
   .card-telemetry {
     --card-bg: linear-gradient(160deg, #0a0d1a 0%, #05070d 100%);
+    --card-gradient: linear-gradient(180deg, rgba(7,7,13,0) 0%, rgba(7,7,13,.95) 100%);
+  }
+
+  /* Card 4 — Brake */
+  .card-brake {
+    --card-accent: #ff2233;
+    --card-bg: linear-gradient(160deg, #1c090b 0%, #0c0506 100%);
     --card-gradient: linear-gradient(180deg, rgba(7,7,13,0) 0%, rgba(7,7,13,.95) 100%);
   }
 
@@ -644,6 +651,15 @@
   }
 
   /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .cards-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .card {
+      aspect-ratio: 4/3;
+    }
+  }
+
   @media (max-width: 768px) {
     .header-nav { top: 16px; right: 16px; justify-content: center; width: calc(100% - 32px); }
     .nav-pill { font-size: 9px; padding: 4px 8px; }
@@ -693,6 +709,7 @@
     <a href="sessions.html"     class="nav-pill">SESSIONS</a>
     <a href="map.html"          class="nav-pill">MAP</a>
     <a href="championship.html" class="nav-pill">CHAMPIONSHIP</a>
+    <a href="brake.html"        class="nav-pill">BRAKE DETECT</a>
   </nav>
 
   <div class="hero-content">
@@ -847,6 +864,40 @@
         <p class="card-desc">Full session dashboard with lap-by-lap analysis, personal bests, trend tracking, and video replay.</p>
         <div class="card-cta">
           Open Dashboard
+          <span class="card-cta-arrow"></span>
+        </div>
+      </div>
+    </a>
+
+    <!-- CARD 4: BRAKE DETECTION -->
+    <a href="brake.html" class="card card-brake">
+      <div class="card-bg"></div>
+
+      <!-- Animated brake waveform / pulses -->
+      <svg style="position:absolute;inset:0;width:100%;height:60%;top:15%;opacity:0.25;z-index:0;" viewBox="0 0 300 150" preserveAspectRatio="none">
+        <path d="M0,100 L50,100 L60,30 L80,130 L90,100 L150,100 L160,20 L185,140 L200,100 L250,100 L260,40 L280,120 L300,100"
+          fill="none" stroke="#ff2233" stroke-width="2.5">
+          <animate attributeName="stroke-dashoffset" from="600" to="0" dur="3.5s" fill="freeze"/>
+        </path>
+        <circle cx="70" cy="80" r="25" fill="none" stroke="#ff2233" stroke-width="1.5" opacity="0.3">
+          <animate attributeName="r" values="10;35;10" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.5;0;0.5" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="172" cy="80" r="30" fill="none" stroke="#ff2233" stroke-width="1.5" opacity="0.3">
+          <animate attributeName="r" values="15;40;15" dur="3s" repeatCount="indefinite" begin="1s"/>
+          <animate attributeName="opacity" values="0.5;0;0.5" dur="3s" repeatCount="indefinite" begin="1s"/>
+        </circle>
+      </svg>
+
+      <span class="card-num">04</span>
+      <div class="card-border"></div>
+
+      <div class="card-content">
+        <div class="card-tag">Telemetry Overlay</div>
+        <h2 class="card-title">Brake<br>Detection</h2>
+        <p class="card-desc">Extract brake points from footage using computer vision and audio tracking, or sync exact GPS deceleration.</p>
+        <div class="card-cta">
+          Detect Braking
           <span class="card-cta-arrow"></span>
         </div>
       </div>
