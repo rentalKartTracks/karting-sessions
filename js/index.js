@@ -53,7 +53,8 @@ function getUrlParams() {
     dateFilter: params.get('date') || 'all',
     dateFrom: params.get('from') || '',
     dateTo: params.get('to') || '',
-    sort: params.get('sort') || 'date'
+    sort: params.get('sort') || 'date',
+    page: parseInt(params.get('page'), 10) || 1
   };
 }
 
@@ -73,6 +74,7 @@ function updateUrlParams() {
   if (dateFilter === 'custom' && dateFrom) params.set('from', dateFrom);
   if (dateFilter === 'custom' && dateTo) params.set('to', dateTo);
   if (currentSort !== 'date') params.set('sort', currentSort);
+  if (currentPage > 1) params.set('page', currentPage);
 
   const newUrl = params.toString() ? `${window.location.pathname}?${params.toString()}` : window.location.pathname;
   window.history.replaceState({}, '', newUrl);
@@ -88,6 +90,7 @@ function applyUrlParams() {
   document.getElementById('date-from').value = params.dateFrom;
   document.getElementById('date-to').value = params.dateTo;
   currentSort = params.sort;
+  currentPage = params.page;
   updateDateFilterVisibility();
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.sort === currentSort);
@@ -510,13 +513,40 @@ function renderSessions() {
   // Pagination controls
   let paginationHTML = '';
   if (totalPages > 1) {
+    const pageButtons = [];
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, currentPage + 2);
+
+    if (currentPage <= 3) {
+      startPage = 1;
+      endPage = Math.min(totalPages, 5);
+    } else if (currentPage >= totalPages - 2) {
+      endPage = totalPages;
+      startPage = Math.max(1, totalPages - 4);
+    }
+
+    if (startPage > 1) {
+      pageButtons.push(`<button class="pagination-btn" onclick="goToPage(1)">1</button>`);
+      if (startPage > 2) pageButtons.push(`<span class="pagination-ellipsis">…</span>`);
+    }
+
+    for (let page = startPage; page <= endPage; page++) {
+      pageButtons.push(`<button class="pagination-btn ${page === currentPage ? 'active' : ''}" ${page === currentPage ? 'disabled' : ''} onclick="goToPage(${page})">${page}</button>`);
+    }
+
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) pageButtons.push(`<span class="pagination-ellipsis">…</span>`);
+      pageButtons.push(`<button class="pagination-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`);
+    }
+
     paginationHTML = `
       <div class="pagination">
         <button class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(1)">⏮️ First</button>
         <button class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">⬅️ Prev</button>
-        <span class="pagination-info">Page ${currentPage} of ${totalPages} (${filteredSessions.length} sessions)</span>
+        <div class="pagination-pages">${pageButtons.join('')}</div>
         <button class="pagination-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">Next ➡️</button>
         <button class="pagination-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${totalPages})">Last ⏭️</button>
+        <span class="pagination-info">Page ${currentPage} of ${totalPages} (${filteredSessions.length} sessions)</span>
       </div>
     `;
   }
@@ -532,7 +562,8 @@ function renderSessions() {
 }
 
 function goToPage(page) {
-  currentPage = page;
+  currentPage = Math.max(1, Math.min(totalPages, page));
+  updateUrlParams();
   renderSessions();
 }
 

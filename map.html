@@ -11,25 +11,8 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
 <style>
-  :root {
-    --gold:   #e8c84a;
-    --green:  #4ae8a0;
-    --blue:   #4ab8e8;
-    --red:    #e84a4a;
-    --bg:     #07070d;
-    --surface: #0f0f1a;
-    --line:   #1c1c2a;
-    --dim:    #333344;
-    --muted:  #666677;
-    --text:   #ddddf0;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background: var(--bg);
-    font-family: 'Barlow', sans-serif;
-    color: var(--text);
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -118,19 +101,6 @@
     flex: 1;
   }
   .header-nav { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
-  .nav-pill {
-    background: rgba(255,255,255,.06); backdrop-filter: blur(8px);
-    color: var(--muted); text-decoration: none; padding: 5px 12px;
-    border-radius: 6px; font-family: 'Barlow Condensed', sans-serif;
-    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
-    text-transform: uppercase; transition: all .2s;
-    border: 1px solid var(--line); white-space: nowrap;
-  }
-  .nav-pill:hover {
-    background: rgba(232,200,74,.15); border-color: rgba(232,200,74,.4);
-    color: var(--gold); transform: translateY(-2px);
-  }
-
   .topbar-tag {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 9px;
@@ -429,10 +399,9 @@
     .main { flex-direction: column; }
     .tracks-list { display: flex; flex-direction: row; overflow-x: auto; overflow-y: hidden; padding: 8px; gap: 4px; }
     .track-card { min-width: 200px; margin-bottom: 0; }
-    .nav-pill { font-size: 9px; padding: 4px 8px; }
   }
 </style>
-  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="css/site.min.css">
 </head>
 <body>
 

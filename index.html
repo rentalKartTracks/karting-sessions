@@ -9,39 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --gold:    #e8c84a;
-    --red:     #e84a4a;
-    --bg:      #07070d;
-    --surface: #0f0f1a;
-    --line:    #1c1c2a;
-    --dim:     #333344;
-    --text:    #ddddf0;
-    --muted:   #666677;
-  }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    font-family: 'Barlow', sans-serif;
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* ── NOISE OVERLAY ── */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.6;
-  }
 
   /* ── HERO ── */
   .hero {
@@ -184,18 +152,6 @@
     z-index: 100;
     opacity: 0;
     animation: fadeUp .8s ease .8s forwards;
-  }
-  .nav-pill {
-    background: rgba(255,255,255,.06); backdrop-filter: blur(8px);
-    color: var(--muted); text-decoration: none; padding: 5px 12px;
-    border-radius: 4px; font-family: 'Barlow Condensed', sans-serif;
-    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
-    text-transform: uppercase; transition: all .2s;
-    border: 1px solid rgba(255,255,255,.08); white-space: nowrap;
-  }
-  .nav-pill:hover {
-    background: rgba(232,200,74,.15); border-color: rgba(232,200,74,.4);
-    color: var(--gold); transform: translateY(-2px);
   }
 
   /* ── CHEVRON DOWN ── */
@@ -662,8 +618,7 @@
 
   @media (max-width: 768px) {
     .header-nav { top: 16px; right: 16px; justify-content: center; width: calc(100% - 32px); }
-    .nav-pill { font-size: 9px; padding: 4px 8px; }
-    
+
     .cards-grid {
       grid-template-columns: 1fr;
     }
@@ -690,7 +645,7 @@
     .hero-title { letter-spacing: 2px; }
   }
 </style>
-  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="css/site.min.css">
 </head>
 <body>
 

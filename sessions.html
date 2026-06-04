@@ -13,59 +13,6 @@
     href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&family=Barlow:wght@300;400;500&display=swap"
     rel="stylesheet">
   <style>
-    /* ── TOKENS ── */
-    :root {
-      --gold: #e8c84a;
-      --gold-dim: rgba(232, 200, 74, .15);
-      --red: #e84a4a;
-      --green: #4ae8a0;
-      --blue: #4ab8e8;
-      --bg: #07070d;
-      --surface: #0f0f1a;
-      --surface2: #14141f;
-      --line: #1c1c2a;
-      --dim: #333344;
-      --text: #ddddf0;
-      --muted: #666677;
-
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 16px;
-      --radius-full: 9999px;
-      --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      background: var(--bg);
-      font-family: 'Barlow', sans-serif;
-      color: var(--text);
-      min-height: 100vh;
-      overflow-x: hidden;
-      padding: 0 20px 60px;
-    }
-
-    /* Noise overlay */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.5;
-    }
 
     /* Animated grid */
     body::after {
@@ -198,30 +145,6 @@
       justify-content: flex-end;
       opacity: 0;
       animation: fadeUp .6s ease .5s forwards;
-    }
-
-    .nav-pill {
-      background: rgba(255, 255, 255, .07);
-      backdrop-filter: blur(8px);
-      color: var(--text);
-      text-decoration: none;
-      padding: 6px 14px;
-      border-radius: var(--radius-sm);
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      transition: all var(--transition);
-      border: 1px solid rgba(255, 255, 255, .12);
-      white-space: nowrap;
-    }
-
-    .nav-pill:hover {
-      background: rgba(232, 200, 74, .15);
-      border-color: rgba(232, 200, 74, .4);
-      color: var(--gold);
-      transform: translateY(-2px);
     }
 
     /* ── STATS STRIP ── */
@@ -783,6 +706,28 @@
       transform: translateY(-1px);
     }
 
+    .pagination-btn.active {
+      background: var(--gold);
+      color: var(--bg);
+      border-color: var(--gold);
+      cursor: default;
+      transform: none;
+    }
+
+    .pagination-ellipsis {
+      color: var(--muted);
+      font-size: 18px;
+      padding: 0 6px;
+    }
+
+    .pagination-pages {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+
     .pagination-btn:disabled {
       opacity: 0.3;
       cursor: not-allowed;
@@ -993,11 +938,6 @@
         right: 14px;
       }
 
-      .nav-pill {
-        font-size: 10px;
-        padding: 5px 10px;
-      }
-
       .sessions-grid {
         grid-template-columns: 1fr;
       }
@@ -1074,7 +1014,7 @@
       }
     }
   </style>
-  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="css/site.min.css">
 </head>
 
 <body>

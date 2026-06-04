@@ -13,43 +13,13 @@
     href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,400&family=Barlow:wght@400;500&display=swap"
     rel="stylesheet">
   <style>
-    :root {
-      --gold: #e8c84a;
-      --silver: #b8b8c8;
-      --bronze: #cd7f32;
-      --red: #e84a4a;
-      --green: #4ae8a0;
-      --blue: #4ab8e8;
-      --purple: #a84ae8;
-      --bg: #08080e;
-      --surface: #0f0f1a;
-      --line: #1c1c2a;
-      --dim: #444455;
-      --muted: #666677;
-      --text: #e0e0ee;
-    }
-
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background: var(--bg);
-      font-family: 'Barlow', sans-serif;
-      color: var(--text);
-      min-height: 100vh;
-    }
 
     /* TOPBAR */
     .topbar {
       background: var(--surface);
       border-bottom: 1px solid var(--line);
       padding: 0 24px;
-      height: 56px;
+      height: 88px;
       display: flex;
       align-items: center;
       gap: 16px;
@@ -85,85 +55,53 @@
       flex: 1;
     }
 
-    .topbar-tag {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--gold);
-      background: rgba(232, 200, 74, .1);
-      border: 1px solid rgba(232, 200, 74, .2);
-      padding: 4px 10px;
-      border-radius: 3px;
-      flex-shrink: 0;
-    }
-
-    .header-nav {
+    /* YEAR SWITCHER BAR */
+    .year-switcher-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      padding: 12px 24px;
       display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-left: auto;
-    }
-
-    .nav-pill {
-      background: rgba(255, 255, 255, .06);
-      backdrop-filter: blur(8px);
-      color: var(--muted);
-      text-decoration: none;
-      padding: 5px 12px;
-      border-radius: 6px;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      transition: all .2s;
-      border: 1px solid var(--line);
-      white-space: nowrap;
-    }
-
-    .nav-pill:hover {
-      background: rgba(232, 200, 74, .15);
-      border-color: rgba(232, 200, 74, .4);
-      color: var(--gold);
-      transform: translateY(-2px);
+      align-items: center;
+      justify-content: flex-start;
     }
 
     /* YEAR SWITCHER */
     .year-switcher {
       display: flex;
       align-items: center;
-      gap: 2px;
-      background: rgba(255, 255, 255, .04);
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 3px;
+      gap: 0;
+      background: none;
+      border: none;
+      border-radius: 0;
+      padding: 0;
       flex-shrink: 0;
     }
 
     .year-btn {
-      font-family: 'Bebas Neue', cursive;
-      font-size: 16px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
       letter-spacing: 2px;
+      font-weight: 600;
+      text-transform: uppercase;
       color: var(--muted);
       background: none;
       border: none;
       cursor: pointer;
-      padding: 4px 12px;
-      border-radius: 4px;
+      padding: 8px 14px;
+      border-radius: 0;
+      border-bottom: 2px solid transparent;
       transition: all .2s ease;
       white-space: nowrap;
     }
 
     .year-btn:hover {
       color: var(--text);
-      background: rgba(255, 255, 255, .06);
+      border-bottom-color: rgba(232, 200, 74, 0.4);
     }
 
     .year-btn.active {
-      color: var(--bg);
-      background: var(--gold);
+      color: var(--gold);
+      border-bottom-color: var(--gold);
     }
 
     /* PANELS */
@@ -191,10 +129,10 @@
       color: #111;
       font-family: 'Barlow Condensed', sans-serif;
       font-weight: 700;
-      font-size: 10px;
+      font-size: 12px;
       letter-spacing: 3px;
       text-transform: uppercase;
-      padding: 3px 12px;
+      padding: 4px 14px;
       border-radius: 20px;
       margin-bottom: 10px;
     }
@@ -210,8 +148,8 @@
 
     .subtitle {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 12px;
-      letter-spacing: 2.5px;
+      font-size: 13px;
+      letter-spacing: 2px;
       color: var(--dim);
       text-transform: uppercase;
       margin-top: 7px;
@@ -287,10 +225,10 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      padding: 5px 12px;
+      padding: 6px 14px;
       border-radius: 4px;
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
       letter-spacing: 1.5px;
       text-transform: uppercase;
@@ -349,7 +287,7 @@
     .rule-note {
       text-align: center;
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 11px;
+      font-size: 12px;
       color: var(--dim);
       letter-spacing: 1.5px;
       text-transform: uppercase;
@@ -373,11 +311,11 @@
 
     thead tr.thead-group th {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 9px;
+      font-size: 11px;
       font-weight: 700;
-      letter-spacing: 2px;
+      letter-spacing: 1.8px;
       text-transform: uppercase;
-      padding: 0 8px 5px;
+      padding: 0 10px 6px;
       color: var(--dim);
     }
 
@@ -396,12 +334,12 @@
 
     thead tr.thead-sub th {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 9px;
+      font-size: 11px;
       font-weight: 600;
-      letter-spacing: 2px;
+      letter-spacing: 1.6px;
       text-transform: uppercase;
       color: #444;
-      padding: 5px 8px 10px;
+      padding: 6px 10px 10px;
       border-bottom: 1px solid var(--line);
       white-space: nowrap;
     }
@@ -478,8 +416,9 @@
     }
 
     td {
-      padding: 11px 8px;
+      padding: 12px 10px;
       vertical-align: middle;
+      font-size: 13px;
     }
 
     td.pos {
@@ -536,7 +475,7 @@
     td.ses {
       text-align: center;
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 600;
       color: #aaa;
       letter-spacing: .4px;
@@ -546,13 +485,13 @@
     td.ses.pending {
       color: var(--dim);
       font-style: italic;
-      font-size: 11px;
+      font-size: 12px;
       letter-spacing: 1px;
     }
 
     td.ses .pos-mini {
       display: block;
-      font-size: 9px;
+      font-size: 10px;
       font-weight: 600;
       letter-spacing: 1.5px;
       text-transform: uppercase;
@@ -587,7 +526,7 @@
 
     td.total.pending {
       color: var(--dim);
-      font-size: 11px;
+      font-size: 12px;
       font-family: 'Barlow Condensed', sans-serif;
       font-style: italic;
     }
@@ -595,7 +534,7 @@
     td.gap-leader {
       text-align: right;
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 13px;
+      font-size: 14px;
       color: #777;
       padding-right: 8px;
       white-space: nowrap;
@@ -604,7 +543,7 @@
     td.interval {
       text-align: right;
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 13px;
+      font-size: 14px;
       color: #555;
       padding-right: 8px;
       white-space: nowrap;
@@ -638,7 +577,7 @@
 
     .pace-val {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 10px;
+      font-size: 11px;
       color: #555;
       letter-spacing: .5px;
       min-width: 30px;
@@ -687,32 +626,23 @@
         font-size: 16px;
       }
 
-      .year-btn {
-        font-size: 13px;
-        padding: 4px 8px;
+      .year-switcher-bar {
+        padding: 10px 16px;
       }
 
-      .nav-pill {
-        font-size: 9px;
-        padding: 4px 8px;
+      .year-btn {
+        font-size: 12px;
+        padding: 6px 10px;
       }
     }
   </style>
-  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="css/site.min.css">
 </head>
 
 <body>
 
   <div class="topbar">
     <div class="topbar-title">Spring Challenge</div>
-
-    <div class="year-switcher" id="year-switcher">
-      <button class="year-btn" data-year="2025">2025</button>
-      <button class="year-btn active" data-year="2026">2026</button>
-      <button class="year-btn" data-year="2027">2027</button>
-    </div>
-
-    <div class="topbar-tag" id="topbar-tag">2026</div>
 
     <nav class="header-nav">
       <a href="index.html" class="nav-pill">HUB</a>
@@ -721,6 +651,14 @@
       <a href="fastest-lap-projection.html" class="nav-pill">FASTEST LAP</a>
       <a href="brake.html" class="nav-pill">BRAKE DETECT</a>
     </nav>
+  </div>
+
+  <div class="year-switcher-bar">
+    <div class="year-switcher" id="year-switcher">
+      <button class="year-btn" data-year="2025">2025</button>
+      <button class="year-btn active" data-year="2026">2026</button>
+      <button class="year-btn" data-year="2027">2027</button>
+    </div>
   </div>
 
   <!-- ═══════════════ 2025 PANEL ═══════════════ -->
@@ -1077,7 +1015,6 @@
         btn.classList.add('active');
         document.querySelectorAll('.season-panel').forEach(p => p.classList.remove('active'));
         document.getElementById(`panel-${year}`)?.classList.add('active');
-        document.getElementById('topbar-tag').textContent = year;
       });
     });
   </script>

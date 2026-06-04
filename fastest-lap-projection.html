@@ -6,38 +6,8 @@
 <title>Fastest Lap Projection</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0a0908;
-    --bg-grad-1: #0f0d0a;
-    --bg-grad-2: #07060a;
-    --surface: #161412;
-    --surface-2: #1f1c19;
-    --line: #2a2622;
-    --line-bright: #3a3530;
-    --text: #f4ebd9;
-    --text-dim: #a89c87;
-    --text-mute: #6b6357;
-    --yellow: #ffcc00;
-    --yellow-glow: rgba(255, 204, 0, 0.35);
-    --red: #e63946;
-    --orange: #ff7b1c;
-    --cyan: #4ecdc4;
-    --green: #95d96f;
-    --purple: #b08fff;
-    --apex: #ffcc00;
-    --brake: #e63946;
-    --accel: #4ecdc4;
-    --neutral: #ffe9a8;
-    --font-display: 'Oswald', sans-serif;
-    --font-body: 'Manrope', system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
     height: 100%;
     background: var(--bg);
@@ -86,32 +56,6 @@
     align-items: center;
     gap: 32px;
     border-bottom: 1px solid var(--line);
-  }
-  .header-nav {
-    margin-left: auto;
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  .nav-pill {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6px 10px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 999px;
-    color: var(--text);
-    font-family: var(--font-mono);
-    font-size: 11px;
-    text-decoration: none;
-    letter-spacing: 0.08em;
-    transition: background 0.2s, border-color 0.2s;
-  }
-  .nav-pill:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255,255,255,0.16);
   }
   .brand {
     display: flex;
@@ -195,7 +139,7 @@
     font-size: clamp(1.4rem, 2vw, 2.2rem);
     margin: 0 0 12px 0;
     line-height: 1.05;
-    color: rgba(244, 235, 217, 0.78);
+    color: var(--text);
     display: block;
   }
   .section-title::before { display: none; }
@@ -235,35 +179,48 @@
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
-    height: 4px;
-    background: var(--surface-2);
-    border-radius: 2px;
+    height: 8px;
+    background: linear-gradient(90deg, rgba(232,200,74,0.2), rgba(255,255,255,0.08));
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 999px;
     outline: none;
     cursor: pointer;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 8px;
+    background: transparent;
+    border-radius: 999px;
+  }
+  input[type="range"]::-moz-range-track {
+    height: 8px;
+    background: transparent;
+    border-radius: 999px;
   }
   input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 14px;
-    height: 14px;
+    width: 18px;
+    height: 18px;
     background: var(--yellow);
     border-radius: 50%;
     border: 2px solid var(--bg);
-    box-shadow: 0 0 0 1px var(--yellow), 0 0 8px var(--yellow-glow);
+    box-shadow: 0 0 0 1px var(--yellow), 0 0 12px rgba(232,200,74,0.45);
     cursor: grab;
-    transition: transform 0.1s;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    margin-top: -6px;
   }
   input[type="range"]::-webkit-slider-thumb:active {
-    transform: scale(1.15);
+    transform: scale(1.2);
     cursor: grabbing;
   }
   input[type="range"]::-moz-range-thumb {
-    width: 14px;
-    height: 14px;
+    width: 18px;
+    height: 18px;
     background: var(--yellow);
     border-radius: 50%;
     border: 2px solid var(--bg);
-    box-shadow: 0 0 0 1px var(--yellow), 0 0 8px var(--yellow-glow);
+    box-shadow: 0 0 0 1px var(--yellow), 0 0 12px rgba(232,200,74,0.45);
     cursor: grab;
   }
 
@@ -1190,7 +1147,7 @@
     50% { opacity: 0.4; }
   }
 </style>
-  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="css/site.min.css">
 </head>
 <body>
 <div class="app">
