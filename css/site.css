@@ -153,6 +153,11 @@ h3 {
   align-items: center;
 }
 
+/* Ensure header navigation floats above hero/title elements */
+.header-nav {
+  z-index: 20;
+}
+
 .nav-pill,
 .site-pill,
 .btn-pill {
