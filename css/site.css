@@ -158,6 +158,14 @@ h3 {
   z-index: 20;
 }
 
+/* Place header nav into the header flow to avoid overlapping large hero titles */
+.header .header-nav {
+  position: static !important;
+  margin-left: auto;
+  align-self: flex-start;
+  z-index: 20;
+}
+
 .nav-pill,
 .site-pill,
 .btn-pill {
