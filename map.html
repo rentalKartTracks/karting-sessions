@@ -41,12 +41,48 @@
     background: var(--surface);
     border-bottom: 1px solid var(--line);
     padding: 0 24px;
-    height: 56px;
+    min-height: 56px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 20px;
     flex-shrink: 0;
     z-index: 1000;
+  }
+  .topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+  }
+  .topbar-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: #fff;
+    flex: 0 1 auto;
+    min-width: 0;
+    white-space: nowrap;
+  }
+  .topbar-tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--green);
+    background: rgba(74,232,160,.1);
+    border: 1px solid rgba(74,232,160,.2);
+    padding: 4px 10px;
+    border-radius: 3px;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+  .header-nav {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
   }
 
   .back-btn {
@@ -402,8 +438,10 @@
 
 <!-- TOPBAR -->
 <div class="topbar">
-  <div class="topbar-title">Tracks Map</div>
-  <div class="topbar-tag">4 Venues</div>
+  <div class="topbar-brand">
+    <div class="topbar-title">Tracks Map</div>
+    <div class="topbar-tag">4 Venues</div>
+  </div>
 
   <nav class="header-nav">
     <a href="index.html"          class="nav-pill">HUB</a>

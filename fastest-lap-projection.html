@@ -190,33 +190,16 @@
   .param-section:last-child { margin-bottom: 0; }
 
   .section-title {
+    /* Use shared site section title styles (defined in css/site.css) */
     font-family: var(--font-display);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--yellow);
-    margin-bottom: 14px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--line);
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-size: clamp(1.4rem, 2vw, 2.2rem);
+    margin: 0 0 12px 0;
+    line-height: 1.05;
+    color: rgba(244, 235, 217, 0.78);
+    display: block;
   }
-  .section-title::before {
-    content: '';
-    width: 3px;
-    height: 12px;
-    background: var(--yellow);
-  }
-  .section-title .num {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    color: var(--text-mute);
-    margin-left: auto;
-    font-weight: 400;
-    letter-spacing: 0.1em;
-  }
+  .section-title::before { display: none; }
+  .section-title .num { display: inline-block; color: var(--text-mute); font-family: var(--font-mono); font-size: 0.8rem; }
 
   .slider-row {
     margin-bottom: 14px;
@@ -403,16 +386,19 @@
   .builder-row.four { grid-template-columns: 1fr 1fr 1fr 1fr; }
 
   .mode-btn {
-    padding: 8px 6px;
+    padding: 12px 14px;
     background: var(--surface-2);
     border: 1px solid var(--line-bright);
-    color: var(--text-dim);
+    color: var(--text);
     font-family: var(--font-display);
-    font-size: 10px;
+    font-size: 13px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     cursor: pointer;
     transition: all 0.15s;
+    min-width: 140px;
+    text-align: center;
+    border-radius: 10px;
   }
   .mode-btn:hover {
     background: var(--line-bright);
@@ -918,18 +904,21 @@
     left: 18px;
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
     background: rgba(10, 9, 8, 0.88);
     border: 1px solid var(--line-bright);
-    padding: 4px;
+    padding: 6px 8px;
     backdrop-filter: blur(6px);
     font-family: var(--font-mono);
-    font-size: 10px;
-    z-index: 4;
+    font-size: 12px;
+    color: var(--text-mute);
+    letter-spacing: 0.06em;
+    z-index: 400;
+    border-radius: 8px;
   }
   .zoom-hud button {
-    width: 24px;
-    height: 24px;
+    width: 34px;
+    height: 28px;
     background: transparent;
     color: var(--text);
     border: 1px solid transparent;
@@ -937,6 +926,10 @@
     font-size: 14px;
     cursor: pointer;
     transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
   }
   .zoom-hud button:hover { background: var(--surface-2); border-color: var(--line-bright); }
   .zoom-hud button.active { background: var(--yellow); color: var(--bg); border-color: var(--yellow); }
@@ -944,7 +937,7 @@
   .zoom-hud .readout {
     color: var(--text-mute);
     padding: 0 8px;
-    min-width: 38px;
+    min-width: 44px;
     text-align: center;
     letter-spacing: 0.06em;
   }
@@ -998,7 +991,7 @@
 
   .legend {
     position: absolute;
-    bottom: 18px;
+    bottom: 64px; /* sit above the HUD to avoid overlap */
     left: 18px;
     background: rgba(10, 9, 8, 0.85);
     border: 1px solid var(--line-bright);
@@ -1007,6 +1000,7 @@
     font-family: var(--font-mono);
     font-size: 10px;
     color: var(--text-dim);
+    z-index: 200; /* keep legend below HUD controls so buttons remain clickable */
   }
   .legend-title {
     font-family: var(--font-display);
@@ -1030,14 +1024,7 @@
   }
 
   .canvas-hud {
-    position: absolute;
-    top: 18px;
-    left: 18px;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    color: var(--text-mute);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
+    display: none;
   }
   .canvas-hud-r {
     position: absolute;
@@ -1213,6 +1200,7 @@
     <div class="brand">
       <div class="brand-mark">FASTEST<span class="accent">·</span>LAP <span style="font-weight:400;color:var(--text-mute);">/</span> <span id="brand-model">SR4</span></div>
       <div class="brand-sub" id="brand-sub">Honda GX270 · Live Axle · 9 hp</div>
+    </div>
     <nav class="header-nav" aria-label="Site navigation">
       <a href="index.html" class="nav-pill">HUB</a>
       <a href="sessions.html" class="nav-pill">SESSIONS</a>
@@ -1221,7 +1209,6 @@
       <a href="championship.html" class="nav-pill">CHAMPIONSHIP</a>
       <a href="brake.html" class="nav-pill">BRAKE DETECT</a>
     </nav>
-    </div>
     <div class="header-stats">
       <div class="stat">
         <div class="stat-label">Lap Time</div>
@@ -1550,7 +1537,7 @@
       <div class="big">RACING LINE / SPEED MAP</div>
       <div style="margin-top:4px;">color = velocity · red ticks = braking zone</div>
     </div>
-    <div class="legend">
+    <div class="legend" style="bottom: 18px; right: 18px; left: auto; top: auto;">
       <div class="legend-title">SPEED · KM/H</div>
       <div class="gradient-bar"></div>
       <div class="gradient-labels">
