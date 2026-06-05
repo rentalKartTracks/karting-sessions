@@ -379,6 +379,14 @@ h3 {
   color: var(--accent);
 }
 
+.nav-pill.active,
+.nav-pill[aria-current="page"] {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--bg);
+  cursor: default;
+}
+
 .card-grid {
   display: grid;
   gap: 20px;
