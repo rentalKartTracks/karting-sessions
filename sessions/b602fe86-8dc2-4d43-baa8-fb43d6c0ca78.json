@@ -1,0 +1,60 @@
+{
+  "session_id": "b602fe86-8dc2-4d43-baa8-fb43d6c0ca78",
+  "driver": "Ignas M",
+  "fastest_lap": "00:40.573",
+  "track": {
+    "name": "KartCenter Sopot",
+    "configuration": "2025",
+    "maps_link": "https://maps.app.goo.gl/t4cWok3pkRS21u6k9"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "00:22",
+  "video_url": "https://youtu.be/92ezWwaTnEA",
+  "session_date": "2025-05-23",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "00:43.996"
+    },
+    {
+      "lap": 2,
+      "time": "00:42.145"
+    },
+    {
+      "lap": 3,
+      "time": "00:41.713"
+    },
+    {
+      "lap": 4,
+      "time": "00:41.509"
+    },
+    {
+      "lap": 5,
+      "time": "00:41.132"
+    },
+    {
+      "lap": 6,
+      "time": "00:40.967"
+    },
+    {
+      "lap": 7,
+      "time": "00:41.005"
+    },
+    {
+      "lap": 8,
+      "time": "00:40.573"
+    },
+    {
+      "lap": 9,
+      "time": "00:41.100"
+    },
+    {
+      "lap": 10,
+      "time": "00:41.722"
+    },
+    {
+      "lap": 11,
+      "time": "00:41.310"
+    }
+  ]
+}
