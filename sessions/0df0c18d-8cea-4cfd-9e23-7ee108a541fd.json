@@ -1,0 +1,48 @@
+{
+  "session_id": "0df0c18d-8cea-4cfd-9e23-7ee108a541fd",
+  "driver": "Ignas M.",
+  "fastest_lap": "00:56.220",
+  "track": {
+    "name": "🏟️ E1gokart Gdańsk",
+    "configuration": "2025",
+    "maps_link": "https://maps.app.goo.gl/X4x15zAeCHb2NFjz7"
+  },
+  "kart": "",
+  "video_start_time": "00:08",
+  "video_url": "https://youtu.be/sV0FeFAX3CE",
+  "session_date": "2025-05-23",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "00:59.733"
+    },
+    {
+      "lap": 2,
+      "time": "00:59.858"
+    },
+    {
+      "lap": 3,
+      "time": "00:58.282"
+    },
+    {
+      "lap": 4,
+      "time": "00:56.588"
+    },
+    {
+      "lap": 5,
+      "time": "00:56.589"
+    },
+    {
+      "lap": 6,
+      "time": "00:57.001"
+    },
+    {
+      "lap": 7,
+      "time": "00:56.220"
+    },
+    {
+      "lap": 8,
+      "time": "00:56.398"
+    }
+  ]
+}
