@@ -86,6 +86,23 @@
             "has_video": true
         },
         {
+            "id": "06dff852-f279-4308-885f-0e5678be537f",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Wolf-cart track",
+                "configuration": "2025",
+                "maps_link": "https://rentalkarttracks.github.io/karting-sessions/session.html?id=4a326eb4-ced0-490b-a4e8-edc211b65437"
+            },
+            "session_date": "2025-09-11",
+            "kart": "9 Ag",
+            "fastest_lap": null,
+            "average_lap": null,
+            "fastest_lap_s": null,
+            "average_lap_s": null,
+            "laps_count": 0,
+            "has_video": true
+        },
+        {
             "id": "346e55c3-7d4c-4441-8791-4c9efe9aff73",
             "driver": "Romualdas P.",
             "track": {

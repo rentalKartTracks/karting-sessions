@@ -7,8 +7,8 @@
         "mapsLink": "https://maps.app.goo.gl/AmF51NGm8bysceeN9",
         "color": "hsl(269, 78%, 62%)",
         "configs": [
-            "Summer",
-            "Winter"
+            "Winter",
+            "Summer"
         ],
         "sessions": 23,
         "bestLap": "00:43.150",
@@ -23,8 +23,8 @@
         "color": "hsl(182, 78%, 62%)",
         "configs": [
             "Rain",
-            "Winter 2026",
-            "3 konfiguracija"
+            "3 konfiguracija",
+            "Winter 2026"
         ],
         "sessions": 14,
         "bestLap": "00:44.327",
@@ -57,6 +57,20 @@
         "sessions": 6,
         "bestLap": "00:45.330",
         "bestDriver": "Povilas L."
+    },
+    {
+        "id": "wolf_cart_track",
+        "name": "Wolf-cart track",
+        "lat": 0,
+        "lng": 0,
+        "mapsLink": "https://rentalkarttracks.github.io/karting-sessions/session.html?id=4a326eb4-ced0-490b-a4e8-edc211b65437",
+        "color": "hsl(307, 78%, 62%)",
+        "configs": [
+            "2025"
+        ],
+        "sessions": 1,
+        "bestLap": null,
+        "bestDriver": null
     },
     {
         "id": "speedway_kartodromas",
@@ -94,8 +108,8 @@
         "mapsLink": "https://maps.app.goo.gl/EmVwycty7FxrB8TH7",
         "color": "hsl(240, 78%, 62%)",
         "configs": [
-            "2025",
-            "2024"
+            "2024",
+            "2025"
         ],
         "sessions": 3,
         "bestLap": "00:25.180",
