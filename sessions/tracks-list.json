@@ -22,11 +22,11 @@
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "hsl(182, 78%, 62%)",
         "configs": [
-            "2024",
-            "3 konfiguracija",
             "Rain",
             "long",
-            "Winter 2026"
+            "Winter 2026",
+            "2024",
+            "3 konfiguracija"
         ],
         "sessions": 16,
         "bestLap": "00:44.327",
@@ -75,6 +75,20 @@
         "bestDriver": null
     },
     {
+        "id": "e1gokart_gdańsk",
+        "name": "E1GOKART Gdańsk",
+        "lat": 54.3683641,
+        "lng": 18.4699973,
+        "mapsLink": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8",
+        "color": "hsl(32, 78%, 62%)",
+        "configs": [
+            "2024"
+        ],
+        "sessions": 1,
+        "bestLap": "00:57.748",
+        "bestDriver": "Povilas L."
+    },
+    {
         "id": "𝗔𝘄𝗶𝘅_𝗥𝗮𝗰𝗶𝗻𝗴_𝗔𝗿𝗲𝗻𝗮",
         "name": "𝗔𝘄𝗶𝘅 𝗥𝗮𝗰𝗶𝗻𝗴 𝗔𝗿𝗲𝗻𝗮",
         "lat": 53.0184783,
@@ -110,8 +124,8 @@
         "mapsLink": "https://maps.app.goo.gl/EmVwycty7FxrB8TH7",
         "color": "hsl(240, 78%, 62%)",
         "configs": [
-            "2025",
-            "2024"
+            "2024",
+            "2025"
         ],
         "sessions": 3,
         "bestLap": "00:25.180",
