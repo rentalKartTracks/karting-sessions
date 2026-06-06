@@ -7,8 +7,8 @@
         "mapsLink": "https://maps.app.goo.gl/AmF51NGm8bysceeN9",
         "color": "hsl(269, 78%, 62%)",
         "configs": [
-            "Winter",
-            "Summer"
+            "Summer",
+            "Winter"
         ],
         "sessions": 23,
         "bestLap": "00:43.150",
@@ -22,8 +22,8 @@
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "hsl(182, 78%, 62%)",
         "configs": [
-            "Winter 2026",
             "Rain",
+            "Winter 2026",
             "3 konfiguracija"
         ],
         "sessions": 14,
@@ -56,6 +56,21 @@
         ],
         "sessions": 1,
         "bestLap": "01:02.505",
+        "bestDriver": "Povilas L."
+    },
+    {
+        "id": "tor_półwysep",
+        "name": "Tor Półwysep",
+        "lat": 54.7891707,
+        "lng": 18.4222912,
+        "mapsLink": "https://maps.app.goo.gl/EmVwycty7FxrB8TH7",
+        "color": "hsl(240, 78%, 62%)",
+        "configs": [
+            "2024",
+            "2025"
+        ],
+        "sessions": 3,
+        "bestLap": "00:25.180",
         "bestDriver": "Povilas L."
     },
     {

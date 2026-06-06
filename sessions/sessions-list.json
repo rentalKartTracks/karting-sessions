@@ -171,6 +171,23 @@
             "has_video": true
         },
         {
+            "id": "6761734c-c0c5-4545-9a34-24b48a43303f",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Tor Półwysep",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/EmVwycty7FxrB8TH7"
+            },
+            "session_date": "2024-06-26",
+            "kart": "9 Ag",
+            "fastest_lap": "00:25.352",
+            "average_lap": "00:26.554",
+            "fastest_lap_s": 25.352,
+            "average_lap_s": 26.55405882352941,
+            "laps_count": 17,
+            "has_video": true
+        },
+        {
             "id": "103721eb-ac5d-44e7-8d40-efb94fd7b191",
             "driver": "Justas Ž.",
             "track": {
@@ -372,6 +389,40 @@
             "fastest_lap_s": 46.013,
             "average_lap_s": 49.71363636363637,
             "laps_count": 11,
+            "has_video": true
+        },
+        {
+            "id": "9fdee29c-c4af-490a-adce-5cbbbab68d89",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Tor Półwysep",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/EmVwycty7FxrB8TH7"
+            },
+            "session_date": "2024-06-26",
+            "kart": "9 Ag",
+            "fastest_lap": "00:25.733",
+            "average_lap": "00:28.274",
+            "fastest_lap_s": 25.733,
+            "average_lap_s": 28.274124999999998,
+            "laps_count": 16,
+            "has_video": true
+        },
+        {
+            "id": "61364232-2096-419c-afef-be3d844f1533",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Tor Półwysep",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/rAMgznAK6mQx8Nwf6"
+            },
+            "session_date": "2025-05-28",
+            "kart": "9 Ag",
+            "fastest_lap": "00:25.180",
+            "average_lap": "00:26.317",
+            "fastest_lap_s": 25.18,
+            "average_lap_s": 26.316764705882353,
+            "laps_count": 17,
             "has_video": true
         },
         {
