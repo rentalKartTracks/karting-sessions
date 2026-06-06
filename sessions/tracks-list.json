@@ -7,8 +7,8 @@
         "mapsLink": "https://maps.app.goo.gl/AmF51NGm8bysceeN9",
         "color": "hsl(269, 78%, 62%)",
         "configs": [
-            "Winter",
-            "Summer"
+            "Summer",
+            "Winter"
         ],
         "sessions": 23,
         "bestLap": "00:43.150",
@@ -23,12 +23,12 @@
         "color": "hsl(182, 78%, 62%)",
         "configs": [
             "Winter 2026",
-            "long",
-            "2024",
             "3 konfiguracija",
-            "Rain"
+            "2024",
+            "Rain",
+            "long"
         ],
-        "sessions": 15,
+        "sessions": 16,
         "bestLap": "00:44.327",
         "bestDriver": "Povilas L."
     },
@@ -144,20 +144,6 @@
         "sessions": 2,
         "bestLap": "00:40.573",
         "bestDriver": "Ignas M"
-    },
-    {
-        "id": "speedway_kartodromas",
-        "name": "Speedway kartodromas",
-        "lat": 54.7972092,
-        "lng": 24.429372,
-        "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
-        "color": "hsl(356, 78%, 62%)",
-        "configs": [
-            "3 konfiguracija"
-        ],
-        "sessions": 1,
-        "bestLap": "01:01.504",
-        "bestDriver": "Vaidas R."
     },
     {
         "id": "balčiūnų",
