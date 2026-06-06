@@ -1191,6 +1191,23 @@
             "has_video": true
         },
         {
+            "id": "f1bd3b18-24e6-4f21-bbc1-395bce3d0b03",
+            "driver": "Justas Ž.",
+            "track": {
+                "name": "🏟️ E1gokart GdańSk",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/wr4dY7tgiYpgngB77"
+            },
+            "session_date": "2025-05-23",
+            "kart": "",
+            "fastest_lap": "00:57.516",
+            "average_lap": "00:58.723",
+            "fastest_lap_s": 57.516,
+            "average_lap_s": 58.723,
+            "laps_count": 8,
+            "has_video": true
+        },
+        {
             "id": "7b2fdc80-5f92-49eb-8227-067b1496c122",
             "driver": "Kęstas Č.",
             "track": {

@@ -7,8 +7,8 @@
         "mapsLink": "https://maps.app.goo.gl/AmF51NGm8bysceeN9",
         "color": "hsl(269, 78%, 62%)",
         "configs": [
-            "Winter",
-            "Summer"
+            "Summer",
+            "Winter"
         ],
         "sessions": 23,
         "bestLap": "00:43.150",
@@ -23,10 +23,10 @@
         "color": "hsl(182, 78%, 62%)",
         "configs": [
             "Winter 2026",
-            "2024",
-            "3 konfiguracija",
             "Rain",
-            "long"
+            "2024",
+            "long",
+            "3 konfiguracija"
         ],
         "sessions": 16,
         "bestLap": "00:44.327",
@@ -309,7 +309,7 @@
         "configs": [
             "2025"
         ],
-        "sessions": 1,
+        "sessions": 2,
         "bestLap": "00:56.240",
         "bestDriver": "Povilas L."
     }
