@@ -1164,9 +1164,9 @@ button, a, input, select { -webkit-tap-highlight-color: transparent; }
 
 #qr-code {
   display: inline-block;
-  padding: var(--spacing-lg);
+  padding: 40px;
   background: white;
-  border-radius: var(--radius-md);
+  border-radius: 4px;
   box-shadow: 0 0 40px rgba(232,200,74,.1);
 }
 

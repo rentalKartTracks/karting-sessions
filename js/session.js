@@ -2245,8 +2245,8 @@ function initializePeer() {
       try {
         new QRCode(qrContainer, {
           text: remoteUrl,
-          width: 256,
-          height: 256,
+          width: 300,
+          height: 300,
           colorDark: '#000000',
           colorLight: '#ffffff',
           correctLevel: QRCode.CorrectLevel.L
