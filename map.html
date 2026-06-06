@@ -503,7 +503,8 @@ const popupContent = (t) => `
       </div>
     </div>
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:#666677;margin-bottom:4px;">By ${t.bestDriver || 'N/A'}</div>
-    <a href="${t.mapsLink}" target="_blank" class="popup-link">Open in Google Maps ↗</a>
+    <a href="sessions.html?track=${encodeURIComponent(t.name)}" class="popup-link" style="margin-top:6px;">View Sessions →</a>
+    <a href="${t.mapsLink}" target="_blank" class="popup-link" style="margin-top:6px;background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.12);color:var(--muted);">Open in Google Maps ↗</a>
   </div>
 `;
 
