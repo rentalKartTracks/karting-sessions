@@ -256,6 +256,23 @@
             "has_video": true
         },
         {
+            "id": "d8625020-03cc-45a0-a876-13f4af92d5a8",
+            "driver": "Vaidas R.",
+            "track": {
+                "name": "Rudskogen Motorsenter",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/BHE3Yt1iVqcHmGkv7"
+            },
+            "session_date": "2025-07-17",
+            "kart": "13 Ag",
+            "fastest_lap": null,
+            "average_lap": null,
+            "fastest_lap_s": null,
+            "average_lap_s": null,
+            "laps_count": 0,
+            "has_video": true
+        },
+        {
             "id": "6196da7a-0988-4ebf-952d-e4782047b5d9",
             "driver": "Ignas I.",
             "track": {

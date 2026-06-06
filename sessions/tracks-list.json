@@ -24,9 +24,9 @@
         "color": "#4ab8e8",
         "note": "Outdoor circuit · Elektrėnai",
         "configs": [
-            "Rain",
             "3 konfiguracija",
-            "Winter 2026"
+            "Winter 2026",
+            "Rain"
         ],
         "sessions": 14,
         "bestLap": "00:44.327",
@@ -61,6 +61,22 @@
         "sessions": 7,
         "bestLap": "00:38.361",
         "bestDriver": "Kęstas Č."
+    },
+    {
+        "id": "rudskogen_motorsenter",
+        "name": "Rudskogen Motorsenter",
+        "lat": 0,
+        "lng": 0,
+        "mapsLink": "https://maps.app.goo.gl/BHE3Yt1iVqcHmGkv7",
+        "color": "#aaaaaa",
+        "note": "Generated circuit",
+        "configs": [
+            "Summer"
+        ],
+        "sessions": 1,
+        "bestLap": null,
+        "bestLap_s": null,
+        "bestDriver": null
     },
     {
         "id": "vilko",
