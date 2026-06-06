@@ -1106,6 +1106,23 @@
             "has_video": true
         },
         {
+            "id": "3a779710-d89b-4289-a354-06fcf53cd020",
+            "driver": "Julius B.",
+            "track": {
+                "name": "E1GOKART Gdańsk",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8"
+            },
+            "session_date": "2024-07-29",
+            "kart": "",
+            "fastest_lap": "00:59.532",
+            "average_lap": "01:02.406",
+            "fastest_lap_s": 59.532,
+            "average_lap_s": 62.405833333333334,
+            "laps_count": 6,
+            "has_video": true
+        },
+        {
             "id": "2ee6b65c-2542-4d3c-91bb-7a4d29442509",
             "driver": "Ignas M.",
             "track": {
