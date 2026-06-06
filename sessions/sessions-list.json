@@ -375,6 +375,23 @@
             "has_video": true
         },
         {
+            "id": "9fdee29c-c4af-490a-adce-5cbbbab68d89",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Tor Półwysep",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/EmVwycty7FxrB8TH7"
+            },
+            "session_date": "2024-06-26",
+            "kart": "9 Ag",
+            "fastest_lap": "00:25.733",
+            "average_lap": "00:28.274",
+            "fastest_lap_s": 25.733,
+            "average_lap_s": 28.274124999999998,
+            "laps_count": 16,
+            "has_video": true
+        },
+        {
             "id": "13acce39-6093-4ace-99c0-541006106be6",
             "driver": "Justas Ž.",
             "track": {
