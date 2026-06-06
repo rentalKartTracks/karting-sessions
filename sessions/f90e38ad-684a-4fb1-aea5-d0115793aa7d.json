@@ -1,0 +1,48 @@
+{
+  "session_id": "f90e38ad-684a-4fb1-aea5-d0115793aa7d",
+  "driver": "Vaidas R.",
+  "fastest_lap": "01:07.244",
+  "track": {
+    "name": "Rudskogen Motorsenter",
+    "configuration": "Summer",
+    "maps_link": "https://maps.app.goo.gl/F1Skt3aC7h4SPi856"
+  },
+  "kart": "13 Ag",
+  "video_start_time": "01:28",
+  "video_url": "https://youtu.be/vAII-G2FeXs",
+  "session_date": "2026-06-06",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "01:11.251"
+    },
+    {
+      "lap": 2,
+      "time": "01:13.392"
+    },
+    {
+      "lap": 3,
+      "time": "01:08.016"
+    },
+    {
+      "lap": 4,
+      "time": "01:07.392"
+    },
+    {
+      "lap": 5,
+      "time": "01:08.638"
+    },
+    {
+      "lap": 6,
+      "time": "01:08.371"
+    },
+    {
+      "lap": 7,
+      "time": "01:07.244"
+    },
+    {
+      "lap": 8,
+      "time": "01:09.660"
+    }
+  ]
+}
