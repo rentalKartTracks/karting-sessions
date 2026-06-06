@@ -22,11 +22,11 @@
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "hsl(182, 78%, 62%)",
         "configs": [
-            "Rain",
             "2024",
-            "Winter 2026",
+            "3 konfiguracija",
             "long",
-            "3 konfiguracija"
+            "Rain",
+            "Winter 2026"
         ],
         "sessions": 16,
         "bestLap": "00:44.327",
@@ -131,18 +131,19 @@
         "bestDriver": "Povilas L."
     },
     {
-        "id": "kart_center_sopot",
-        "name": "Kart Center Sopot",
+        "id": "kartcenter_sopot",
+        "name": "KartCenter Sopot",
         "lat": 54.4339594,
         "lng": 18.4234929,
         "mapsLink": "https://maps.app.goo.gl/AXFPcDj5CWT7rPX27",
-        "color": "hsl(192, 78%, 62%)",
+        "color": "hsl(174, 78%, 62%)",
         "configs": [
-            "Summer"
+            "Summer",
+            "2025"
         ],
-        "sessions": 1,
-        "bestLap": "00:43.333",
-        "bestDriver": "Povilas L."
+        "sessions": 2,
+        "bestLap": "00:40.573",
+        "bestDriver": "Ignas M"
     },
     {
         "id": "balčiūnų",
@@ -166,26 +167,12 @@
         "mapsLink": "https://maps.app.goo.gl/EmVwycty7FxrB8TH7",
         "color": "hsl(240, 78%, 62%)",
         "configs": [
-            "2025",
-            "2024"
+            "2024",
+            "2025"
         ],
         "sessions": 3,
         "bestLap": "00:25.180",
         "bestDriver": "Povilas L."
-    },
-    {
-        "id": "kartcenter_sopot",
-        "name": "KartCenter Sopot",
-        "lat": 54.4339595,
-        "lng": 18.5609781,
-        "mapsLink": "https://maps.app.goo.gl/t4cWok3pkRS21u6k9",
-        "color": "hsl(174, 78%, 62%)",
-        "configs": [
-            "2025"
-        ],
-        "sessions": 1,
-        "bestLap": "00:40.573",
-        "bestDriver": "Ignas M"
     },
     {
         "id": "rudskogen_motorsenter",
