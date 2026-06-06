@@ -123,7 +123,7 @@
             "id": "565e7836-a2ec-4ca2-9d20-54c17261648d",
             "driver": "Julius B.",
             "track": {
-                "name": "Speedway Kartodromas",
+                "name": "Speedway",
                 "configuration": "2024",
                 "maps_link": "https://maps.app.goo.gl/UKjf5X7JGVfx8h2c8"
             },
@@ -803,7 +803,7 @@
             "id": "2f7a66f1-14bf-47a0-860f-ce1886739604",
             "driver": "Povilas L.",
             "track": {
-                "name": "Speedway kartodromas",
+                "name": "Speedway",
                 "configuration": "long",
                 "maps_link": "https://maps.app.goo.gl/UKjf5X7JGVfx8h2c8"
             },

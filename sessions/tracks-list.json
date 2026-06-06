@@ -7,8 +7,8 @@
         "mapsLink": "https://maps.app.goo.gl/AmF51NGm8bysceeN9",
         "color": "hsl(269, 78%, 62%)",
         "configs": [
-            "Winter",
-            "Summer"
+            "Summer",
+            "Winter"
         ],
         "sessions": 23,
         "bestLap": "00:43.150",
@@ -22,11 +22,13 @@
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "hsl(182, 78%, 62%)",
         "configs": [
-            "Rain",
+            "Winter 2026",
             "3 konfiguracija",
-            "Winter 2026"
+            "2024",
+            "long",
+            "Rain"
         ],
-        "sessions": 14,
+        "sessions": 16,
         "bestLap": "00:44.327",
         "bestDriver": "Povilas L."
     },
@@ -71,20 +73,6 @@
         "sessions": 1,
         "bestLap": null,
         "bestDriver": null
-    },
-    {
-        "id": "speedway_kartodromas",
-        "name": "Speedway Kartodromas",
-        "lat": 54.7972092,
-        "lng": 24.5668674,
-        "mapsLink": "https://maps.app.goo.gl/UKjf5X7JGVfx8h2c8",
-        "color": "hsl(64, 78%, 62%)",
-        "configs": [
-            "2024"
-        ],
-        "sessions": 1,
-        "bestLap": "01:05.026",
-        "bestDriver": "Julius B."
     },
     {
         "id": "𝗔𝘄𝗶𝘅_𝗥𝗮𝗰𝗶𝗻𝗴_𝗔𝗿𝗲𝗻𝗮",
@@ -225,20 +213,6 @@
         ],
         "sessions": 1,
         "bestLap": "00:51.010",
-        "bestDriver": "Povilas L."
-    },
-    {
-        "id": "speedway_kartodromas",
-        "name": "Speedway kartodromas",
-        "lat": 54.7972092,
-        "lng": 24.5668674,
-        "mapsLink": "https://maps.app.goo.gl/UKjf5X7JGVfx8h2c8",
-        "color": "hsl(356, 78%, 62%)",
-        "configs": [
-            "long"
-        ],
-        "sessions": 1,
-        "bestLap": "00:57.483",
         "bestDriver": "Povilas L."
     },
     {
