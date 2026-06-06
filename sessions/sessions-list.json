@@ -579,6 +579,23 @@
             "has_video": true
         },
         {
+            "id": "08109fcd-966c-4db7-8d9a-a2e0818fa43f",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "𝗦𝗽𝗼𝗿𝘁𝗮 𝗸𝗼𝗺𝗽𝗹𝗲𝗸𝘀𝘀 𝟯𝟯𝟯",
+                "configuration": "2024",
+                "maps_link": "https://goo.gl/maps/kZR3mou2NyC9NFx26"
+            },
+            "session_date": "2024-08-16",
+            "kart": "9 Ag",
+            "fastest_lap": "00:51.010",
+            "average_lap": "00:54.737",
+            "fastest_lap_s": 51.01,
+            "average_lap_s": 54.7375,
+            "laps_count": 8,
+            "has_video": true
+        },
+        {
             "id": "11eb97b2-c016-4e40-97ef-065ab445993e",
             "driver": "Ernest S.",
             "track": {

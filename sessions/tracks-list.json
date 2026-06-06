@@ -22,8 +22,8 @@
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "hsl(182, 78%, 62%)",
         "configs": [
-            "Rain",
             "Winter 2026",
+            "Rain",
             "3 konfiguracija"
         ],
         "sessions": 14,
@@ -127,6 +127,20 @@
         "sessions": 2,
         "bestLap": "00:18.050",
         "bestDriver": "Kęstas Č."
+    },
+    {
+        "id": "𝗦𝗽𝗼𝗿𝘁𝗮_𝗸𝗼𝗺𝗽𝗹𝗲𝗸𝘀𝘀_𝟯𝟯𝟯",
+        "name": "𝗦𝗽𝗼𝗿𝘁𝗮 𝗸𝗼𝗺𝗽𝗹𝗲𝗸𝘀𝘀 𝟯𝟯𝟯",
+        "lat": 56.9501916,
+        "lng": 24.4101832,
+        "mapsLink": "https://goo.gl/maps/kZR3mou2NyC9NFx26",
+        "color": "hsl(320, 78%, 62%)",
+        "configs": [
+            "2024"
+        ],
+        "sessions": 1,
+        "bestLap": "00:51.010",
+        "bestDriver": "Povilas L."
     },
     {
         "id": "gokarting_center_krakow",
