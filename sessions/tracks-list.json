@@ -7,8 +7,8 @@
         "mapsLink": "https://maps.app.goo.gl/AmF51NGm8bysceeN9",
         "color": "hsl(269, 78%, 62%)",
         "configs": [
-            "Winter",
-            "Summer"
+            "Summer",
+            "Winter"
         ],
         "sessions": 23,
         "bestLap": "00:43.150",
@@ -22,11 +22,11 @@
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "hsl(182, 78%, 62%)",
         "configs": [
-            "Rain",
             "Winter 2026",
             "2024",
+            "long",
             "3 konfiguracija",
-            "long"
+            "Rain"
         ],
         "sessions": 16,
         "bestLap": "00:44.327",
@@ -152,8 +152,8 @@
         "mapsLink": "https://maps.app.goo.gl/EmVwycty7FxrB8TH7",
         "color": "hsl(240, 78%, 62%)",
         "configs": [
-            "2025",
-            "2024"
+            "2024",
+            "2025"
         ],
         "sessions": 3,
         "bestLap": "00:25.180",
@@ -167,10 +167,10 @@
         "mapsLink": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6",
         "color": "hsl(283, 78%, 62%)",
         "configs": [
-            "2025",
-            "Summer"
+            "Summer",
+            "2025"
         ],
-        "sessions": 4,
+        "sessions": 5,
         "bestLap": "01:04.020",
         "bestDriver": "Kęstas Č."
     },
