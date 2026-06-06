@@ -7,8 +7,8 @@
         "mapsLink": "https://maps.app.goo.gl/AmF51NGm8bysceeN9",
         "color": "hsl(269, 78%, 62%)",
         "configs": [
-            "Summer",
-            "Winter"
+            "Winter",
+            "Summer"
         ],
         "sessions": 23,
         "bestLap": "00:43.150",
@@ -22,10 +22,10 @@
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "hsl(182, 78%, 62%)",
         "configs": [
-            "Rain",
             "Winter 2026",
-            "2024",
             "3 konfiguracija",
+            "Rain",
+            "2024",
             "long"
         ],
         "sessions": 16,
@@ -152,8 +152,8 @@
         "mapsLink": "https://maps.app.goo.gl/EmVwycty7FxrB8TH7",
         "color": "hsl(240, 78%, 62%)",
         "configs": [
-            "2025",
-            "2024"
+            "2024",
+            "2025"
         ],
         "sessions": 3,
         "bestLap": "00:25.180",
@@ -286,6 +286,20 @@
         "bestDriver": "Povilas L."
     },
     {
+        "id": "balčiūnų",
+        "name": "Balčiūnų",
+        "lat": 55.8984443,
+        "lng": 23.3519096,
+        "mapsLink": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6",
+        "color": "hsl(283, 78%, 62%)",
+        "configs": [
+            "2025"
+        ],
+        "sessions": 2,
+        "bestLap": "01:04.555",
+        "bestDriver": "Povilas L."
+    },
+    {
         "id": "gokarting_center_krakow",
         "name": "GOKARTING CENTER KRAKOW",
         "lat": 50.0271708,
@@ -311,20 +325,6 @@
         ],
         "sessions": 2,
         "bestLap": "00:56.240",
-        "bestDriver": "Povilas L."
-    },
-    {
-        "id": "balčiūnų",
-        "name": "Balčiūnų",
-        "lat": 55.8984443,
-        "lng": 23.3519096,
-        "mapsLink": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6",
-        "color": "hsl(283, 78%, 62%)",
-        "configs": [
-            "2025"
-        ],
-        "sessions": 1,
-        "bestLap": "01:04.570",
         "bestDriver": "Povilas L."
     }
 ]
