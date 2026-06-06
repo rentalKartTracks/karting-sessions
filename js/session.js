@@ -2201,18 +2201,32 @@ function setupAutocomplete() {
 /**
 * Initialize PeerJS connection
 */
+function generateShortPeerId() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let id = 'HCH';
+  for (let i = 0; i < 6; i++) id += chars[Math.floor(Math.random() * chars.length)];
+  return id;
+}
+
 function initializePeer() {
   if (peer) {
     peer.destroy();
   }
 
-  peer = new Peer();
+  peer = new Peer(generateShortPeerId());
+
+  peer.on('error', (err) => {
+    // If our custom ID is already taken, retry with a fresh one
+    if (err.type === 'unavailable-id') {
+      peer = new Peer(generateShortPeerId());
+    }
+  });
 
   peer.on('open', (id) => {
     reconnectAttempts = 0;
 
-    const remoteUrl = `${window.location.origin}${window.location.pathname.replace('session.html',
-      'remote.html')}?host=${id}&mode=${currentMode}`;
+    const base = window.location.origin + window.location.pathname.replace('session.html', 'remote.html');
+    const remoteUrl = `${base}?host=${id}`;
 
     const remoteUrlEl = document.getElementById('remote-url');
     if (remoteUrlEl) {
@@ -2224,18 +2238,18 @@ function initializePeer() {
       peerStatus.textContent = 'Ready';
     }
 
-    // Generate QR code
+    // Generate QR code — short URL + error correction L keeps the code small and easy to scan
     const qrContainer = document.getElementById('qr-code');
     if (qrContainer) {
       qrContainer.innerHTML = '';
       try {
         new QRCode(qrContainer, {
           text: remoteUrl,
-          width: 220,
-          height: 220,
+          width: 256,
+          height: 256,
           colorDark: '#000000',
           colorLight: '#ffffff',
-          correctLevel: QRCode.CorrectLevel.M
+          correctLevel: QRCode.CorrectLevel.L
         });
       } catch (error) {
         qrContainer.innerHTML = '<p style="color:var(--error);">QR code generation failed</p>';
