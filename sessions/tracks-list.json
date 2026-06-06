@@ -22,9 +22,9 @@
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "hsl(182, 78%, 62%)",
         "configs": [
-            "Rain",
             "3 konfiguracija",
-            "Winter 2026"
+            "Winter 2026",
+            "Rain"
         ],
         "sessions": 14,
         "bestLap": "00:44.327",
@@ -42,6 +42,20 @@
         ],
         "sessions": 3,
         "bestLap": "00:25.906",
+        "bestDriver": "Povilas L."
+    },
+    {
+        "id": "𝗔𝘄𝗶𝘅_𝗥𝗮𝗰𝗶𝗻𝗴_𝗔𝗿𝗲𝗻𝗮",
+        "name": "𝗔𝘄𝗶𝘅 𝗥𝗮𝗰𝗶𝗻𝗴 𝗔𝗿𝗲𝗻𝗮",
+        "lat": 53.0184783,
+        "lng": 18.5415042,
+        "mapsLink": "https://maps.app.goo.gl/ybcsyhCrN3D1E2XbA",
+        "color": "hsl(329, 78%, 62%)",
+        "configs": [
+            "2024"
+        ],
+        "sessions": 1,
+        "bestLap": "01:02.505",
         "bestDriver": "Povilas L."
     },
     {
@@ -71,6 +85,20 @@
         "sessions": 7,
         "bestLap": "00:38.361",
         "bestDriver": "Kęstas Č."
+    },
+    {
+        "id": "kartcenter_gdańsk_gokarty",
+        "name": "KartCenter Gdańsk Gokarty",
+        "lat": 54.3890499,
+        "lng": 18.5136168,
+        "mapsLink": "https://maps.app.goo.gl/RUBF4Y86mvd37qu67",
+        "color": "hsl(42, 78%, 62%)",
+        "configs": [
+            "2025"
+        ],
+        "sessions": 1,
+        "bestLap": "00:22.840",
+        "bestDriver": "Povilas L."
     },
     {
         "id": "vilko_kartodromas",

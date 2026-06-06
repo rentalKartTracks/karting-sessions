@@ -1,0 +1,56 @@
+{
+  "session_id": "ce80f760-e117-4739-b711-573e8dbf7bb3",
+  "driver": "Povilas L.",
+  "fastest_lap": "01:02.505",
+  "track": {
+    "name": "𝗔𝘄𝗶𝘅 𝗥𝗮𝗰𝗶𝗻𝗴 𝗔𝗿𝗲𝗻𝗮",
+    "configuration": "2024",
+    "maps_link": "https://maps.app.goo.gl/ybcsyhCrN3D1E2XbA"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "00:35",
+  "video_url": "https://youtu.be/fBqXp-ugmzs",
+  "session_date": "2024-06-04",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "01:10.359"
+    },
+    {
+      "lap": 2,
+      "time": "01:13.425"
+    },
+    {
+      "lap": 3,
+      "time": "01:04.355"
+    },
+    {
+      "lap": 4,
+      "time": "01:03.804"
+    },
+    {
+      "lap": 5,
+      "time": "01:03.754"
+    },
+    {
+      "lap": 6,
+      "time": "01:03.402"
+    },
+    {
+      "lap": 7,
+      "time": "01:02.616"
+    },
+    {
+      "lap": 8,
+      "time": "01:02.505"
+    },
+    {
+      "lap": 9,
+      "time": "01:02.848"
+    },
+    {
+      "lap": 10,
+      "time": "01:02.915"
+    }
+  ]
+}
