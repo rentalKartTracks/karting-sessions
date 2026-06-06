@@ -2,6 +2,7 @@
 
 const REPO = 'rentalKartTracks/karting-sessions';
 const TOKEN_KEY = 'hch_admin_pat';
+const YT_KEY_STORAGE = 'hch_yt_key';
 
 // ── State ──────────────────────────────────────────────────────────────────
 let laps = [];
@@ -14,6 +15,7 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('session_date').valueAsDate = new Date();
   document.getElementById('session-id-label').textContent = 'ID: ' + sessionId;
   renderTokenStatus();
+  renderYtKeyStatus();
   loadAllSessions();
 
   const id = new URLSearchParams(location.search).get('id');
@@ -69,11 +71,48 @@ function clearToken() {
 }
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
-  if (e.key === 'Enter' && !document.getElementById('modal-bg').classList.contains('hidden')) {
-    saveToken();
+  if (e.key === 'Escape') { closeModal(); closeYtModal(); }
+  if (e.key === 'Enter') {
+    if (!document.getElementById('modal-bg').classList.contains('hidden'))    saveToken();
+    if (!document.getElementById('yt-modal-bg').classList.contains('hidden')) saveYtKey();
   }
 });
+
+// ── YouTube key management ─────────────────────────────────────────────────
+function getYtKey() { return localStorage.getItem(YT_KEY_STORAGE) || ''; }
+
+function renderYtKeyStatus() {
+  const ok = !!getYtKey();
+  document.getElementById('yt-dot').className = 'token-dot' + (ok ? ' ok' : '');
+  document.getElementById('yt-chip-text').textContent = ok ? 'YouTube: ready' : 'YouTube: set up key';
+}
+
+function openYtKeyModal() {
+  document.getElementById('yt-key-input').value = '';
+  document.getElementById('yt-modal-bg').classList.remove('hidden');
+  setTimeout(() => document.getElementById('yt-key-input').focus(), 50);
+}
+
+function closeYtModal() { document.getElementById('yt-modal-bg').classList.add('hidden'); }
+
+function closeYtModalBg(e) {
+  if (e.target === document.getElementById('yt-modal-bg')) closeYtModal();
+}
+
+function saveYtKey() {
+  const val = document.getElementById('yt-key-input').value.trim();
+  if (!val) return;
+  localStorage.setItem(YT_KEY_STORAGE, val);
+  closeYtModal();
+  renderYtKeyStatus();
+}
+
+function clearYtKey() {
+  localStorage.removeItem(YT_KEY_STORAGE);
+  document.getElementById('yt-key-input').value = '';
+  closeYtModal();
+  renderYtKeyStatus();
+}
 
 // ── Status bar ─────────────────────────────────────────────────────────────
 function setStatus(type, msg) {
@@ -250,16 +289,32 @@ function extractYouTubeId(url) {
   return m ? m[1] : null;
 }
 
-async function importYouTubeTitle() {
+async function importYouTube() {
   const url = document.getElementById('video_url').value.trim();
   if (!url) return;
   const id = extractYouTubeId(url);
   if (!id) return;
-  try {
-    const res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`);
-    if (!res.ok) return;
-    prefillFromTitle((await res.json()).title);
-  } catch {}
+
+  const ytKey = getYtKey();
+  if (ytKey) {
+    try {
+      setStatus('busy', 'Fetching YouTube info…');
+      const res = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${id}&key=${ytKey}`);
+      if (!res.ok) { setStatus('err', '✗ YouTube API error'); return; }
+      const snippet = (await res.json()).items?.[0]?.snippet;
+      if (!snippet) { setStatus('err', '✗ Video not found'); return; }
+      prefillFromTitle(snippet.title);
+      applyDescription(snippet.description);
+    } catch (ex) {
+      setStatus('err', '✗ ' + ex.message);
+    }
+  } else {
+    try {
+      const res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`);
+      if (!res.ok) return;
+      prefillFromTitle((await res.json()).title);
+    } catch {}
+  }
 }
 
 function prefillFromTitle(title) {
@@ -308,7 +363,11 @@ function hideDescImport()   { document.getElementById('desc-box').classList.add(
 function processDescImport() {
   const raw = document.getElementById('desc-text').value;
   if (!raw.trim()) return;
+  applyDescription(raw);
+  hideDescImport();
+}
 
+function applyDescription(raw) {
   const clean = raw.replace(/[‎‏​‌‍﻿]/g, '');
   let driver = '', mapsLink = '', trackName = '', onboardStart = '';
   const newLaps = [];
@@ -316,11 +375,9 @@ function processDescImport() {
   for (const line of clean.split('\n')) {
     const norm = normalizeBold(line.trim());
 
-    // "Driver: Name"
     const driverM = norm.match(/^Driver:\s*(.+)/i);
     if (driverM) { driver = driverM[1].trim(); continue; }
 
-    // "*MM:SS Lap N - laptime*" (RaceChrono)
     const lapM = norm.match(/^\*?(\d{1,2}:\d{2})\s+Lap\s+(\d+)\s*-\s*([\d:.]+)/i);
     if (lapM) {
       const [, chapterTime, lapNum, lapTime] = lapM;
@@ -329,19 +386,17 @@ function processDescImport() {
       continue;
     }
 
-    // "Track Name - https://maps..." (maps line)
     const mapM = norm.match(/^(.+?)\s+-\s+(https?:\/\/\S+)/);
     if (mapM) { trackName = mapM[1].trim(); mapsLink = mapM[2]; }
   }
 
-  if (driver      && !document.getElementById('driver').value)             document.getElementById('driver').value             = driver;
-  if (trackName   && !document.getElementById('track_name').value)         document.getElementById('track_name').value         = trackName;
-  if (mapsLink    && !document.getElementById('maps_link').value)          document.getElementById('maps_link').value          = mapsLink;
-  if (onboardStart && !document.getElementById('video_start_time').value)  document.getElementById('video_start_time').value  = onboardStart;
+  if (driver      && !document.getElementById('driver').value)            document.getElementById('driver').value            = driver;
+  if (trackName   && !document.getElementById('track_name').value)        document.getElementById('track_name').value        = trackName;
+  if (mapsLink    && !document.getElementById('maps_link').value)         document.getElementById('maps_link').value         = mapsLink;
+  if (onboardStart && !document.getElementById('video_start_time').value) document.getElementById('video_start_time').value = onboardStart;
   if (newLaps.length) { laps = newLaps; renderLaps(); }
 
-  hideDescImport();
-  setStatus('ok', `✓ Imported ${newLaps.length} lap${newLaps.length !== 1 ? 's' : ''}` + (onboardStart ? `, start ${onboardStart}` : ''));
+  if (newLaps.length) setStatus('ok', `✓ Imported ${newLaps.length} lap${newLaps.length !== 1 ? 's' : ''}` + (onboardStart ? `, start ${onboardStart}` : ''));
 }
 
 // ── Download JSON ──────────────────────────────────────────────────────────

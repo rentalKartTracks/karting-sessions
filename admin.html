@@ -197,6 +197,10 @@
     <span class="token-dot" id="token-dot"></span>
     <span id="token-chip-text">GitHub…</span>
   </button>
+  <button class="token-chip" id="yt-chip" onclick="openYtKeyModal()">
+    <span class="token-dot" id="yt-dot"></span>
+    <span id="yt-chip-text">YouTube…</span>
+  </button>
 </div>
 
 <div class="wrap">
@@ -253,7 +257,7 @@
           <div class="form-group full">
             <label>YouTube URL</label>
             <div style="display:flex;gap:6px;align-items:center">
-              <input type="url" id="video_url" placeholder="https://youtu.be/…" style="flex:1" onblur="importYouTubeTitle()">
+              <input type="url" id="video_url" placeholder="https://youtu.be/…" style="flex:1" onblur="importYouTube()">
               <button type="button" class="btn btn-secondary btn-sm" onclick="toggleDescImport()">📋 Import</button>
             </div>
           </div>
@@ -338,6 +342,28 @@
     <p class="modal-note">
       Stored only in this browser's localStorage. Never written to the repo or sent
       anywhere other than the GitHub API directly.
+    </p>
+  </div>
+</div>
+
+<!-- ── YouTube API key modal ── -->
+<div class="modal-bg hidden" id="yt-modal-bg" onclick="closeYtModalBg(event)">
+  <div class="modal">
+    <h2>YouTube API Key</h2>
+    <p>
+      Create a free key in <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer">Google Cloud Console</a>:
+      enable the <strong>YouTube Data API v3</strong>, create an API key, optionally restrict it to this site.
+      Allows auto-filling all fields from the YouTube URL.
+    </p>
+    <input type="password" class="modal-input" id="yt-key-input"
+      placeholder="AIza…" autocomplete="off">
+    <div class="modal-actions">
+      <button class="btn btn-danger  btn-sm" onclick="clearYtKey()">Clear</button>
+      <button class="btn btn-secondary btn-sm" onclick="closeYtModal()">Cancel</button>
+      <button class="btn btn-primary  btn-sm" onclick="saveYtKey()">Save</button>
+    </div>
+    <p class="modal-note">
+      Stored only in this browser's localStorage. The key is sent directly to the YouTube API and nowhere else.
     </p>
   </div>
 </div>
