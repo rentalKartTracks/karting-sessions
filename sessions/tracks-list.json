@@ -23,8 +23,8 @@
         "color": "hsl(182, 78%, 62%)",
         "configs": [
             "Rain",
-            "3 konfiguracija",
-            "Winter 2026"
+            "Winter 2026",
+            "3 konfiguracija"
         ],
         "sessions": 14,
         "bestLap": "00:44.327",
@@ -130,6 +130,20 @@
         "bestDriver": "Justas Ž."
     },
     {
+        "id": "anykščių_kartodromas",
+        "name": "Anykščių kartodromas",
+        "lat": 55.518791,
+        "lng": 25.0668037,
+        "mapsLink": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8",
+        "color": "hsl(286, 78%, 62%)",
+        "configs": [
+            "2024"
+        ],
+        "sessions": 2,
+        "bestLap": "00:47.200",
+        "bestDriver": "Povilas L."
+    },
+    {
         "id": "kartcenter_gdańsk_gokarty",
         "name": "KartCenter Gdańsk Gokarty",
         "lat": 54.3890499,
@@ -184,19 +198,5 @@
         "sessions": 1,
         "bestLap": "00:28.790",
         "bestDriver": "Ignas M."
-    },
-    {
-        "id": "anykščių_kartodromas",
-        "name": "Anykščių kartodromas",
-        "lat": 55.518791,
-        "lng": 25.0668037,
-        "mapsLink": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8",
-        "color": "hsl(286, 78%, 62%)",
-        "configs": [
-            "2024"
-        ],
-        "sessions": 1,
-        "bestLap": "00:47.200",
-        "bestDriver": "Povilas L."
     }
 ]
