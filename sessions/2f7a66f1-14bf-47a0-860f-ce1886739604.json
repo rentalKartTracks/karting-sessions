@@ -1,0 +1,52 @@
+{
+  "session_id": "2f7a66f1-14bf-47a0-860f-ce1886739604",
+  "driver": "Povilas L.",
+  "fastest_lap": "00:57.483",
+  "track": {
+    "name": "Speedway",
+    "configuration": "long",
+    "maps_link": "https://maps.app.goo.gl/UKjf5X7JGVfx8h2c8"
+  },
+  "kart": "13 Ag",
+  "video_start_time": "00:20",
+  "video_url": "https://youtu.be/csB1p7Exbag",
+  "session_date": "2025-04-25",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "00:58.720"
+    },
+    {
+      "lap": 2,
+      "time": "00:59.179"
+    },
+    {
+      "lap": 3,
+      "time": "00:58.278"
+    },
+    {
+      "lap": 4,
+      "time": "00:58.213"
+    },
+    {
+      "lap": 5,
+      "time": "00:57.996"
+    },
+    {
+      "lap": 6,
+      "time": "00:57.483"
+    },
+    {
+      "lap": 7,
+      "time": "00:58.112"
+    },
+    {
+      "lap": 8,
+      "time": "00:58.263"
+    },
+    {
+      "lap": 9,
+      "time": "00:58.239"
+    }
+  ]
+}

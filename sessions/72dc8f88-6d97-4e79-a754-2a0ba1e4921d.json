@@ -1,0 +1,40 @@
+{
+  "session_id": "72dc8f88-6d97-4e79-a754-2a0ba1e4921d",
+  "driver": "Justas Ž.",
+  "fastest_lap": "01:18.546",
+  "track": {
+    "name": "Race Time",
+    "configuration": "Summer",
+    "maps_link": "https://maps.app.goo.gl/dRBrDVFfcDvgQaCo6"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "00:04",
+  "video_url": "https://youtu.be/-MbjmGwqC8E",
+  "session_date": "2024-08-08",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "01:24.317"
+    },
+    {
+      "lap": 2,
+      "time": "01:20.504"
+    },
+    {
+      "lap": 3,
+      "time": "01:20.157"
+    },
+    {
+      "lap": 4,
+      "time": "01:19.069"
+    },
+    {
+      "lap": 6,
+      "time": "01:19.251"
+    },
+    {
+      "lap": 7,
+      "time": "01:18.546"
+    }
+  ]
+}

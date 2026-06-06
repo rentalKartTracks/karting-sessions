@@ -69,6 +69,40 @@
             "has_video": true
         },
         {
+            "id": "5a51fadf-76ca-491c-965a-2b3de21a13c6",
+            "driver": "Ignas M.",
+            "track": {
+                "name": "Anykščių kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8"
+            },
+            "session_date": "2024-09-08",
+            "kart": "13 Ag",
+            "fastest_lap": "00:47.400",
+            "average_lap": "00:51.291",
+            "fastest_lap_s": 47.4,
+            "average_lap_s": 51.290909090909096,
+            "laps_count": 11,
+            "has_video": true
+        },
+        {
+            "id": "06dff852-f279-4308-885f-0e5678be537f",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Wolf-cart track",
+                "configuration": "2025",
+                "maps_link": "https://rentalkarttracks.github.io/karting-sessions/session.html?id=4a326eb4-ced0-490b-a4e8-edc211b65437"
+            },
+            "session_date": "2025-09-11",
+            "kart": "9 Ag",
+            "fastest_lap": null,
+            "average_lap": null,
+            "fastest_lap_s": null,
+            "average_lap_s": null,
+            "laps_count": 0,
+            "has_video": true
+        },
+        {
             "id": "346e55c3-7d4c-4441-8791-4c9efe9aff73",
             "driver": "Romualdas P.",
             "track": {
@@ -83,6 +117,23 @@
             "fastest_lap_s": 88.358,
             "average_lap_s": 107.7202,
             "laps_count": 5,
+            "has_video": true
+        },
+        {
+            "id": "565e7836-a2ec-4ca2-9d20-54c17261648d",
+            "driver": "Julius B.",
+            "track": {
+                "name": "Speedway",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/UKjf5X7JGVfx8h2c8"
+            },
+            "session_date": "2024-10-16",
+            "kart": "13 Ag",
+            "fastest_lap": "01:05.026",
+            "average_lap": "01:08.719",
+            "fastest_lap_s": 65.026,
+            "average_lap_s": 68.71900000000001,
+            "laps_count": 7,
             "has_video": true
         },
         {
@@ -222,6 +273,23 @@
             "has_video": true
         },
         {
+            "id": "72dc8f88-6d97-4e79-a754-2a0ba1e4921d",
+            "driver": "Justas Ž.",
+            "track": {
+                "name": "Race Time",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/dRBrDVFfcDvgQaCo6"
+            },
+            "session_date": "2024-08-08",
+            "kart": "9 Ag",
+            "fastest_lap": "01:18.546",
+            "average_lap": "01:20.307",
+            "fastest_lap_s": 78.54599999999999,
+            "average_lap_s": 80.30733333333333,
+            "laps_count": 6,
+            "has_video": true
+        },
+        {
             "id": "9da53414-8e0c-4434-9651-63fe6e46edac",
             "driver": "Povilas L.",
             "track": {
@@ -341,6 +409,23 @@
             "has_video": true
         },
         {
+            "id": "04e898e9-0c52-42bf-b01f-bbebee490945",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Smalininkų kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/959ZMAV6acyt6..."
+            },
+            "session_date": "2024-04-27",
+            "kart": "9 Ag",
+            "fastest_lap": "00:59.000",
+            "average_lap": "01:01.382",
+            "fastest_lap_s": 59.0,
+            "average_lap_s": 61.38211111111111,
+            "laps_count": 9,
+            "has_video": true
+        },
+        {
             "id": "b424ec42-4be0-44bc-bf6d-a989c9506ecb",
             "driver": "Ignas M.",
             "track": {
@@ -409,6 +494,23 @@
             "has_video": true
         },
         {
+            "id": "2dd469fc-e230-4c9f-a463-570b425ed44e",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Anykščių kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8"
+            },
+            "session_date": "2024-09-08",
+            "kart": "13 Ag",
+            "fastest_lap": "00:45.330",
+            "average_lap": "00:46.381",
+            "fastest_lap_s": 45.33,
+            "average_lap_s": 46.38083333333333,
+            "laps_count": 12,
+            "has_video": true
+        },
+        {
             "id": "61364232-2096-419c-afef-be3d844f1533",
             "driver": "Povilas L.",
             "track": {
@@ -443,6 +545,23 @@
             "has_video": true
         },
         {
+            "id": "eacc44fc-49fb-4315-8e38-42d193c05b4a",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Anykščių kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8"
+            },
+            "session_date": "2024-09-08",
+            "kart": "9 Ag",
+            "fastest_lap": "00:47.300",
+            "average_lap": "00:49.325",
+            "fastest_lap_s": 47.3,
+            "average_lap_s": 49.324999999999996,
+            "laps_count": 12,
+            "has_video": true
+        },
+        {
             "id": "0ba6fa36-0416-48a0-a322-7ee6a67f513d",
             "driver": "Justas Ž.",
             "track": {
@@ -474,6 +593,23 @@
             "fastest_lap_s": 80.385,
             "average_lap_s": 84.50157142857142,
             "laps_count": 7,
+            "has_video": true
+        },
+        {
+            "id": "7a884ece-ef91-4dd8-a793-e162bd4e9dc5",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Race Time",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/4RT2QjMpYtWP6mh26"
+            },
+            "session_date": "2026-06-06",
+            "kart": "9 Ag",
+            "fastest_lap": "01:15.999",
+            "average_lap": "01:20.276",
+            "fastest_lap_s": 75.999,
+            "average_lap_s": 80.27583333333332,
+            "laps_count": 6,
             "has_video": true
         },
         {
@@ -664,6 +800,23 @@
             "has_video": true
         },
         {
+            "id": "2f7a66f1-14bf-47a0-860f-ce1886739604",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Speedway",
+                "configuration": "long",
+                "maps_link": "https://maps.app.goo.gl/UKjf5X7JGVfx8h2c8"
+            },
+            "session_date": "2025-04-25",
+            "kart": "13 Ag",
+            "fastest_lap": "00:57.483",
+            "average_lap": "00:58.276",
+            "fastest_lap_s": 57.483,
+            "average_lap_s": 58.275888888888886,
+            "laps_count": 9,
+            "has_video": true
+        },
+        {
             "id": "0cea4ced-a510-4f82-be70-d9afecaf65bf",
             "driver": "Kęstas Č.",
             "track": {
@@ -732,6 +885,23 @@
             "has_video": true
         },
         {
+            "id": "1731bcde-c037-418e-acdf-e168be28f9a7",
+            "driver": "Julius B.",
+            "track": {
+                "name": "Anykščių kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8"
+            },
+            "session_date": "2024-07-16",
+            "kart": "9 Ag",
+            "fastest_lap": "00:52.760",
+            "average_lap": "00:56.511",
+            "fastest_lap_s": 52.76,
+            "average_lap_s": 56.511,
+            "laps_count": 10,
+            "has_video": true
+        },
+        {
             "id": "3a7d895c-8279-43ec-9817-b84e6ccaa55f",
             "driver": "Justas Ž.",
             "track": {
@@ -783,6 +953,23 @@
             "has_video": true
         },
         {
+            "id": "0a4f1c75-fd73-48ab-b595-7bf48c7b7f1f",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Smalininkų kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/959ZMAV6acyt6..."
+            },
+            "session_date": "2024-04-27",
+            "kart": "9 Ag",
+            "fastest_lap": "00:59.348",
+            "average_lap": "01:00.389",
+            "fastest_lap_s": 59.348,
+            "average_lap_s": 60.389111111111106,
+            "laps_count": 9,
+            "has_video": true
+        },
+        {
             "id": "cd56b050-af11-419d-9186-5fe0cd49b904",
             "driver": "Romualdas P.",
             "track": {
@@ -831,6 +1018,23 @@
             "fastest_lap_s": 38.701,
             "average_lap_s": 40.39566666666666,
             "laps_count": 21,
+            "has_video": true
+        },
+        {
+            "id": "2ee6b65c-2542-4d3c-91bb-7a4d29442509",
+            "driver": "Ignas M.",
+            "track": {
+                "name": "Anykščių kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8"
+            },
+            "session_date": "2024-09-08",
+            "kart": "9 Ag",
+            "fastest_lap": "00:49.500",
+            "average_lap": "00:51.955",
+            "fastest_lap_s": 49.5,
+            "average_lap_s": 51.95454545454545,
+            "laps_count": 11,
             "has_video": true
         },
         {
@@ -902,6 +1106,23 @@
             "has_video": true
         },
         {
+            "id": "c28a9346-1205-48e3-bb9d-efa3f21b0418",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Smalininkų kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/959ZMAV6acyt6uEr8"
+            },
+            "session_date": "2024-04-27",
+            "kart": "9 Ag",
+            "fastest_lap": "00:59.698",
+            "average_lap": "01:00.247",
+            "fastest_lap_s": 59.698,
+            "average_lap_s": 60.24699999999999,
+            "laps_count": 9,
+            "has_video": true
+        },
+        {
             "id": "728b61b0-5dc4-401e-9ded-9259bd2b17fd",
             "driver": "Ignas M.",
             "track": {
@@ -932,6 +1153,23 @@
             "average_lap": "00:47.596",
             "fastest_lap_s": 45.792,
             "average_lap_s": 47.59558333333334,
+            "laps_count": 12,
+            "has_video": true
+        },
+        {
+            "id": "c0e2f16a-5005-4796-8401-15e3e3ae3b3c",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Anykščių kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8"
+            },
+            "session_date": "2024-09-08",
+            "kart": "9 Ag",
+            "fastest_lap": "00:47.200",
+            "average_lap": "00:47.933",
+            "fastest_lap_s": 47.2,
+            "average_lap_s": 47.93333333333334,
             "laps_count": 12,
             "has_video": true
         },
@@ -984,6 +1222,23 @@
             "fastest_lap_s": 26.124,
             "average_lap_s": 28.2647,
             "laps_count": 30,
+            "has_video": true
+        },
+        {
+            "id": "45fde364-025f-4519-a6c2-4b4c49126db2",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Smalininkų kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/959ZMAV6acyt6uEr8"
+            },
+            "session_date": "2024-04-27",
+            "kart": "9 Ag",
+            "fastest_lap": "00:59.878",
+            "average_lap": "01:00.842",
+            "fastest_lap_s": 59.878,
+            "average_lap_s": 60.841555555555566,
+            "laps_count": 9,
             "has_video": true
         },
         {

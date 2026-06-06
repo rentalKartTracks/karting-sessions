@@ -1,0 +1,64 @@
+{
+  "session_id": "2dd469fc-e230-4c9f-a463-570b425ed44e",
+  "driver": "Povilas L.",
+  "fastest_lap": "00:45.330",
+  "track": {
+    "name": "Anykščių kartodromas",
+    "configuration": "2024",
+    "maps_link": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8"
+  },
+  "kart": "13 Ag",
+  "video_start_time": "00:16",
+  "video_url": "https://youtu.be/MJD8cNBjLJU",
+  "session_date": "2024-09-08",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "00:47.360"
+    },
+    {
+      "lap": 2,
+      "time": "00:46.290"
+    },
+    {
+      "lap": 3,
+      "time": "00:45.440"
+    },
+    {
+      "lap": 4,
+      "time": "00:45.490"
+    },
+    {
+      "lap": 5,
+      "time": "00:46.010"
+    },
+    {
+      "lap": 6,
+      "time": "00:46.160"
+    },
+    {
+      "lap": 7,
+      "time": "00:46.460"
+    },
+    {
+      "lap": 8,
+      "time": "00:46.240"
+    },
+    {
+      "lap": 9,
+      "time": "00:47.050"
+    },
+    {
+      "lap": 10,
+      "time": "00:46.460"
+    },
+    {
+      "lap": 11,
+      "time": "00:45.330"
+    },
+    {
+      "lap": 12,
+      "time": "00:48.280"
+    }
+  ]
+}

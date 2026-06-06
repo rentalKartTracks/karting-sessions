@@ -22,11 +22,13 @@
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "hsl(182, 78%, 62%)",
         "configs": [
-            "Rain",
             "Winter 2026",
-            "3 konfiguracija"
+            "3 konfiguracija",
+            "2024",
+            "long",
+            "Rain"
         ],
-        "sessions": 14,
+        "sessions": 16,
         "bestLap": "00:44.327",
         "bestDriver": "Povilas L."
     },
@@ -43,6 +45,34 @@
         "sessions": 3,
         "bestLap": "00:25.906",
         "bestDriver": "Povilas L."
+    },
+    {
+        "id": "anykščių_kartodromas",
+        "name": "Anykščių kartodromas",
+        "lat": 55.518791,
+        "lng": 25.0668037,
+        "mapsLink": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8",
+        "color": "hsl(286, 78%, 62%)",
+        "configs": [
+            "2024"
+        ],
+        "sessions": 6,
+        "bestLap": "00:45.330",
+        "bestDriver": "Povilas L."
+    },
+    {
+        "id": "wolf_cart_track",
+        "name": "Wolf-cart track",
+        "lat": 0,
+        "lng": 0,
+        "mapsLink": "https://rentalkarttracks.github.io/karting-sessions/session.html?id=4a326eb4-ced0-490b-a4e8-edc211b65437",
+        "color": "hsl(307, 78%, 62%)",
+        "configs": [
+            "2025"
+        ],
+        "sessions": 1,
+        "bestLap": null,
+        "bestDriver": null
     },
     {
         "id": "𝗔𝘄𝗶𝘅_𝗥𝗮𝗰𝗶𝗻𝗴_𝗔𝗿𝗲𝗻𝗮",
@@ -88,6 +118,20 @@
         "bestDriver": "Vaidas R."
     },
     {
+        "id": "race_time",
+        "name": "Race Time",
+        "lat": 55.9084559,
+        "lng": 21.0974078,
+        "mapsLink": "https://maps.app.goo.gl/dRBrDVFfcDvgQaCo6",
+        "color": "hsl(240, 78%, 62%)",
+        "configs": [
+            "Summer"
+        ],
+        "sessions": 2,
+        "bestLap": "01:15.999",
+        "bestDriver": "Povilas L."
+    },
+    {
         "id": "kartlandas_max",
         "name": "Kartlandas Max",
         "lat": 54.6621119,
@@ -100,6 +144,20 @@
         "sessions": 7,
         "bestLap": "00:38.361",
         "bestDriver": "Kęstas Č."
+    },
+    {
+        "id": "smalininkų_kartodromas",
+        "name": "Smalininkų kartodromas",
+        "lat": 0,
+        "lng": 0,
+        "mapsLink": "https://maps.app.goo.gl/959ZMAV6acyt6...",
+        "color": "hsl(192, 78%, 62%)",
+        "configs": [
+            "2024"
+        ],
+        "sessions": 4,
+        "bestLap": "00:59.000",
+        "bestDriver": "Povilas L."
     },
     {
         "id": "𝗞𝗮𝗿𝘁𝗶𝗻𝗴_𝗦𝗮𝗹𝗼𝘂",

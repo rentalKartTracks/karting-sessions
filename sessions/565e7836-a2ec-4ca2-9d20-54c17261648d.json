@@ -1,0 +1,44 @@
+{
+  "session_id": "565e7836-a2ec-4ca2-9d20-54c17261648d",
+  "driver": "Julius B.",
+  "fastest_lap": "01:05.026",
+  "track": {
+    "name": "Speedway",
+    "configuration": "2024",
+    "maps_link": "https://maps.app.goo.gl/UKjf5X7JGVfx8h2c8"
+  },
+  "kart": "13 Ag",
+  "video_start_time": "00:26",
+  "video_url": "https://youtu.be/__SifXzIKGs",
+  "session_date": "2024-10-16",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "01:17.190"
+    },
+    {
+      "lap": 2,
+      "time": "01:10.139"
+    },
+    {
+      "lap": 3,
+      "time": "01:09.132"
+    },
+    {
+      "lap": 4,
+      "time": "01:06.916"
+    },
+    {
+      "lap": 5,
+      "time": "01:06.981"
+    },
+    {
+      "lap": 6,
+      "time": "01:05.649"
+    },
+    {
+      "lap": 7,
+      "time": "01:05.026"
+    }
+  ]
+}
