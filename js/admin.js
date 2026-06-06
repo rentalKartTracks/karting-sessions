@@ -159,8 +159,7 @@ function loadIntoForm(data) {
 }
 
 // ── Reset form ─────────────────────────────────────────────────────────────
-function resetForm() {
-  if (isEditing && !confirm('Discard changes and start a new session?')) return;
+function clearForm() {
   document.getElementById('session-form').reset();
   laps = [];
   sessionId = crypto.randomUUID();
@@ -169,6 +168,11 @@ function resetForm() {
   document.getElementById('session_date').valueAsDate = new Date();
   document.getElementById('delete-btn').classList.add('hidden');
   renderLaps();
+}
+
+function resetForm() {
+  if (isEditing && !confirm('Discard changes and start a new session?')) return;
+  clearForm();
   setStatus('', '');
 }
 
@@ -280,8 +284,7 @@ async function handlePublish(e) {
 
     if (res.ok) {
       setStatus('ok', '✓ Published! Dashboard updates in ~30 seconds.');
-      isEditing = true;
-      document.getElementById('delete-btn').classList.remove('hidden');
+      clearForm();
       loadAllSessions();
     } else {
       const err = await res.json();
