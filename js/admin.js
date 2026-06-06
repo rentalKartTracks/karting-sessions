@@ -356,7 +356,7 @@ async function loadSessionById(id) {
 function renderSessionList() {
   const query = (document.getElementById('search-input')?.value || '').toLowerCase();
   const filtered = allSessions.filter(s => {
-    const text = [s.driver, s.track?.name, s.track?.configuration, s.session_date, s.kart].join(' ').toLowerCase();
+    const text = [s.driver, s.track?.name, s.track?.configuration, s.session_date, s.kart, s.id].join(' ').toLowerCase();
     return !query || text.includes(query);
   });
 
