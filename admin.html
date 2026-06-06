@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — HCH</title>
+  <link rel="stylesheet" href="css/site.min.css">
+  <style>
+    body { background: #000; color: #fff; font-family: var(--font-body); margin: 0; min-height: 100vh; }
+
+    /* ── Top bar ── */
+    .admin-bar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(28,28,30,0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 0.5px solid rgba(255,255,255,0.1);
+      padding: 12px 24px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .admin-bar a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 13px; transition: color .15s; }
+    .admin-bar a:hover { color: #fff; }
+    .admin-badge {
+      background: #FF9F0A; color: #000;
+      font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      padding: 2px 8px; border-radius: 5px;
+    }
+    .bar-sep { color: rgba(255,255,255,0.15); }
+    .bar-spacer { flex: 1; }
+
+    /* ── Token chip ── */
+    .token-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #1C1C1E; border: 0.5px solid rgba(255,255,255,0.12);
+      border-radius: 20px; padding: 5px 13px;
+      cursor: pointer; font-size: 12px; color: rgba(255,255,255,0.55);
+      transition: .15s; font-family: inherit;
+    }
+    .token-chip:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
+    .token-dot { width: 7px; height: 7px; border-radius: 50%; background: #3A3A3C; flex-shrink: 0; }
+    .token-dot.ok { background: #30D158; box-shadow: 0 0 6px rgba(48,209,88,0.5); }
+    .token-dot.err { background: #FF453A; }
+
+    /* ── Wrap ── */
+    .wrap { max-width: 960px; margin: 0 auto; padding: 28px 20px 120px; }
+
+    /* ── Tabs ── */
+    .tabs { display: flex; gap: 2px; background: #1C1C1E; border-radius: 12px; padding: 3px; width: fit-content; margin-bottom: 24px; }
+    .tab-btn {
+      padding: 8px 18px; border-radius: 9px; border: none; cursor: pointer;
+      font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.4);
+      background: transparent; transition: .2s; font-family: inherit;
+    }
+    .tab-btn.active { background: #2C2C2E; color: #fff; }
+
+    /* ── Form sections ── */
+    .form-section {
+      background: #1C1C1E; border-radius: 16px;
+      border: 0.5px solid rgba(255,255,255,0.08);
+      padding: 18px 20px; margin-bottom: 10px;
+    }
+    .form-section h3 {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
+      color: rgba(255,255,255,0.3); margin-bottom: 14px;
+    }
+    .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .full { grid-column: 1 / -1; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group label { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.4); }
+    .form-group input {
+      background: #2C2C2E; border: 0.5px solid rgba(255,255,255,0.1);
+      border-radius: 10px; padding: 9px 12px;
+      color: #fff; font-family: inherit; font-size: 14px; transition: border-color .15s;
+    }
+    .form-group input:focus { outline: none; border-color: #0A84FF; }
+
+    /* ── Laps ── */
+    .laps-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .laps-head h3 { margin-bottom: 0; }
+    .laps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(138px, 1fr)); gap: 6px; }
+    .lap-item {
+      display: flex; align-items: center; gap: 6px;
+      background: #2C2C2E; border-radius: 8px; padding: 7px 10px;
+      border: 0.5px solid rgba(255,255,255,0.07);
+    }
+    .lap-num { font-size: 10px; color: rgba(255,255,255,0.25); min-width: 24px; font-weight: 600; }
+    .lap-input { border: none; background: transparent; color: #fff; font-family: monospace; font-size: 13px; width: 100%; }
+    .lap-del { border: none; background: none; color: rgba(255,255,255,0.2); cursor: pointer; padding: 0 2px; font-size: 13px; line-height: 1; }
+    .lap-del:hover { color: #FF453A; }
+
+    /* ── Bulk box ── */
+    .bulk-box {
+      background: #2C2C2E; border-radius: 10px; padding: 12px;
+      border: 0.5px dashed rgba(255,255,255,0.12); margin-bottom: 10px;
+    }
+    .bulk-box textarea {
+      width: 100%; height: 110px; background: #1C1C1E;
+      border: 0.5px solid rgba(255,255,255,0.08); border-radius: 8px;
+      padding: 10px; color: #fff; font-family: monospace; font-size: 12px; resize: vertical;
+    }
+    .bulk-box textarea:focus { outline: none; border-color: #0A84FF; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 16px; border-radius: 10px; border: none;
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      font-family: inherit; transition: .15s; text-decoration: none;
+    }
+    .btn-primary { background: #0A84FF; color: #fff; }
+    .btn-primary:hover:not(:disabled) { background: #409CFF; }
+    .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-secondary { background: #2C2C2E; color: rgba(255,255,255,0.65); border: 0.5px solid rgba(255,255,255,0.1); }
+    .btn-secondary:hover { background: #3A3A3C; color: #fff; }
+    .btn-danger { background: rgba(255,69,58,0.12); color: #FF453A; border: 0.5px solid rgba(255,69,58,0.25); }
+    .btn-danger:hover { background: #FF453A; color: #fff; }
+    .btn-sm { padding: 6px 11px; font-size: 12px; border-radius: 8px; }
+
+    /* ── Sticky form actions ── */
+    .form-actions {
+      position: sticky; bottom: 0;
+      background: rgba(0,0,0,0.92); backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 0.5px solid rgba(255,255,255,0.1);
+      padding: 12px 20px;
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .session-id-label { font-family: monospace; font-size: 11px; color: rgba(255,255,255,0.25); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .actions-right { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+    .status-msg { font-size: 12px; padding: 5px 10px; border-radius: 7px; white-space: nowrap; }
+    .status-msg.ok  { color: #30D158; background: rgba(48,209,88,0.1); }
+    .status-msg.err { color: #FF453A; background: rgba(255,69,58,0.1); }
+    .status-msg.busy{ color: #FF9F0A; background: rgba(255,159,10,0.1); }
+
+    /* ── Sessions list ── */
+    .search-box {
+      background: #1C1C1E; border: 0.5px solid rgba(255,255,255,0.1);
+      border-radius: 12px; padding: 10px 16px; color: #fff;
+      font-size: 14px; width: 100%; font-family: inherit; margin-bottom: 14px;
+    }
+    .search-box:focus { outline: none; border-color: #0A84FF; }
+    .sessions-list { display: flex; flex-direction: column; gap: 6px; }
+    .session-row {
+      display: flex; align-items: center; gap: 14px;
+      background: #1C1C1E; border: 0.5px solid rgba(255,255,255,0.07);
+      border-radius: 12px; padding: 12px 16px; transition: border-color .15s;
+    }
+    .session-row:hover { border-color: rgba(255,255,255,0.14); }
+    .session-info { flex: 1; min-width: 0; }
+    .session-title { font-size: 14px; font-weight: 500; }
+    .session-meta  { font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 2px; }
+    .session-acts  { display: flex; gap: 6px; flex-shrink: 0; }
+
+    /* ── Token modal ── */
+    .modal-bg {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      z-index: 300; display: flex; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal {
+      background: #1C1C1E; border: 0.5px solid rgba(255,255,255,0.14);
+      border-radius: 20px; padding: 28px; width: 100%; max-width: 460px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.9);
+    }
+    .modal h2 { font-size: 17px; font-weight: 600; margin-bottom: 6px; }
+    .modal p  { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.65; margin-bottom: 16px; }
+    .modal p a { color: #0A84FF; text-decoration: none; }
+    .modal p a:hover { text-decoration: underline; }
+    .modal p code { background: #2C2C2E; padding: 1px 5px; border-radius: 4px; font-family: monospace; }
+    .modal-input {
+      width: 100%; background: #2C2C2E; border: 0.5px solid rgba(255,255,255,0.12);
+      border-radius: 10px; padding: 10px 14px; color: #fff; font-family: monospace;
+      font-size: 13px; margin-bottom: 12px;
+    }
+    .modal-input:focus { outline: none; border-color: #0A84FF; }
+    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+    .modal-note { font-size: 11px; color: rgba(255,255,255,0.25); margin-top: 14px; line-height: 1.6; }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 600px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .laps-grid  { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+      .session-row { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Admin bar ── -->
+<div class="admin-bar">
+  <a href="index.html">← HCH</a>
+  <span class="bar-sep">/</span>
+  <span class="admin-badge">Admin</span>
+  <div class="bar-spacer"></div>
+  <button class="token-chip" id="token-chip" onclick="openTokenModal()">
+    <span class="token-dot" id="token-dot"></span>
+    <span id="token-chip-text">GitHub…</span>
+  </button>
+</div>
+
+<div class="wrap">
+
+  <!-- ── Tabs ── -->
+  <div class="tabs">
+    <button class="tab-btn active" id="tab-new"    onclick="showTab('new')">➕ New Session</button>
+    <button class="tab-btn"        id="tab-manage" onclick="showTab('manage')">📋 All Sessions</button>
+  </div>
+
+  <!-- ── CREATE / EDIT PANEL ── -->
+  <div id="panel-new">
+    <form id="session-form" onsubmit="handlePublish(event)">
+
+      <div class="form-section">
+        <h3>Driver &amp; Date</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Driver Name</label>
+            <input type="text" id="driver" required placeholder="e.g. Povilas L.">
+          </div>
+          <div class="form-group">
+            <label>Date</label>
+            <input type="date" id="session_date" required>
+          </div>
+          <div class="form-group">
+            <label>Kart</label>
+            <input type="text" id="kart" placeholder="e.g. 7 or 9 Ag">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>Track</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Track Name</label>
+            <input type="text" id="track_name" required placeholder="Speedway">
+          </div>
+          <div class="form-group">
+            <label>Configuration</label>
+            <input type="text" id="track_config" required placeholder="Summer">
+          </div>
+          <div class="form-group full">
+            <label>Google Maps Link</label>
+            <input type="url" id="maps_link" placeholder="https://maps.app.goo.gl/…">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>Video</h3>
+        <div class="form-grid">
+          <div class="form-group full">
+            <label>YouTube URL</label>
+            <input type="url" id="video_url" placeholder="https://youtu.be/…">
+          </div>
+          <div class="form-group">
+            <label>Onboard Start Time (MM:SS)</label>
+            <input type="text" id="video_start_time" placeholder="01:14" pattern="[0-9]{1,2}:[0-9]{2}">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="laps-head">
+          <h3>Lap Times</h3>
+          <div style="display:flex;gap:6px">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="toggleBulk()">Bulk Import</button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="addLap()">+ Add Lap</button>
+          </div>
+        </div>
+
+        <div class="bulk-box hidden" id="bulk-box">
+          <textarea id="bulk-text" placeholder="Paste lap times, one per line&#10;e.g. 00:45.123 or 45.123"></textarea>
+          <div style="display:flex;gap:6px;margin-top:8px">
+            <button type="button" class="btn btn-primary btn-sm"    onclick="processBulk()">Process</button>
+            <button type="button" class="btn btn-secondary btn-sm"  onclick="hideBulk()">Cancel</button>
+          </div>
+        </div>
+
+        <div class="laps-grid" id="laps-container"></div>
+      </div>
+
+      <!-- Sticky action bar -->
+      <div class="form-actions">
+        <div class="session-id-label" id="session-id-label">ID: —</div>
+        <div id="publish-status" class="status-msg"></div>
+        <div class="actions-right">
+          <button type="button" class="btn btn-secondary btn-sm"          onclick="resetForm()">Reset</button>
+          <button type="button" class="btn btn-danger btn-sm hidden" id="delete-btn" onclick="handleDelete()">🗑 Delete</button>
+          <button type="button" class="btn btn-secondary"                 onclick="handleDownload()">⤓ Download</button>
+          <button type="submit" class="btn btn-primary"          id="publish-btn">🚀 Publish to GitHub</button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- ── MANAGE PANEL ── -->
+  <div id="panel-manage" class="hidden">
+    <input class="search-box" id="search-input" type="text"
+      placeholder="Search by driver, track, date…" oninput="renderSessionList()">
+    <div class="sessions-list" id="sessions-list">
+      <div style="color:rgba(255,255,255,0.3);padding:24px;text-align:center;font-size:13px">Loading…</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Token modal ── -->
+<div class="modal-bg hidden" id="modal-bg" onclick="closeModalBg(event)">
+  <div class="modal">
+    <h2>GitHub Token</h2>
+    <p>
+      Create a <strong>fine-grained Personal Access Token</strong> scoped to the
+      <code>karting-sessions</code> repo with <em>Contents: Read &amp; write</em>.
+      <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">Open GitHub →</a>
+    </p>
+    <input type="password" class="modal-input" id="token-input"
+      placeholder="github_pat_…" autocomplete="off">
+    <div class="modal-actions">
+      <button class="btn btn-danger  btn-sm" onclick="clearToken()">Clear</button>
+      <button class="btn btn-secondary btn-sm" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary  btn-sm" onclick="saveToken()">Save</button>
+    </div>
+    <p class="modal-note">
+      Stored only in this browser's localStorage. Never written to the repo or sent
+      anywhere other than the GitHub API directly.
+    </p>
+  </div>
+</div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>
