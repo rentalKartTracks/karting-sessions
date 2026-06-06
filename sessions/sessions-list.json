@@ -749,6 +749,23 @@
             "has_video": true
         },
         {
+            "id": "2f7a66f1-14bf-47a0-860f-ce1886739604",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Speedway kartodromas",
+                "configuration": "long",
+                "maps_link": "https://maps.app.goo.gl/UKjf5X7JGVfx8h2c8"
+            },
+            "session_date": "2025-04-25",
+            "kart": "13 Ag",
+            "fastest_lap": "00:57.483",
+            "average_lap": "00:58.276",
+            "fastest_lap_s": 57.483,
+            "average_lap_s": 58.275888888888886,
+            "laps_count": 9,
+            "has_video": true
+        },
+        {
             "id": "0cea4ced-a510-4f82-be70-d9afecaf65bf",
             "driver": "Kęstas Č.",
             "track": {

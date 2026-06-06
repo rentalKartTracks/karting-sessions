@@ -7,8 +7,8 @@
         "mapsLink": "https://maps.app.goo.gl/AmF51NGm8bysceeN9",
         "color": "hsl(269, 78%, 62%)",
         "configs": [
-            "Summer",
-            "Winter"
+            "Winter",
+            "Summer"
         ],
         "sessions": 23,
         "bestLap": "00:43.150",
@@ -22,9 +22,9 @@
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "hsl(182, 78%, 62%)",
         "configs": [
-            "Rain",
             "3 konfiguracija",
-            "Winter 2026"
+            "Winter 2026",
+            "Rain"
         ],
         "sessions": 14,
         "bestLap": "00:44.327",
@@ -94,8 +94,8 @@
         "mapsLink": "https://maps.app.goo.gl/EmVwycty7FxrB8TH7",
         "color": "hsl(240, 78%, 62%)",
         "configs": [
-            "2024",
-            "2025"
+            "2025",
+            "2024"
         ],
         "sessions": 3,
         "bestLap": "00:25.180",
@@ -197,6 +197,20 @@
         ],
         "sessions": 1,
         "bestLap": "00:51.010",
+        "bestDriver": "Povilas L."
+    },
+    {
+        "id": "speedway_kartodromas",
+        "name": "Speedway kartodromas",
+        "lat": 54.7972092,
+        "lng": 24.5668674,
+        "mapsLink": "https://maps.app.goo.gl/UKjf5X7JGVfx8h2c8",
+        "color": "hsl(356, 78%, 62%)",
+        "configs": [
+            "long"
+        ],
+        "sessions": 1,
+        "bestLap": "00:57.483",
         "bestDriver": "Povilas L."
     },
     {
