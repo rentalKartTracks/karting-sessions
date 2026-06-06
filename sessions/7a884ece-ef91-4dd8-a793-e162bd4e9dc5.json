@@ -1,0 +1,40 @@
+{
+  "session_id": "7a884ece-ef91-4dd8-a793-e162bd4e9dc5",
+  "driver": "Povilas L.",
+  "fastest_lap": "01:15.999",
+  "track": {
+    "name": "Race Time",
+    "configuration": "Summer",
+    "maps_link": "https://maps.app.goo.gl/4RT2QjMpYtWP6mh26"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "00:05",
+  "video_url": "https://youtu.be/EiGogCZ5EHM",
+  "session_date": "2026-06-06",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "01:28.618"
+    },
+    {
+      "lap": 2,
+      "time": "01:18.863"
+    },
+    {
+      "lap": 3,
+      "time": "01:18.849"
+    },
+    {
+      "lap": 5,
+      "time": "01:18.000"
+    },
+    {
+      "lap": 6,
+      "time": "01:15.999"
+    },
+    {
+      "lap": 7,
+      "time": "01:21.326"
+    }
+  ]
+}
