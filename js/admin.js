@@ -243,6 +243,107 @@ function processBulk() {
   hideBulk();
 }
 
+// ── YouTube prefill ────────────────────────────────────────────────────────
+
+function extractYouTubeId(url) {
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+async function importYouTubeTitle() {
+  const url = document.getElementById('video_url').value.trim();
+  if (!url) return;
+  const id = extractYouTubeId(url);
+  if (!id) return;
+  try {
+    const res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`);
+    if (!res.ok) return;
+    prefillFromTitle((await res.json()).title);
+  } catch {}
+}
+
+function prefillFromTitle(title) {
+  // Expected title format: "Track - Driver "FastestLap" (YYYY-MM-DD)"
+  const m = title.replace(/[‎‏​]/g, '')
+    .match(/^(.+?)\s*[-–]\s*(.+?)\s*"[^"]*"\s*\((\d{4}-\d{2}-\d{2})\)$/);
+  if (!m) return;
+  const [, track, driver, date] = m;
+  if (!document.getElementById('track_name').value)   document.getElementById('track_name').value   = track.trim();
+  if (!document.getElementById('driver').value)        document.getElementById('driver').value        = driver.trim();
+  if (!document.getElementById('session_date').value)  document.getElementById('session_date').value  = date;
+}
+
+// ── Description import ─────────────────────────────────────────────────────
+
+function normalizeBold(s) {
+  return [...s].map(c => {
+    const cp = c.codePointAt(0);
+    if (cp >= 0x1D400 && cp <= 0x1D419) return String.fromCharCode(cp - 0x1D400 + 65); // Math Bold A-Z
+    if (cp >= 0x1D41A && cp <= 0x1D433) return String.fromCharCode(cp - 0x1D41A + 97); // Math Bold a-z
+    if (cp >= 0x1D5D4 && cp <= 0x1D5ED) return String.fromCharCode(cp - 0x1D5D4 + 65); // Sans-Serif Bold A-Z
+    if (cp >= 0x1D5EE && cp <= 0x1D607) return String.fromCharCode(cp - 0x1D5EE + 97); // Sans-Serif Bold a-z
+    if (cp >= 0x1D7CE && cp <= 0x1D7D7) return String.fromCharCode(cp - 0x1D7CE + 48); // Math Bold 0-9
+    if (cp >= 0x1D7EC && cp <= 0x1D7F5) return String.fromCharCode(cp - 0x1D7EC + 48); // Sans-Serif Bold 0-9
+    return c;
+  }).join('');
+}
+
+function fmtLapTime(t) {
+  t = t.replace(/[‎‏​‌‍]/g, '');
+  if (t.includes(':')) {
+    const [mm, ss] = t.split(':');
+    const parts = (ss.includes('.') ? ss : ss + '.000').split('.');
+    while (parts[1].length < 3) parts[1] += '0';
+    return mm.padStart(2, '0') + ':' + parts[0].padStart(2, '0') + '.' + parts[1].slice(0, 3);
+  }
+  const sec = parseFloat(t);
+  const mins = Math.floor(sec / 60);
+  const rem = (sec % 60).toFixed(3).padStart(6, '0');
+  return String(mins).padStart(2, '0') + ':' + rem;
+}
+
+function toggleDescImport() { document.getElementById('desc-box').classList.toggle('hidden'); }
+function hideDescImport()   { document.getElementById('desc-box').classList.add('hidden'); document.getElementById('desc-text').value = ''; }
+
+function processDescImport() {
+  const raw = document.getElementById('desc-text').value;
+  if (!raw.trim()) return;
+
+  const clean = raw.replace(/[‎‏​‌‍﻿]/g, '');
+  let driver = '', mapsLink = '', trackName = '', onboardStart = '';
+  const newLaps = [];
+
+  for (const line of clean.split('\n')) {
+    const norm = normalizeBold(line.trim());
+
+    // "Driver: Name"
+    const driverM = norm.match(/^Driver:\s*(.+)/i);
+    if (driverM) { driver = driverM[1].trim(); continue; }
+
+    // "*MM:SS Lap N - laptime*" (RaceChrono)
+    const lapM = norm.match(/^\*?(\d{1,2}:\d{2})\s+Lap\s+(\d+)\s*-\s*([\d:.]+)/i);
+    if (lapM) {
+      const [, chapterTime, lapNum, lapTime] = lapM;
+      if (parseInt(lapNum) === 1) onboardStart = chapterTime;
+      newLaps.push({ lap: parseInt(lapNum), time: fmtLapTime(lapTime) });
+      continue;
+    }
+
+    // "Track Name - https://maps..." (maps line)
+    const mapM = norm.match(/^(.+?)\s+-\s+(https?:\/\/\S+)/);
+    if (mapM) { trackName = mapM[1].trim(); mapsLink = mapM[2]; }
+  }
+
+  if (driver      && !document.getElementById('driver').value)             document.getElementById('driver').value             = driver;
+  if (trackName   && !document.getElementById('track_name').value)         document.getElementById('track_name').value         = trackName;
+  if (mapsLink    && !document.getElementById('maps_link').value)          document.getElementById('maps_link').value          = mapsLink;
+  if (onboardStart && !document.getElementById('video_start_time').value)  document.getElementById('video_start_time').value  = onboardStart;
+  if (newLaps.length) { laps = newLaps; renderLaps(); }
+
+  hideDescImport();
+  setStatus('ok', `✓ Imported ${newLaps.length} lap${newLaps.length !== 1 ? 's' : ''}` + (onboardStart ? `, start ${onboardStart}` : ''));
+}
+
 // ── Download JSON ──────────────────────────────────────────────────────────
 function handleDownload() {
   const data = buildSessionData();
