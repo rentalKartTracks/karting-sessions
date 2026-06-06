@@ -8,27 +8,12 @@
         "color": "#a84ae8",
         "note": "Professional karting circuit",
         "configs": [
-            "Winter",
-            "Summer"
+            "Summer",
+            "Winter"
         ],
         "sessions": 23,
         "bestLap": "00:43.150",
         "bestDriver": "Ignas M."
-    },
-    {
-        "id": "vilko",
-        "name": "Vilko Kartodromas",
-        "lat": 54.88831631453673,
-        "lng": 23.922075279103808,
-        "mapsLink": "https://maps.app.goo.gl/9erykKE9f58EYZ9TA",
-        "color": "#e84a4a",
-        "note": "Technical indoor circuit",
-        "configs": [
-            "wolf 2025"
-        ],
-        "sessions": 2,
-        "bestLap": "00:18.050",
-        "bestDriver": "Kęstas Č."
     },
     {
         "id": "speedway",
@@ -39,12 +24,27 @@
         "color": "#4ab8e8",
         "note": "Outdoor circuit · Elektrėnai",
         "configs": [
-            "Winter 2026",
+            "Rain",
             "3 konfiguracija",
-            "Rain"
+            "Winter 2026"
         ],
         "sessions": 14,
         "bestLap": "00:44.327",
+        "bestDriver": "Povilas L."
+    },
+    {
+        "id": "kartlandas",
+        "name": "Kartlandas Kaunas",
+        "lat": 54.91482127742085,
+        "lng": 23.84298728162076,
+        "mapsLink": "https://maps.app.goo.gl/7Q9SbwwcmwyNqUH56",
+        "color": "#e8c84a",
+        "note": "High-speed Kaunas circuit",
+        "configs": [
+            "2025"
+        ],
+        "sessions": 3,
+        "bestLap": "00:25.906",
         "bestDriver": "Povilas L."
     },
     {
@@ -63,19 +63,19 @@
         "bestDriver": "Kęstas Č."
     },
     {
-        "id": "kartlandas",
-        "name": "Kartlandas Kaunas",
-        "lat": 54.91482127742085,
-        "lng": 23.84298728162076,
-        "mapsLink": "https://maps.app.goo.gl/7Q9SbwwcmwyNqUH56",
-        "color": "#e8c84a",
-        "note": "High-speed Kaunas circuit",
+        "id": "vilko",
+        "name": "Vilko Kartodromas",
+        "lat": 54.88831631453673,
+        "lng": 23.922075279103808,
+        "mapsLink": "https://maps.app.goo.gl/9erykKE9f58EYZ9TA",
+        "color": "#e84a4a",
+        "note": "Technical indoor circuit",
         "configs": [
-            "2025"
+            "wolf 2025"
         ],
-        "sessions": 3,
-        "bestLap": "00:25.906",
-        "bestDriver": "Povilas L."
+        "sessions": 2,
+        "bestLap": "00:18.050",
+        "bestDriver": "Kęstas Č."
     },
     {
         "id": "gokarting_center_krakow",
