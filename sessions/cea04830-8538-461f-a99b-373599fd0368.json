@@ -1,0 +1,48 @@
+{
+  "session_id": "cea04830-8538-461f-a99b-373599fd0368",
+  "driver": "Kęstas Č.",
+  "fastest_lap": "01:04.660",
+  "track": {
+    "name": "Balčiūnų",
+    "configuration": "2025",
+    "maps_link": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "00:48",
+  "video_url": "https://youtu.be/eAPF4yXVdW0",
+  "session_date": "2025-07-13",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "01:06.790"
+    },
+    {
+      "lap": 2,
+      "time": "01:06.330"
+    },
+    {
+      "lap": 3,
+      "time": "01:05.540"
+    },
+    {
+      "lap": 4,
+      "time": "01:05.540"
+    },
+    {
+      "lap": 5,
+      "time": "01:05.250"
+    },
+    {
+      "lap": 6,
+      "time": "01:04.850"
+    },
+    {
+      "lap": 7,
+      "time": "01:07.300"
+    },
+    {
+      "lap": 8,
+      "time": "01:04.660"
+    }
+  ]
+}
