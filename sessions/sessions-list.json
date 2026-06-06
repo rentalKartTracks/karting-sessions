@@ -103,6 +103,23 @@
             "has_video": true
         },
         {
+            "id": "565e7836-a2ec-4ca2-9d20-54c17261648d",
+            "driver": "Julius B.",
+            "track": {
+                "name": "Speedway Kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/UKjf5X7JGVfx8h2c8"
+            },
+            "session_date": "2024-10-16",
+            "kart": "13 Ag",
+            "fastest_lap": "01:05.026",
+            "average_lap": "01:08.719",
+            "fastest_lap_s": 65.026,
+            "average_lap_s": 68.71900000000001,
+            "laps_count": 7,
+            "has_video": true
+        },
+        {
             "id": "7aad12f4-6619-4bf6-ae8a-c313d966d54c",
             "driver": "Ignas M.",
             "track": {
