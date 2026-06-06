@@ -1,0 +1,84 @@
+{
+  "session_id": "6761734c-c0c5-4545-9a34-24b48a43303f",
+  "driver": "Povilas L.",
+  "fastest_lap": "00:25.352",
+  "track": {
+    "name": "Tor Półwysep",
+    "configuration": "2024",
+    "maps_link": "https://maps.app.goo.gl/EmVwycty7FxrB8TH7"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "01:15",
+  "video_url": "https://youtu.be/VruMuZbhNx8",
+  "session_date": "2024-06-26",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "00:35.948"
+    },
+    {
+      "lap": 2,
+      "time": "00:26.436"
+    },
+    {
+      "lap": 3,
+      "time": "00:26.223"
+    },
+    {
+      "lap": 4,
+      "time": "00:25.816"
+    },
+    {
+      "lap": 5,
+      "time": "00:25.785"
+    },
+    {
+      "lap": 6,
+      "time": "00:25.761"
+    },
+    {
+      "lap": 7,
+      "time": "00:26.204"
+    },
+    {
+      "lap": 8,
+      "time": "00:25.767"
+    },
+    {
+      "lap": 9,
+      "time": "00:25.831"
+    },
+    {
+      "lap": 10,
+      "time": "00:26.232"
+    },
+    {
+      "lap": 11,
+      "time": "00:25.535"
+    },
+    {
+      "lap": 12,
+      "time": "00:25.352"
+    },
+    {
+      "lap": 13,
+      "time": "00:26.419"
+    },
+    {
+      "lap": 14,
+      "time": "00:25.975"
+    },
+    {
+      "lap": 15,
+      "time": "00:26.294"
+    },
+    {
+      "lap": 16,
+      "time": "00:25.900"
+    },
+    {
+      "lap": 17,
+      "time": "00:25.941"
+    }
+  ]
+}
