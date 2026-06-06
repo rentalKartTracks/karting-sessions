@@ -103,6 +103,23 @@
             "has_video": true
         },
         {
+            "id": "ce80f760-e117-4739-b711-573e8dbf7bb3",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "𝗔𝘄𝗶𝘅 𝗥𝗮𝗰𝗶𝗻𝗴 𝗔𝗿𝗲𝗻𝗮",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/ybcsyhCrN3D1E2XbA"
+            },
+            "session_date": "2024-06-04",
+            "kart": "9 Ag",
+            "fastest_lap": "01:02.505",
+            "average_lap": "01:04.998",
+            "fastest_lap_s": 62.505,
+            "average_lap_s": 64.9983,
+            "laps_count": 10,
+            "has_video": true
+        },
+        {
             "id": "a9663237-6649-486e-b5e9-08931eab826c",
             "driver": "Ignas I.",
             "track": {
