@@ -375,6 +375,23 @@
             "has_video": true
         },
         {
+            "id": "13acce39-6093-4ace-99c0-541006106be6",
+            "driver": "Justas Ž.",
+            "track": {
+                "name": "𝗞𝗮𝗿𝘁𝗶𝗻𝗴 𝗦𝗮𝗹𝗼𝘂",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/H4DpdF6T1XHRE6239"
+            },
+            "session_date": "2024-05-07",
+            "kart": "9 Ag",
+            "fastest_lap": "00:51.862",
+            "average_lap": "00:52.982",
+            "fastest_lap_s": 51.862,
+            "average_lap_s": 52.981700000000004,
+            "laps_count": 10,
+            "has_video": true
+        },
+        {
             "id": "0ba6fa36-0416-48a0-a322-7ee6a67f513d",
             "driver": "Justas Ž.",
             "track": {

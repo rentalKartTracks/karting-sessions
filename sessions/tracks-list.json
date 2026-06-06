@@ -7,8 +7,8 @@
         "mapsLink": "https://maps.app.goo.gl/AmF51NGm8bysceeN9",
         "color": "hsl(269, 78%, 62%)",
         "configs": [
-            "Summer",
-            "Winter"
+            "Winter",
+            "Summer"
         ],
         "sessions": 23,
         "bestLap": "00:43.150",
@@ -22,9 +22,9 @@
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "hsl(182, 78%, 62%)",
         "configs": [
-            "3 konfiguracija",
+            "Rain",
             "Winter 2026",
-            "Rain"
+            "3 konfiguracija"
         ],
         "sessions": 14,
         "bestLap": "00:44.327",
@@ -85,6 +85,20 @@
         "sessions": 7,
         "bestLap": "00:38.361",
         "bestDriver": "Kęstas Č."
+    },
+    {
+        "id": "𝗞𝗮𝗿𝘁𝗶𝗻𝗴_𝗦𝗮𝗹𝗼𝘂",
+        "name": "𝗞𝗮𝗿𝘁𝗶𝗻𝗴 𝗦𝗮𝗹𝗼𝘂",
+        "lat": 41.0920037,
+        "lng": 1.1290256,
+        "mapsLink": "https://maps.app.goo.gl/H4DpdF6T1XHRE6239",
+        "color": "hsl(359, 78%, 62%)",
+        "configs": [
+            "2024"
+        ],
+        "sessions": 1,
+        "bestLap": "00:51.862",
+        "bestDriver": "Justas Ž."
     },
     {
         "id": "kartcenter_gdańsk_gokarty",
