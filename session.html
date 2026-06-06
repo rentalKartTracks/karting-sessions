@@ -9,21 +9,28 @@
   <meta http-equiv="X-XSS-Protection" content="1; mode=block">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <title>Karting Session Viewer</title>
-  <meta name="description" content="View individual karting session telemetry, lap times, compare video feeds, and dive into driver performance.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://www.youtube.com">
+  <meta name="description" content="View individual karting session telemetry, lap times, compare video feeds, and dive into driver performance.">  <link rel="preconnect" href="https://www.youtube.com">
   <link rel="preconnect" href="https://s.ytimg.com">
   <link rel="preconnect" href="https://unpkg.com">
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/session.css">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">  <link rel="stylesheet" href="css/session.css">
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
   <link rel="stylesheet" href="css/site.min.css">
 </head>
 
 <body>
+
+  <!-- ── FIXED TOP NAV ── -->
+  <nav class="header-nav" aria-label="Site navigation">
+    <a href="index.html" class="nav-brand">HCH</a>
+    <a href="index.html" class="nav-pill">Hub</a>
+    <a href="sessions.html" class="nav-pill">Sessions</a>
+    <a href="map.html" class="nav-pill">Map</a>
+    <a href="fastest-lap-projection.html" class="nav-pill">Fastest Lap</a>
+    <a href="championship.html" class="nav-pill">Championship</a>
+    <a href="brake.html" class="nav-pill">Brake Detect</a>
+  </nav>
+
   <div class="container">
 
     <!-- ── ERROR BANNER ── -->
@@ -51,7 +58,7 @@
 
         <!-- Left: driver name + meta -->
         <div class="header-info">
-          <div class="header-eyebrow">🏁 Session Telemetry</div>
+          <div class="header-eyebrow">Session Telemetry</div>
           <h1 class="driver-name" id="driver">Loading…</h1>
           <div class="session-meta">
             <span class="session-meta-item" id="session-date">
@@ -70,19 +77,8 @@
           </div>
         </div>
 
-        <!-- Right: nav + mode switcher -->
+        <!-- Right: mode switcher only -->
         <div class="header-actions">
-          <!-- Site navigation pills -->
-          <nav class="header-nav" aria-label="Site navigation">
-            <a href="index.html"          class="nav-pill">HUB</a>
-            <a href="sessions.html"     class="nav-pill">SESSIONS</a>
-            <a href="map.html"          class="nav-pill">MAP</a>
-            <a href="fastest-lap-projection.html" class="nav-pill">FASTEST LAP</a>
-        <a href="championship.html" class="nav-pill">CHAMPIONSHIP</a>
-            <a href="brake.html"        class="nav-pill">BRAKE DETECT</a>
-          </nav>
-
-          <!-- PC / TV mode toggle -->
           <div class="mode-switcher" role="group" aria-label="View mode switcher">
             <button class="mode-btn active" id="pc-mode-btn" onclick="switchMode('pc')" title="PC Mode" aria-label="Switch to PC Mode">
               <span>💻</span>

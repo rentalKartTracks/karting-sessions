@@ -5,13 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Helmet Cam Heroes — Racing Hub</title>
 <meta name="description" content="Helmet Cam Heroes — The central hub for kart racing telemetry, track maps, and championship standings.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-
-
-  /* ── HERO ── */
+  /* ── APPLE-STYLE HERO ── */
   .hero {
     position: relative;
     min-height: 100vh;
@@ -19,145 +14,104 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 40px 20px;
+    padding: 100px 20px 80px;
     text-align: center;
+    background: #000;
     overflow: hidden;
   }
 
-  /* Animated grid lines */
-  .hero-grid {
+  .hero::before {
+    content: '';
     position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(232,200,74,.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(232,200,74,.04) 1px, transparent 1px);
-    background-size: 60px 60px;
-    animation: gridDrift 20s linear infinite;
-  }
-
-  @keyframes gridDrift {
-    0%   { background-position: 0 0; }
-    100% { background-position: 60px 60px; }
-  }
-
-  /* Radial glow */
-  .hero-glow {
-    position: absolute;
-    top: 50%;
+    top: -80px;
     left: 50%;
-    transform: translate(-50%, -50%);
-    width: 700px;
-    height: 700px;
-    background: radial-gradient(ellipse, rgba(232,200,74,.07) 0%, transparent 70%);
+    transform: translateX(-50%);
+    width: 900px;
+    height: 600px;
+    background: radial-gradient(ellipse at top, rgba(10,132,255,0.11) 0%, transparent 65%);
     pointer-events: none;
-    animation: glowPulse 4s ease-in-out infinite;
-  }
-
-  @keyframes glowPulse {
-    0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
-    50%       { opacity: 1;   transform: translate(-50%, -50%) scale(1.15); }
-  }
-
-  /* Speed lines */
-  .speed-lines {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
-  }
-
-  .speed-line {
-    position: absolute;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(232,200,74,.15), transparent);
-    animation: speedLine 3s ease-in-out infinite;
-    opacity: 0;
-  }
-
-  .speed-line:nth-child(1)  { top: 20%; width: 60%; left: -60%; animation-delay: 0s;    animation-duration: 2.8s; }
-  .speed-line:nth-child(2)  { top: 35%; width: 45%; left: -45%; animation-delay: 0.7s;  animation-duration: 3.2s; }
-  .speed-line:nth-child(3)  { top: 50%; width: 70%; left: -70%; animation-delay: 1.4s;  animation-duration: 2.5s; }
-  .speed-line:nth-child(4)  { top: 65%; width: 50%; left: -50%; animation-delay: 0.3s;  animation-duration: 3.5s; }
-  .speed-line:nth-child(5)  { top: 80%; width: 40%; left: -40%; animation-delay: 1.0s;  animation-duration: 2.9s; }
-
-  @keyframes speedLine {
-    0%   { left: -70%; opacity: 0; }
-    10%  { opacity: 1; }
-    90%  { opacity: 1; }
-    100% { left: 110%; opacity: 0; }
   }
 
   .hero-content {
     position: relative;
     z-index: 1;
+    max-width: 880px;
   }
 
   .hero-eyebrow {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    color: #0A84FF;
+    margin-bottom: 16px;
     opacity: 0;
-    animation: fadeUp .8s ease .2s forwards;
+    animation: fadeUp .5s ease .1s forwards;
   }
 
   .hero-title {
-    font-family: 'Bebas Neue', cursive;
-    font-size: clamp(64px, 14vw, 160px);
-    letter-spacing: 6px;
-    line-height: 0.9;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+    font-size: clamp(52px, 11vw, 120px);
+    font-weight: 700;
+    letter-spacing: -3px;
+    line-height: 1.0;
     color: #fff;
-    text-shadow:
-      0 0 80px rgba(232,200,74,.2),
-      0 0 160px rgba(232,200,74,.1);
     opacity: 0;
-    animation: fadeUp .8s ease .4s forwards;
+    animation: fadeUp .5s ease .25s forwards;
   }
 
   .hero-title span {
-    color: var(--gold);
+    color: #0A84FF;
     display: block;
   }
 
   .hero-sub {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(14px, 2.5vw, 18px);
-    font-weight: 300;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--muted);
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+    font-size: clamp(17px, 2.5vw, 21px);
+    font-weight: 400;
+    letter-spacing: 0.1px;
+    color: rgba(255,255,255,0.55);
     margin-top: 20px;
-    margin-bottom: 60px;
+    line-height: 1.5;
     opacity: 0;
-    animation: fadeUp .8s ease .6s forwards;
+    animation: fadeUp .5s ease .4s forwards;
   }
 
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0; transform: translateY(16px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* ── NAV PILLS ── */
-  .header-nav {
-    position: absolute;
-    top: 20px;
-    right: 24px;
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    z-index: 100;
-    opacity: 0;
-    animation: fadeUp .8s ease .8s forwards;
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
   }
 
-  /* ── CHEVRON DOWN ── */
+  /* ── TOP NAV BAR ── */
+  .header-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+    padding: 10px 24px;
+    background: rgba(0,0,0,0.72);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 0.5px solid rgba(255,255,255,0.1);
+    z-index: 100;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeIn .5s ease .5s forwards;
+  }
+
+  /* ── SCROLL CUE ── */
   .scroll-cue {
     position: absolute;
-    bottom: 36px;
+    bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -165,32 +119,33 @@
     align-items: center;
     gap: 6px;
     z-index: 1;
-    animation: fadeIn 1s ease 1.2s both;
+    animation: fadeIn 1s ease 1s both;
   }
 
   .scroll-cue span {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 9px;
-    letter-spacing: 3px;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
     text-transform: uppercase;
-    color: var(--muted);
+    color: rgba(255,255,255,0.3);
   }
 
   .chevron {
-    width: 18px;
-    height: 18px;
-    border-right: 1.5px solid var(--muted);
-    border-bottom: 1.5px solid var(--muted);
+    width: 16px;
+    height: 16px;
+    border-right: 1.5px solid rgba(255,255,255,0.25);
+    border-bottom: 1.5px solid rgba(255,255,255,0.25);
     transform: rotate(45deg);
     animation: bounce 2s ease infinite;
   }
 
   @keyframes bounce {
     0%, 100% { transform: rotate(45deg) translateY(0); }
-    50%       { transform: rotate(45deg) translateY(5px); }
+    50%       { transform: rotate(45deg) translateY(4px); }
   }
 
-  /* ── NAV CARDS SECTION ── */
+  /* ── CARDS SECTION ── */
   .cards-section {
     position: relative;
     z-index: 1;
@@ -200,17 +155,17 @@
   }
 
   .section-label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 4px;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
     text-transform: uppercase;
-    color: var(--muted);
+    color: rgba(255,255,255,0.25);
     text-align: center;
-    margin-bottom: 48px;
+    margin-bottom: 40px;
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 16px;
     justify-content: center;
   }
 
@@ -218,16 +173,16 @@
   .section-label::after {
     content: '';
     flex: 1;
-    max-width: 120px;
-    height: 1px;
-    background: var(--line);
+    max-width: 100px;
+    height: 0.5px;
+    background: rgba(255,255,255,0.1);
   }
 
-  /* ── MAIN 4-CARD GRID ── */
+  /* ── CARDS GRID ── */
   .cards-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 2px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
   }
 
   .card {
@@ -236,240 +191,141 @@
     cursor: pointer;
     text-decoration: none;
     display: block;
-    aspect-ratio: 3/4;
-    background: var(--surface);
+    background: #1C1C1E;
+    border-radius: 20px;
+    border: 0.5px solid rgba(255,255,255,0.1);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    transition: transform .25s ease, box-shadow .25s ease;
   }
 
-  .card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--card-gradient);
-    opacity: 0.85;
-    transition: opacity .4s ease;
-    z-index: 1;
+  .card:hover {
+    transform: scale(1.025);
+    box-shadow: 0 16px 56px rgba(0,0,0,0.65);
   }
-
-  .card:hover::before { opacity: 0.65; }
 
   .card-bg {
     position: absolute;
     inset: 0;
-    background: var(--card-bg);
-    transform: scale(1);
-    transition: transform .6s ease;
+    border-radius: 20px;
+    transition: transform .5s ease;
   }
 
-  .card:hover .card-bg {
-    transform: scale(1.08);
-  }
+  .card:hover .card-bg { transform: scale(1.04); }
 
-  /* Card 1 — Map */
+  /* Featured: Map spans 2 cols, landscape */
   .card-map {
-    --card-bg: linear-gradient(160deg, #0d1f0d 0%, #071a0f 50%, #050d08 100%);
-    --card-gradient: linear-gradient(180deg, rgba(7,7,13,0) 0%, rgba(7,7,13,.95) 100%);
+    --card-accent: #30D158;
+    grid-column: span 2;
+    aspect-ratio: 16/9;
   }
+  .card-map .card-bg { background: linear-gradient(160deg, #0C1F10 0%, #040C07 100%); }
 
-  .card-map .card-bg {
-    background:
-      linear-gradient(160deg, #0a180a 0%, #050d08 100%);
+  /* Championship fills the row height next to map */
+  .card-champ {
+    --card-accent: #FF9F0A;
+    min-height: 260px;
   }
+  .card-champ .card-bg { background: linear-gradient(160deg, #1F1508 0%, #0E0803 100%); }
 
-  /* Animated map dots on card 1 */
-  .map-dots {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-  }
+  /* Bottom row: landscape cards */
+  .card-telemetry { --card-accent: #0A84FF; aspect-ratio: 4/3; }
+  .card-telemetry .card-bg { background: linear-gradient(160deg, #0A1520 0%, #040810 100%); }
 
-  .map-dot {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(74,232,160,.6);
-    box-shadow: 0 0 12px rgba(74,232,160,.4);
-    animation: dotPulse 2.5s ease-in-out infinite;
-  }
+  .card-fastest { --card-accent: #BF5AF2; aspect-ratio: 4/3; }
+  .card-fastest .card-bg { background: linear-gradient(160deg, #140820 0%, #080412 100%); }
 
-  .map-dot::after {
+  .card-brake { --card-accent: #FF453A; aspect-ratio: 4/3; }
+  .card-brake .card-bg { background: linear-gradient(160deg, #200808 0%, #0E0404 100%); }
+
+  /* Gradient overlay */
+  .card::after {
     content: '';
     position: absolute;
-    inset: -4px;
-    border-radius: 50%;
-    border: 1px solid rgba(74,232,160,.3);
-    animation: dotRing 2.5s ease-in-out infinite;
-  }
-
-  @keyframes dotPulse {
-    0%,100% { transform: scale(1); opacity: .8; }
-    50%      { transform: scale(1.3); opacity: 1; }
-  }
-
-  @keyframes dotRing {
-    0%   { transform: scale(1); opacity: .6; }
-    100% { transform: scale(2.5); opacity: 0; }
-  }
-
-  /* Pseudo-map lines */
-  .map-lines-svg {
-    position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.12;
-    z-index: 0;
+    background: linear-gradient(180deg, transparent 25%, rgba(0,0,0,0.88) 100%);
+    z-index: 1;
+    border-radius: 20px;
   }
 
-  /* Card 2 — Championship */
-  .card-champ {
-    --card-bg: linear-gradient(160deg, #1a120a 0%, #0d0905 100%);
-    --card-gradient: linear-gradient(180deg, rgba(7,7,13,0) 0%, rgba(7,7,13,.95) 100%);
-  }
-
-  /* Card 3 — Telemetry */
-  .card-telemetry {
-    --card-bg: linear-gradient(160deg, #0a0d1a 0%, #05070d 100%);
-    --card-gradient: linear-gradient(180deg, rgba(7,7,13,0) 0%, rgba(7,7,13,.95) 100%);
-  }
-
-  /* Card 4 — Brake */
-  .card-brake {
-    --card-accent: #ff2233;
-    --card-bg: linear-gradient(160deg, #1c090b 0%, #0c0506 100%);
-    --card-gradient: linear-gradient(180deg, rgba(7,7,13,0) 0%, rgba(7,7,13,.95) 100%);
-  }
-
-  /* Animated chart bars */
-  .chart-bars {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    gap: 6px;
-    padding: 0 20px 80px;
-    z-index: 0;
-  }
-
-  .chart-bar {
-    flex: 1;
-    background: linear-gradient(0deg, rgba(74,184,232,.5), rgba(74,184,232,.1));
-    border-radius: 2px 2px 0 0;
-    animation: barGrow 2s ease-in-out infinite alternate;
-    opacity: 0.6;
-  }
-
-  .chart-bar:nth-child(1)  { height: 30%; animation-delay: 0s; }
-  .chart-bar:nth-child(2)  { height: 55%; animation-delay: .1s; }
-  .chart-bar:nth-child(3)  { height: 42%; animation-delay: .2s; }
-  .chart-bar:nth-child(4)  { height: 70%; animation-delay: .3s; }
-  .chart-bar:nth-child(5)  { height: 38%; animation-delay: .4s; }
-  .chart-bar:nth-child(6)  { height: 60%; animation-delay: .5s; }
-  .chart-bar:nth-child(7)  { height: 48%; animation-delay: .6s; }
-  .chart-bar:nth-child(8)  { height: 75%; animation-delay: .7s; }
-  .chart-bar:nth-child(9)  { height: 32%; animation-delay: .8s; }
-  .chart-bar:nth-child(10) { height: 58%; animation-delay: .9s; }
-
-  @keyframes barGrow {
-    0%   { transform: scaleY(0.6); }
-    100% { transform: scaleY(1); }
-  }
-
-  /* Trophy icon for card 2 */
-  .trophy-visual {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 0;
-    font-size: 100px;
-    opacity: 0.07;
-    animation: trophyFloat 4s ease-in-out infinite;
-  }
-
-  @keyframes trophyFloat {
-    0%,100% { transform: translateY(0) scale(1); }
-    50%      { transform: translateY(-12px) scale(1.05); }
-  }
-
-  /* Card Content */
+  /* Card content */
   .card-content {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 28px 24px;
+    padding: 22px 20px;
     z-index: 2;
-    transition: transform .4s ease;
+    transition: transform .3s ease;
   }
 
-  .card:hover .card-content { transform: translateY(-6px); }
+  .card:hover .card-content { transform: translateY(-4px); }
 
   .card-tag {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 3px;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
     text-transform: uppercase;
-    color: var(--card-accent, var(--gold));
-    margin-bottom: 8px;
+    color: var(--card-accent);
+    margin-bottom: 6px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 7px;
   }
 
   .card-tag::before {
     content: '';
     display: inline-block;
-    width: 16px;
-    height: 1px;
-    background: var(--card-accent, var(--gold));
+    width: 14px;
+    height: 1.5px;
+    background: var(--card-accent);
+    border-radius: 2px;
+    flex-shrink: 0;
   }
 
   .card-title {
-    font-family: 'Bebas Neue', cursive;
-    font-size: clamp(28px, 3.5vw, 42px);
-    letter-spacing: 2px;
-    line-height: 1;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+    font-size: clamp(22px, 2.6vw, 32px);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
     color: #fff;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
 
   .card-desc {
-    font-family: 'Barlow', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
     font-size: 12px;
-    font-weight: 300;
-    color: rgba(255,255,255,.55);
-    line-height: 1.6;
-    letter-spacing: 0.3px;
-    margin-bottom: 20px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.48);
+    line-height: 1.5;
+    margin-bottom: 14px;
   }
 
   .card-cta {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px;
+    gap: 7px;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+    font-size: 12px;
     font-weight: 600;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: var(--card-accent, var(--gold));
-    transition: gap .3s ease;
+    color: var(--card-accent);
+    transition: gap .2s ease;
   }
 
-  .card:hover .card-cta { gap: 16px; }
+  .card:hover .card-cta { gap: 11px; }
 
   .card-cta-arrow {
-    width: 24px;
-    height: 1px;
-    background: var(--card-accent, var(--gold));
+    width: 18px;
+    height: 1.5px;
+    background: var(--card-accent);
     position: relative;
     flex-shrink: 0;
-    transition: width .3s ease;
+    transition: width .2s ease;
+    border-radius: 2px;
   }
 
-  .card:hover .card-cta-arrow { width: 32px; }
+  .card:hover .card-cta-arrow { width: 24px; }
 
   .card-cta-arrow::after {
     content: '';
@@ -477,56 +333,49 @@
     right: 0;
     top: 50%;
     transform: translateY(-50%) rotate(45deg);
-    width: 6px;
-    height: 6px;
-    border-right: 1.5px solid var(--card-accent, var(--gold));
-    border-top: 1.5px solid var(--card-accent, var(--gold));
+    width: 5px;
+    height: 5px;
+    border-right: 1.5px solid var(--card-accent);
+    border-top: 1.5px solid var(--card-accent);
   }
 
-  /* Card accent colors */
-  .card-map     { --card-accent: #4ae8a0; }
-  .card-champ   { --card-accent: var(--gold); }
-  .card-telemetry { --card-accent: #4ab8e8; }
-
-  /* Top-right corner label */
   .card-num {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    font-family: 'Bebas Neue', cursive;
-    font-size: 64px;
+    top: 18px;
+    right: 18px;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+    font-size: 54px;
+    font-weight: 700;
     line-height: 1;
-    color: rgba(255,255,255,.04);
+    color: rgba(255,255,255,0.04);
     z-index: 2;
     letter-spacing: -2px;
-    transition: color .4s ease;
+    transition: color .3s ease;
     user-select: none;
   }
 
-  .card:hover .card-num { color: rgba(255,255,255,.07); }
+  .card:hover .card-num { color: rgba(255,255,255,0.07); }
 
-  /* Hover border flash */
   .card-border {
     position: absolute;
     inset: 0;
+    border-radius: 20px;
     border: 1px solid transparent;
     z-index: 3;
     pointer-events: none;
-    transition: border-color .4s ease;
+    transition: border-color .3s ease;
   }
 
-  .card:hover .card-border {
-    border-color: rgba(255,255,255,.08);
-  }
+  .card:hover .card-border { border-color: rgba(255,255,255,0.1); }
 
   /* ── STATS STRIP ── */
   .stats-strip {
     position: relative;
     z-index: 1;
-    background: var(--surface);
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    padding: 24px 40px;
+    background: #1C1C1E;
+    border-top: 0.5px solid rgba(255,255,255,0.1);
+    border-bottom: 0.5px solid rgba(255,255,255,0.1);
+    padding: 28px 40px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -539,27 +388,28 @@
     flex: 1;
     text-align: center;
     padding: 0 24px;
-    border-right: 1px solid var(--line);
+    border-right: 0.5px solid rgba(255,255,255,0.1);
   }
 
   .stat-item:last-child { border-right: none; }
 
   .stat-val {
-    font-family: 'Bebas Neue', cursive;
-    font-size: clamp(28px, 4vw, 48px);
-    letter-spacing: 2px;
-    color: var(--gold);
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+    font-size: clamp(32px, 4.5vw, 52px);
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: #0A84FF;
     line-height: 1;
     display: block;
   }
 
   .stat-label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: 3px;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
     text-transform: uppercase;
-    color: var(--muted);
+    color: rgba(255,255,255,0.4);
     margin-top: 4px;
     display: block;
   }
@@ -570,14 +420,15 @@
     z-index: 1;
     padding: 40px;
     text-align: center;
-    border-top: 1px solid var(--line);
+    border-top: 0.5px solid rgba(255,255,255,0.08);
   }
 
   .footer-logo {
-    font-family: 'Bebas Neue', cursive;
-    font-size: 20px;
-    letter-spacing: 4px;
-    color: rgba(255,255,255,.15);
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+    color: rgba(255,255,255,0.18);
     margin-bottom: 16px;
     display: block;
   }
@@ -589,60 +440,38 @@
   }
 
   .footer-link {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.35);
     text-decoration: none;
     transition: color .2s ease;
   }
 
-  .footer-link:hover { color: var(--text); }
-
-  /* ── ANIMATIONS ── */
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-  }
+  .footer-link:hover { color: rgba(255,255,255,0.8); }
 
   /* ── RESPONSIVE ── */
   @media (max-width: 1024px) {
-    .cards-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-    .card {
-      aspect-ratio: 4/3;
-    }
+    .cards-grid { grid-template-columns: repeat(2, 1fr); }
+    .card-map { grid-column: span 2; aspect-ratio: 16/9; }
+    .card-champ { min-height: 200px; aspect-ratio: auto; }
+    .card-telemetry, .card-fastest, .card-brake { aspect-ratio: 4/3; }
   }
 
   @media (max-width: 768px) {
-    .header-nav { top: 16px; right: 16px; justify-content: center; width: calc(100% - 32px); }
-
-    .cards-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .card {
+    .header-nav { padding: 8px 12px; gap: 2px; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .card-map, .card-champ, .card-telemetry, .card-fastest, .card-brake {
+      grid-column: span 1;
       aspect-ratio: 16/9;
+      min-height: auto;
     }
-
-    .stats-strip {
-      flex-wrap: wrap;
-      gap: 20px;
-      padding: 24px 20px;
-    }
-
-    .stat-item {
-      border-right: none;
-      flex: 0 0 45%;
-    }
+    .stats-strip { flex-wrap: wrap; gap: 20px; padding: 24px 20px; }
+    .stat-item { border-right: none; flex: 0 0 45%; }
   }
 
   @media (max-width: 480px) {
-    .card { aspect-ratio: 4/3; }
     .stat-item { flex: 0 0 100%; }
-    .hero-title { letter-spacing: 2px; }
   }
 </style>
   <link rel="stylesheet" href="css/site.min.css">
@@ -651,27 +480,19 @@
 
 <!-- ── HERO ── -->
 <section class="hero">
-  <div class="hero-grid"></div>
-  <div class="hero-glow"></div>
-  <div class="speed-lines">
-    <div class="speed-line"></div>
-    <div class="speed-line"></div>
-    <div class="speed-line"></div>
-    <div class="speed-line"></div>
-    <div class="speed-line"></div>
-  </div>
 
   <nav class="header-nav">
-    <a href="index.html" class="nav-pill active">HUB</a>
-    <a href="sessions.html" class="nav-pill">SESSIONS</a>
-    <a href="map.html" class="nav-pill">MAP</a>
-    <a href="fastest-lap-projection.html" class="nav-pill">FASTEST LAP</a>
-    <a href="championship.html" class="nav-pill">CHAMPIONSHIP</a>
-    <a href="brake.html" class="nav-pill">BRAKE DETECT</a>
+    <a href="index.html" class="nav-brand">HCH</a>
+    <a href="index.html" class="nav-pill active">Hub</a>
+    <a href="sessions.html" class="nav-pill">Sessions</a>
+    <a href="map.html" class="nav-pill">Map</a>
+    <a href="fastest-lap-projection.html" class="nav-pill">Fastest Lap</a>
+    <a href="championship.html" class="nav-pill">Championship</a>
+    <a href="brake.html" class="nav-pill">Brake Detect</a>
   </nav>
 
   <div class="hero-content">
-    <div class="hero-eyebrow">🏁 Helmet Cam Heroes Racing</div>
+    <div class="hero-eyebrow">Helmet Cam Heroes Racing</div>
     <h1 class="hero-title">
       Kart
       <span>Racing</span>
@@ -715,33 +536,6 @@
     <!-- CARD 1: MAP -->
     <a href="map.html" class="card card-map">
       <div class="card-bg"></div>
-
-      <!-- Pseudo map lines -->
-      <svg class="map-lines-svg" viewBox="0 0 300 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20 80 Q80 40 160 100 T280 80" stroke="#4ae8a0" stroke-width="1.5" fill="none"/>
-        <path d="M10 200 Q120 160 200 220 T290 200" stroke="#4ae8a0" stroke-width="1" fill="none"/>
-        <path d="M40 320 Q100 280 180 310 T270 290" stroke="#4ae8a0" stroke-width="0.8" fill="none"/>
-        <path d="M80 50 L80 350" stroke="#4ae8a0" stroke-width="0.5" opacity="0.4"/>
-        <path d="M160 30 L160 370" stroke="#4ae8a0" stroke-width="0.5" opacity="0.4"/>
-        <path d="M240 50 L240 340" stroke="#4ae8a0" stroke-width="0.5" opacity="0.4"/>
-        <circle cx="80" cy="100" r="4" fill="#4ae8a0" opacity="0.8"/>
-        <circle cx="80" cy="100" r="10" stroke="#4ae8a0" stroke-width="0.8" opacity="0.3"/>
-        <circle cx="200" cy="220" r="4" fill="#4ae8a0" opacity="0.8"/>
-        <circle cx="200" cy="220" r="10" stroke="#4ae8a0" stroke-width="0.8" opacity="0.3"/>
-        <circle cx="160" cy="310" r="4" fill="#4ae8a0" opacity="0.8"/>
-        <circle cx="160" cy="310" r="10" stroke="#4ae8a0" stroke-width="0.8" opacity="0.3"/>
-        <circle cx="240" cy="80" r="3" fill="#e8c84a" opacity="0.7"/>
-        <circle cx="240" cy="80" r="8" stroke="#e8c84a" stroke-width="0.6" opacity="0.3"/>
-      </svg>
-
-      <!-- Animated glowing dots -->
-      <div class="map-dots">
-        <div class="map-dot" style="width:10px;height:10px;top:25%;left:27%;animation-delay:0s;"></div>
-        <div class="map-dot" style="width:8px;height:8px;top:55%;left:67%;animation-delay:.9s;background:rgba(232,200,74,.7);box-shadow:0 0 12px rgba(232,200,74,.4);"></div>
-        <div class="map-dot" style="width:9px;height:9px;top:77%;left:53%;animation-delay:1.6s;"></div>
-        <div class="map-dot" style="width:7px;height:7px;top:20%;left:80%;animation-delay:.4s;"></div>
-      </div>
-
       <span class="card-num">01</span>
       <div class="card-border"></div>
 
@@ -759,16 +553,6 @@
     <!-- CARD 2: CHAMPIONSHIP -->
     <a href="championship.html" class="card card-champ">
       <div class="card-bg"></div>
-
-      <div class="trophy-visual">🏆</div>
-
-      <!-- Animated shimmer bars representing podium -->
-      <div style="position:absolute;inset:0;z-index:0;display:flex;align-items:flex-end;justify-content:center;gap:8px;padding:0 30px 80px;">
-        <div style="flex:1;height:50%;background:linear-gradient(0deg,rgba(192,192,192,.25),rgba(192,192,192,.05));border-radius:2px 2px 0 0;animation:barGrow 2.2s ease-in-out infinite alternate;animation-delay:.3s;"></div>
-        <div style="flex:1;height:75%;background:linear-gradient(0deg,rgba(232,200,74,.3),rgba(232,200,74,.05));border-radius:2px 2px 0 0;animation:barGrow 2.2s ease-in-out infinite alternate;"></div>
-        <div style="flex:1;height:38%;background:linear-gradient(0deg,rgba(205,127,50,.2),rgba(205,127,50,.05));border-radius:2px 2px 0 0;animation:barGrow 2.2s ease-in-out infinite alternate;animation-delay:.6s;"></div>
-      </div>
-
       <span class="card-num">02</span>
       <div class="card-border"></div>
 
@@ -786,33 +570,6 @@
     <!-- CARD 3: TELEMETRY -->
     <a href="sessions.html" class="card card-telemetry">
       <div class="card-bg"></div>
-
-      <!-- Animated chart bars -->
-      <div class="chart-bars">
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-      </div>
-
-      <!-- Animated line chart -->
-      <svg style="position:absolute;inset:0;width:100%;height:60%;top:10%;opacity:0.2;z-index:0;" viewBox="0 0 300 150" preserveAspectRatio="none">
-        <polyline points="0,100 30,80 60,90 90,50 120,70 150,40 180,55 210,30 240,45 270,20 300,35"
-          fill="none" stroke="#4ab8e8" stroke-width="2">
-          <animate attributeName="stroke-dashoffset" from="600" to="0" dur="3s" fill="freeze"/>
-        </polyline>
-        <polyline points="0,130 30,110 60,120 90,90 120,100 150,75 180,85 210,65 240,75 270,50 300,60"
-          fill="none" stroke="#e8c84a" stroke-width="1.5" opacity="0.6">
-          <animate attributeName="stroke-dashoffset" from="600" to="0" dur="3s" fill="freeze" begin="0.5s"/>
-        </polyline>
-      </svg>
-
       <span class="card-num">03</span>
       <div class="card-border"></div>
 
@@ -830,11 +587,6 @@
     <!-- CARD 4: FASTEST LAP PROJECTION -->
     <a href="fastest-lap-projection.html" class="card card-fastest">
       <div class="card-bg"></div>
-      <div style="position:absolute;inset:0;z-index:0;display:flex;align-items:flex-end;justify-content:center;gap:8px;padding:0 30px 80px;">
-        <div style="flex:1;height:36%;background:linear-gradient(180deg,rgba(255,204,0,.3),rgba(255,204,0,0));border-radius:4px;animation:barGrow 2.2s ease-in-out infinite alternate;animation-delay:.1s;"></div>
-        <div style="flex:1;height:60%;background:linear-gradient(180deg,rgba(78,205,196,.3),rgba(78,205,196,0));border-radius:4px;animation:barGrow 2.2s ease-in-out infinite alternate;animation-delay:.4s;"></div>
-        <div style="flex:1;height:44%;background:linear-gradient(180deg,rgba(232,200,74,.3),rgba(232,200,74,0));border-radius:4px;animation:barGrow 2.2s ease-in-out infinite alternate;animation-delay:.7s;"></div>
-      </div>
       <span class="card-num">04</span>
       <div class="card-border"></div>
       <div class="card-content">
@@ -850,23 +602,6 @@
     <!-- CARD 5: BRAKE DETECTION -->
     <a href="brake.html" class="card card-brake">
       <div class="card-bg"></div>
-
-      <!-- Animated brake waveform / pulses -->
-      <svg style="position:absolute;inset:0;width:100%;height:60%;top:15%;opacity:0.25;z-index:0;" viewBox="0 0 300 150" preserveAspectRatio="none">
-        <path d="M0,100 L50,100 L60,30 L80,130 L90,100 L150,100 L160,20 L185,140 L200,100 L250,100 L260,40 L280,120 L300,100"
-          fill="none" stroke="#ff2233" stroke-width="2.5">
-          <animate attributeName="stroke-dashoffset" from="600" to="0" dur="3.5s" fill="freeze"/>
-        </path>
-        <circle cx="70" cy="80" r="25" fill="none" stroke="#ff2233" stroke-width="1.5" opacity="0.3">
-          <animate attributeName="r" values="10;35;10" dur="3s" repeatCount="indefinite"/>
-          <animate attributeName="opacity" values="0.5;0;0.5" dur="3s" repeatCount="indefinite"/>
-        </circle>
-        <circle cx="172" cy="80" r="30" fill="none" stroke="#ff2233" stroke-width="1.5" opacity="0.3">
-          <animate attributeName="r" values="15;40;15" dur="3s" repeatCount="indefinite" begin="1s"/>
-          <animate attributeName="opacity" values="0.5;0;0.5" dur="3s" repeatCount="indefinite" begin="1s"/>
-        </circle>
-      </svg>
-
       <span class="card-num">05</span>
       <div class="card-border"></div>
 
@@ -896,46 +631,50 @@
 </footer>
 
 <script>
+  function animateCount(el, target, delay = 0) {
+    if (!target || target <= 0) { el.textContent = target || '-'; return; }
+    const duration = 900;
+    let startTime = null;
+    const step = (now) => {
+      if (!startTime) startTime = now;
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(eased * target);
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    setTimeout(() => requestAnimationFrame(step), delay);
+  }
+
   async function loadHubStats() {
     try {
-      // 1. Fetch sessions
       const sessionsRes = await fetch('sessions/sessions-list.json');
       if (sessionsRes.ok) {
         const data = await sessionsRes.json();
         const sessions = data.sessions || [];
-        
         const uniqueTracks = new Set();
         const uniqueDrivers = new Set();
-        
         sessions.forEach(s => {
           if (s.track && s.track.name) uniqueTracks.add(s.track.name);
           if (s.driver) uniqueDrivers.add(s.driver);
         });
-        
-        document.getElementById('hub-tracks-count').textContent = uniqueTracks.size;
-        document.getElementById('hub-drivers-count').textContent = uniqueDrivers.size;
-        document.getElementById('hub-sessions-count').textContent = sessions.length;
+        animateCount(document.getElementById('hub-tracks-count'), uniqueTracks.size, 200);
+        animateCount(document.getElementById('hub-drivers-count'), uniqueDrivers.size, 350);
+        animateCount(document.getElementById('hub-sessions-count'), sessions.length, 500);
       }
-      
-      // 2. Fetch championship rounds
       const champRes = await fetch('championship.html');
       if (champRes.ok) {
         const champHtml = await champRes.text();
         const parser = new DOMParser();
         const doc = parser.parseFromString(champHtml, 'text/html');
         const roundsCount = doc.querySelectorAll('.season-panel.active .status-chip').length;
-        if (roundsCount > 0) {
-          document.getElementById('hub-championships-count').textContent = roundsCount;
-        } else {
-          // Fallback if no active panel or chips
-          document.getElementById('hub-championships-count').textContent = '-';
-        }
+        animateCount(document.getElementById('hub-championships-count'), roundsCount || 0, 650);
       }
     } catch (e) {
       console.error('Error loading hub stats:', e);
     }
   }
-  
+
   document.addEventListener('DOMContentLoaded', loadHubStats);
 </script>
 </body>

@@ -27,21 +27,50 @@ function debounce(func, wait) {
 
 function showSkeletonLoading() {
   const loader = document.getElementById('skeleton-loader');
-  const skeletonHTML = Array(6).fill().map(() => `
+  const skeletonHTML = `<div class="sessions-grid">${Array(6).fill().map(() => `
     <div class="skeleton-card">
       <div class="skeleton-header">
-        <div class="skeleton skeleton-title"></div>
+        <div>
+          <div class="skeleton skeleton-title" style="width:55%;height:22px;margin-bottom:8px;"></div>
+          <div class="skeleton" style="width:35%;height:14px;border-radius:6px;"></div>
+        </div>
         <div class="skeleton skeleton-date"></div>
       </div>
       <div class="skeleton skeleton-stat"></div>
       <div class="skeleton skeleton-stat"></div>
       <div class="skeleton skeleton-stat"></div>
-      <div class="skeleton skeleton-stat"></div>
-      <div class="skeleton skeleton-stat"></div>
       <div class="skeleton skeleton-button"></div>
     </div>
-  `).join('');
+  `).join('')}</div>`;
   loader.innerHTML = skeletonHTML;
+}
+
+function generateSparkline(session) {
+  const { fastest_lap, average_lap, laps_count, trend } = session;
+  if (!fastest_lap || !laps_count || laps_count < 3) return '';
+  const parseTime = (t) => {
+    if (!t) return null;
+    const m = t.match(/(\d+):(\d+\.?\d*)/);
+    return m ? parseFloat(m[1]) * 60 + parseFloat(m[2]) : parseFloat(t) || null;
+  };
+  const fastest = parseTime(fastest_lap);
+  const avg = parseTime(average_lap);
+  if (!fastest || fastest <= 0) return '';
+  const spread = Math.max((avg || fastest + 1) - fastest, 0.5);
+  const points = Math.min(laps_count, 14);
+  const seed = fastest * 100;
+  const data = Array.from({ length: points }, (_, i) => {
+    const p = i / (points - 1);
+    let base = (avg || fastest + spread * 0.5);
+    if (trend === 'improving') base = (avg || fastest + spread) - spread * p * 0.6;
+    else if (trend === 'declining') base = fastest + spread * p * 0.7;
+    return base + Math.abs(Math.sin(seed + i * 1.9) * spread * 0.35);
+  });
+  const min = Math.min(...data), max = Math.max(...data), range = max - min || 0.1;
+  const W = 72, H = 22;
+  const pts = data.map((v, i) => `${((i / (points - 1)) * W).toFixed(1)},${(H - 2 - ((v - min) / range) * (H - 4)).toFixed(1)}`).join(' ');
+  const color = trend === 'improving' ? '#30D158' : trend === 'declining' ? '#FF453A' : '#0A84FF';
+  return `<svg class="lap-sparkline" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/></svg>`;
 }
 
 function getUrlParams() {
@@ -157,7 +186,12 @@ async function loadAllSessions() {
     }));
 
     if (allSessions.length === 0) {
-      container.innerHTML = '<div class="no-results">No sessions found. Start tracking your performance!</div>';
+      container.innerHTML = `
+        <div class="no-results">
+          <div style="font-size:48px;margin-bottom:16px;opacity:0.5;">🏎️</div>
+          <div style="font-size:17px;font-weight:600;color:rgba(255,255,255,0.8);margin-bottom:8px;">No sessions yet</div>
+          <div style="font-size:14px;color:rgba(255,255,255,0.4);">Start tracking your performance to see sessions here</div>
+        </div>`;
       isLoading = false;
       return;
     }
@@ -423,7 +457,12 @@ function renderSessions() {
   const container = document.getElementById('sessions-container');
 
   if (filteredSessions.length === 0) {
-    container.innerHTML = '<div class="no-results">No sessions match your filters. Try adjusting your search criteria.</div>';
+    container.innerHTML = `
+      <div class="no-results">
+        <div style="font-size:48px;margin-bottom:16px;opacity:0.5;">🏁</div>
+        <div style="font-size:17px;font-weight:600;color:rgba(255,255,255,0.8);margin-bottom:8px;">No sessions found</div>
+        <div style="font-size:14px;color:rgba(255,255,255,0.4);">Try adjusting your filters or search terms</div>
+      </div>`;
     return;
   }
 
@@ -468,6 +507,8 @@ function renderSessions() {
       trendHTML = `<div class="trend-indicator ${trendClass}">${trendIcon} ${trendText}</div>`;
     }
 
+    const sparkline = generateSparkline(session);
+
     return `
       <div class="session-card" onclick="viewSession('${session.id}')">
         ${badgesHTML}
@@ -476,9 +517,12 @@ function renderSessions() {
             <div class="driver-name">${session.driver}</div>
             ${trendHTML}
           </div>
-          <div class="session-date">${new Date(session.session_date).toLocaleDateString()}</div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+            <div class="session-date">${new Date(session.session_date).toLocaleDateString()}</div>
+            ${sparkline}
+          </div>
         </div>
-        
+
         <div class="session-stats">
           <div class="session-stat">
             <span class="stat-name">Track</span>
@@ -490,7 +534,7 @@ function renderSessions() {
           </div>
           <div class="session-stat">
             <span class="stat-name">Fastest Lap</span>
-            <span class="stat-val">🏆 ${fastestTime}</span>
+            <span class="stat-val" style="color:#0A84FF;font-weight:700;">${fastestTime}</span>
           </div>
           <div class="session-stat">
             <span class="stat-name">Average</span>
@@ -501,10 +545,10 @@ function renderSessions() {
             <span class="stat-val">${lapsCount}</span>
           </div>
         </div>
-        
-        <div class="session-actions" style="display: flex; gap: 8px; margin-top: 12px;">
-          <button class="view-btn" style="flex: 1;">View Telemetry</button>
-          <button class="edit-btn secondary-btn" onclick="event.stopPropagation(); window.location.href='manage.html?id=${session.id}'" style="padding: 8px 12px;">✏️</button>
+
+        <div class="session-actions" style="display:flex;gap:8px;margin-top:12px;">
+          <button class="view-btn" style="flex:1;">View Telemetry</button>
+          <button class="edit-btn secondary-btn" onclick="event.stopPropagation();window.location.href='manage.html?id=${session.id}'" style="padding:8px 12px;">✏️</button>
         </div>
       </div>
     `;

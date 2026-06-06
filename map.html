@@ -4,11 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tracks Map — Helmet Cam Heroes</title>
-<meta name="description" content="Explore every driven circuit and configuration plotted on our interactive map. View distance and layouts for our championship venues.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,400&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<meta name="description" content="Explore every driven circuit and configuration plotted on our interactive map. View distance and layouts for our championship venues."><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
 <style>
 
@@ -17,20 +13,20 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    padding-top: 56px;
   }
 
   /* ── TOPBAR ── */
   .topbar {
-    background: var(--surface);
-    border-bottom: 1px solid var(--line);
+    background: rgba(28,28,30,0.95);
+    border-bottom: 0.5px solid rgba(255,255,255,0.1);
     padding: 0 24px;
-    min-height: 56px;
+    min-height: 52px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 20px;
     flex-shrink: 0;
-    z-index: 1000;
+    z-index: 100;
   }
   .topbar-brand {
     display: flex;
@@ -94,13 +90,28 @@
   }
 
   .topbar-title {
-    font-family: 'Bebas Neue', cursive;
-    font-size: 22px;
-    letter-spacing: 3px;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
     color: #fff;
     flex: 1;
   }
-  .header-nav { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+  .header-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+    padding: 10px 24px;
+    background: rgba(0,0,0,0.72);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 0.5px solid rgba(255,255,255,0.1);
+    z-index: 2000;
+    flex-wrap: wrap;
+  }
   .topbar-tag {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 9px;
@@ -405,21 +416,22 @@
 </head>
 <body>
 
+<nav class="header-nav">
+  <a href="index.html" class="nav-brand">HCH</a>
+  <a href="index.html" class="nav-pill">Hub</a>
+  <a href="sessions.html" class="nav-pill">Sessions</a>
+  <a href="map.html" class="nav-pill active">Map</a>
+  <a href="fastest-lap-projection.html" class="nav-pill">Fastest Lap</a>
+  <a href="championship.html" class="nav-pill">Championship</a>
+  <a href="brake.html" class="nav-pill">Brake Detect</a>
+</nav>
+
 <!-- TOPBAR -->
 <div class="topbar">
   <div class="topbar-brand">
     <div class="topbar-title">Tracks Map</div>
     <div class="topbar-tag">4 Venues</div>
   </div>
-
-  <nav class="header-nav">
-    <a href="index.html" class="nav-pill">HUB</a>
-    <a href="sessions.html" class="nav-pill">SESSIONS</a>
-    <a href="map.html" class="nav-pill active">MAP</a>
-    <a href="fastest-lap-projection.html" class="nav-pill">FASTEST LAP</a>
-    <a href="championship.html" class="nav-pill">CHAMPIONSHIP</a>
-    <a href="brake.html" class="nav-pill">BRAKE DETECT</a>
-  </nav>
 </div>
 
 <div class="main">

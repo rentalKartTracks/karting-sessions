@@ -3,11 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fastest Lap Projection</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
+<title>Fastest Lap Projection</title><style>
   html, body {
     height: 100%;
     background: var(--bg);
@@ -48,14 +44,32 @@
   }
 
   /* HEADER */
+  /* fixed top nav */
+  .header-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+    padding: 10px 24px;
+    background: rgba(0,0,0,0.72);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 0.5px solid rgba(255,255,255,0.1);
+    z-index: 2000;
+    flex-wrap: wrap;
+  }
+
   .header {
     grid-area: header;
-    background: var(--surface);
-    padding: 14px 28px;
+    background: rgba(28,28,30,0.95);
+    padding: 12px 28px;
     display: flex;
     align-items: center;
     gap: 32px;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 0.5px solid rgba(255,255,255,0.1);
+    margin-top: 56px;
   }
   .brand {
     display: flex;
@@ -1150,6 +1164,17 @@
   <link rel="stylesheet" href="css/site.min.css">
 </head>
 <body>
+
+<nav class="header-nav" aria-label="Site navigation">
+  <a href="index.html" class="nav-brand">HCH</a>
+  <a href="index.html" class="nav-pill">Hub</a>
+  <a href="sessions.html" class="nav-pill">Sessions</a>
+  <a href="map.html" class="nav-pill">Map</a>
+  <a href="fastest-lap-projection.html" class="nav-pill active">Fastest Lap</a>
+  <a href="championship.html" class="nav-pill">Championship</a>
+  <a href="brake.html" class="nav-pill">Brake Detect</a>
+</nav>
+
 <div class="app">
 
   <!-- HEADER -->
@@ -1158,14 +1183,6 @@
       <div class="brand-mark">FASTEST<span class="accent">·</span>LAP <span style="font-weight:400;color:var(--text-mute);">/</span> <span id="brand-model">SR4</span></div>
       <div class="brand-sub" id="brand-sub">Honda GX270 · Live Axle · 9 hp</div>
     </div>
-    <nav class="header-nav" aria-label="Site navigation">
-      <a href="index.html" class="nav-pill">HUB</a>
-      <a href="sessions.html" class="nav-pill">SESSIONS</a>
-      <a href="map.html" class="nav-pill">MAP</a>
-      <a href="fastest-lap-projection.html" class="nav-pill active">FASTEST LAP</a>
-      <a href="championship.html" class="nav-pill">CHAMPIONSHIP</a>
-      <a href="brake.html" class="nav-pill">BRAKE DETECT</a>
-    </nav>
     <div class="header-stats">
       <div class="stat">
         <div class="stat-label">Lap Time</div>

@@ -3,47 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Brake Detection</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
+<title>Brake Detection</title><style>
   html,body{height:100%}
   body{
-    background:
-      radial-gradient(1200px 600px at 80% -10%, #16202c 0%, transparent 60%),
-      radial-gradient(900px 500px at -10% 110%, #1a1216 0%, transparent 55%),
-      var(--bg);
+    background: #000;
     color:var(--txt);
     font-family:var(--mono);
     min-height:100vh;
-    padding:24px;
-    background-attachment:fixed;
   }
-  body::before{
-    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
-    background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.015) 0 1px,transparent 1px 3px);
-    mix-blend-mode:overlay;opacity:.5;
-  }
-  .wrap{max-width:1180px;margin:0 auto;position:relative;z-index:1}
+  .wrap{max-width:1180px;margin:0 auto;position:relative;z-index:1;padding:80px 24px 24px;}
 
   header{
-    display:flex;align-items:baseline;justify-content:space-between;
-    border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:22px;
-    flex-wrap:wrap;gap:10px;
+    display:flex;align-items:flex-start;justify-content:space-between;
+    border-bottom:0.5px solid rgba(255,255,255,0.1);padding-bottom:24px;margin-bottom:28px;
+    flex-wrap:wrap;gap:16px;
   }
-  .brand{display:flex;align-items:baseline;gap:14px}
-  .brand h1{
-    font-family:var(--disp);font-weight:800;font-size:38px;letter-spacing:2px;
-    line-height:.9;text-transform:uppercase;
-  }
-  .brand h1 b{color:var(--brake)}
+  .brand{ display:flex; flex-direction:column; gap:6px; }
   .brand .tag{
-    font-size:11px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size:13px;font-weight:600;letter-spacing:0.2px;
+    color:#FF453A;display:block;text-transform:none;
   }
+  .brand h1{
+    font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;
+    font-weight:700;font-size:clamp(32px,5vw,52px);
+    letter-spacing:-1.5px;line-height:1;color:#fff;text-transform:none;
+  }
+  .brand h1 b{color:#FF453A;}
   .status{
-    font-size:12px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;
-    display:flex;align-items:center;gap:8px;
+    font-size:13px;font-weight:500;letter-spacing:0.1px;
+    color:rgba(255,255,255,0.5);text-transform:none;
+    display:flex;align-items:center;gap:8px;margin-top:8px;
   }
   .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);box-shadow:0 0 0 0 transparent}
   .dot.live{background:var(--brake);animation:pulse 1s infinite}
@@ -51,11 +41,11 @@
 
   /* upload */
   .drop{
-    border:2px dashed var(--line);border-radius:14px;background:var(--panel);
+    border:1.5px dashed rgba(255,255,255,0.15);border-radius:20px;background:#1C1C1E;
     padding:54px 24px;text-align:center;cursor:pointer;transition:.18s;
   }
-  .drop:hover,.drop.over{border-color:var(--accent);background:var(--panel-2)}
-  .drop .big{font-family:var(--disp);font-weight:700;font-size:26px;letter-spacing:1px;text-transform:uppercase}
+  .drop:hover,.drop.over{border-color:#0A84FF;background:#2C2C2E}
+  .drop .big{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;font-weight:700;font-size:22px;letter-spacing:-0.3px;}
   .drop .sub{color:var(--muted);font-size:13px;margin-top:8px}
   .drop svg{display:block;margin:0 auto 14px;opacity:.8}
 
@@ -109,9 +99,9 @@
   body.recording .rec-flag{display:flex}
 
   /* timeline */
-  .tl-wrap{margin-top:14px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .tl-wrap{margin-top:14px;background:#1C1C1E;border:0.5px solid rgba(255,255,255,0.1);border-radius:16px;padding:16px}
   .tl-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-  .tl-head .t{font-family:var(--disp);font-weight:700;letter-spacing:2px;text-transform:uppercase;font-size:14px;color:var(--muted)}
+  .tl-head .t{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-weight:600;letter-spacing:0.2px;font-size:13px;color:rgba(255,255,255,0.4);text-transform:uppercase;}
   .tl-head .time{font-size:13px;color:var(--accent)}
   .timeline{position:relative;height:46px;background:var(--panel-2);border-radius:8px;cursor:pointer;overflow:hidden;border:1px solid var(--line)}
   .timeline .seg{position:absolute;top:0;bottom:0;background:linear-gradient(180deg,var(--brake),#b3121f);opacity:.85;border-left:1px solid #ff8088;border-right:1px solid #ff8088}
@@ -122,9 +112,10 @@
   /* controls */
   .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
   button{
-    font-family:var(--disp);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
-    background:var(--panel-2);color:var(--txt);border:1px solid var(--line);
-    padding:11px 16px;border-radius:9px;cursor:pointer;font-size:14px;transition:.14s;
+    font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-weight:600;
+    letter-spacing:0.1px;
+    background:var(--panel-2);color:var(--txt);border:0.5px solid rgba(255,255,255,0.12);
+    padding:11px 16px;border-radius:10px;cursor:pointer;font-size:14px;transition:.14s;
     display:inline-flex;align-items:center;gap:8px;
   }
   button:hover{border-color:var(--accent);color:#fff;transform:translateY(-1px)}
@@ -143,13 +134,13 @@
   /* stats + brake pad + segments */
   .grid{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-top:16px}
   @media(max-width:820px){.grid{grid-template-columns:1fr}}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
-  .card h3{font-family:var(--disp);font-weight:700;letter-spacing:2px;text-transform:uppercase;font-size:14px;color:var(--muted);margin-bottom:12px;display:flex;justify-content:space-between}
+  .card{background:#1C1C1E;border:0.5px solid rgba(255,255,255,0.1);border-radius:16px;padding:18px}
+  .card h3{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-weight:600;letter-spacing:0.2px;font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:12px;display:flex;justify-content:space-between;text-transform:uppercase;}
   .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-  .stat{background:var(--panel-2);border:1px solid var(--line);border-radius:9px;padding:12px}
-  .stat .n{font-family:var(--disp);font-weight:800;font-size:30px;line-height:1;color:var(--accent)}
-  .stat .n.red{color:var(--brake)}
-  .stat .l{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:6px}
+  .stat{background:var(--panel-2);border:0.5px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px}
+  .stat .n{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;font-weight:700;font-size:28px;letter-spacing:-0.5px;line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
+  .stat .n.red{color:#FF453A}
+  .stat .l{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:11px;font-weight:500;letter-spacing:0.2px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:6px}
 
   .pad{
     margin-top:12px;height:92px;border-radius:10px;border:1px solid var(--line);
@@ -219,30 +210,43 @@
   .hint b{color:var(--amber)}
   kbd{background:var(--panel-2);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:2px 7px;font-family:var(--mono);font-size:12px;color:var(--txt)}
   .foot{margin-top:24px;text-align:center;color:var(--muted);font-size:11px;letter-spacing:2px;text-transform:uppercase}
+  /* fixed top nav comes from site.min.css .header-nav + local override below */
   .header-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 8px;
+    gap: 3px;
+    padding: 10px 24px;
+    background: rgba(0,0,0,0.72);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 0.5px solid rgba(255,255,255,0.1);
+    z-index: 200;
     flex-wrap: wrap;
   }
 </style>
   <link rel="stylesheet" href="css/site.min.css">
 </head>
 <body>
+
+<nav class="header-nav">
+  <a href="index.html" class="nav-brand">HCH</a>
+  <a href="index.html" class="nav-pill">Hub</a>
+  <a href="sessions.html" class="nav-pill">Sessions</a>
+  <a href="map.html" class="nav-pill">Map</a>
+  <a href="fastest-lap-projection.html" class="nav-pill">Fastest Lap</a>
+  <a href="championship.html" class="nav-pill">Championship</a>
+  <a href="brake.html" class="nav-pill active">Brake Detect</a>
+</nav>
+
 <div class="wrap">
   <header>
     <div class="brand">
-      <h1>BRAKE<b>·</b>detection</h1>
-      <span class="tag">Kart Brake Telemetry Overlay</span>
+      <span class="tag">Telemetry Overlay</span>
+      <h1>Brake<b> Detection</b></h1>
     </div>
-    <nav class="header-nav">
-      <a href="index.html" class="nav-pill">HUB</a>
-      <a href="sessions.html" class="nav-pill">SESSIONS</a>
-      <a href="map.html" class="nav-pill">MAP</a>
-      <a href="fastest-lap-projection.html" class="nav-pill">FASTEST LAP</a>
-      <a href="championship.html" class="nav-pill">CHAMPIONSHIP</a>
-      <a href="brake.html" class="nav-pill active">BRAKE DETECT</a>
-    </nav>
     <div class="status"><span class="dot" id="statusDot"></span><span id="statusTxt">No clip loaded</span></div>
   </header>
 
