@@ -137,6 +137,23 @@
             "has_video": true
         },
         {
+            "id": "f1ad89eb-a8a6-42fb-9cfc-2c98bb59d91c",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "E1GOKART",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8"
+            },
+            "session_date": "2024-06-23",
+            "kart": "",
+            "fastest_lap": "00:58.777",
+            "average_lap": "01:03.443",
+            "fastest_lap_s": 58.777,
+            "average_lap_s": 63.44316666666666,
+            "laps_count": 6,
+            "has_video": true
+        },
+        {
             "id": "565e7836-a2ec-4ca2-9d20-54c17261648d",
             "driver": "Julius B.",
             "track": {
