@@ -1,0 +1,48 @@
+{
+  "session_id": "08109fcd-966c-4db7-8d9a-a2e0818fa43f",
+  "driver": "Povilas L.",
+  "fastest_lap": "00:51.01",
+  "track": {
+    "name": "𝗦𝗽𝗼𝗿𝘁𝗮 𝗸𝗼𝗺𝗽𝗹𝗲𝗸𝘀𝘀 𝟯𝟯𝟯",
+    "configuration": "2024",
+    "maps_link": "https://goo.gl/maps/kZR3mou2NyC9NFx26"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "00:18",
+  "video_url": "https://youtu.be/5R4hPWjiMVk",
+  "session_date": "2024-08-16",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "00:56.00"
+    },
+    {
+      "lap": 2,
+      "time": "00:52.60"
+    },
+    {
+      "lap": 3,
+      "time": "00:57.30"
+    },
+    {
+      "lap": 4,
+      "time": "00:57.40"
+    },
+    {
+      "lap": 5,
+      "time": "00:54.60"
+    },
+    {
+      "lap": 6,
+      "time": "00:54.90"
+    },
+    {
+      "lap": 7,
+      "time": "00:54.09"
+    },
+    {
+      "lap": 8,
+      "time": "00:51.01"
+    }
+  ]
+}
