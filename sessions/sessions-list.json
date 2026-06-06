@@ -902,6 +902,23 @@
             "has_video": true
         },
         {
+            "id": "2ee6b65c-2542-4d3c-91bb-7a4d29442509",
+            "driver": "Ignas M.",
+            "track": {
+                "name": "Anykščių kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8"
+            },
+            "session_date": "2024-09-08",
+            "kart": "9 Ag",
+            "fastest_lap": "00:49.500",
+            "average_lap": "00:51.955",
+            "fastest_lap_s": 49.5,
+            "average_lap_s": 51.95454545454545,
+            "laps_count": 11,
+            "has_video": true
+        },
+        {
             "id": "4a326eb4-ced0-490b-a4e8-edc211b65437",
             "driver": "Povilas L.",
             "track": {
