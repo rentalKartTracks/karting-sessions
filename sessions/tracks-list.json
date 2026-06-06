@@ -7,8 +7,8 @@
         "mapsLink": "https://maps.app.goo.gl/AmF51NGm8bysceeN9",
         "color": "hsl(269, 78%, 62%)",
         "configs": [
-            "Winter",
-            "Summer"
+            "Summer",
+            "Winter"
         ],
         "sessions": 23,
         "bestLap": "00:43.150",
@@ -23,8 +23,8 @@
         "color": "hsl(182, 78%, 62%)",
         "configs": [
             "3 konfiguracija",
-            "Rain",
-            "Winter 2026"
+            "Winter 2026",
+            "Rain"
         ],
         "sessions": 14,
         "bestLap": "00:44.327",
@@ -85,6 +85,20 @@
         "sessions": 7,
         "bestLap": "00:38.361",
         "bestDriver": "Kęstas Č."
+    },
+    {
+        "id": "kartcenter_gdańsk_gokarty",
+        "name": "KartCenter Gdańsk Gokarty",
+        "lat": 54.3890499,
+        "lng": 18.5136168,
+        "mapsLink": "https://maps.app.goo.gl/RUBF4Y86mvd37qu67",
+        "color": "hsl(42, 78%, 62%)",
+        "configs": [
+            "2025"
+        ],
+        "sessions": 1,
+        "bestLap": "00:22.840",
+        "bestDriver": "Povilas L."
     },
     {
         "id": "vilko_kartodromas",

@@ -409,6 +409,23 @@
             "has_video": true
         },
         {
+            "id": "a92abab9-ced6-451e-8599-2c45498a7d1c",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "KartCenter Gdańsk Gokarty",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/RUBF4Y86mvd37qu67"
+            },
+            "session_date": "2025-05-28",
+            "kart": "",
+            "fastest_lap": "00:22.840",
+            "average_lap": "00:23.530",
+            "fastest_lap_s": 22.84,
+            "average_lap_s": 23.529571428571426,
+            "laps_count": 14,
+            "has_video": true
+        },
+        {
             "id": "0268bcc5-f6c6-4113-be17-1b1c3922eecf",
             "driver": "Ignas M.",
             "track": {
