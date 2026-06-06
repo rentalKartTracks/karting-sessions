@@ -23,10 +23,10 @@
         "color": "hsl(182, 78%, 62%)",
         "configs": [
             "Winter 2026",
-            "Rain",
+            "2024",
             "3 konfiguracija",
-            "long",
-            "2024"
+            "Rain",
+            "long"
         ],
         "sessions": 16,
         "bestLap": "00:44.327",
@@ -298,5 +298,19 @@
         "sessions": 1,
         "bestLap": "00:28.790",
         "bestDriver": "Ignas M."
+    },
+    {
+        "id": "e1gokart_gdańsk",
+        "name": "🏟️ E1gokart GdańSk",
+        "lat": 54.3683641,
+        "lng": 18.4699973,
+        "mapsLink": "https://maps.app.goo.gl/wr4dY7tgiYpgngB77",
+        "color": "hsl(357, 78%, 62%)",
+        "configs": [
+            "2025"
+        ],
+        "sessions": 1,
+        "bestLap": "00:56.240",
+        "bestDriver": "Povilas L."
     }
 ]
