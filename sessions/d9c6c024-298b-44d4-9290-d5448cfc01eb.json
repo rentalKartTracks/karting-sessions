@@ -1,0 +1,44 @@
+{
+  "session_id": "d9c6c024-298b-44d4-9290-d5448cfc01eb",
+  "driver": "Julius.B",
+  "fastest_lap": "00:58.225",
+  "track": {
+    "name": "E1GOKART Gdańsk",
+    "configuration": "2024",
+    "maps_link": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8"
+  },
+  "kart": "",
+  "video_start_time": "00:46",
+  "video_url": "https://youtu.be/QBHJOeEpbRY",
+  "session_date": "2024-07-29",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "01:00.907"
+    },
+    {
+      "lap": 2,
+      "time": "01:02.034"
+    },
+    {
+      "lap": 3,
+      "time": "00:58.880"
+    },
+    {
+      "lap": 4,
+      "time": "01:00.379"
+    },
+    {
+      "lap": 5,
+      "time": "00:58.225"
+    },
+    {
+      "lap": 6,
+      "time": "00:58.435"
+    },
+    {
+      "lap": 7,
+      "time": "00:58.580"
+    }
+  ]
+}
