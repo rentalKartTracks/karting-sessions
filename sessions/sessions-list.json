@@ -273,6 +273,23 @@
             "has_video": true
         },
         {
+            "id": "b602fe86-8dc2-4d43-baa8-fb43d6c0ca78",
+            "driver": "Ignas M",
+            "track": {
+                "name": "KartCenter Sopot",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/t4cWok3pkRS21u6k9"
+            },
+            "session_date": "2025-05-23",
+            "kart": "9 Ag",
+            "fastest_lap": "00:40.573",
+            "average_lap": "00:41.561",
+            "fastest_lap_s": 40.573,
+            "average_lap_s": 41.561090909090915,
+            "laps_count": 11,
+            "has_video": true
+        },
+        {
             "id": "f90e38ad-684a-4fb1-aea5-d0115793aa7d",
             "driver": "Vaidas R.",
             "track": {
