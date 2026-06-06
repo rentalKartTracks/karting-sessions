@@ -430,7 +430,7 @@
 <div class="topbar">
   <div class="topbar-brand">
     <div class="topbar-title">Tracks Map</div>
-    <div class="topbar-tag">4 Venues</div>
+    <div class="topbar-tag" id="venues-tag">— Venues</div>
   </div>
 </div>
 
@@ -439,7 +439,7 @@
   <div class="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-label">Circuits Driven</div>
-      <div class="sidebar-count">4 <span>tracks</span></div>
+      <div class="sidebar-count">— <span>tracks</span></div>
     </div>
     <div class="tracks-list" id="tracks-list"></div>
   </div>
@@ -469,10 +469,15 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
 L.control.zoom({ position: 'bottomright' }).addTo(map);
 
 const markers = {};
+
+// Convert hsl(...) to hsla(...) for glow effects
+const colorAlpha = (color, alpha) => color.startsWith('hsl(')
+  ? color.replace('hsl(', 'hsla(').replace(')', `, ${alpha})`)
+  : color;
+
 const popupContent = (t) => `
   <div style="padding:4px;min-width:200px;">
     <div class="popup-title">${t.name}</div>
-    <span class="popup-tag">${t.note}</span>
     <div class="popup-stats">
       <div>
         <span class="popup-stat-val">${t.sessions}</span>
@@ -502,9 +507,11 @@ fetch('sessions/tracks-list.json')
   .then(data => {
     tracks = data;
     
-    // Update sidebar count
+    // Update sidebar count and topbar tag
     const countEl = document.querySelector('.sidebar-count');
     if (countEl) countEl.innerHTML = `${tracks.length} <span>tracks</span>`;
+    const tagEl = document.getElementById('venues-tag');
+    if (tagEl) tagEl.textContent = `${tracks.length} Venues`;
 
     tracks.forEach(t => {
       // Don't draw tracks missing GPS coordinates
@@ -517,7 +524,7 @@ fetch('sessions/tracks-list.json')
           border-radius:50% 50% 50% 0;
           transform:rotate(-45deg);
           display:flex;align-items:center;justify-content:center;
-          box-shadow:0 4px 20px rgba(0,0,0,.5), 0 0 20px ${t.color}44;
+          box-shadow:0 4px 20px rgba(0,0,0,.5), 0 0 20px ${colorAlpha(t.color, 0.27)};
         "><div style="width:12px;height:12px;border-radius:50%;background:rgba(0,0,0,.5);"></div></div>`,
         className: '',
         iconSize: [36, 36],
@@ -537,12 +544,9 @@ fetch('sessions/tracks-list.json')
       card.id = `card-${t.id}`;
       card.innerHTML = `
         <div class="track-card-header">
-          <div class="track-dot" style="background:${t.color};box-shadow:0 0 8px ${t.color}66;"></div>
+          <div class="track-dot" style="background:${t.color};box-shadow:0 0 8px ${colorAlpha(t.color, 0.4)};"></div>
           <div class="track-name">${t.name}</div>
           <div class="track-sessions">${t.sessions} sessions</div>
-        </div>
-        <div class="track-meta">
-          <div class="track-meta-item">📍 ${t.note}</div>
         </div>
         <div class="track-configs">
           ${(t.configs || []).map(c => `<span class="config-tag">${c}</span>`).join('')}
