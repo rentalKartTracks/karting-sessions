@@ -188,6 +188,23 @@
             "has_video": true
         },
         {
+            "id": "4d8008ee-c155-4ab6-8371-25cb378c9a08",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Kart Center Sopot",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/AXFPcDj5CWT7rPX27"
+            },
+            "session_date": "2024-06-20",
+            "kart": "9 Ag",
+            "fastest_lap": "00:43.333",
+            "average_lap": "00:43.672",
+            "fastest_lap_s": 43.333,
+            "average_lap_s": 43.67177777777778,
+            "laps_count": 9,
+            "has_video": true
+        },
+        {
             "id": "477e60fd-e72d-4d1d-9c42-514e0b3ba2d4",
             "driver": "Ignas M.",
             "track": {
