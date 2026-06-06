@@ -7,8 +7,8 @@
         "mapsLink": "https://maps.app.goo.gl/AmF51NGm8bysceeN9",
         "color": "hsl(269, 78%, 62%)",
         "configs": [
-            "Winter",
-            "Summer"
+            "Summer",
+            "Winter"
         ],
         "sessions": 23,
         "bestLap": "00:43.150",
@@ -22,9 +22,9 @@
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "hsl(182, 78%, 62%)",
         "configs": [
-            "3 konfiguracija",
             "Winter 2026",
-            "Rain"
+            "Rain",
+            "3 konfiguracija"
         ],
         "sessions": 14,
         "bestLap": "00:44.327",
@@ -114,6 +114,20 @@
         "sessions": 2,
         "bestLap": "01:07.080",
         "bestDriver": "Vaidas R."
+    },
+    {
+        "id": "race_time",
+        "name": "Race Time",
+        "lat": 55.9084559,
+        "lng": 21.0974078,
+        "mapsLink": "https://maps.app.goo.gl/dRBrDVFfcDvgQaCo6",
+        "color": "hsl(240, 78%, 62%)",
+        "configs": [
+            "Summer"
+        ],
+        "sessions": 1,
+        "bestLap": "01:18.546",
+        "bestDriver": "Justas Ž."
     },
     {
         "id": "kartlandas_max",

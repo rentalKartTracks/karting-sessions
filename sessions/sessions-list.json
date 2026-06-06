@@ -256,6 +256,23 @@
             "has_video": true
         },
         {
+            "id": "72dc8f88-6d97-4e79-a754-2a0ba1e4921d",
+            "driver": "Justas Ž.",
+            "track": {
+                "name": "Race Time",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/dRBrDVFfcDvgQaCo6"
+            },
+            "session_date": "2024-08-08",
+            "kart": "9 Ag",
+            "fastest_lap": "01:18.546",
+            "average_lap": "01:20.307",
+            "fastest_lap_s": 78.54599999999999,
+            "average_lap_s": 80.30733333333333,
+            "laps_count": 6,
+            "has_video": true
+        },
+        {
             "id": "9da53414-8e0c-4434-9651-63fe6e46edac",
             "driver": "Povilas L.",
             "track": {
