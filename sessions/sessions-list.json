@@ -282,11 +282,11 @@
             },
             "session_date": "2025-07-17",
             "kart": "13 Ag",
-            "fastest_lap": null,
-            "average_lap": null,
-            "fastest_lap_s": null,
-            "average_lap_s": null,
-            "laps_count": 0,
+            "fastest_lap": "01:07.080",
+            "average_lap": "01:08.020",
+            "fastest_lap_s": 67.08,
+            "average_lap_s": 68.01975,
+            "laps_count": 8,
             "has_video": true
         },
         {

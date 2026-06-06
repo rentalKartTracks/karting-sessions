@@ -8,8 +8,8 @@
         "color": "#a84ae8",
         "note": "Professional karting circuit",
         "configs": [
-            "Summer",
-            "Winter"
+            "Winter",
+            "Summer"
         ],
         "sessions": 23,
         "bestLap": "00:43.150",
@@ -24,9 +24,9 @@
         "color": "#4ab8e8",
         "note": "Outdoor circuit · Elektrėnai",
         "configs": [
-            "3 konfiguracija",
             "Winter 2026",
-            "Rain"
+            "Rain",
+            "3 konfiguracija"
         ],
         "sessions": 14,
         "bestLap": "00:44.327",
@@ -59,7 +59,7 @@
             "Summer"
         ],
         "sessions": 2,
-        "bestLap": "01:07.244",
+        "bestLap": "01:07.080",
         "bestDriver": "Vaidas R."
     },
     {
