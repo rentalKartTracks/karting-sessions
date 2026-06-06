@@ -22,11 +22,11 @@
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "hsl(182, 78%, 62%)",
         "configs": [
-            "2024",
-            "long",
             "Rain",
+            "Winter 2026",
+            "2024",
             "3 konfiguracija",
-            "Winter 2026"
+            "long"
         ],
         "sessions": 16,
         "bestLap": "00:44.327",
@@ -170,7 +170,7 @@
             "2025",
             "Summer"
         ],
-        "sessions": 3,
+        "sessions": 4,
         "bestLap": "01:04.020",
         "bestDriver": "Kęstas Č."
     },

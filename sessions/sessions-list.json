@@ -1157,6 +1157,23 @@
             "has_video": true
         },
         {
+            "id": "cea04830-8538-461f-a99b-373599fd0368",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Balčiūnų",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6"
+            },
+            "session_date": "2025-07-13",
+            "kart": "9 Ag",
+            "fastest_lap": "01:04.660",
+            "average_lap": "01:05.782",
+            "fastest_lap_s": 64.66,
+            "average_lap_s": 65.7825,
+            "laps_count": 8,
+            "has_video": true
+        },
+        {
             "id": "182f5046-4c4d-4da5-9d53-552a2622506b",
             "driver": "Vaidas R.",
             "track": {
