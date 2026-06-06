@@ -22,11 +22,11 @@
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "hsl(182, 78%, 62%)",
         "configs": [
-            "long",
-            "Rain",
-            "Winter 2026",
+            "2024",
             "3 konfiguracija",
-            "2024"
+            "Rain",
+            "long",
+            "Winter 2026"
         ],
         "sessions": 16,
         "bestLap": "00:44.327",
@@ -242,6 +242,20 @@
         "sessions": 1,
         "bestLap": "00:51.010",
         "bestDriver": "Povilas L."
+    },
+    {
+        "id": "e1gokart_gdańsk",
+        "name": "🏟️ E1gokart Gdańsk",
+        "lat": 54.3683641,
+        "lng": 18.4699973,
+        "mapsLink": "https://maps.app.goo.gl/X4x15zAeCHb2NFjz7",
+        "color": "hsl(146, 78%, 62%)",
+        "configs": [
+            "2025"
+        ],
+        "sessions": 1,
+        "bestLap": "00:56.220",
+        "bestDriver": "Ignas M."
     },
     {
         "id": "gokarting_center_krakow",
