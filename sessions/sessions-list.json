@@ -936,6 +936,23 @@
             "has_video": true
         },
         {
+            "id": "c28a9346-1205-48e3-bb9d-efa3f21b0418",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Smalininkų kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/959ZMAV6acyt6uEr8"
+            },
+            "session_date": "2024-04-27",
+            "kart": "9 Ag",
+            "fastest_lap": "00:59.698",
+            "average_lap": "01:00.247",
+            "fastest_lap_s": 59.698,
+            "average_lap_s": 60.24699999999999,
+            "laps_count": 9,
+            "has_video": true
+        },
+        {
             "id": "728b61b0-5dc4-401e-9ded-9259bd2b17fd",
             "driver": "Ignas M.",
             "track": {
