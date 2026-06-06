@@ -454,18 +454,20 @@ function createPlayer(id, config) {
 /**
  * Player ready handler
  */
-function onPlayerReady(event, id) {
-  const player = videoPlayers[id];
-
-  // Set quality
-  if (player && typeof player.getAvailableQualityLevels === 'function') {
-    const qualities = player.getAvailableQualityLevels();
-    if (qualities.includes('hd2160')) {
-      player.setPlaybackQuality('hd2160');
-    } else if (qualities.includes('hd1080')) {
-      player.setPlaybackQuality('hd1080');
+function setHighestQuality(player) {
+  if (!player || typeof player.getAvailableQualityLevels !== 'function') return;
+  const qualities = player.getAvailableQualityLevels();
+  const preferred = ['hd2160', 'hd1440', 'hd1080', 'hd720'];
+  for (const q of preferred) {
+    if (qualities.includes(q)) {
+      player.setPlaybackQuality(q);
+      return;
     }
   }
+}
+
+function onPlayerReady(event, id) {
+  const player = videoPlayers[id];
 
   // Set initial audio state
   updateAudioState();
@@ -545,6 +547,12 @@ function onPlayerReady(event, id) {
 function onPlayerStateChange(event) {
   const isPlaying = event.data === YT.PlayerState.PLAYING;
   const senderId = Object.keys(videoPlayers).find(key => videoPlayers[key] === event.target);
+
+  // Enforce highest quality on first PLAYING event, when quality levels are available
+  if (isPlaying && senderId && !videoPlayers[senderId]._qualitySet) {
+    setHighestQuality(videoPlayers[senderId]);
+    videoPlayers[senderId]._qualitySet = true;
+  }
 
   // Update UI icons based on state
   const playIcon = document.getElementById('play-icon');
