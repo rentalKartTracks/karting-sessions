@@ -171,6 +171,23 @@
             "has_video": true
         },
         {
+            "id": "f90e38ad-684a-4fb1-aea5-d0115793aa7d",
+            "driver": "Vaidas R.",
+            "track": {
+                "name": "Rudskogen Motorsenter",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/F1Skt3aC7h4SPi856"
+            },
+            "session_date": "2026-06-06",
+            "kart": "13 Ag",
+            "fastest_lap": "01:07.244",
+            "average_lap": "01:09.246",
+            "fastest_lap_s": 67.244,
+            "average_lap_s": 69.24549999999999,
+            "laps_count": 8,
+            "has_video": true
+        },
+        {
             "id": "9da53414-8e0c-4434-9651-63fe6e46edac",
             "driver": "Povilas L.",
             "track": {

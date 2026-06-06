@@ -48,6 +48,21 @@
         "bestDriver": "Povilas L."
     },
     {
+        "id": "rudskogen_motorsenter",
+        "name": "Rudskogen Motorsenter",
+        "lat": 0,
+        "lng": 0,
+        "mapsLink": "https://maps.app.goo.gl/F1Skt3aC7h4SPi856",
+        "color": "#aaaaaa",
+        "note": "Generated circuit",
+        "configs": [
+            "Summer"
+        ],
+        "sessions": 2,
+        "bestLap": "01:07.244",
+        "bestDriver": "Vaidas R."
+    },
+    {
         "id": "kartlandas_max",
         "name": "Kartlandas Max",
         "lat": 54.65066751187685,
@@ -61,22 +76,6 @@
         "sessions": 7,
         "bestLap": "00:38.361",
         "bestDriver": "Kęstas Č."
-    },
-    {
-        "id": "rudskogen_motorsenter",
-        "name": "Rudskogen Motorsenter",
-        "lat": 0,
-        "lng": 0,
-        "mapsLink": "https://maps.app.goo.gl/BHE3Yt1iVqcHmGkv7",
-        "color": "#aaaaaa",
-        "note": "Generated circuit",
-        "configs": [
-            "Summer"
-        ],
-        "sessions": 1,
-        "bestLap": null,
-        "bestLap_s": null,
-        "bestDriver": null
     },
     {
         "id": "vilko",
