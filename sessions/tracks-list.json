@@ -7,8 +7,8 @@
         "mapsLink": "https://maps.app.goo.gl/AmF51NGm8bysceeN9",
         "color": "hsl(269, 78%, 62%)",
         "configs": [
-            "Summer",
-            "Winter"
+            "Winter",
+            "Summer"
         ],
         "sessions": 23,
         "bestLap": "00:43.150",
@@ -22,9 +22,9 @@
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "hsl(182, 78%, 62%)",
         "configs": [
+            "3 konfiguracija",
             "Winter 2026",
-            "Rain",
-            "3 konfiguracija"
+            "Rain"
         ],
         "sessions": 14,
         "bestLap": "00:44.327",
@@ -59,6 +59,20 @@
         "bestDriver": "Povilas L."
     },
     {
+        "id": "tor_półwysep",
+        "name": "Tor Półwysep",
+        "lat": 54.7891707,
+        "lng": 18.4222912,
+        "mapsLink": "https://maps.app.goo.gl/EmVwycty7FxrB8TH7",
+        "color": "hsl(240, 78%, 62%)",
+        "configs": [
+            "2024"
+        ],
+        "sessions": 2,
+        "bestLap": "00:25.352",
+        "bestDriver": "Povilas L."
+    },
+    {
         "id": "rudskogen_motorsenter",
         "name": "Rudskogen Motorsenter",
         "lat": 59.3679825,
@@ -85,20 +99,6 @@
         "sessions": 7,
         "bestLap": "00:38.361",
         "bestDriver": "Kęstas Č."
-    },
-    {
-        "id": "tor_półwysep",
-        "name": "Tor Półwysep",
-        "lat": 54.7891707,
-        "lng": 18.4222912,
-        "mapsLink": "https://maps.app.goo.gl/EmVwycty7FxrB8TH7",
-        "color": "hsl(240, 78%, 62%)",
-        "configs": [
-            "2024"
-        ],
-        "sessions": 1,
-        "bestLap": "00:25.733",
-        "bestDriver": "Povilas L."
     },
     {
         "id": "𝗞𝗮𝗿𝘁𝗶𝗻𝗴_𝗦𝗮𝗹𝗼𝘂",
