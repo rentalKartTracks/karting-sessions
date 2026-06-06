@@ -31,30 +31,30 @@
         "bestDriver": "Povilas L."
     },
     {
-        "id": "gokarting_center_krakow",
-        "name": "GOKARTING CENTER KRAKOW",
-        "lat": 50.0271708,
-        "lng": 20.0478606,
-        "mapsLink": "https://maps.app.goo.gl/fbAaPCaugyx4FDjYA",
-        "color": "hsl(305, 78%, 62%)",
+        "id": "kartlandas_kaunas",
+        "name": "Kartlandas Kaunas",
+        "lat": 54.9146582,
+        "lng": 23.8407337,
+        "mapsLink": "https://maps.app.goo.gl/7Q9SbwwcmwyNqUH56",
+        "color": "hsl(116, 78%, 62%)",
         "configs": [
             "2025"
         ],
-        "sessions": 1,
-        "bestLap": "00:28.790",
-        "bestDriver": "Ignas M."
+        "sessions": 3,
+        "bestLap": "00:25.906",
+        "bestDriver": "Povilas L."
     },
     {
         "id": "rudskogen_motorsenter",
         "name": "Rudskogen Motorsenter",
-        "lat": 59.3679798,
-        "lng": 11.2620216,
-        "mapsLink": "https://maps.app.goo.gl/BHE3Yt1iVqcHmGkv7",
+        "lat": 59.3679825,
+        "lng": 11.2594467,
+        "mapsLink": "https://maps.app.goo.gl/F1Skt3aC7h4SPi856",
         "color": "hsl(21, 78%, 62%)",
         "configs": [
             "Summer"
         ],
-        "sessions": 1,
+        "sessions": 2,
         "bestLap": "01:07.080",
         "bestDriver": "Vaidas R."
     },
@@ -73,20 +73,6 @@
         "bestDriver": "Kęstas Č."
     },
     {
-        "id": "kartlandas_kaunas",
-        "name": "Kartlandas Kaunas",
-        "lat": 54.9146582,
-        "lng": 23.8407337,
-        "mapsLink": "https://maps.app.goo.gl/7Q9SbwwcmwyNqUH56",
-        "color": "hsl(116, 78%, 62%)",
-        "configs": [
-            "2025"
-        ],
-        "sessions": 3,
-        "bestLap": "00:25.906",
-        "bestDriver": "Povilas L."
-    },
-    {
         "id": "vilko_kartodromas",
         "name": "Vilko Kartodromas",
         "lat": 54.8883225,
@@ -99,5 +85,19 @@
         "sessions": 2,
         "bestLap": "00:18.050",
         "bestDriver": "Kęstas Č."
+    },
+    {
+        "id": "gokarting_center_krakow",
+        "name": "GOKARTING CENTER KRAKOW",
+        "lat": 50.0271708,
+        "lng": 20.0478606,
+        "mapsLink": "https://maps.app.goo.gl/fbAaPCaugyx4FDjYA",
+        "color": "hsl(305, 78%, 62%)",
+        "configs": [
+            "2025"
+        ],
+        "sessions": 1,
+        "bestLap": "00:28.790",
+        "bestDriver": "Ignas M."
     }
 ]
