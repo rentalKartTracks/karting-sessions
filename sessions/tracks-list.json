@@ -22,9 +22,9 @@
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "hsl(182, 78%, 62%)",
         "configs": [
-            "Winter 2026",
+            "Rain",
             "3 konfiguracija",
-            "Rain"
+            "Winter 2026"
         ],
         "sessions": 14,
         "bestLap": "00:44.327",
@@ -66,8 +66,8 @@
         "mapsLink": "https://maps.app.goo.gl/EmVwycty7FxrB8TH7",
         "color": "hsl(240, 78%, 62%)",
         "configs": [
-            "2024",
-            "2025"
+            "2025",
+            "2024"
         ],
         "sessions": 3,
         "bestLap": "00:25.180",
@@ -184,5 +184,19 @@
         "sessions": 1,
         "bestLap": "00:28.790",
         "bestDriver": "Ignas M."
+    },
+    {
+        "id": "anykščių_kartodromas",
+        "name": "Anykščių kartodromas",
+        "lat": 55.518791,
+        "lng": 25.0668037,
+        "mapsLink": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8",
+        "color": "hsl(286, 78%, 62%)",
+        "configs": [
+            "2024"
+        ],
+        "sessions": 1,
+        "bestLap": "00:47.200",
+        "bestDriver": "Povilas L."
     }
 ]
