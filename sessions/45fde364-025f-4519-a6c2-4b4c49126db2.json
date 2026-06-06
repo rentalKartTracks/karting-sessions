@@ -1,0 +1,52 @@
+{
+  "session_id": "45fde364-025f-4519-a6c2-4b4c49126db2",
+  "driver": "Kęstas Č.",
+  "fastest_lap": "00:59.878",
+  "track": {
+    "name": "Smalininkų kartodromas",
+    "configuration": "2024",
+    "maps_link": "https://maps.app.goo.gl/959ZMAV6acyt6uEr8"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "0:45",
+  "video_url": "https://youtu.be/zp-BE_gKjgs",
+  "session_date": "2024-04-27",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "01:04.007"
+    },
+    {
+      "lap": 2,
+      "time": "01:01.862"
+    },
+    {
+      "lap": 3,
+      "time": "01:00.768"
+    },
+    {
+      "lap": 4,
+      "time": "01:00.429"
+    },
+    {
+      "lap": 5,
+      "time": "01:00.412"
+    },
+    {
+      "lap": 6,
+      "time": "00:59.878"
+    },
+    {
+      "lap": 7,
+      "time": "01:00.060"
+    },
+    {
+      "lap": 8,
+      "time": "01:00.023"
+    },
+    {
+      "lap": 9,
+      "time": "01:00.135"
+    }
+  ]
+}
