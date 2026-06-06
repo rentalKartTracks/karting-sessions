@@ -173,17 +173,19 @@ async function loadAllSessions() {
       container.innerHTML = `<div class="loading">📊 Processing ${sessionList.sessions.length} sessions...</div>`;
     }
 
-    allSessions = sessionList.sessions.map(session => ({
-      id: session.id,
-      driver: session.driver,
-      track_name: session.track?.name || 'N/A',
-      track_config: session.track?.configuration || 'N/A',
-      session_date: session.session_date,
-      fastest_lap: session.fastest_lap,
-      kart: session.kart,
-      laps_count: session.laps_count,
-      average_lap: session.average_lap
-    }));
+    allSessions = sessionList.sessions
+      .filter(session => session.has_video)
+      .map(session => ({
+        id: session.id,
+        driver: session.driver,
+        track_name: session.track?.name || 'N/A',
+        track_config: session.track?.configuration || 'N/A',
+        session_date: session.session_date,
+        fastest_lap: session.fastest_lap,
+        kart: session.kart,
+        laps_count: session.laps_count,
+        average_lap: session.average_lap
+      }));
 
     if (allSessions.length === 0) {
       container.innerHTML = `

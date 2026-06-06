@@ -158,7 +158,15 @@ def process_session_file(filepath: Path) -> Optional[Dict[str, Any]]:
         # Numeric derived metrics
         "fastest_lap_s": fastest_lap_s,
         "average_lap_s": average_lap_s,
-        "laps_count": total_valid_laps
+        "laps_count": total_valid_laps,
+
+        # Video — prefer the checked status written by check_videos.py;
+        # fall back to presence of video_url for sessions not yet checked.
+        "has_video": (
+            session_data["video_available"]
+            if "video_available" in session_data
+            else bool(session_data.get("video_url", "").strip())
+        )
     }
     
     return summary
