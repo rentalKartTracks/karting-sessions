@@ -1,0 +1,48 @@
+{
+  "session_id": "f1bd3b18-24e6-4f21-bbc1-395bce3d0b03",
+  "driver": "Justas Ž.",
+  "fastest_lap": "00:57.516",
+  "track": {
+    "name": "🏟️ E1gokart GdańSk",
+    "configuration": "2025",
+    "maps_link": "https://maps.app.goo.gl/wr4dY7tgiYpgngB77"
+  },
+  "kart": "",
+  "video_start_time": "00:45",
+  "video_url": "https://youtu.be/jc5sYtqZLpY",
+  "session_date": "2025-05-23",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "00:59.903"
+    },
+    {
+      "lap": 2,
+      "time": "01:00.008"
+    },
+    {
+      "lap": 3,
+      "time": "01:00.003"
+    },
+    {
+      "lap": 4,
+      "time": "00:58.538"
+    },
+    {
+      "lap": 5,
+      "time": "00:58.307"
+    },
+    {
+      "lap": 6,
+      "time": "00:57.516"
+    },
+    {
+      "lap": 7,
+      "time": "00:57.889"
+    },
+    {
+      "lap": 8,
+      "time": "00:57.620"
+    }
+  ]
+}
