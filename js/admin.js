@@ -268,9 +268,9 @@ function prefillFromTitle(title) {
     .match(/^(.+?)\s*[-–]\s*(.+?)\s*"[^"]*"\s*\((\d{4}-\d{2}-\d{2})\)$/);
   if (!m) return;
   const [, track, driver, date] = m;
-  if (!document.getElementById('track_name').value)   document.getElementById('track_name').value   = track.trim();
-  if (!document.getElementById('driver').value)        document.getElementById('driver').value        = driver.trim();
-  if (!document.getElementById('session_date').value)  document.getElementById('session_date').value  = date;
+  if (!document.getElementById('track_name').value)  document.getElementById('track_name').value  = track.trim();
+  if (!document.getElementById('driver').value)       document.getElementById('driver').value       = driver.trim();
+  document.getElementById('session_date').value = date;
 }
 
 // ── Description import ─────────────────────────────────────────────────────
