@@ -1,0 +1,72 @@
+{
+  "session_id": "a92abab9-ced6-451e-8599-2c45498a7d1c",
+  "driver": "Povilas L.",
+  "fastest_lap": "00:22.840",
+  "track": {
+    "name": "KartCenter Gdańsk Gokarty",
+    "configuration": "2025",
+    "maps_link": "https://maps.app.goo.gl/RUBF4Y86mvd37qu67"
+  },
+  "kart": "",
+  "video_start_time": "00:03",
+  "video_url": "https://youtu.be/phgc590ZEOA",
+  "session_date": "2025-05-28",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "00:24.219"
+    },
+    {
+      "lap": 2,
+      "time": "00:23.281"
+    },
+    {
+      "lap": 3,
+      "time": "00:23.239"
+    },
+    {
+      "lap": 4,
+      "time": "00:24.609"
+    },
+    {
+      "lap": 5,
+      "time": "00:23.039"
+    },
+    {
+      "lap": 6,
+      "time": "00:23.641"
+    },
+    {
+      "lap": 7,
+      "time": "00:23.070"
+    },
+    {
+      "lap": 8,
+      "time": "00:22.895"
+    },
+    {
+      "lap": 9,
+      "time": "00:23.257"
+    },
+    {
+      "lap": 10,
+      "time": "00:22.840"
+    },
+    {
+      "lap": 11,
+      "time": "00:22.856"
+    },
+    {
+      "lap": 12,
+      "time": "00:23.273"
+    },
+    {
+      "lap": 13,
+      "time": "00:23.742"
+    },
+    {
+      "lap": 14,
+      "time": "00:25.453"
+    }
+  ]
+}
