@@ -348,8 +348,10 @@ function renderStatsGrid(data) {
   const stdDev = calculateConsistency(lapTimes);
   const consistency = getConsistencyRating(stdDev);
 
+  const fastestLapNumber = fastestIdx >= 0 ? fastestIdx + 1 : 1;
+
   statsGrid.innerHTML = `
-  <div class="stat-card">
+  <div class="stat-card stat-card-clickable" onclick="seekToLap(${fastestLapNumber})" title="Jump to fastest lap">
     <div class="stat-label">Fastest Lap</div>
     <div class="stat-value fastest-time">${data.fastest_lap || formatTime(fastestTime)}</div>
   </div>
