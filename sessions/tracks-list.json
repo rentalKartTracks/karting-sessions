@@ -22,8 +22,8 @@
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "hsl(182, 78%, 62%)",
         "configs": [
-            "Winter 2026",
             "Rain",
+            "Winter 2026",
             "3 konfiguracija"
         ],
         "sessions": 14,
@@ -125,9 +125,9 @@
         "configs": [
             "Summer"
         ],
-        "sessions": 1,
-        "bestLap": "01:18.546",
-        "bestDriver": "Justas Ž."
+        "sessions": 2,
+        "bestLap": "01:15.999",
+        "bestDriver": "Povilas L."
     },
     {
         "id": "kartlandas_max",
