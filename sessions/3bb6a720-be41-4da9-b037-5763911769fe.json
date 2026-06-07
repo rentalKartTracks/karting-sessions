@@ -1,0 +1,49 @@
+{
+  "session_id": "3bb6a720-be41-4da9-b037-5763911769fe",
+  "driver": "Povilas L.",
+  "fastest_lap": "00:56.240",
+  "track": {
+    "name": "🏟️ E1gokart GdańSk",
+    "configuration": "2025",
+    "maps_link": "https://maps.app.goo.gl/wr4dY7tgiYpgngB77"
+  },
+  "kart": "",
+  "video_start_time": "00:08",
+  "video_url": "https://youtu.be/sUSY8g4XJeY",
+  "session_date": "2025-05-23",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "00:57.913"
+    },
+    {
+      "lap": 2,
+      "time": "00:56.255"
+    },
+    {
+      "lap": 3,
+      "time": "00:57.240"
+    },
+    {
+      "lap": 4,
+      "time": "00:56.677"
+    },
+    {
+      "lap": 5,
+      "time": "00:56.620"
+    },
+    {
+      "lap": 6,
+      "time": "00:56.240"
+    },
+    {
+      "lap": 7,
+      "time": "00:56.372"
+    },
+    {
+      "lap": 8,
+      "time": "00:56.868"
+    }
+  ],
+  "video_available": true
+}

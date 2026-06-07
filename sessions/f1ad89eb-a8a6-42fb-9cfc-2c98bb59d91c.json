@@ -1,0 +1,41 @@
+{
+  "session_id": "f1ad89eb-a8a6-42fb-9cfc-2c98bb59d91c",
+  "driver": "Povilas L.",
+  "fastest_lap": "00:58.777",
+  "track": {
+    "name": "E1GOKART",
+    "configuration": "2024",
+    "maps_link": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8"
+  },
+  "kart": "",
+  "video_start_time": "00:30",
+  "video_url": "https://youtu.be/-OsaDUbKHeI",
+  "session_date": "2024-06-23",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "01:03.237"
+    },
+    {
+      "lap": 2,
+      "time": "00:58.799"
+    },
+    {
+      "lap": 3,
+      "time": "01:06.536"
+    },
+    {
+      "lap": 4,
+      "time": "01:08.598"
+    },
+    {
+      "lap": 5,
+      "time": "00:58.777"
+    },
+    {
+      "lap": 6,
+      "time": "01:04.712"
+    }
+  ],
+  "video_available": true
+}

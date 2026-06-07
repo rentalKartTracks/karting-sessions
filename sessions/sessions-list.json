@@ -18,6 +18,23 @@
             "has_video": true
         },
         {
+            "id": "0e70ce26-9c64-4dc1-9fe7-1392630d394f",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Serbentų",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/1oCzCX2u3d3UXAmg9"
+            },
+            "session_date": "2026-06-07",
+            "kart": "9 Ag",
+            "fastest_lap": "01:07.241",
+            "average_lap": "01:09.186",
+            "fastest_lap_s": 67.241,
+            "average_lap_s": 69.18575,
+            "laps_count": 8,
+            "has_video": true
+        },
+        {
             "id": "3cba0319-864d-4ab1-a689-c57e79eff33e",
             "driver": "Povilas L.",
             "track": {
@@ -120,6 +137,74 @@
             "has_video": true
         },
         {
+            "id": "0df0c18d-8cea-4cfd-9e23-7ee108a541fd",
+            "driver": "Ignas M.",
+            "track": {
+                "name": "🏟️ E1gokart Gdańsk",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/X4x15zAeCHb2NFjz7"
+            },
+            "session_date": "2025-05-23",
+            "kart": "",
+            "fastest_lap": "00:56.220",
+            "average_lap": "00:57.584",
+            "fastest_lap_s": 56.22,
+            "average_lap_s": 57.583625,
+            "laps_count": 8,
+            "has_video": true
+        },
+        {
+            "id": "1d7a6432-0394-4808-b7b6-c48127b40c5d",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "E1GOKART Gdańsk",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8"
+            },
+            "session_date": "2024-06-18",
+            "kart": "",
+            "fastest_lap": "00:57.748",
+            "average_lap": "00:58.479",
+            "fastest_lap_s": 57.748,
+            "average_lap_s": 58.478571428571435,
+            "laps_count": 7,
+            "has_video": true
+        },
+        {
+            "id": "f1ad89eb-a8a6-42fb-9cfc-2c98bb59d91c",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "E1GOKART",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8"
+            },
+            "session_date": "2024-06-23",
+            "kart": "",
+            "fastest_lap": "00:58.777",
+            "average_lap": "01:03.443",
+            "fastest_lap_s": 58.777,
+            "average_lap_s": 63.44316666666666,
+            "laps_count": 6,
+            "has_video": true
+        },
+        {
+            "id": "a4c8b460-6d87-4939-87e6-03f571b5a23e",
+            "driver": "Ignas I.",
+            "track": {
+                "name": "Serbentų kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88"
+            },
+            "session_date": "2024-07-06",
+            "kart": "9 Ag",
+            "fastest_lap": "01:10.648",
+            "average_lap": "01:13.127",
+            "fastest_lap_s": 70.648,
+            "average_lap_s": 73.12671428571429,
+            "laps_count": 7,
+            "has_video": true
+        },
+        {
             "id": "565e7836-a2ec-4ca2-9d20-54c17261648d",
             "driver": "Julius B.",
             "track": {
@@ -134,6 +219,23 @@
             "fastest_lap_s": 65.026,
             "average_lap_s": 68.71900000000001,
             "laps_count": 7,
+            "has_video": true
+        },
+        {
+            "id": "8024a6e4-05ec-4a11-b2c4-eb6ddd6b6027",
+            "driver": "Ignas I.",
+            "track": {
+                "name": "*Serbentų kartodromas*",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/V8ir9cZW4CiqPsT17"
+            },
+            "session_date": "2026-06-07",
+            "kart": "9 Ag",
+            "fastest_lap": "01:08.584",
+            "average_lap": "01:10.049",
+            "fastest_lap_s": 68.584,
+            "average_lap_s": 70.04875,
+            "laps_count": 8,
             "has_video": true
         },
         {
@@ -171,6 +273,40 @@
             "has_video": true
         },
         {
+            "id": "5e5ba0d7-d3d5-421a-8982-04dd5d8279a7",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Serbentų kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88"
+            },
+            "session_date": "2024-07-06",
+            "kart": "9 Ag",
+            "fastest_lap": "01:06.823",
+            "average_lap": "01:08.561",
+            "fastest_lap_s": 66.82300000000001,
+            "average_lap_s": 68.561,
+            "laps_count": 7,
+            "has_video": true
+        },
+        {
+            "id": "53332571-f519-4b5d-8f60-831b8328ece5",
+            "driver": "Justas Ž",
+            "track": {
+                "name": "Serbentų kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88"
+            },
+            "session_date": "2024-07-06",
+            "kart": "9 Ag",
+            "fastest_lap": "01:07.915",
+            "average_lap": "01:09.807",
+            "fastest_lap_s": 67.915,
+            "average_lap_s": 69.80728571428571,
+            "laps_count": 7,
+            "has_video": true
+        },
+        {
             "id": "a9663237-6649-486e-b5e9-08931eab826c",
             "driver": "Ignas I.",
             "track": {
@@ -188,6 +324,40 @@
             "has_video": true
         },
         {
+            "id": "d9c6c024-298b-44d4-9290-d5448cfc01eb",
+            "driver": "Julius.B",
+            "track": {
+                "name": "E1GOKART Gdańsk",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8"
+            },
+            "session_date": "2024-07-29",
+            "kart": "",
+            "fastest_lap": "00:58.225",
+            "average_lap": "00:59.634",
+            "fastest_lap_s": 58.225,
+            "average_lap_s": 59.63428571428572,
+            "laps_count": 7,
+            "has_video": true
+        },
+        {
+            "id": "4d8008ee-c155-4ab6-8371-25cb378c9a08",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "KartCenter Sopot",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/AXFPcDj5CWT7rPX27"
+            },
+            "session_date": "2024-06-20",
+            "kart": "9 Ag",
+            "fastest_lap": "00:43.333",
+            "average_lap": "00:43.672",
+            "fastest_lap_s": 43.333,
+            "average_lap_s": 43.67177777777778,
+            "laps_count": 9,
+            "has_video": true
+        },
+        {
             "id": "477e60fd-e72d-4d1d-9c42-514e0b3ba2d4",
             "driver": "Ignas M.",
             "track": {
@@ -202,6 +372,23 @@
             "fastest_lap_s": 43.15,
             "average_lap_s": 51.82445454545454,
             "laps_count": 11,
+            "has_video": false
+        },
+        {
+            "id": "b03a20c8-5571-4690-988e-e34c5b00d760",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Serbentų kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/V8ir9cZW4CiqPsT17"
+            },
+            "session_date": "2026-06-07",
+            "kart": "9 Ag",
+            "fastest_lap": "01:07.246",
+            "average_lap": "01:10.063",
+            "fastest_lap_s": 67.246,
+            "average_lap_s": 70.062625,
+            "laps_count": 8,
             "has_video": true
         },
         {
@@ -222,6 +409,23 @@
             "has_video": true
         },
         {
+            "id": "88edc64e-f0f2-43b3-ac04-397ccdc424b8",
+            "driver": "Justas Ž.",
+            "track": {
+                "name": "Balčiūnų",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6"
+            },
+            "session_date": "2025-07-13",
+            "kart": "9 Ag",
+            "fastest_lap": "01:04.090",
+            "average_lap": "01:06.131",
+            "fastest_lap_s": 64.09,
+            "average_lap_s": 66.13125,
+            "laps_count": 8,
+            "has_video": true
+        },
+        {
             "id": "6761734c-c0c5-4545-9a34-24b48a43303f",
             "driver": "Povilas L.",
             "track": {
@@ -239,6 +443,40 @@
             "has_video": true
         },
         {
+            "id": "55859a7b-9438-422f-b9cd-ca68816ecc95",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Balčiūnų",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6"
+            },
+            "session_date": "2025-07-13",
+            "kart": "9 Ag",
+            "fastest_lap": "01:04.020",
+            "average_lap": "01:04.954",
+            "fastest_lap_s": 64.02,
+            "average_lap_s": 64.95375,
+            "laps_count": 8,
+            "has_video": true
+        },
+        {
+            "id": "3b4e5b90-fb54-4667-823c-18758eece338",
+            "driver": "Justas Ž.",
+            "track": {
+                "name": "Balčiūnų",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6"
+            },
+            "session_date": "2025-07-13",
+            "kart": "9 Ag",
+            "fastest_lap": "01:05.830",
+            "average_lap": "01:07.054",
+            "fastest_lap_s": 65.83,
+            "average_lap_s": 67.05444444444444,
+            "laps_count": 9,
+            "has_video": true
+        },
+        {
             "id": "103721eb-ac5d-44e7-8d40-efb94fd7b191",
             "driver": "Justas Ž.",
             "track": {
@@ -253,6 +491,23 @@
             "fastest_lap_s": 43.735,
             "average_lap_s": 44.64338461538462,
             "laps_count": 13,
+            "has_video": true
+        },
+        {
+            "id": "b602fe86-8dc2-4d43-baa8-fb43d6c0ca78",
+            "driver": "Ignas M",
+            "track": {
+                "name": "KartCenter Sopot",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/t4cWok3pkRS21u6k9"
+            },
+            "session_date": "2025-05-23",
+            "kart": "9 Ag",
+            "fastest_lap": "00:40.573",
+            "average_lap": "00:41.561",
+            "fastest_lap_s": 40.573,
+            "average_lap_s": 41.561090909090915,
+            "laps_count": 11,
             "has_video": true
         },
         {
@@ -338,6 +593,23 @@
             "fastest_lap_s": 59.463,
             "average_lap_s": 62.608,
             "laps_count": 9,
+            "has_video": true
+        },
+        {
+            "id": "fb6cb98e-b9f2-4b12-a4b2-4ef08257da5a",
+            "driver": "Ignas M.",
+            "track": {
+                "name": "Serbentų kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88"
+            },
+            "session_date": "2024-07-06",
+            "kart": "9 Ag",
+            "fastest_lap": "01:08.293",
+            "average_lap": "01:10.679",
+            "fastest_lap_s": 68.293,
+            "average_lap_s": 70.67914285714286,
+            "laps_count": 7,
             "has_video": true
         },
         {
@@ -746,7 +1018,7 @@
             "fastest_lap_s": 45.741,
             "average_lap_s": 4575.0635,
             "laps_count": 12,
-            "has_video": true
+            "has_video": false
         },
         {
             "id": "c74839e7-1346-4027-ad80-dd3bc2a631dd",
@@ -817,6 +1089,40 @@
             "has_video": true
         },
         {
+            "id": "52a13f05-fabe-4f5d-b1ac-1ac55e28ff8a",
+            "driver": "Ignas M.",
+            "track": {
+                "name": "🏟️ E1gokart Gdańsk",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/X4x15zAeCHb2NFjz7"
+            },
+            "session_date": "2025-05-23",
+            "kart": "",
+            "fastest_lap": "00:56.220",
+            "average_lap": "00:57.584",
+            "fastest_lap_s": 56.22,
+            "average_lap_s": 57.583625,
+            "laps_count": 8,
+            "has_video": true
+        },
+        {
+            "id": "90a12d0f-14b0-41e7-9f57-6fa9c696ae64",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Balčiūnų",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6"
+            },
+            "session_date": "2025-07-13",
+            "kart": "9 Ag",
+            "fastest_lap": "01:04.555",
+            "average_lap": "01:05.747",
+            "fastest_lap_s": 64.555,
+            "average_lap_s": 65.747375,
+            "laps_count": 8,
+            "has_video": true
+        },
+        {
             "id": "0cea4ced-a510-4f82-be70-d9afecaf65bf",
             "driver": "Kęstas Č.",
             "track": {
@@ -848,6 +1154,23 @@
             "fastest_lap_s": 38.701,
             "average_lap_s": 40.39566666666666,
             "laps_count": 21,
+            "has_video": true
+        },
+        {
+            "id": "7e3792e8-31e9-458d-85a3-9114833d1146",
+            "driver": "Vaidas R.",
+            "track": {
+                "name": "Balčiūnų",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6"
+            },
+            "session_date": "2025-07-13",
+            "kart": "",
+            "fastest_lap": "01:04.500",
+            "average_lap": "01:06.284",
+            "fastest_lap_s": 64.5,
+            "average_lap_s": 66.28444444444443,
+            "laps_count": 9,
             "has_video": true
         },
         {
@@ -916,7 +1239,7 @@
             "fastest_lap_s": 38.437,
             "average_lap_s": 39.50373333333334,
             "laps_count": 15,
-            "has_video": true
+            "has_video": false
         },
         {
             "id": "d403a989-0073-4a7a-8905-5fda13e845d5",
@@ -933,7 +1256,7 @@
             "fastest_lap_s": 43.79,
             "average_lap_s": 44.42753846153846,
             "laps_count": 13,
-            "has_video": true
+            "has_video": false
         },
         {
             "id": "cf5d9f8e-5fe0-4273-b822-e66f88cdba66",
@@ -1004,6 +1327,23 @@
             "has_video": true
         },
         {
+            "id": "cea04830-8538-461f-a99b-373599fd0368",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Balčiūnų",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6"
+            },
+            "session_date": "2025-07-13",
+            "kart": "9 Ag",
+            "fastest_lap": "01:04.660",
+            "average_lap": "01:05.782",
+            "fastest_lap_s": 64.66,
+            "average_lap_s": 65.7825,
+            "laps_count": 8,
+            "has_video": true
+        },
+        {
             "id": "182f5046-4c4d-4da5-9d53-552a2622506b",
             "driver": "Vaidas R.",
             "track": {
@@ -1018,6 +1358,23 @@
             "fastest_lap_s": 38.701,
             "average_lap_s": 40.39566666666666,
             "laps_count": 21,
+            "has_video": true
+        },
+        {
+            "id": "3a779710-d89b-4289-a354-06fcf53cd020",
+            "driver": "Julius B.",
+            "track": {
+                "name": "E1GOKART Gdańsk",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8"
+            },
+            "session_date": "2024-07-29",
+            "kart": "",
+            "fastest_lap": "00:59.532",
+            "average_lap": "01:02.406",
+            "fastest_lap_s": 59.532,
+            "average_lap_s": 62.405833333333334,
+            "laps_count": 6,
             "has_video": true
         },
         {
@@ -1038,6 +1395,23 @@
             "has_video": true
         },
         {
+            "id": "3bb6a720-be41-4da9-b037-5763911769fe",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "🏟️ E1gokart GdańSk",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/wr4dY7tgiYpgngB77"
+            },
+            "session_date": "2025-05-23",
+            "kart": "",
+            "fastest_lap": "00:56.240",
+            "average_lap": "00:56.773",
+            "fastest_lap_s": 56.24,
+            "average_lap_s": 56.773125,
+            "laps_count": 8,
+            "has_video": true
+        },
+        {
             "id": "4a326eb4-ced0-490b-a4e8-edc211b65437",
             "driver": "Povilas L.",
             "track": {
@@ -1055,6 +1429,57 @@
             "has_video": true
         },
         {
+            "id": "f1bd3b18-24e6-4f21-bbc1-395bce3d0b03",
+            "driver": "Justas Ž.",
+            "track": {
+                "name": "🏟️ E1gokart GdańSk",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/wr4dY7tgiYpgngB77"
+            },
+            "session_date": "2025-05-23",
+            "kart": "",
+            "fastest_lap": "00:57.516",
+            "average_lap": "00:58.723",
+            "fastest_lap_s": 57.516,
+            "average_lap_s": 58.723,
+            "laps_count": 8,
+            "has_video": true
+        },
+        {
+            "id": "ccf8543c-46c2-4a15-91eb-b435c7832b45",
+            "driver": "Justas Ž.",
+            "track": {
+                "name": "Serbentų kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/V8ir9cZW4CiqPsT17"
+            },
+            "session_date": "2026-06-07",
+            "kart": "9 Ag",
+            "fastest_lap": "01:07.209",
+            "average_lap": "01:09.415",
+            "fastest_lap_s": 67.209,
+            "average_lap_s": 69.415125,
+            "laps_count": 8,
+            "has_video": true
+        },
+        {
+            "id": "cb39bdb0-a14b-444d-95a8-ee05efd0496e",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Balčiūnų",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6"
+            },
+            "session_date": "2025-07-13",
+            "kart": "9 Ag",
+            "fastest_lap": "01:04.570",
+            "average_lap": "01:05.277",
+            "fastest_lap_s": 64.57,
+            "average_lap_s": 65.27655555555556,
+            "laps_count": 9,
+            "has_video": true
+        },
+        {
             "id": "7b2fdc80-5f92-49eb-8227-067b1496c122",
             "driver": "Kęstas Č.",
             "track": {
@@ -1069,6 +1494,40 @@
             "fastest_lap_s": 38.361,
             "average_lap_s": 39.48540909090909,
             "laps_count": 22,
+            "has_video": true
+        },
+        {
+            "id": "e70daded-d3da-461a-b9bc-a5f714338580",
+            "driver": "Justas Ž.",
+            "track": {
+                "name": "Serbentų kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88"
+            },
+            "session_date": "2024-07-06",
+            "kart": "9 Ag",
+            "fastest_lap": "01:08.110",
+            "average_lap": "01:10.438",
+            "fastest_lap_s": 68.11,
+            "average_lap_s": 70.43828571428571,
+            "laps_count": 7,
+            "has_video": true
+        },
+        {
+            "id": "cf2b478d-a16e-4c8e-bd3a-96c332893bfb",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Serbentų kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88"
+            },
+            "session_date": "2024-07-06",
+            "kart": "9 Ag",
+            "fastest_lap": "01:07.211",
+            "average_lap": "01:08.533",
+            "fastest_lap_s": 67.211,
+            "average_lap_s": 68.53257142857143,
+            "laps_count": 7,
             "has_video": true
         },
         {
@@ -1120,6 +1579,23 @@
             "fastest_lap_s": 59.698,
             "average_lap_s": 60.24699999999999,
             "laps_count": 9,
+            "has_video": true
+        },
+        {
+            "id": "0fa36c4c-c818-4dde-8e5f-24a83bd110e3",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Serbentų kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88"
+            },
+            "session_date": "2024-07-06",
+            "kart": "9 Ag",
+            "fastest_lap": "01:07.525",
+            "average_lap": "01:09.647",
+            "fastest_lap_s": 67.525,
+            "average_lap_s": 69.64742857142858,
+            "laps_count": 7,
             "has_video": true
         },
         {

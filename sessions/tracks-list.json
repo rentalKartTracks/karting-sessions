@@ -15,6 +15,20 @@
         "bestDriver": "Ignas M."
     },
     {
+        "id": "serbentų",
+        "name": "Serbentų",
+        "lat": 55.9140472,
+        "lng": 23.3323005,
+        "mapsLink": "https://maps.app.goo.gl/1oCzCX2u3d3UXAmg9",
+        "color": "hsl(283, 78%, 62%)",
+        "configs": [
+            "Summer"
+        ],
+        "sessions": 1,
+        "bestLap": "01:07.241",
+        "bestDriver": "Kęstas Č."
+    },
+    {
         "id": "speedway",
         "name": "Speedway",
         "lat": 54.7972092,
@@ -22,11 +36,11 @@
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "hsl(182, 78%, 62%)",
         "configs": [
-            "Winter 2026",
+            "Rain",
             "3 konfiguracija",
             "2024",
-            "long",
-            "Rain"
+            "Winter 2026",
+            "long"
         ],
         "sessions": 16,
         "bestLap": "00:44.327",
@@ -75,6 +89,76 @@
         "bestDriver": null
     },
     {
+        "id": "e1gokart_gdańsk",
+        "name": "🏟️ E1gokart Gdańsk",
+        "lat": 54.3683641,
+        "lng": 18.4699973,
+        "mapsLink": "https://maps.app.goo.gl/X4x15zAeCHb2NFjz7",
+        "color": "hsl(146, 78%, 62%)",
+        "configs": [
+            "2025"
+        ],
+        "sessions": 2,
+        "bestLap": "00:56.220",
+        "bestDriver": "Ignas M."
+    },
+    {
+        "id": "e1gokart_gdańsk",
+        "name": "E1GOKART Gdańsk",
+        "lat": 54.3683641,
+        "lng": 18.4699973,
+        "mapsLink": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8",
+        "color": "hsl(32, 78%, 62%)",
+        "configs": [
+            "2024"
+        ],
+        "sessions": 3,
+        "bestLap": "00:57.748",
+        "bestDriver": "Povilas L."
+    },
+    {
+        "id": "e1gokart",
+        "name": "E1GOKART",
+        "lat": 54.3683641,
+        "lng": 18.4699973,
+        "mapsLink": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8",
+        "color": "hsl(138, 78%, 62%)",
+        "configs": [
+            "2024"
+        ],
+        "sessions": 1,
+        "bestLap": "00:58.777",
+        "bestDriver": "Povilas L."
+    },
+    {
+        "id": "serbentų_kartodromas",
+        "name": "Serbentų kartodromas",
+        "lat": 55.9062438,
+        "lng": 23.3343615,
+        "mapsLink": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88",
+        "color": "hsl(179, 78%, 62%)",
+        "configs": [
+            "Summer"
+        ],
+        "sessions": 9,
+        "bestLap": "01:06.823",
+        "bestDriver": "Kęstas Č."
+    },
+    {
+        "id": "serbentų_kartodromas",
+        "name": "*Serbentų kartodromas*",
+        "lat": 55.9140502,
+        "lng": 23.3323059,
+        "mapsLink": "https://maps.app.goo.gl/V8ir9cZW4CiqPsT17",
+        "color": "hsl(11, 78%, 62%)",
+        "configs": [
+            "Summer"
+        ],
+        "sessions": 1,
+        "bestLap": "01:08.584",
+        "bestDriver": "Ignas I."
+    },
+    {
         "id": "𝗔𝘄𝗶𝘅_𝗥𝗮𝗰𝗶𝗻𝗴_𝗔𝗿𝗲𝗻𝗮",
         "name": "𝗔𝘄𝗶𝘅 𝗥𝗮𝗰𝗶𝗻𝗴 𝗔𝗿𝗲𝗻𝗮",
         "lat": 53.0184783,
@@ -89,6 +173,35 @@
         "bestDriver": "Povilas L."
     },
     {
+        "id": "kartcenter_sopot",
+        "name": "KartCenter Sopot",
+        "lat": 54.4339594,
+        "lng": 18.4234929,
+        "mapsLink": "https://maps.app.goo.gl/AXFPcDj5CWT7rPX27",
+        "color": "hsl(174, 78%, 62%)",
+        "configs": [
+            "Summer",
+            "2025"
+        ],
+        "sessions": 2,
+        "bestLap": "00:40.573",
+        "bestDriver": "Ignas M"
+    },
+    {
+        "id": "balčiūnų",
+        "name": "Balčiūnų",
+        "lat": 55.8984443,
+        "lng": 23.3519096,
+        "mapsLink": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6",
+        "color": "hsl(283, 78%, 62%)",
+        "configs": [
+            "2025"
+        ],
+        "sessions": 7,
+        "bestLap": "01:04.020",
+        "bestDriver": "Kęstas Č."
+    },
+    {
         "id": "tor_półwysep",
         "name": "Tor Półwysep",
         "lat": 54.7891707,
@@ -96,8 +209,8 @@
         "mapsLink": "https://maps.app.goo.gl/EmVwycty7FxrB8TH7",
         "color": "hsl(240, 78%, 62%)",
         "configs": [
-            "2024",
-            "2025"
+            "2025",
+            "2024"
         ],
         "sessions": 3,
         "bestLap": "00:25.180",
@@ -228,5 +341,19 @@
         "sessions": 1,
         "bestLap": "00:28.790",
         "bestDriver": "Ignas M."
+    },
+    {
+        "id": "e1gokart_gdańsk",
+        "name": "🏟️ E1gokart GdańSk",
+        "lat": 54.3683641,
+        "lng": 18.4699973,
+        "mapsLink": "https://maps.app.goo.gl/wr4dY7tgiYpgngB77",
+        "color": "hsl(357, 78%, 62%)",
+        "configs": [
+            "2025"
+        ],
+        "sessions": 2,
+        "bestLap": "00:56.240",
+        "bestDriver": "Povilas L."
     }
 ]

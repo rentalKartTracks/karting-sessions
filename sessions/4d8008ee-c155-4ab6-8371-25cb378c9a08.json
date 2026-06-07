@@ -1,0 +1,53 @@
+{
+  "session_id": "4d8008ee-c155-4ab6-8371-25cb378c9a08",
+  "driver": "Povilas L.",
+  "fastest_lap": "00:43.333",
+  "track": {
+    "name": "KartCenter Sopot",
+    "configuration": "Summer",
+    "maps_link": "https://maps.app.goo.gl/AXFPcDj5CWT7rPX27"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "00:54",
+  "video_url": "https://youtu.be/d7nGeAtqFcY",
+  "session_date": "2024-06-20",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "00:43.861"
+    },
+    {
+      "lap": 2,
+      "time": "00:43.514"
+    },
+    {
+      "lap": 3,
+      "time": "00:43.333"
+    },
+    {
+      "lap": 4,
+      "time": "00:43.422"
+    },
+    {
+      "lap": 5,
+      "time": "00:44.318"
+    },
+    {
+      "lap": 6,
+      "time": "00:43.503"
+    },
+    {
+      "lap": 7,
+      "time": "00:43.997"
+    },
+    {
+      "lap": 8,
+      "time": "00:43.530"
+    },
+    {
+      "lap": 9,
+      "time": "00:43.568"
+    }
+  ],
+  "video_available": true
+}
