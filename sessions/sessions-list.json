@@ -287,7 +287,7 @@
             "fastest_lap_s": 43.15,
             "average_lap_s": 51.82445454545454,
             "laps_count": 11,
-            "has_video": true
+            "has_video": false
         },
         {
             "id": "5dccd612-73fb-484b-a1bf-70658ddcb609",
@@ -899,7 +899,7 @@
             "fastest_lap_s": 45.741,
             "average_lap_s": 4575.0635,
             "laps_count": 12,
-            "has_video": true
+            "has_video": false
         },
         {
             "id": "c74839e7-1346-4027-ad80-dd3bc2a631dd",
@@ -1120,7 +1120,7 @@
             "fastest_lap_s": 38.437,
             "average_lap_s": 39.50373333333334,
             "laps_count": 15,
-            "has_video": true
+            "has_video": false
         },
         {
             "id": "d403a989-0073-4a7a-8905-5fda13e845d5",
@@ -1137,7 +1137,7 @@
             "fastest_lap_s": 43.79,
             "average_lap_s": 44.42753846153846,
             "laps_count": 13,
-            "has_video": true
+            "has_video": false
         },
         {
             "id": "cf5d9f8e-5fe0-4273-b822-e66f88cdba66",
