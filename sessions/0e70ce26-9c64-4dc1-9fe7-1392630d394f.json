@@ -1,0 +1,48 @@
+{
+  "session_id": "0e70ce26-9c64-4dc1-9fe7-1392630d394f",
+  "driver": "Kęstas Č.",
+  "fastest_lap": "01:07.241",
+  "track": {
+    "name": "Serbentų",
+    "configuration": "Summer",
+    "maps_link": "https://maps.app.goo.gl/1oCzCX2u3d3UXAmg9"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "00:21",
+  "video_url": "https://youtu.be/GTecgLmwiwI",
+  "session_date": "2026-06-07",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "01:10.780"
+    },
+    {
+      "lap": 2,
+      "time": "01:09.818"
+    },
+    {
+      "lap": 3,
+      "time": "01:11.589"
+    },
+    {
+      "lap": 4,
+      "time": "01:08.160"
+    },
+    {
+      "lap": 5,
+      "time": "01:09.421"
+    },
+    {
+      "lap": 6,
+      "time": "01:07.475"
+    },
+    {
+      "lap": 7,
+      "time": "01:07.241"
+    },
+    {
+      "lap": 8,
+      "time": "01:09.002"
+    }
+  ]
+}
