@@ -22,11 +22,11 @@
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "hsl(182, 78%, 62%)",
         "configs": [
-            "Winter 2026",
-            "Rain",
-            "2024",
             "long",
-            "3 konfiguracija"
+            "Rain",
+            "3 konfiguracija",
+            "Winter 2026",
+            "2024"
         ],
         "sessions": 16,
         "bestLap": "00:44.327",
@@ -131,6 +131,20 @@
         "bestDriver": "Povilas L."
     },
     {
+        "id": "serbentų_kartodromas",
+        "name": "Serbentų kartodromas",
+        "lat": 55.9062438,
+        "lng": 23.3343615,
+        "mapsLink": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88",
+        "color": "hsl(179, 78%, 62%)",
+        "configs": [
+            "Summer"
+        ],
+        "sessions": 2,
+        "bestLap": "01:06.823",
+        "bestDriver": "Kęstas Č."
+    },
+    {
         "id": "kartcenter_sopot",
         "name": "KartCenter Sopot",
         "lat": 54.4339594,
@@ -138,8 +152,8 @@
         "mapsLink": "https://maps.app.goo.gl/AXFPcDj5CWT7rPX27",
         "color": "hsl(174, 78%, 62%)",
         "configs": [
-            "Summer",
-            "2025"
+            "2025",
+            "Summer"
         ],
         "sessions": 2,
         "bestLap": "00:40.573",
@@ -167,8 +181,8 @@
         "mapsLink": "https://maps.app.goo.gl/EmVwycty7FxrB8TH7",
         "color": "hsl(240, 78%, 62%)",
         "configs": [
-            "2024",
-            "2025"
+            "2025",
+            "2024"
         ],
         "sessions": 3,
         "bestLap": "00:25.180",
@@ -313,19 +327,5 @@
         "sessions": 2,
         "bestLap": "00:56.240",
         "bestDriver": "Povilas L."
-    },
-    {
-        "id": "serbentų_kartodromas",
-        "name": "Serbentų kartodromas",
-        "lat": 55.9062438,
-        "lng": 23.3343615,
-        "mapsLink": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88",
-        "color": "hsl(179, 78%, 62%)",
-        "configs": [
-            "Summer"
-        ],
-        "sessions": 1,
-        "bestLap": "01:07.211",
-        "bestDriver": "Kęstas Č."
     }
 ]
