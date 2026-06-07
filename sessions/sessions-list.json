@@ -18,6 +18,23 @@
             "has_video": true
         },
         {
+            "id": "0e70ce26-9c64-4dc1-9fe7-1392630d394f",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Serbentų",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/1oCzCX2u3d3UXAmg9"
+            },
+            "session_date": "2026-06-07",
+            "kart": "9 Ag",
+            "fastest_lap": "01:07.241",
+            "average_lap": "01:09.186",
+            "fastest_lap_s": 67.241,
+            "average_lap_s": 69.18575,
+            "laps_count": 8,
+            "has_video": true
+        },
+        {
             "id": "3cba0319-864d-4ab1-a689-c57e79eff33e",
             "driver": "Povilas L.",
             "track": {

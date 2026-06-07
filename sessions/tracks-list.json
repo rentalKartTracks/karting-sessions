@@ -15,6 +15,20 @@
         "bestDriver": "Ignas M."
     },
     {
+        "id": "serbentų",
+        "name": "Serbentų",
+        "lat": 55.9140472,
+        "lng": 23.3323005,
+        "mapsLink": "https://maps.app.goo.gl/1oCzCX2u3d3UXAmg9",
+        "color": "hsl(283, 78%, 62%)",
+        "configs": [
+            "Summer"
+        ],
+        "sessions": 1,
+        "bestLap": "01:07.241",
+        "bestDriver": "Kęstas Č."
+    },
+    {
         "id": "speedway",
         "name": "Speedway",
         "lat": 54.7972092,
@@ -22,11 +36,11 @@
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "hsl(182, 78%, 62%)",
         "configs": [
-            "long",
-            "Rain",
+            "Winter 2026",
             "2024",
             "3 konfiguracija",
-            "Winter 2026"
+            "long",
+            "Rain"
         ],
         "sessions": 16,
         "bestLap": "00:44.327",
@@ -181,8 +195,8 @@
         "mapsLink": "https://maps.app.goo.gl/EmVwycty7FxrB8TH7",
         "color": "hsl(240, 78%, 62%)",
         "configs": [
-            "2024",
-            "2025"
+            "2025",
+            "2024"
         ],
         "sessions": 3,
         "bestLap": "00:25.180",
