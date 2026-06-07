@@ -36,11 +36,11 @@
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "hsl(182, 78%, 62%)",
         "configs": [
-            "3 konfiguracija",
-            "Winter 2026",
-            "long",
             "2024",
-            "Rain"
+            "Rain",
+            "long",
+            "3 konfiguracija",
+            "Winter 2026"
         ],
         "sessions": 16,
         "bestLap": "00:44.327",
@@ -140,7 +140,7 @@
         "configs": [
             "Summer"
         ],
-        "sessions": 8,
+        "sessions": 9,
         "bestLap": "01:06.823",
         "bestDriver": "Kęstas Č."
     },
@@ -195,8 +195,8 @@
         "mapsLink": "https://maps.app.goo.gl/EmVwycty7FxrB8TH7",
         "color": "hsl(240, 78%, 62%)",
         "configs": [
-            "2025",
-            "2024"
+            "2024",
+            "2025"
         ],
         "sessions": 3,
         "bestLap": "00:25.180",
