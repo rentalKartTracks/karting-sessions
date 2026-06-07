@@ -1463,6 +1463,23 @@
             "has_video": true
         },
         {
+            "id": "0fa36c4c-c818-4dde-8e5f-24a83bd110e3",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Serbentų kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88"
+            },
+            "session_date": "2024-07-06",
+            "kart": "9 Ag",
+            "fastest_lap": "01:07.525",
+            "average_lap": "01:09.647",
+            "fastest_lap_s": 67.525,
+            "average_lap_s": 69.64742857142858,
+            "laps_count": 7,
+            "has_video": true
+        },
+        {
             "id": "728b61b0-5dc4-401e-9ded-9259bd2b17fd",
             "driver": "Ignas M.",
             "track": {
