@@ -23,9 +23,9 @@
         "color": "hsl(182, 78%, 62%)",
         "configs": [
             "long",
-            "3 konfiguracija",
-            "2024",
             "Rain",
+            "2024",
+            "3 konfiguracija",
             "Winter 2026"
         ],
         "sessions": 16,
@@ -126,7 +126,7 @@
         "configs": [
             "Summer"
         ],
-        "sessions": 6,
+        "sessions": 7,
         "bestLap": "01:06.823",
         "bestDriver": "Kęstas Č."
     },
