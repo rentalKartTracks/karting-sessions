@@ -1,0 +1,44 @@
+{
+  "session_id": "5e5ba0d7-d3d5-421a-8982-04dd5d8279a7",
+  "driver": "Kęstas Č.",
+  "fastest_lap": "01:06.823",
+  "track": {
+    "name": "Serbentų kartodromas",
+    "configuration": "Summer",
+    "maps_link": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "00:21",
+  "video_url": "https://youtu.be/ZXCyGMzU7Po",
+  "session_date": "2024-07-06",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "01:08.855"
+    },
+    {
+      "lap": 2,
+      "time": "01:07.606"
+    },
+    {
+      "lap": 3,
+      "time": "01:10.505"
+    },
+    {
+      "lap": 4,
+      "time": "01:07.521"
+    },
+    {
+      "lap": 5,
+      "time": "01:10.165"
+    },
+    {
+      "lap": 6,
+      "time": "01:06.823"
+    },
+    {
+      "lap": 7,
+      "time": "01:08.452"
+    }
+  ]
+}
