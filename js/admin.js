@@ -228,7 +228,7 @@ function removeLap(i) {
 }
 
 function updateLapTime(i, val) {
-  laps[i].time = val;
+  laps[i].time = val.trim();
 }
 
 function renderLaps() {
