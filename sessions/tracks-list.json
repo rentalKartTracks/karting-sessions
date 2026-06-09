@@ -37,10 +37,10 @@
         "color": "hsl(182, 78%, 62%)",
         "configs": [
             "2024",
-            "3 konfiguracija",
+            "Winter 2026",
             "Rain",
-            "long",
-            "Winter 2026"
+            "3 konfiguracija",
+            "long"
         ],
         "sessions": 16,
         "bestLap": "00:44.327",
@@ -209,8 +209,8 @@
         "mapsLink": "https://maps.app.goo.gl/EmVwycty7FxrB8TH7",
         "color": "hsl(240, 78%, 62%)",
         "configs": [
-            "2024",
-            "2025"
+            "2025",
+            "2024"
         ],
         "sessions": 3,
         "bestLap": "00:25.180",
