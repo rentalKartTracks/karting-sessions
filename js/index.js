@@ -79,6 +79,7 @@ function getUrlParams() {
     search: params.get('search') || '',
     track: params.get('track') || '',
     config: params.get('config') || '',
+    driver: params.get('driver') || '',
     dateFilter: params.get('date') || 'all',
     dateFrom: params.get('from') || '',
     dateTo: params.get('to') || '',
@@ -92,6 +93,7 @@ function updateUrlParams() {
   const search = document.getElementById('search-input').value;
   const track = document.getElementById('track-filter').value;
   const config = document.getElementById('config-filter').value;
+  const driver = document.getElementById('driver-filter').value;
   const dateFilter = document.getElementById('date-filter').value;
   const dateFrom = document.getElementById('date-from').value;
   const dateTo = document.getElementById('date-to').value;
@@ -99,6 +101,7 @@ function updateUrlParams() {
   if (search) params.set('search', search);
   if (track) params.set('track', track);
   if (config) params.set('config', config);
+  if (driver) params.set('driver', driver);
   if (dateFilter !== 'all') params.set('date', dateFilter);
   if (dateFilter === 'custom' && dateFrom) params.set('from', dateFrom);
   if (dateFilter === 'custom' && dateTo) params.set('to', dateTo);
@@ -115,6 +118,7 @@ function applyUrlParams() {
   document.getElementById('track-filter').value = params.track;
   updateConfigFilter();
   document.getElementById('config-filter').value = params.config;
+  document.getElementById('driver-filter').value = params.driver;
   document.getElementById('date-filter').value = params.dateFilter;
   document.getElementById('date-from').value = params.dateFrom;
   document.getElementById('date-to').value = params.dateTo;
@@ -131,6 +135,7 @@ function resetFilters() {
   document.getElementById('track-filter').value = '';
   updateConfigFilter();
   document.getElementById('config-filter').value = '';
+  document.getElementById('driver-filter').value = '';
   document.getElementById('date-filter').value = 'all';
 
   const today = new Date().toISOString().split('T')[0];
@@ -156,7 +161,7 @@ async function loadAllSessions() {
   showSkeletonLoading();
 
   try {
-    const listResponse = await fetch('sessions/sessions-list.json');
+    const listResponse = await fetch(`sessions/sessions-list.json?t=${Date.now()}`);
 
     if (!listResponse.ok) {
       throw new Error(`Failed to load sessions: ${listResponse.statusText}`);
@@ -174,7 +179,6 @@ async function loadAllSessions() {
     }
 
     allSessions = sessionList.sessions
-      .filter(session => session.has_video)
       .map(session => ({
         id: session.id,
         driver: session.driver,
@@ -184,7 +188,8 @@ async function loadAllSessions() {
         fastest_lap: session.fastest_lap,
         kart: session.kart,
         laps_count: session.laps_count,
-        average_lap: session.average_lap
+        average_lap: session.average_lap,
+        has_video: session.has_video || false
       }));
 
     if (allSessions.length === 0) {
@@ -426,12 +431,21 @@ function updateConfigFilter() {
 
 function populateFilters() {
   const trackFilter = document.getElementById('track-filter');
+  const driverFilter = document.getElementById('driver-filter');
 
   Array.from(uniqueTracks).sort().forEach(track => {
     const option = document.createElement('option');
     option.value = track;
     option.textContent = track;
     trackFilter.appendChild(option);
+  });
+
+  const uniqueDrivers = [...new Set(allSessions.map(s => s.driver).filter(Boolean))].sort();
+  uniqueDrivers.forEach(driver => {
+    const option = document.createElement('option');
+    option.value = driver;
+    option.textContent = driver;
+    driverFilter.appendChild(option);
   });
 
   updateConfigFilter();
@@ -549,7 +563,7 @@ function renderSessions() {
         </div>
 
         <div class="session-actions" style="display:flex;gap:8px;margin-top:12px;">
-          <button class="view-btn" style="flex:1;">View Telemetry</button>
+          <button class="view-btn" style="flex:1;">View Telemetry${session.has_video ? '' : ' <span style="opacity:.5;font-size:.85em;">(no video)</span>'}</button>
         </div>
       </div>
     `;
@@ -641,6 +655,7 @@ function filterSessions() {
   const searchTerm = document.getElementById('search-input').value.toLowerCase();
   const selectedTrack = document.getElementById('track-filter').value;
   const selectedConfig = document.getElementById('config-filter').value;
+  const selectedDriver = document.getElementById('driver-filter').value;
   const dateFilter = document.getElementById('date-filter').value;
 
   filteredSessions = allSessions.filter(session => {
@@ -649,6 +664,10 @@ function filterSessions() {
       !session.driver.toLowerCase().includes(searchTerm) &&
       !session.track_name.toLowerCase().includes(searchTerm) &&
       !kart.includes(searchTerm)) {
+      return false;
+    }
+
+    if (selectedDriver && session.driver !== selectedDriver) {
       return false;
     }
 
@@ -717,6 +736,11 @@ document.getElementById('search-input').addEventListener('input', debouncedFilte
 
 document.getElementById('track-filter').addEventListener('change', () => {
   updateConfigFilter();
+  filterSessions();
+  updateUrlParams();
+});
+
+document.getElementById('driver-filter').addEventListener('change', () => {
   filterSessions();
   updateUrlParams();
 });

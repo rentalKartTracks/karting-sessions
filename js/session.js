@@ -1486,9 +1486,7 @@ function drawLineChart(mainLaps, compareLapsArray = [], currentVideoTime = null)
     drawLapLine(laps, colors.line, colors.point, true, index);
   });
 
-  drawLapLine(mainLaps, '#f44336', '#ff5252', false, -1);
-
-  // Draw main line on top
+  // Draw main line on top of comparison lines
   drawLapLine(mainLaps, '#f44336', '#ff5252', false, -1);
 
   // Draw best lap stars
