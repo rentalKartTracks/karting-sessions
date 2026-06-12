@@ -1,20 +1,5 @@
 [
     {
-        "id": "plytinės_kartodromas",
-        "name": "Plytinės Kartodromas",
-        "lat": 54.7250099,
-        "lng": 25.3467219,
-        "mapsLink": "https://maps.app.goo.gl/AmF51NGm8bysceeN9",
-        "color": "hsl(269, 78%, 62%)",
-        "configs": [
-            "Summer",
-            "Winter"
-        ],
-        "sessions": 23,
-        "bestLap": "00:43.150",
-        "bestDriver": "Ignas M."
-    },
-    {
         "id": "serbentų",
         "name": "Serbentų",
         "lat": 55.9140472,
@@ -36,10 +21,10 @@
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "hsl(182, 78%, 62%)",
         "configs": [
-            "2024",
-            "Winter 2026",
             "Rain",
             "3 konfiguracija",
+            "Winter 2026",
+            "2024",
             "long"
         ],
         "sessions": 16,
@@ -47,46 +32,33 @@
         "bestDriver": "Povilas L."
     },
     {
-        "id": "kartlandas_kaunas",
-        "name": "Kartlandas Kaunas",
-        "lat": 54.9146582,
-        "lng": 23.8407337,
-        "mapsLink": "https://maps.app.goo.gl/7Q9SbwwcmwyNqUH56",
-        "color": "hsl(116, 78%, 62%)",
+        "id": "plytinės_kartodromas",
+        "name": "Plytinės Kartodromas",
+        "lat": 54.7250099,
+        "lng": 25.3467219,
+        "mapsLink": "https://maps.app.goo.gl/AmF51NGm8bysceeN9",
+        "color": "hsl(269, 78%, 62%)",
+        "configs": [
+            "Summer",
+            "Winter"
+        ],
+        "sessions": 23,
+        "bestLap": "00:43.150",
+        "bestDriver": "Ignas M."
+    },
+    {
+        "id": "e1gokart_gdańsk",
+        "name": "🏟️ E1gokart GdańSk",
+        "lat": 54.3683641,
+        "lng": 18.4699973,
+        "mapsLink": "https://maps.app.goo.gl/wr4dY7tgiYpgngB77",
+        "color": "hsl(357, 78%, 62%)",
         "configs": [
             "2025"
         ],
-        "sessions": 3,
-        "bestLap": "00:25.906",
+        "sessions": 2,
+        "bestLap": "00:56.240",
         "bestDriver": "Povilas L."
-    },
-    {
-        "id": "anykščių_kartodromas",
-        "name": "Anykščių kartodromas",
-        "lat": 55.518791,
-        "lng": 25.0668037,
-        "mapsLink": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8",
-        "color": "hsl(286, 78%, 62%)",
-        "configs": [
-            "2024"
-        ],
-        "sessions": 6,
-        "bestLap": "00:45.330",
-        "bestDriver": "Povilas L."
-    },
-    {
-        "id": "wolf_cart_track",
-        "name": "Wolf-cart track",
-        "lat": 0,
-        "lng": 0,
-        "mapsLink": "https://rentalkarttracks.github.io/karting-sessions/session.html?id=4a326eb4-ced0-490b-a4e8-edc211b65437",
-        "color": "hsl(307, 78%, 62%)",
-        "configs": [
-            "2025"
-        ],
-        "sessions": 1,
-        "bestLap": null,
-        "bestDriver": null
     },
     {
         "id": "e1gokart_gdańsk",
@@ -103,32 +75,46 @@
         "bestDriver": "Ignas M."
     },
     {
-        "id": "e1gokart_gdańsk",
-        "name": "E1GOKART Gdańsk",
-        "lat": 54.3683641,
-        "lng": 18.4699973,
-        "mapsLink": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8",
-        "color": "hsl(32, 78%, 62%)",
+        "id": "kartlandas_kaunas",
+        "name": "Kartlandas Kaunas",
+        "lat": 54.9146582,
+        "lng": 23.8407337,
+        "mapsLink": "https://maps.app.goo.gl/7Q9SbwwcmwyNqUH56",
+        "color": "hsl(116, 78%, 62%)",
         "configs": [
-            "2024"
+            "2025"
         ],
         "sessions": 3,
-        "bestLap": "00:57.748",
+        "bestLap": "00:25.906",
         "bestDriver": "Povilas L."
     },
     {
-        "id": "e1gokart",
-        "name": "E1GOKART",
-        "lat": 54.3683641,
-        "lng": 18.4699973,
-        "mapsLink": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8",
-        "color": "hsl(138, 78%, 62%)",
+        "id": "kartlandas_max",
+        "name": "Kartlandas Max",
+        "lat": 54.6621119,
+        "lng": 25.2017819,
+        "mapsLink": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7",
+        "color": "hsl(292, 78%, 62%)",
         "configs": [
-            "2024"
+            "Kartlandas Max 2026"
         ],
-        "sessions": 1,
-        "bestLap": "00:58.777",
-        "bestDriver": "Povilas L."
+        "sessions": 7,
+        "bestLap": "00:38.361",
+        "bestDriver": "Kęstas Č."
+    },
+    {
+        "id": "vilko_kartodromas",
+        "name": "Vilko Kartodromas",
+        "lat": 54.8883225,
+        "lng": 23.9197686,
+        "mapsLink": "https://maps.app.goo.gl/9erykKE9f58EYZ9TA",
+        "color": "hsl(96, 78%, 62%)",
+        "configs": [
+            "wolf 2025"
+        ],
+        "sessions": 2,
+        "bestLap": "00:18.050",
+        "bestDriver": "Kęstas Č."
     },
     {
         "id": "serbentų_kartodromas",
@@ -145,39 +131,11 @@
         "bestDriver": "Kęstas Č."
     },
     {
-        "id": "serbentų_kartodromas",
-        "name": "*Serbentų kartodromas*",
-        "lat": 55.9140502,
-        "lng": 23.3323059,
-        "mapsLink": "https://maps.app.goo.gl/V8ir9cZW4CiqPsT17",
-        "color": "hsl(11, 78%, 62%)",
-        "configs": [
-            "Summer"
-        ],
-        "sessions": 1,
-        "bestLap": "01:08.584",
-        "bestDriver": "Ignas I."
-    },
-    {
-        "id": "𝗔𝘄𝗶𝘅_𝗥𝗮𝗰𝗶𝗻𝗴_𝗔𝗿𝗲𝗻𝗮",
-        "name": "𝗔𝘄𝗶𝘅 𝗥𝗮𝗰𝗶𝗻𝗴 𝗔𝗿𝗲𝗻𝗮",
-        "lat": 53.0184783,
-        "lng": 18.5415042,
-        "mapsLink": "https://maps.app.goo.gl/ybcsyhCrN3D1E2XbA",
-        "color": "hsl(329, 78%, 62%)",
-        "configs": [
-            "2024"
-        ],
-        "sessions": 1,
-        "bestLap": "01:02.505",
-        "bestDriver": "Povilas L."
-    },
-    {
         "id": "kartcenter_sopot",
         "name": "KartCenter Sopot",
-        "lat": 54.4339594,
-        "lng": 18.4234929,
-        "mapsLink": "https://maps.app.goo.gl/AXFPcDj5CWT7rPX27",
+        "lat": 54.4339595,
+        "lng": 18.5609781,
+        "mapsLink": "https://maps.app.goo.gl/t4cWok3pkRS21u6k9",
         "color": "hsl(174, 78%, 62%)",
         "configs": [
             "2025",
@@ -202,6 +160,34 @@
         "bestDriver": "Kęstas Č."
     },
     {
+        "id": "anykščių_kartodromas",
+        "name": "Anykščių kartodromas",
+        "lat": 55.518791,
+        "lng": 25.0668037,
+        "mapsLink": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8",
+        "color": "hsl(286, 78%, 62%)",
+        "configs": [
+            "2024"
+        ],
+        "sessions": 6,
+        "bestLap": "00:45.330",
+        "bestDriver": "Povilas L."
+    },
+    {
+        "id": "𝗦𝗽𝗼𝗿𝘁𝗮_𝗸𝗼𝗺𝗽𝗹𝗲𝗸𝘀𝘀_𝟯𝟯𝟯",
+        "name": "𝗦𝗽𝗼𝗿𝘁𝗮 𝗸𝗼𝗺𝗽𝗹𝗲𝗸𝘀𝘀 𝟯𝟯𝟯",
+        "lat": 56.9501916,
+        "lng": 24.4101832,
+        "mapsLink": "https://goo.gl/maps/kZR3mou2NyC9NFx26",
+        "color": "hsl(320, 78%, 62%)",
+        "configs": [
+            "2024"
+        ],
+        "sessions": 1,
+        "bestLap": "00:51.010",
+        "bestDriver": "Povilas L."
+    },
+    {
         "id": "tor_półwysep",
         "name": "Tor Półwysep",
         "lat": 54.7891707,
@@ -214,6 +200,20 @@
         ],
         "sessions": 3,
         "bestLap": "00:25.180",
+        "bestDriver": "Povilas L."
+    },
+    {
+        "id": "smalininkų_kartodromas",
+        "name": "Smalininkų kartodromas",
+        "lat": 0,
+        "lng": 0,
+        "mapsLink": "https://maps.app.goo.gl/959ZMAV6acyt6...",
+        "color": "hsl(192, 78%, 62%)",
+        "configs": [
+            "2024"
+        ],
+        "sessions": 4,
+        "bestLap": "00:59.000",
         "bestDriver": "Povilas L."
     },
     {
@@ -231,45 +231,31 @@
         "bestDriver": "Vaidas R."
     },
     {
-        "id": "race_time",
-        "name": "Race Time",
-        "lat": 55.9084559,
-        "lng": 21.0974078,
-        "mapsLink": "https://maps.app.goo.gl/dRBrDVFfcDvgQaCo6",
-        "color": "hsl(240, 78%, 62%)",
+        "id": "kartcenter_gdańsk_gokarty",
+        "name": "KartCenter Gdańsk Gokarty",
+        "lat": 54.3890499,
+        "lng": 18.5136168,
+        "mapsLink": "https://maps.app.goo.gl/RUBF4Y86mvd37qu67",
+        "color": "hsl(42, 78%, 62%)",
         "configs": [
-            "Summer"
+            "2025"
         ],
-        "sessions": 2,
-        "bestLap": "01:15.999",
+        "sessions": 1,
+        "bestLap": "00:22.840",
         "bestDriver": "Povilas L."
     },
     {
-        "id": "kartlandas_max",
-        "name": "Kartlandas Max",
-        "lat": 54.6621119,
-        "lng": 25.2017819,
-        "mapsLink": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7",
-        "color": "hsl(292, 78%, 62%)",
-        "configs": [
-            "Kartlandas Max 2026"
-        ],
-        "sessions": 7,
-        "bestLap": "00:38.361",
-        "bestDriver": "Kęstas Č."
-    },
-    {
-        "id": "smalininkų_kartodromas",
-        "name": "Smalininkų kartodromas",
-        "lat": 0,
-        "lng": 0,
-        "mapsLink": "https://maps.app.goo.gl/959ZMAV6acyt6...",
-        "color": "hsl(192, 78%, 62%)",
+        "id": "e1gokart_gdańsk",
+        "name": "E1GOKART Gdańsk",
+        "lat": 54.3683641,
+        "lng": 18.4699973,
+        "mapsLink": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8",
+        "color": "hsl(32, 78%, 62%)",
         "configs": [
             "2024"
         ],
-        "sessions": 4,
-        "bestLap": "00:59.000",
+        "sessions": 3,
+        "bestLap": "00:57.748",
         "bestDriver": "Povilas L."
     },
     {
@@ -287,45 +273,17 @@
         "bestDriver": "Justas Ž."
     },
     {
-        "id": "kartcenter_gdańsk_gokarty",
-        "name": "KartCenter Gdańsk Gokarty",
-        "lat": 54.3890499,
-        "lng": 18.5136168,
-        "mapsLink": "https://maps.app.goo.gl/RUBF4Y86mvd37qu67",
-        "color": "hsl(42, 78%, 62%)",
-        "configs": [
-            "2025"
-        ],
-        "sessions": 1,
-        "bestLap": "00:22.840",
-        "bestDriver": "Povilas L."
-    },
-    {
-        "id": "vilko_kartodromas",
-        "name": "Vilko Kartodromas",
-        "lat": 54.8883225,
-        "lng": 23.9197686,
-        "mapsLink": "https://maps.app.goo.gl/9erykKE9f58EYZ9TA",
-        "color": "hsl(96, 78%, 62%)",
-        "configs": [
-            "wolf 2025"
-        ],
-        "sessions": 2,
-        "bestLap": "00:18.050",
-        "bestDriver": "Kęstas Č."
-    },
-    {
-        "id": "𝗦𝗽𝗼𝗿𝘁𝗮_𝗸𝗼𝗺𝗽𝗹𝗲𝗸𝘀𝘀_𝟯𝟯𝟯",
-        "name": "𝗦𝗽𝗼𝗿𝘁𝗮 𝗸𝗼𝗺𝗽𝗹𝗲𝗸𝘀𝘀 𝟯𝟯𝟯",
-        "lat": 56.9501916,
-        "lng": 24.4101832,
-        "mapsLink": "https://goo.gl/maps/kZR3mou2NyC9NFx26",
-        "color": "hsl(320, 78%, 62%)",
+        "id": "𝗔𝘄𝗶𝘅_𝗥𝗮𝗰𝗶𝗻𝗴_𝗔𝗿𝗲𝗻𝗮",
+        "name": "𝗔𝘄𝗶𝘅 𝗥𝗮𝗰𝗶𝗻𝗴 𝗔𝗿𝗲𝗻𝗮",
+        "lat": 53.0184783,
+        "lng": 18.5415042,
+        "mapsLink": "https://maps.app.goo.gl/ybcsyhCrN3D1E2XbA",
+        "color": "hsl(329, 78%, 62%)",
         "configs": [
             "2024"
         ],
         "sessions": 1,
-        "bestLap": "00:51.010",
+        "bestLap": "01:02.505",
         "bestDriver": "Povilas L."
     },
     {
@@ -343,17 +301,59 @@
         "bestDriver": "Ignas M."
     },
     {
-        "id": "e1gokart_gdańsk",
-        "name": "🏟️ E1gokart GdańSk",
+        "id": "race_time",
+        "name": "Race Time",
+        "lat": 55.9084559,
+        "lng": 21.0974078,
+        "mapsLink": "https://maps.app.goo.gl/dRBrDVFfcDvgQaCo6",
+        "color": "hsl(240, 78%, 62%)",
+        "configs": [
+            "Summer"
+        ],
+        "sessions": 2,
+        "bestLap": "01:15.999",
+        "bestDriver": "Povilas L."
+    },
+    {
+        "id": "serbentų_kartodromas",
+        "name": "*Serbentų kartodromas*",
+        "lat": 55.9140502,
+        "lng": 23.3323059,
+        "mapsLink": "https://maps.app.goo.gl/V8ir9cZW4CiqPsT17",
+        "color": "hsl(11, 78%, 62%)",
+        "configs": [
+            "Summer"
+        ],
+        "sessions": 1,
+        "bestLap": "01:08.584",
+        "bestDriver": "Ignas I."
+    },
+    {
+        "id": "e1gokart",
+        "name": "E1GOKART",
         "lat": 54.3683641,
         "lng": 18.4699973,
-        "mapsLink": "https://maps.app.goo.gl/wr4dY7tgiYpgngB77",
-        "color": "hsl(357, 78%, 62%)",
+        "mapsLink": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8",
+        "color": "hsl(138, 78%, 62%)",
+        "configs": [
+            "2024"
+        ],
+        "sessions": 1,
+        "bestLap": "00:58.777",
+        "bestDriver": "Povilas L."
+    },
+    {
+        "id": "wolf_cart_track",
+        "name": "Wolf-cart track",
+        "lat": 0,
+        "lng": 0,
+        "mapsLink": "https://rentalkarttracks.github.io/karting-sessions/session.html?id=4a326eb4-ced0-490b-a4e8-edc211b65437",
+        "color": "hsl(307, 78%, 62%)",
         "configs": [
             "2025"
         ],
-        "sessions": 2,
-        "bestLap": "00:56.240",
-        "bestDriver": "Povilas L."
+        "sessions": 1,
+        "bestLap": null,
+        "bestDriver": null
     }
 ]
