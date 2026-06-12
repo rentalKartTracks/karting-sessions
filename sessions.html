@@ -7,341 +7,379 @@
   <title>Karting Telemetry — Sessions Dashboard</title>
   <meta name="description"
     content="Full session dashboard with lap-by-lap analysis, personal bests, trend tracking, and video replay.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&family=Barlow:wght@300;400;500&display=swap"
+    rel="stylesheet">
   <style>
+    /* ── TOKENS ── */
+    :root {
+      --gold: #e8c84a;
+      --gold-dim: rgba(232, 200, 74, .15);
+      --red: #e84a4a;
+      --green: #4ae8a0;
+      --blue: #4ab8e8;
+      --bg: #07070d;
+      --surface: #0f0f1a;
+      --surface2: #14141f;
+      --line: #1c1c2a;
+      --dim: #333344;
+      --text: #ddddf0;
+      --muted: #666677;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+      --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      font-family: 'Barlow', sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding: 0 20px 60px;
+    }
+
+    /* Noise overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    /* Animated grid */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(232, 200, 74, .025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232, 200, 74, .025) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridDrift 30s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes gridDrift {
+      0% {
+        background-position: 0 0;
+      }
+
+      100% {
+        background-position: 60px 60px;
+      }
+    }
+
     .page-wrapper {
       position: relative;
       z-index: 1;
       max-width: 1400px;
       margin: 0 auto;
       width: 100%;
-      padding-top: 80px;
     }
 
     /* ── HEADER ── */
     .header {
       position: relative;
-      padding: 64px 40px 40px;
-      margin-bottom: 28px;
-      border-bottom: 0.5px solid rgba(255,255,255,0.1);
+      padding: 48px 40px 40px;
+      margin-bottom: 32px;
+      border-bottom: 1px solid var(--line);
       text-align: center;
       overflow: hidden;
     }
 
     .header-glow {
       position: absolute;
-      top: -60px;
+      top: -40px;
       left: 50%;
       transform: translateX(-50%);
       width: 600px;
-      height: 300px;
-      background: radial-gradient(ellipse, rgba(10,132,255,0.09) 0%, transparent 70%);
+      height: 200px;
+      background: radial-gradient(ellipse, rgba(232, 200, 74, .08) 0%, transparent 70%);
       pointer-events: none;
+      animation: glowPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes glowPulse {
+
+      0%,
+      100% {
+        opacity: 0.6;
+        transform: translateX(-50%) scale(1);
+      }
+
+      50% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1.15);
+      }
     }
 
     .header-eyebrow {
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.2px;
-      color: #0A84FF;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--gold);
       margin-bottom: 12px;
       opacity: 0;
-      animation: fadeUp .5s ease .1s forwards;
+      animation: fadeUp .7s ease .1s forwards;
     }
 
     .header h1 {
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-      font-size: clamp(40px, 7vw, 72px);
-      font-weight: 700;
-      letter-spacing: -2px;
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(40px, 8vw, 80px);
+      letter-spacing: 4px;
       line-height: 1;
       color: #fff;
+      text-shadow: 0 0 60px rgba(232, 200, 74, .15), 0 0 120px rgba(232, 200, 74, .07);
       opacity: 0;
-      animation: fadeUp .5s ease .2s forwards;
+      animation: fadeUp .7s ease .25s forwards;
     }
 
     .header h1 span {
-      color: #0A84FF;
+      color: var(--gold);
     }
 
     .header-sub {
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
-      font-size: 17px;
-      font-weight: 400;
-      letter-spacing: 0px;
-      color: rgba(255,255,255,0.5);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
       margin-top: 10px;
       opacity: 0;
-      animation: fadeUp .5s ease .35s forwards;
+      animation: fadeUp .7s ease .4s forwards;
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(14px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-
-    /* ── TOP NAV ── */
+    /* Nav pills */
     .header-nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      position: absolute;
+      top: 20px;
+      right: 24px;
       display: flex;
-      justify-content: center;
       align-items: center;
-      gap: 3px;
-      padding: 10px 24px;
-      background: rgba(0,0,0,0.72);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 0.5px solid rgba(255,255,255,0.1);
-      z-index: 100;
+      gap: 8px;
       flex-wrap: wrap;
+      justify-content: flex-end;
       opacity: 0;
-      animation: fadeIn .5s ease .5s forwards;
+      animation: fadeUp .6s ease .5s forwards;
+    }
+
+    .nav-pill {
+      background: rgba(255, 255, 255, .07);
+      backdrop-filter: blur(8px);
+      color: var(--text);
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: all var(--transition);
+      border: 1px solid rgba(255, 255, 255, .12);
+      white-space: nowrap;
+    }
+
+    .nav-pill:hover {
+      background: rgba(232, 200, 74, .15);
+      border-color: rgba(232, 200, 74, .4);
+      color: var(--gold);
+      transform: translateY(-2px);
     }
 
     /* ── STATS STRIP ── */
     .stats-strip {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      margin-bottom: 20px;
-      background: rgba(255,255,255,0.08);
-      border-radius: 16px;
+      gap: 2px;
+      margin-bottom: 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
       overflow: hidden;
       opacity: 0;
-      animation: fadeUp .5s ease .3s forwards;
+      animation: fadeUp .6s ease .3s forwards;
     }
 
     .stat-card {
-      background: #1C1C1E;
+      background: var(--surface);
       padding: 20px 24px;
       text-align: center;
-      transition: background 200ms;
+      transition: background var(--transition);
+      border-right: 1px solid var(--line);
+    }
+
+    .stat-card:last-child {
       border-right: none;
     }
 
-    .stat-card:hover { background: #2C2C2E; }
+    .stat-card:hover {
+      background: var(--surface2);
+    }
 
     .stat-label {
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.2px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 3px;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.4);
+      color: var(--muted);
       display: block;
       margin-bottom: 8px;
     }
 
     .filtered-stat-value {
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-      font-size: clamp(28px, 4vw, 42px);
-      font-weight: 700;
-      letter-spacing: -1px;
-      color: #0A84FF;
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(28px, 4vw, 40px);
+      letter-spacing: 2px;
+      color: var(--gold);
       line-height: 1;
       display: block;
     }
 
     /* ── CONTROLS ── */
     .controls {
-      background: #1C1C1E;
-      border: 0.5px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
-      padding: 14px 16px;
-      margin-bottom: 20px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 24px;
       display: flex;
-      flex-direction: column;
-      gap: 10px;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
       opacity: 0;
-      animation: fadeUp .5s ease .35s forwards;
+      animation: fadeUp .6s ease .35s forwards;
     }
 
-    /* Row 2: filter selects + sort segment + reset */
-    .filter-row {
+    .search-box {
+      flex: 1;
+      min-width: 200px;
+      padding: 11px 16px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      color: var(--text);
+      border-radius: var(--radius-sm);
+      font-family: 'Barlow', sans-serif;
+      font-size: 14px;
+      transition: border-color var(--transition);
+    }
+
+    .search-box::placeholder {
+      color: var(--muted);
+    }
+
+    .search-box:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+
+    .filter-group {
       display: flex;
-      align-items: center;
       gap: 8px;
       flex-wrap: wrap;
     }
 
-    .filter-selects {
-      display: flex;
-      gap: 6px;
-      flex-wrap: nowrap;
-      flex: 1;
-      min-width: 0;
-    }
-
-    .sort-controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-shrink: 0;
-    }
-
-    /* iOS-style segmented sort control */
-    .sort-segment {
-      display: flex;
-      background: rgba(255,255,255,0.06);
-      border: 0.5px solid rgba(255,255,255,0.1);
-      border-radius: 20px;
-      padding: 3px;
-    }
-
-    .search-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-      width: 100%;
-    }
-
-    .search-icon {
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: rgba(255,255,255,0.4);
-      pointer-events: none;
-      flex-shrink: 0;
-      z-index: 1;
-    }
-
-    /* More specific selector overrides site.min.css button reset */
-    .search-wrapper .search-clear {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 20px !important;
-      height: 20px !important;
-      min-height: 20px !important;
-      padding: 0 !important;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.18);
-      border: none;
-      color: rgba(255,255,255,0.75);
-      font-size: 10px;
-      cursor: pointer;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      line-height: 1;
-      transition: background 150ms;
-      flex-shrink: 0;
-      z-index: 1;
-    }
-
-    .search-wrapper .search-clear:hover { background: rgba(255,255,255,0.3); }
-
-    .search-box {
-      width: 100%;
-      min-width: 0;
-      padding: 10px 36px;
-      background: rgba(255,255,255,0.06);
-      border: 0.5px solid rgba(255,255,255,0.12);
-      color: #fff;
-      border-radius: 10px;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 15px;
-      transition: border-color 200ms, background 200ms;
-    }
-
-    .search-box::placeholder { color: rgba(255,255,255,0.35); }
-
-    .search-box:focus {
-      outline: none;
-      border-color: rgba(10,132,255,0.55);
-      background: rgba(10,132,255,0.07);
-    }
-
     .select-filter {
-      appearance: none;
-      -webkit-appearance: none;
-      flex: 1;
-      min-width: 0;
-      padding: 8px 28px 8px 12px;
-      background-color: rgba(255,255,255,0.06);
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(255,255,255,0.4)' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 10px center;
-      border: 0.5px solid rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.85);
-      border-radius: 20px;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 11px 14px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      color: var(--text);
+      border-radius: var(--radius-sm);
+      font-family: 'Barlow', sans-serif;
       font-size: 13px;
-      font-weight: 500;
+      min-width: 160px;
+      transition: border-color var(--transition);
       cursor: pointer;
-      transition: all 200ms;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .select-filter:hover {
-      background-color: rgba(255,255,255,0.09);
-      border-color: rgba(255,255,255,0.18);
     }
 
     .select-filter:focus {
       outline: none;
-      border-color: rgba(10,132,255,0.55);
-      background-color: rgba(10,132,255,0.08);
+      border-color: var(--gold);
     }
 
-    /* Segmented sort buttons inside .sort-segment */
     .filter-btn {
-      padding: 6px 14px;
-      background: transparent;
-      border: none;
-      border-radius: 16px;
-      color: rgba(255,255,255,0.5);
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 13px;
-      font-weight: 500;
+      padding: 10px 18px;
+      background: var(--surface2);
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
       cursor: pointer;
-      transition: all 150ms;
-      white-space: nowrap;
+      transition: all var(--transition);
     }
 
-    .filter-btn:hover:not(.active) {
-      color: rgba(255,255,255,0.85);
-      background: rgba(255,255,255,0.06);
+    .filter-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      transform: translateY(-2px);
     }
 
     .filter-btn.active {
-      background: #0A84FF;
-      color: #fff;
-      font-weight: 600;
+      background: var(--gold-dim);
+      border-color: var(--gold);
+      color: var(--gold);
     }
 
-    /* Reset pill button */
     .reset-btn {
-      padding: 6px 14px;
+      padding: 10px 18px;
       background: transparent;
-      border: 0.5px solid rgba(255,255,255,0.15);
-      border-radius: 20px;
-      color: rgba(255,255,255,0.45);
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 13px;
-      font-weight: 500;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
       cursor: pointer;
-      transition: all 200ms;
-      flex-shrink: 0;
-      white-space: nowrap;
+      transition: all var(--transition);
     }
 
     .reset-btn:hover {
-      background: rgba(255,69,58,0.1);
-      border-color: rgba(255,69,58,0.45);
-      color: #FF453A;
+      border-color: #e84a4a;
+      color: #e84a4a;
+      transform: translateY(-2px);
     }
 
     .date-filter-group {
@@ -349,30 +387,30 @@
       gap: 8px;
       align-items: center;
       flex-wrap: wrap;
-      min-width: 0;
     }
 
     .date-filter-group span {
-      color: rgba(255,255,255,0.4);
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 12px;
+      color: var(--muted);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      letter-spacing: 1px;
     }
 
     .date-input {
-      padding: 10px 12px;
-      background: rgba(255,255,255,0.06);
-      border: 0.5px solid rgba(255,255,255,0.12);
-      color: #fff;
-      border-radius: 10px;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 11px 12px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      color: var(--text);
+      border-radius: var(--radius-sm);
+      font-family: 'Barlow', sans-serif;
       font-size: 13px;
       min-width: 140px;
-      transition: border-color 200ms;
+      transition: border-color var(--transition);
     }
 
     .date-input:focus {
       outline: none;
-      border-color: rgba(10,132,255,0.55);
+      border-color: var(--gold);
     }
 
     .date-range {
@@ -386,20 +424,19 @@
     .sessions-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
-      gap: 12px;
+      gap: 2px;
       opacity: 0;
-      animation: fadeUp .5s ease .45s forwards;
+      animation: fadeUp .6s ease .45s forwards;
     }
 
     .session-card {
-      background: #1C1C1E;
-      border: 0.5px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
+      background: var(--surface);
+      border: 1px solid var(--line);
       padding: 24px;
       cursor: pointer;
       position: relative;
       overflow: hidden;
-      transition: transform 200ms ease, box-shadow 200ms ease;
+      transition: all var(--transition);
     }
 
     .session-card::before {
@@ -409,18 +446,19 @@
       left: 0;
       right: 0;
       height: 2px;
-      background: linear-gradient(90deg, #0A84FF, transparent);
+      background: linear-gradient(90deg, var(--gold), transparent);
       opacity: 0;
-      transition: opacity 200ms;
-      border-radius: 16px 16px 0 0;
+      transition: opacity var(--transition);
     }
 
     .session-card:hover {
+      background: var(--surface2);
       transform: translateY(-2px);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
     }
 
-    .session-card:hover::before { opacity: 1; }
+    .session-card:hover::before {
+      opacity: 1;
+    }
 
     .badge-container {
       position: absolute;
@@ -434,35 +472,45 @@
 
     .badge {
       padding: 4px 10px;
-      border-radius: 20px;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      border-radius: var(--radius-full);
+      font-family: 'Barlow Condensed', sans-serif;
       font-size: 10px;
-      font-weight: 600;
+      font-weight: 700;
+      letter-spacing: 1px;
       display: inline-flex;
       align-items: center;
       gap: 4px;
       cursor: help;
-      transition: transform 200ms;
+      transition: transform var(--transition);
     }
 
-    .badge:hover { transform: scale(1.06); }
+    .badge:hover {
+      transform: scale(1.06);
+    }
 
     .pb-badge {
-      background: linear-gradient(135deg, #FF9F0A, #FFBD38);
-      color: #000;
-      box-shadow: 0 2px 8px rgba(255,159,10,0.3);
+      background: linear-gradient(135deg, #e8c84a, #f5d96b);
+      color: #07070d;
+      box-shadow: 0 2px 8px rgba(232, 200, 74, .35);
       animation: pulse 2.5s ease-in-out infinite;
     }
 
     @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50%       { transform: scale(1.05); }
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
     }
 
     .track-pb-badge {
-      background: linear-gradient(135deg, #BF5AF2, #D987F5);
+      background: linear-gradient(135deg, #9c27b0, #ba68c8);
       color: #fff;
-      box-shadow: 0 2px 8px rgba(191,90,242,0.3);
+      box-shadow: 0 2px 8px rgba(156, 39, 176, .35);
     }
 
     .session-header {
@@ -476,19 +524,19 @@
     }
 
     .driver-name {
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
+      font-family: 'Bebas Neue', cursive;
+      font-size: 26px;
+      letter-spacing: 2px;
       color: #fff;
-      line-height: 1.1;
+      line-height: 1;
     }
 
     .session-date {
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 12px;
-      font-weight: 400;
-      color: rgba(255,255,255,0.4);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
     }
 
     .trend-indicator {
@@ -496,55 +544,60 @@
       align-items: center;
       gap: 4px;
       padding: 3px 8px;
-      border-radius: 8px;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      border-radius: var(--radius-sm);
+      font-family: 'Barlow Condensed', sans-serif;
       font-size: 11px;
       font-weight: 600;
+      letter-spacing: 0.5px;
       margin-top: 4px;
     }
 
     .trend-improving {
-      background: rgba(48,209,88,0.12);
-      color: #30D158;
+      background: rgba(74, 232, 160, .12);
+      color: var(--green);
     }
 
     .trend-declining {
-      background: rgba(255,69,58,0.12);
-      color: #FF453A;
+      background: rgba(232, 74, 74, .12);
+      color: var(--red);
     }
 
     .trend-stable {
-      background: rgba(10,132,255,0.1);
-      color: #0A84FF;
+      background: rgba(232, 200, 74, .10);
+      color: var(--gold);
     }
 
-    .session-stats { margin: 12px 0; }
+    .session-stats {
+      margin: 12px 0;
+    }
 
     .session-stat {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 7px 0;
-      border-bottom: 0.5px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid var(--line);
       font-size: 13px;
     }
 
-    .session-stat:last-child { border-bottom: none; }
+    .session-stat:last-child {
+      border-bottom: none;
+    }
 
     .stat-name {
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.1px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 10px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.4);
+      color: var(--muted);
     }
 
     .stat-val {
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       font-weight: 600;
-      color: #0A84FF;
+      color: var(--gold);
+      font-family: 'Barlow Condensed', sans-serif;
       font-size: 13px;
+      letter-spacing: 0.5px;
     }
 
     .session-actions {
@@ -556,57 +609,63 @@
     .view-btn {
       flex: 1;
       padding: 11px;
-      background: rgba(10,132,255,0.15);
-      color: #0A84FF;
-      border: 0.5px solid rgba(10,132,255,0.35);
-      border-radius: 10px;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 13px;
-      font-weight: 600;
+      background: var(--gold-dim);
+      color: var(--gold);
+      border: 1px solid rgba(232, 200, 74, .3);
+      border-radius: var(--radius-sm);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
       cursor: pointer;
-      transition: all 200ms;
+      transition: all var(--transition);
     }
 
     .view-btn:hover {
-      background: rgba(10,132,255,0.25);
-      border-color: #0A84FF;
+      background: rgba(232, 200, 74, .25);
+      border-color: var(--gold);
       transform: translateY(-1px);
     }
 
     .edit-btn {
       padding: 11px 14px;
-      background: rgba(255,255,255,0.05);
-      color: rgba(255,255,255,0.4);
-      border: 0.5px solid rgba(255,255,255,0.1);
-      border-radius: 10px;
+      background: rgba(255, 255, 255, .05);
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
       font-size: 14px;
       cursor: pointer;
-      transition: all 200ms;
+      transition: all var(--transition);
     }
 
     .edit-btn:hover {
-      background: rgba(255,255,255,0.1);
-      color: #fff;
+      background: rgba(255, 255, 255, .1);
+      color: var(--text);
       transform: translateY(-1px);
     }
 
     /* ── SKELETON ── */
     .skeleton {
-      background: linear-gradient(90deg, #1C1C1E 25%, #2C2C2E 50%, #1C1C1E 75%);
+      background: linear-gradient(90deg, var(--surface) 25%, var(--surface2) 50%, var(--surface) 75%);
       background-size: 200% 100%;
       animation: shimmer 1.5s infinite;
-      border-radius: 10px;
+      border-radius: var(--radius-sm);
     }
 
     @keyframes shimmer {
-      0%   { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
     }
 
     .skeleton-card {
-      background: #1C1C1E;
-      border: 0.5px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
+      background: var(--surface);
+      border: 1px solid var(--line);
       padding: 24px;
     }
 
@@ -616,39 +675,56 @@
       margin-bottom: 16px;
     }
 
-    .skeleton-title { height: 22px; width: 55%; }
-    .skeleton-date  { height: 14px; width: 22%; }
-    .skeleton-stat  { height: 18px; margin: 10px 0; }
-    .skeleton-button { height: 42px; margin-top: 16px; }
+    .skeleton-title {
+      height: 24px;
+      width: 55%;
+    }
+
+    .skeleton-date {
+      height: 14px;
+      width: 22%;
+    }
+
+    .skeleton-stat {
+      height: 18px;
+      margin: 10px 0;
+    }
+
+    .skeleton-button {
+      height: 42px;
+      margin-top: 16px;
+    }
 
     /* ── STATES ── */
     .loading {
       text-align: center;
       padding: 80px 20px;
-      color: rgba(255,255,255,0.4);
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 15px;
-      font-weight: 500;
+      color: var(--muted);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 16px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
 
     .no-results {
       text-align: center;
       padding: 80px 20px;
-      color: rgba(255,255,255,0.4);
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--muted);
+      font-family: 'Barlow Condensed', sans-serif;
       font-size: 15px;
-      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
 
     .error {
-      background: rgba(255,69,58,0.1);
-      border: 0.5px solid rgba(255,69,58,0.3);
-      color: #FF453A;
+      background: rgba(232, 74, 74, .1);
+      border: 1px solid rgba(232, 74, 74, .3);
+      color: #e84a4a;
       padding: 24px;
-      border-radius: 14px;
+      border-radius: var(--radius-md);
       margin: 20px 0;
       text-align: center;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Barlow', sans-serif;
     }
 
     /* ── PAGINATION ── */
@@ -656,65 +732,48 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 8px;
-      margin-top: 28px;
-      padding: 18px;
-      background: #1C1C1E;
-      border: 0.5px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
+      gap: 10px;
+      margin-top: 32px;
+      padding: 20px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
       flex-wrap: wrap;
     }
 
     .pagination-btn {
-      padding: 9px 18px;
+      padding: 10px 20px;
       background: transparent;
-      color: rgba(255,255,255,0.5);
-      border: 0.5px solid rgba(255,255,255,0.1);
-      border-radius: 20px;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 13px;
-      font-weight: 500;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
       cursor: pointer;
-      transition: all 200ms;
-      min-width: 80px;
+      transition: all var(--transition);
+      min-width: 90px;
     }
 
     .pagination-btn:hover:not(:disabled) {
-      border-color: #0A84FF;
-      color: #0A84FF;
-      background: rgba(10,132,255,0.1);
-    }
-
-    .pagination-btn.active {
-      background: #0A84FF;
-      color: #fff;
-      border-color: #0A84FF;
-      cursor: default;
-    }
-
-    .pagination-ellipsis {
-      color: rgba(255,255,255,0.3);
-      font-size: 16px;
-      padding: 0 4px;
-    }
-
-    .pagination-pages {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
+      border-color: var(--gold);
+      color: var(--gold);
+      transform: translateY(-1px);
     }
 
     .pagination-btn:disabled {
       opacity: 0.3;
       cursor: not-allowed;
+      transform: none;
     }
 
     .pagination-info {
-      color: rgba(255,255,255,0.6);
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 13px;
+      color: var(--text);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      letter-spacing: 1px;
       padding: 0 12px;
       min-width: 180px;
       text-align: center;
@@ -725,16 +784,16 @@
       position: fixed;
       bottom: 28px;
       right: 28px;
-      width: 50px;
-      height: 50px;
-      background: rgba(10,132,255,0.15);
-      border: 0.5px solid rgba(10,132,255,0.35);
-      color: #0A84FF;
+      width: 52px;
+      height: 52px;
+      background: var(--gold-dim);
+      border: 1px solid rgba(232, 200, 74, .3);
+      color: var(--gold);
       border-radius: 50%;
       font-size: 20px;
       cursor: pointer;
-      box-shadow: 0 4px 20px rgba(10,132,255,0.15);
-      transition: all 200ms;
+      box-shadow: 0 4px 20px rgba(232, 200, 74, .15);
+      transition: all var(--transition);
       z-index: 1000;
       display: flex;
       align-items: center;
@@ -742,93 +801,102 @@
     }
 
     .info-button:hover {
-      background: rgba(10,132,255,0.25);
-      border-color: #0A84FF;
-      transform: scale(1.08);
+      background: rgba(232, 200, 74, .25);
+      border-color: var(--gold);
+      transform: scale(1.1);
     }
 
     /* ── LEGEND OVERLAY ── */
     .legend-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.85);
+      background: rgba(7, 7, 13, .9);
       display: none;
       align-items: center;
       justify-content: center;
       z-index: 2000;
       padding: 20px;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(8px);
     }
 
-    .legend-overlay.active { display: flex; }
+    .legend-overlay.active {
+      display: flex;
+    }
 
     .legend-content {
-      background: #1C1C1E;
-      border: 0.5px solid rgba(255,255,255,0.12);
-      border-radius: 20px;
-      padding: 36px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 40px;
       max-width: 680px;
       width: 100%;
       max-height: 88vh;
       overflow-y: auto;
-      animation: slideUp .25s ease-out;
+      animation: slideUp .3s ease-out;
     }
 
     @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .legend-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 24px;
-      padding-bottom: 18px;
-      border-bottom: 0.5px solid rgba(255,255,255,0.1);
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--line);
     }
 
     .legend-title {
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
+      font-family: 'Bebas Neue', cursive;
+      font-size: 28px;
+      letter-spacing: 3px;
       color: #fff;
     }
 
     .close-legend {
-      background: rgba(255,255,255,0.07);
-      border: 0.5px solid rgba(255,255,255,0.12);
-      color: rgba(255,255,255,0.55);
-      width: 32px;
-      height: 32px;
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       cursor: pointer;
       font-size: 14px;
-      transition: all 200ms;
+      transition: all var(--transition);
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .close-legend:hover {
-      background: rgba(255,69,58,0.15);
-      border-color: #FF453A;
-      color: #FF453A;
+      background: rgba(232, 74, 74, .15);
+      border-color: #e84a4a;
+      color: #e84a4a;
       transform: rotate(90deg);
     }
 
-    .legend-section { margin-bottom: 24px; }
+    .legend-section {
+      margin-bottom: 28px;
+    }
 
     .legend-section-title {
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.3px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 4px;
       text-transform: uppercase;
-      color: #0A84FF;
-      margin-bottom: 12px;
+      color: var(--gold);
+      margin-bottom: 14px;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -837,97 +905,160 @@
     .legend-section-title::after {
       content: '';
       flex: 1;
-      height: 0.5px;
-      background: rgba(255,255,255,0.1);
+      height: 1px;
+      background: var(--line);
     }
 
     .legend-item {
       display: flex;
       align-items: flex-start;
-      gap: 14px;
-      padding: 12px 14px;
-      background: #2C2C2E;
-      border: 0.5px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
+      gap: 16px;
+      padding: 14px 16px;
+      background: var(--surface2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
       margin-bottom: 8px;
-      transition: transform 200ms;
+      transition: transform var(--transition);
     }
 
-    .legend-item:hover { transform: translateX(3px); }
+    .legend-item:hover {
+      transform: translateX(4px);
+    }
 
-    .legend-icon { flex-shrink: 0; }
+    .legend-icon {
+      flex-shrink: 0;
+    }
 
-    .legend-text { flex: 1; }
+    .legend-text {
+      flex: 1;
+    }
 
     .legend-text-title {
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Barlow Condensed', sans-serif;
       font-weight: 600;
       font-size: 13px;
+      letter-spacing: 0.5px;
       color: #fff;
       margin-bottom: 4px;
     }
 
     .legend-text-desc {
-      color: rgba(255,255,255,0.45);
+      color: var(--muted);
       font-size: 12px;
       line-height: 1.6;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
-      .stats-strip { grid-template-columns: repeat(2, 1fr); }
+      .stats-strip {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stat-card:nth-child(2) {
+        border-right: none;
+      }
     }
 
     @media (max-width: 768px) {
-      body { padding: 0 12px 60px; }
-      .header { padding: 52px 16px 32px; }
-      .sessions-grid { grid-template-columns: 1fr; }
-      .controls { padding: 12px; gap: 8px; }
-      .filter-selects { width: 100%; }
-      .select-filter { flex: 1; min-width: 0; font-size: 12px; }
-      .sort-controls { width: 100%; justify-content: space-between; }
-      .sort-segment { flex: 1; }
-      .filter-btn { flex: 1; text-align: center; }
-      .search-box, .date-input { min-width: auto; }
+      body {
+        padding: 0 12px 60px;
+      }
+
+      .header {
+        padding: 52px 16px 32px;
+      }
+
+      .header-nav {
+        top: 14px;
+        right: 14px;
+      }
+
+      .nav-pill {
+        font-size: 10px;
+        padding: 5px 10px;
+      }
+
+      .sessions-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .controls {
+        padding: 14px;
+        gap: 8px;
+      }
+
+      .search-box,
+      .select-filter,
+      .date-input {
+        width: 100%;
+        min-width: auto;
+      }
+
+      .filter-btn,
+      .reset-btn {
+        flex: 1;
+        min-width: calc(50% - 4px);
+        text-align: center;
+      }
     }
 
     @media (max-width: 480px) {
-      .stats-strip { grid-template-columns: repeat(2, 1fr); }
-      .session-header { flex-direction: column; align-items: flex-start; padding-right: 0; }
-      .badge-container { position: static; flex-direction: row; margin-top: 8px; }
-      .info-button { width: 44px; height: 44px; bottom: 20px; right: 20px; }
-      .legend-content { padding: 24px; }
-      .pagination { padding: 12px; gap: 6px; }
-      .pagination-btn { padding: 8px 12px; min-width: 60px; }
+      .stats-strip {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .session-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding-right: 0;
+      }
+
+      .badge-container {
+        position: static;
+        flex-direction: row;
+        margin-top: 8px;
+      }
+
+      .info-button {
+        width: 46px;
+        height: 46px;
+        bottom: 20px;
+        right: 20px;
+      }
+
+      .legend-content {
+        padding: 24px;
+      }
+
+      .pagination {
+        padding: 14px;
+        gap: 6px;
+      }
+
+      .pagination-btn {
+        padding: 9px 14px;
+        min-width: 70px;
+      }
     }
   </style>
-  <link rel="stylesheet" href="css/site.min.css">
 </head>
 
 <body>
-
-  <nav class="header-nav">
-    <a href="index.html" class="nav-brand">HCH</a>
-    <button class="nav-hamburger" aria-label="Toggle navigation" aria-expanded="false">
-      <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true"><rect width="18" height="2" rx="1" fill="currentColor"/><rect y="6" width="18" height="2" rx="1" fill="currentColor"/><rect y="12" width="18" height="2" rx="1" fill="currentColor"/></svg>
-    </button>
-    <a href="index.html" class="nav-pill">Hub</a>
-    <a href="sessions.html" class="nav-pill active">Sessions</a>
-    <a href="map.html" class="nav-pill">Map</a>
-    <a href="fastest-lap-projection.html" class="nav-pill">Fastest Lap</a>
-    <a href="championship.html" class="nav-pill">Championship</a>
-    <a href="brake.html" class="nav-pill">Brake Detect</a>
-  </nav>
-
   <div class="page-wrapper">
 
     <!-- HEADER -->
     <div class="header">
       <div class="header-glow"></div>
-      <div class="header-eyebrow">Helmet Cam Heroes Racing</div>
+      <div class="header-eyebrow">🏁 Helmet Cam Heroes Racing</div>
       <h1>Karting <span>Telemetry</span></h1>
       <div class="header-sub">Track your performance across all sessions</div>
+
+      <nav class="header-nav">
+        <a href="index.html" class="nav-pill">HUB</a>
+        <a href="map.html" class="nav-pill">MAP</a>
+        <a href="championship.html" class="nav-pill">CHAMPIONSHIP</a>
+        <a href="brake.html" class="nav-pill">BRAKE DETECT</a>
+      </nav>
     </div>
 
     <!-- STATS STRIP -->
@@ -952,38 +1083,25 @@
 
     <!-- CONTROLS -->
     <div class="controls">
-      <div class="search-wrapper">
-        <svg class="search-icon" width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
-          <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M10 10L13 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        <input type="text" id="search-input" class="search-box" placeholder="Search sessions…">
-        <button class="search-clear" id="search-clear-btn" title="Clear search" aria-label="Clear search">✕</button>
-      </div>
+      <input type="text" id="search-input" class="search-box" placeholder="Search driver, track, or kart…">
 
-      <div class="filter-row">
-        <div class="filter-selects">
-          <select id="track-filter" class="select-filter">
-            <option value="">All Tracks</option>
-          </select>
-          <select id="config-filter" class="select-filter">
-            <option value="">All Configs</option>
-          </select>
-          <select id="date-filter" class="select-filter">
-            <option value="all">All Dates</option>
-            <option value="today">Today</option>
-            <option value="week">Last 7 Days</option>
-            <option value="month">Last 30 Days</option>
-            <option value="custom">Custom Range</option>
-          </select>
-        </div>
-        <div class="sort-controls">
-          <div class="sort-segment">
-            <button class="filter-btn active" data-sort="date">Newest</button>
-            <button class="filter-btn" data-sort="fastest">Fastest</button>
-          </div>
-          <button id="reset-filters" class="reset-btn">Reset</button>
-        </div>
+      <div class="filter-group">
+        <select id="driver-filter" class="select-filter">
+          <option value="">All Drivers</option>
+        </select>
+        <select id="track-filter" class="select-filter">
+          <option value="">All Tracks</option>
+        </select>
+        <select id="config-filter" class="select-filter">
+          <option value="">All Configurations</option>
+        </select>
+        <select id="date-filter" class="select-filter">
+          <option value="all">All Dates</option>
+          <option value="today">Today</option>
+          <option value="week">Last 7 Days</option>
+          <option value="month">Last 30 Days</option>
+          <option value="custom">Custom Range</option>
+        </select>
       </div>
 
       <div class="date-filter-group" id="custom-date-range" style="display: none;">
@@ -995,6 +1113,12 @@
           <span>To:</span>
           <input type="date" id="date-to" class="date-input">
         </div>
+      </div>
+
+      <div class="filter-group">
+        <button class="filter-btn active" data-sort="date">📅 Newest</button>
+        <button class="filter-btn" data-sort="fastest">⚡ Fastest</button>
+        <button id="reset-filters" class="reset-btn">🔄 Reset</button>
       </div>
     </div>
 
@@ -1069,22 +1193,132 @@
     </div>
   </div>
 
-  <script src="js/nav.js"></script>
   <script src="js/index.js"></script>
   <script>
-    (function() {
-      const input = document.getElementById('search-input');
-      const clearBtn = document.getElementById('search-clear-btn');
-      if (!input || !clearBtn) return;
-      input.addEventListener('input', () => {
-        clearBtn.style.display = input.value ? 'flex' : 'none';
-      });
-      clearBtn.addEventListener('click', () => {
-        input.value = '';
-        clearBtn.style.display = 'none';
-        input.dispatchEvent(new Event('input', { bubbles: true }));
-        input.focus();
-      });
+    // ── DRIVER FILTER PATCH ──────────────────────────────────────────────────
+    // Runs after js/index.js has initialised. Waits until allSessions is
+    // populated, then populates the driver <select> and monkey-patches the
+    // filtering so driver selection is respected alongside all existing filters.
+    (function () {
+      const POLL_MS = 120;
+      const MAX_ATTEMPTS = 100;
+      let attempts = 0;
+
+      function populate(sessions) {
+        const sel = document.getElementById('driver-filter');
+        if (!sel) return;
+        const drivers = [...new Set(
+          sessions.map(s => (s.driver || '').trim()).filter(Boolean)
+        )].sort((a, b) => a.localeCompare(b));
+        drivers.forEach(d => {
+          const opt = document.createElement('option');
+          opt.value = d;
+          opt.textContent = d;
+          sel.appendChild(opt);
+        });
+      }
+
+      function getDriver() {
+        const sel = document.getElementById('driver-filter');
+        return sel ? sel.value.trim() : '';
+      }
+
+      // Re-render helper — calls whatever render/filter function index.js exposes.
+      // Common names used by dashboards of this style:
+      function triggerRerender() {
+        if (typeof applyFilters === 'function') { applyFilters(); return; }
+        if (typeof renderSessions === 'function') { renderSessions(); return; }
+        if (typeof filterSessions === 'function') { filterSessions(); return; }
+        if (typeof updateDisplay === 'function') { updateDisplay(); return; }
+      }
+
+      // Patch: intercept every Array.prototype.filter call on the sessions array
+      // is impractical, so instead we wrap the global filter state by overriding
+      // the sessions getter if available, or by wrapping the render call.
+      // The simplest robust approach: after index.js loads, override the
+      // sessions display by subscribing to the driver <select> change and
+      // post-filtering the already-rendered cards in the DOM.
+      function applyDriverFilter() {
+        const driver = getDriver();
+        const cards = document.querySelectorAll('.session-card');
+        // If index.js hides/shows cards itself, we respect its display and add
+        // our own override class only when a driver is selected.
+        cards.forEach(card => {
+          if (!driver) {
+            card.style.removeProperty('display');
+            return;
+          }
+          // Driver name is in .driver-name inside the card
+          const nameEl = card.querySelector('.driver-name');
+          const cardDriver = nameEl ? nameEl.textContent.trim() : '';
+          card.style.display = (cardDriver === driver) ? '' : 'none';
+        });
+
+        // Also update the summary stats to reflect visible cards only
+        const visibleCards = document.querySelectorAll('.session-card:not([style*="display: none"])');
+        const countEl = document.getElementById('filtered-sessions-count');
+        if (countEl && driver) countEl.textContent = visibleCards.length;
+      }
+
+      // Watch for DOM changes so we re-apply after pagination / re-render
+      const observer = new MutationObserver(() => applyDriverFilter());
+
+      function init() {
+        // Try to find sessions data exposed by index.js
+        const sessions = window.allSessions || window.sessions || window._sessions;
+        if (sessions && sessions.length > 0) {
+          populate(sessions);
+          hookUp();
+          return;
+        }
+        // Fallback: wait for cards to appear, derive drivers from the DOM
+        const cards = document.querySelectorAll('.session-card');
+        if (cards.length > 0) {
+          const domSessions = Array.from(cards).map(c => ({
+            driver: (c.querySelector('.driver-name') || {}).textContent || ''
+          }));
+          populate(domSessions);
+          hookUp();
+          return;
+        }
+        if (++attempts < MAX_ATTEMPTS) setTimeout(init, POLL_MS);
+      }
+
+      function hookUp() {
+        const sel = document.getElementById('driver-filter');
+        if (!sel) return;
+
+        sel.addEventListener('change', () => {
+          triggerRerender();           // let index.js do its own filtering first
+          // Then apply our layer on top (slight delay to let index.js finish)
+          setTimeout(applyDriverFilter, 40);
+        });
+
+        // Also re-apply after any re-render triggered by other controls
+        ['track-filter','config-filter','date-filter','search-input'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.addEventListener('change', () => setTimeout(applyDriverFilter, 60));
+        });
+        document.querySelectorAll('.filter-btn, .reset-btn, .pagination-btn').forEach(btn => {
+          btn.addEventListener('click', () => setTimeout(applyDriverFilter, 60));
+        });
+
+        // Watch sessions container for pagination re-renders
+        const container = document.getElementById('sessions-container');
+        if (container) observer.observe(container, { childList: true, subtree: true });
+
+        // Reset driver filter when main reset is clicked
+        const resetBtn = document.getElementById('reset-filters');
+        if (resetBtn) {
+          resetBtn.addEventListener('click', () => {
+            sel.value = '';
+            setTimeout(applyDriverFilter, 80);
+          });
+        }
+      }
+
+      // Start polling after a brief delay so index.js can finish its own init
+      setTimeout(init, 300);
     })();
   </script>
 </body>
