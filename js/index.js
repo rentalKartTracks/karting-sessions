@@ -189,7 +189,8 @@ async function loadAllSessions() {
         kart: session.kart,
         laps_count: session.laps_count,
         average_lap: session.average_lap,
-        has_video: session.has_video || false
+        has_video: session.has_video || false,
+        weather: session.weather || null
       }));
 
     if (allSessions.length === 0) {
@@ -545,7 +546,7 @@ function renderSessions() {
             <span class="stat-val">${session.track_name} (${session.track_config})</span>
           </div>
           <div class="session-stat">
-            <span class="stat-name">Kart</span>
+            <span class="stat-name">Engine</span>
             <span class="stat-val">${session.kart || '-'}</span>
           </div>
           <div class="session-stat">
@@ -562,6 +563,11 @@ function renderSessions() {
           </div>
         </div>
 
+        ${session.weather ? `
+        <div class="session-stat" style="border-top:1px solid var(--surface-4);margin-top:4px;">
+          <span class="stat-name">🌤 Weather</span>
+          <span class="stat-val" style="font-size:11px;color:var(--text-secondary);">${session.weather.condition} · ${session.weather.temp_max}°/${session.weather.temp_min}°C · 💨${session.weather.wind_kmh}km/h${session.weather.rain_mm > 0 ? ` · 🌧${session.weather.rain_mm}mm` : ''}</span>
+        </div>` : ''}
         <div class="session-actions" style="display:flex;gap:8px;margin-top:12px;">
           <button class="view-btn" style="flex:1;">View Telemetry${session.has_video ? '' : ' <span style="opacity:.5;font-size:.85em;">(no video)</span>'}</button>
         </div>

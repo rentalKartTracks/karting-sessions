@@ -350,6 +350,16 @@ function renderStatsGrid(data) {
 
   const fastestLapNumber = fastestIdx >= 0 ? fastestIdx + 1 : 1;
 
+  const w = data.weather;
+  const weatherHTML = w ? `
+  <div class="stat-card" title="Weather conditions at race time">
+    <div class="stat-label">🌤 Weather</div>
+    <div class="stat-value" style="font-size:1em;line-height:1.4;">
+      ${w.condition}<br>
+      <span style="font-size:0.75em;opacity:0.7;">${w.temp_max}°/${w.temp_min}°C · 💨${w.wind_kmh}km/h${w.rain_mm > 0 ? ` · 🌧${w.rain_mm}mm` : ''}</span>
+    </div>
+  </div>` : '';
+
   statsGrid.innerHTML = `
   <div class="stat-card stat-card-clickable" onclick="seekToLap(${fastestLapNumber})" title="Jump to fastest lap">
     <div class="stat-label">Fastest Lap</div>
@@ -375,13 +385,14 @@ function renderStatsGrid(data) {
     </div>
   </div>
   <div class="stat-card">
-    <div class="stat-label">Kart</div>
+    <div class="stat-label">Engine</div>
     <div class="stat-value">${data.kart}</div>
   </div>
   <div class="stat-card">
     <div class="stat-label">Total Laps</div>
     <div class="stat-value">${validLaps.length}</div>
   </div>
+  ${weatherHTML}
   `;
 }
 
@@ -1722,7 +1733,7 @@ function handleTooltipInteraction(clientX, clientY) {
               <div class="tooltip-delta">Delta: ${deltaStr}</div>
               <div class="tooltip-footer">
                 ${new Date(session.session_date).toLocaleDateString()}<br>
-                Kart: ${session.kart}
+                Engine: ${session.kart}
               </div>
               <div class="tooltip-arrow"></div>
               `;
@@ -1979,7 +1990,7 @@ function createComparisonCard(data, fastest, average, lapCount, color) {
           ${consistency.text} (±${stdDev.toFixed(3)}s)
         </span>
       </p>
-      <p><strong>Kart:</strong> <span>${data.kart}</span></p>
+      <p><strong>Engine:</strong> <span>${data.kart}</span></p>
     </div>
     `;
 }

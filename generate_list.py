@@ -1,5 +1,6 @@
 import json
 import os
+import urllib.request
 from datetime import timedelta
 from pathlib import Path
 from typing import Optional, Dict, List, Any
@@ -16,7 +17,8 @@ STATIC_TRACKS = {
         "lng": 24.56925536425135,
         "mapsLink": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9",
         "color": "#4ab8e8",
-        "note": "Outdoor circuit · Elektrėnai"
+        "note": "Outdoor circuit · Elektrėnai",
+        "outdoor": True
     },
     "Plytinės Kartodromas": {
         "id": "plytines",
@@ -24,7 +26,8 @@ STATIC_TRACKS = {
         "lng": 25.349237826984915,
         "mapsLink": "https://maps.app.goo.gl/AmF51NGm8bysceeN9",
         "color": "#a84ae8",
-        "note": "Professional karting circuit"
+        "note": "Professional karting circuit",
+        "outdoor": True
     },
     "Vilko Kartodromas": {
         "id": "vilko",
@@ -32,7 +35,8 @@ STATIC_TRACKS = {
         "lng": 23.922075279103808,
         "mapsLink": "https://maps.app.goo.gl/9erykKE9f58EYZ9TA",
         "color": "#e84a4a",
-        "note": "Technical indoor circuit"
+        "note": "Technical indoor circuit",
+        "outdoor": False
     },
     "Kartlandas Max": {
         "id": "kartlandas_max",
@@ -40,7 +44,8 @@ STATIC_TRACKS = {
         "lng": 25.219812673115587,
         "mapsLink": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7",
         "color": "#e87a4a",
-        "note": "Technical indoor circuit"
+        "note": "Technical indoor circuit",
+        "outdoor": False
     },
     "Kartlandas Kaunas": {
         "id": "kartlandas",
@@ -48,7 +53,8 @@ STATIC_TRACKS = {
         "lng": 23.84298728162076,
         "mapsLink": "https://maps.app.goo.gl/7Q9SbwwcmwyNqUH56",
         "color": "#e8c84a",
-        "note": "High-speed Kaunas circuit"
+        "note": "High-speed Kaunas circuit",
+        "outdoor": False
     },
     "GOKARTING CENTER KRAKOW": {
         "id": "gokarting_center_krakow",
@@ -56,9 +62,62 @@ STATIC_TRACKS = {
         "lng": 20.050499873015085,
         "mapsLink": "https://maps.app.goo.gl/fbAaPCaugyx4FDjYA",
         "color": "#4a4ae8",
-        "note": "Major Polish venue"
+        "note": "Major Polish venue",
+        "outdoor": False
     }
 }
+
+# --- Weather Fetch ---
+
+def fetch_weather(lat: float, lng: float, date: str) -> Optional[Dict]:
+    """
+    Fetch historical daily weather from Open-Meteo for a given location and date.
+    Returns a dict with temp_max, temp_min, wind_speed_max, precipitation, weather_code
+    or None if the fetch fails.
+    Free API, no key required.
+    """
+    url = (
+        f"https://archive-api.open-meteo.com/v1/archive"
+        f"?latitude={lat}&longitude={lng}"
+        f"&start_date={date}&end_date={date}"
+        f"&daily=temperature_2m_max,temperature_2m_min,wind_speed_10m_max,"
+        f"precipitation_sum,weather_code"
+        f"&wind_speed_unit=kmh&timezone=auto"
+    )
+    try:
+        with urllib.request.urlopen(url, timeout=8) as resp:
+            data = json.loads(resp.read().decode())
+        daily = data.get("daily", {})
+        if not daily.get("time"):
+            return None
+        return {
+            "temp_max": daily["temperature_2m_max"][0],
+            "temp_min": daily["temperature_2m_min"][0],
+            "wind_kmh": daily["wind_speed_10m_max"][0],
+            "rain_mm": daily["precipitation_sum"][0],
+            "wmo_code": daily["weather_code"][0],
+        }
+    except Exception as e:
+        print(f"  [weather] fetch failed for {date} at ({lat},{lng}): {e}")
+        return None
+
+
+WMO_DESCRIPTIONS = {
+    0: "Clear sky", 1: "Mainly clear", 2: "Partly cloudy", 3: "Overcast",
+    45: "Fog", 48: "Icy fog",
+    51: "Light drizzle", 53: "Drizzle", 55: "Heavy drizzle",
+    61: "Light rain", 63: "Rain", 65: "Heavy rain",
+    71: "Light snow", 73: "Snow", 75: "Heavy snow",
+    77: "Snow grains",
+    80: "Light showers", 81: "Showers", 82: "Heavy showers",
+    85: "Snow showers", 86: "Heavy snow showers",
+    95: "Thunderstorm", 96: "Thunderstorm w/ hail", 99: "Thunderstorm w/ heavy hail",
+}
+
+def wmo_to_description(code: Optional[int]) -> str:
+    if code is None:
+        return "Unknown"
+    return WMO_DESCRIPTIONS.get(int(code), f"Code {code}")
 
 # --- Helper Functions ---
 
@@ -144,18 +203,38 @@ def process_session_file(filepath: Path) -> Optional[Dict[str, Any]]:
         average_lap_str = format_seconds_to_time(average_lap_s)
 
     # Compile the Summary Data
+    track_data = session_data.get("track", {})
+    track_name = track_data.get("name") if isinstance(track_data, dict) else str(track_data)
+    static_info = STATIC_TRACKS.get(track_name, {})
+    session_date = session_data.get("session_date")
+
+    # Fetch weather only for outdoor tracks with a valid date
+    weather = None
+    if static_info.get("outdoor") and session_date:
+        print(f"  [weather] fetching for {track_name} on {session_date}…")
+        w = fetch_weather(static_info["lat"], static_info["lng"], session_date)
+        if w:
+            weather = {
+                "temp_max": w["temp_max"],
+                "temp_min": w["temp_min"],
+                "wind_kmh": w["wind_kmh"],
+                "rain_mm": w["rain_mm"],
+                "condition": wmo_to_description(w["wmo_code"]),
+            }
+
     summary = {
         "id": session_id,
         "driver": session_data.get("driver"),
         "track": session_data.get("track"),
-        "session_date": session_data.get("session_date"),
+        "session_date": session_date,
         "kart": session_data.get("kart"),
         "has_video": bool(session_data.get("video_url", "").strip()),
-        
+        "weather": weather,
+
         # Display strings
-        "fastest_lap": fastest_lap_str, 
+        "fastest_lap": fastest_lap_str,
         "average_lap": average_lap_str,
-        
+
         # Numeric derived metrics
         "fastest_lap_s": fastest_lap_s,
         "average_lap_s": average_lap_s,
