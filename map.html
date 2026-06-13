@@ -109,6 +109,30 @@
     border-radius: 3px;
   }
 
+  .near-me-btn {
+    margin-left: auto;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--gold); background: rgba(232,200,74,.1);
+    border: 1px solid rgba(232,200,74,.3);
+    padding: 6px 14px; border-radius: 6px; cursor: pointer;
+    white-space: nowrap; transition: all .2s;
+  }
+  .near-me-btn:hover { background: rgba(232,200,74,.2); border-color: var(--gold); }
+  .near-me-btn:disabled { opacity: .5; cursor: default; }
+
+  /* "You are here" marker */
+  .user-loc-marker {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: #4ab8e8; border: 2px solid #fff;
+    box-shadow: 0 0 0 4px rgba(74,184,232,.3), 0 0 14px rgba(74,184,232,.6);
+    animation: userPulse 2s ease-in-out infinite;
+  }
+  @keyframes userPulse {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(74,184,232,.3), 0 0 14px rgba(74,184,232,.6); }
+    50%      { box-shadow: 0 0 0 9px rgba(74,184,232,.12), 0 0 14px rgba(74,184,232,.6); }
+  }
+
   /* ── LAYOUT ── */
   .main {
     flex: 1;
@@ -424,6 +448,7 @@
 <div class="topbar">
   <div class="topbar-title">Tracks Map</div>
   <div class="topbar-tag" id="venue-count">Venues</div>
+  <button class="near-me-btn" id="near-me-btn" title="Center the map on your location">📍 Near me</button>
 </div>
 
 <div class="main">
@@ -487,6 +512,86 @@ const popupContent = (t) => `
 // Sidebar
 const list = document.getElementById('tracks-list');
 let activeId = null;
+
+// ── Location centering (Geolocation API — free, no backend) ──────────────
+const LOC_KEY = 'hch:mapLocation';
+let userMarker = null;
+
+const placedTracks = () => tracks.filter(t => !(t.lat === 0 && t.lng === 0));
+
+function fitAllTracks() {
+  const pts = placedTracks().map(t => [t.lat, t.lng]);
+  if (pts.length) map.fitBounds(L.latLngBounds(pts), { padding: [50, 50], maxZoom: 11 });
+}
+
+function haversine(aLat, aLng, bLat, bLng) {
+  const R = 6371, toRad = d => d * Math.PI / 180;
+  const dLat = toRad(bLat - aLat), dLng = toRad(bLng - aLng);
+  const s = Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(aLat)) * Math.cos(toRad(bLat)) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(s));
+}
+
+function nearestTrack(lat, lng) {
+  let best = null, bestD = Infinity;
+  placedTracks().forEach(t => {
+    const d = haversine(lat, lng, t.lat, t.lng);
+    if (d < bestD) { bestD = d; best = t; }
+  });
+  return best;
+}
+
+// Drop a "you are here" marker and frame the user together with their
+// nearest track. Optionally remember the location for next visit.
+function showUserLocation(lat, lng, save) {
+  if (save) { try { localStorage.setItem(LOC_KEY, JSON.stringify({ lat, lng })); } catch (e) {} }
+  if (userMarker) map.removeLayer(userMarker);
+  const icon = L.divIcon({
+    html: '<div class="user-loc-marker"></div>',
+    className: '', iconSize: [18, 18], iconAnchor: [9, 9],
+  });
+  userMarker = L.marker([lat, lng], { icon, zIndexOffset: 1000 })
+    .addTo(map).bindPopup('You are here');
+  const near = nearestTrack(lat, lng);
+  if (near) {
+    map.fitBounds(L.latLngBounds([[lat, lng], [near.lat, near.lng]]), { padding: [70, 70], maxZoom: 12 });
+  } else {
+    map.setView([lat, lng], 10, { animate: true });
+  }
+}
+
+// First view: remembered location if we have one, otherwise frame all tracks
+// (better than the fixed default — Spain/Norway venues were off-screen).
+function applyInitialView() {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(LOC_KEY) || 'null'); } catch (e) {}
+  if (saved && typeof saved.lat === 'number' && typeof saved.lng === 'number') {
+    showUserLocation(saved.lat, saved.lng, false);
+  } else {
+    fitAllTracks();
+  }
+}
+
+const nearBtn = document.getElementById('near-me-btn');
+if (nearBtn) {
+  if (!('geolocation' in navigator)) { nearBtn.disabled = true; nearBtn.title = 'Geolocation not supported'; }
+  nearBtn.addEventListener('click', () => {
+    if (!('geolocation' in navigator)) return;
+    nearBtn.disabled = true; nearBtn.textContent = '📍 Locating…';
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        nearBtn.disabled = false; nearBtn.textContent = '📍 Near me';
+        showUserLocation(pos.coords.latitude, pos.coords.longitude, true);
+      },
+      err => {
+        nearBtn.disabled = false;
+        nearBtn.textContent = err.code === 1 ? '📍 Denied' : '📍 Unavailable';
+        setTimeout(() => { nearBtn.textContent = '📍 Near me'; }, 2200);
+      },
+      { enableHighAccuracy: false, timeout: 8000, maximumAge: 600000 }
+    );
+  });
+}
 
 // Fetch auto-generated map data
 fetch('sessions/tracks-list.json', { cache: 'no-cache' })
@@ -560,6 +665,8 @@ fetch('sessions/tracks-list.json', { cache: 'no-cache' })
 
       list.appendChild(card);
     });
+
+    applyInitialView();
   })
   .catch(err => {
     console.error("Error loading map data:", err);
