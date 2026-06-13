@@ -225,7 +225,8 @@
         <div class="form-grid">
           <div class="form-group">
             <label>Driver Name</label>
-            <input type="text" id="driver" required placeholder="e.g. Povilas L.">
+            <input type="text" id="driver" required placeholder="e.g. Povilas L." list="driver-options" autocomplete="off">
+            <datalist id="driver-options"></datalist>
           </div>
           <div class="form-group">
             <label>Date</label>
@@ -233,7 +234,8 @@
           </div>
           <div class="form-group">
             <label>Kart</label>
-            <input type="text" id="kart" placeholder="e.g. 7 or 9 Ag">
+            <input type="text" id="kart" placeholder="e.g. 7 or 9 Ag" list="kart-options" autocomplete="off">
+            <datalist id="kart-options"></datalist>
           </div>
         </div>
       </div>
@@ -243,11 +245,13 @@
         <div class="form-grid">
           <div class="form-group">
             <label>Track Name</label>
-            <input type="text" id="track_name" required placeholder="Speedway">
+            <input type="text" id="track_name" required placeholder="Speedway" list="track-options" autocomplete="off">
+            <datalist id="track-options"></datalist>
           </div>
           <div class="form-group">
             <label>Configuration</label>
-            <input type="text" id="track_config" required placeholder="Summer">
+            <input type="text" id="track_config" required placeholder="Summer" list="config-options" autocomplete="off">
+            <datalist id="config-options"></datalist>
           </div>
           <div class="form-group full">
             <label>Google Maps Link</label>

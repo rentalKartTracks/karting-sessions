@@ -1,6 +1,8 @@
 import json
 import os
+import re
 import urllib.request
+from collections import Counter, defaultdict
 from datetime import timedelta
 from pathlib import Path
 from typing import Optional, Dict, List, Any
@@ -9,6 +11,38 @@ from typing import Optional, Dict, List, Any
 SESSIONS_DIR = Path("sessions")
 OUTPUT_FILE = SESSIONS_DIR / "sessions-list.json"
 TRACKS_OUTPUT_FILE = SESSIONS_DIR / "tracks-list.json"
+
+# Canonical-name maps (populated per run from all source files). They collapse
+# accidental spelling variants — trailing-period, stray dots, emoji prefixes,
+# casing — so e.g. "Ignas M" folds into "Ignas M.". Populated in
+# generate_sessions_list() before any session is processed.
+DRIVER_CANON: Dict[str, str] = {}
+TRACK_CANON: Dict[str, str] = {}
+
+
+def _norm_key(name: Optional[str]) -> str:
+    """Normalize a name to a comparison key: lowercase, keep only letters/digits
+    (drops spaces, punctuation and emoji, keeps Latin diacritics like ž/ė/ń)."""
+    if not name:
+        return ""
+    return re.sub(r"[^0-9a-zÀ-ɏ]+", "", str(name).lower())
+
+
+def build_canonical_map(names: List[Optional[str]]) -> Dict[str, str]:
+    """Group raw names by their normalized key and map every variant to the
+    most common spelling (ties broken toward the longer string, which keeps the
+    more complete form such as the one with a trailing period). Names that
+    normalize differently are never merged, so distinct people/tracks are safe."""
+    groups: Dict[str, Counter] = defaultdict(Counter)
+    for n in names:
+        if n:
+            groups[_norm_key(n)][n] += 1
+    canon: Dict[str, str] = {}
+    for counter in groups.values():
+        best = max(counter.items(), key=lambda kv: (kv[1], len(kv[0])))[0]
+        for raw in counter:
+            canon[raw] = best
+    return canon
 
 STATIC_TRACKS = {
     "Speedway": {
@@ -319,9 +353,16 @@ def process_session_file(filepath: Path) -> Optional[Dict[str, Any]]:
         fastest_lap_str = format_seconds_to_time(fastest_lap_s)
         average_lap_str = format_seconds_to_time(average_lap_s)
 
-    # Compile the Summary Data
+    # Compile the Summary Data — canonicalize driver/track names so spelling
+    # slips don't fragment the aggregates.
+    driver_name = session_data.get("driver")
+    driver_name = DRIVER_CANON.get(driver_name, driver_name)
+
     track_data = session_data.get("track", {})
-    track_name = track_data.get("name") if isinstance(track_data, dict) else str(track_data)
+    raw_track_name = track_data.get("name") if isinstance(track_data, dict) else str(track_data)
+    track_name = TRACK_CANON.get(raw_track_name, raw_track_name)
+    if isinstance(track_data, dict) and track_data.get("name") != track_name:
+        track_data = {**track_data, "name": track_name}
     static_info = STATIC_TRACKS.get(track_name, {})
     session_date = session_data.get("session_date")
 
@@ -341,8 +382,8 @@ def process_session_file(filepath: Path) -> Optional[Dict[str, Any]]:
 
     summary = {
         "id": session_id,
-        "driver": session_data.get("driver"),
-        "track": session_data.get("track"),
+        "driver": driver_name,
+        "track": track_data,
         "session_date": session_date,
         "kart": session_data.get("kart"),
         "has_video": bool(session_data.get("video_url", "").strip()),
@@ -365,6 +406,27 @@ def generate_sessions_list() -> None:
     if not SESSIONS_DIR.is_dir():
         print(f"Error: Directory '{SESSIONS_DIR}' not found.")
         return
+
+    # Pre-scan all source files to learn the canonical spelling of every driver
+    # and track name (majority vote), so the processing pass can fold variants.
+    raw_drivers: List[Optional[str]] = []
+    raw_tracks: List[Optional[str]] = []
+    for filepath in SESSIONS_DIR.glob("*.json"):
+        if filepath.name in ["sessions-list.json", "tracks-list.json"]:
+            continue
+        try:
+            d = json.loads(filepath.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            continue
+        raw_drivers.append(d.get("driver"))
+        td = d.get("track")
+        raw_tracks.append(td.get("name") if isinstance(td, dict) else td)
+    DRIVER_CANON.clear(); DRIVER_CANON.update(build_canonical_map(raw_drivers))
+    TRACK_CANON.clear(); TRACK_CANON.update(build_canonical_map(raw_tracks))
+    folded = {k: v for k, v in {**DRIVER_CANON, **TRACK_CANON}.items() if k != v}
+    if folded:
+        print(f"  [canonical] folded {len(folded)} name variant(s): " +
+              ", ".join(f"{k!r}->{v!r}" for k, v in folded.items()))
 
     all_sessions_summary: List[Dict[str, Any]] = []
     tracks_aggregation: Dict[str, Any] = {}
