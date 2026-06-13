@@ -53,7 +53,7 @@
       color: var(--text);
       min-height: 100vh;
       overflow-x: hidden;
-      padding: 0 20px 60px;
+      padding: 52px 20px 60px;
     }
 
     /* Noise overlay */
@@ -1041,9 +1041,25 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="css/site.min.css">
 </head>
 
 <body>
+
+  <nav class="header-nav" aria-label="Site navigation">
+    <a href="index.html" class="nav-brand">HCH</a>
+    <button class="nav-hamburger" aria-label="Toggle navigation" aria-expanded="false">
+      <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true"><rect width="18" height="2" rx="1" fill="currentColor"/><rect y="6" width="18" height="2" rx="1" fill="currentColor"/><rect y="12" width="18" height="2" rx="1" fill="currentColor"/></svg>
+    </button>
+    <a href="index.html" class="nav-pill">Hub</a>
+    <a href="sessions.html" class="nav-pill active">Sessions</a>
+    <a href="map.html" class="nav-pill">Map</a>
+    <a href="fastest-lap-projection.html" class="nav-pill">Fastest Lap</a>
+    <a href="championship.html" class="nav-pill">Championship</a>
+    <a href="brake.html" class="nav-pill">Brake Detect</a>
+    <a href="progress.html" class="nav-pill">Progress</a>
+  </nav>
+
   <div class="page-wrapper">
 
     <!-- HEADER -->
@@ -1052,16 +1068,6 @@
       <div class="header-eyebrow">🏁 Helmet Cam Heroes Racing</div>
       <h1>Karting <span>Telemetry</span></h1>
       <div class="header-sub">Track your performance across all sessions</div>
-
-      <nav class="header-nav" aria-label="Site navigation">
-        <a href="index.html"                   class="nav-pill">Hub</a>
-        <a href="sessions.html"                class="nav-pill active">Sessions</a>
-        <a href="map.html"                     class="nav-pill">Map</a>
-        <a href="fastest-lap-projection.html"  class="nav-pill">Fastest Lap</a>
-        <a href="championship.html"            class="nav-pill">Championship</a>
-        <a href="brake.html"                   class="nav-pill">Brake Detect</a>
-        <a href="progress.html"                class="nav-pill">Progress</a>
-      </nav>
     </div>
 
     <!-- STATS STRIP -->
@@ -1197,6 +1203,7 @@
   </div>
 
   <script src="js/index.js"></script>
+  <script src="js/nav.js"></script>
 </body>
 
 </html>

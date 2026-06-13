@@ -342,9 +342,31 @@ h3 {
   align-items: center;
 }
 
-/* Ensure header navigation floats above hero/title elements */
+/* ─── Canonical fixed top navigation (shared by every page) ─── */
 .header-nav {
-  z-index: 20;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 24px;
+  margin: 0;
+  background: rgba(0,0,0,0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: none;
+  border-bottom: 0.5px solid rgba(255,255,255,0.1);
+  z-index: 2000;
+  flex-wrap: wrap;
+}
+
+/* Pages opt into clearing the fixed nav with this helper on their first
+   scrolling content (full-viewport "app" pages manage their own offset). */
+.has-fixed-nav {
+  padding-top: 52px;
 }
 
 /* Place header nav into the header flow to avoid overlapping large hero titles */
