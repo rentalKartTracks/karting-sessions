@@ -234,6 +234,49 @@
     50%       { transform: rotate(45deg) translateY(5px); }
   }
 
+  /* ── MOST VISITED (personalized, from localStorage) ── */
+  .most-visited-section {
+    position: relative;
+    z-index: 1;
+    padding: 60px 20px 0;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .mv-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 24px;
+  }
+  .mv-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color .2s, background .2s, transform .2s;
+  }
+  .mv-chip:hover {
+    border-color: var(--gold);
+    background: rgba(232,200,74,.08);
+    transform: translateY(-2px);
+  }
+  .mv-icon { font-size: 20px; line-height: 1; }
+  .mv-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600; letter-spacing: 1px; text-transform: uppercase; font-size: 14px;
+  }
+  .mv-count {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 11px;
+    color: var(--muted); background: rgba(255,255,255,.06);
+    padding: 2px 8px; border-radius: 999px;
+  }
+
   /* ── NAV CARDS SECTION ── */
   .cards-section {
     position: relative;
@@ -778,7 +821,12 @@
 </div>
 
 <!-- ── CARDS ── -->
-<section class="cards-section" style="padding-top: 80px;">
+<section class="most-visited-section" id="most-visited-section" style="display:none;">
+  <div class="section-label">Most Visited</div>
+  <div class="mv-grid" id="mv-grid"></div>
+</section>
+
+<section class="cards-section" style="padding-top: 40px;">
   <div class="section-label">Choose Your Section</div>
 
   <div class="cards-grid">
@@ -1011,7 +1059,27 @@
     }
   }
   
-  document.addEventListener('DOMContentLoaded', loadHubStats);
+  // Personalized "Most Visited" row, ranked from localStorage page counts
+  // (recorded by nav.js). Shows the user's top pages, excluding the Hub itself.
+  function renderMostVisited() {
+    if (!window.HCHNav) return;
+    const visits = window.HCHNav.getVisits();
+    const current = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    const ranked = window.HCHNav.links
+      .filter(l => l.href.toLowerCase() !== current && (visits[l.href] || 0) > 0)
+      .sort((a, b) => (visits[b.href] || 0) - (visits[a.href] || 0))
+      .slice(0, 4);
+    if (!ranked.length) return; // nothing tracked yet — keep section hidden
+    document.getElementById('mv-grid').innerHTML = ranked.map(l => `
+      <a href="${l.href}" class="mv-chip">
+        <span class="mv-icon">${l.icon}</span>
+        <span class="mv-label">${l.label}</span>
+        <span class="mv-count">${visits[l.href]}×</span>
+      </a>`).join('');
+    document.getElementById('most-visited-section').style.display = 'block';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => { loadHubStats(); renderMostVisited(); });
 </script>
 <script src="js/nav.js"></script>
 </body>

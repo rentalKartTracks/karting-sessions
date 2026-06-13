@@ -4,22 +4,53 @@
   // page active by filename — so adding/renaming a page is a one-line change
   // here instead of an edit across every HTML file.
   var LINKS = [
-    ['index.html', 'Hub'],
-    ['sessions.html', 'Sessions'],
-    ['map.html', 'Map'],
-    ['fastest-lap-projection.html', 'Fastest Lap'],
-    ['championship.html', 'Championship'],
-    ['brake.html', 'Brake Detect'],
-    ['progress.html', 'Progress'],
+    { href: 'index.html', label: 'Hub', icon: '🏁' },
+    { href: 'sessions.html', label: 'Sessions', icon: '📊' },
+    { href: 'map.html', label: 'Map', icon: '🗺️' },
+    { href: 'fastest-lap-projection.html', label: 'Fastest Lap', icon: '⚡' },
+    { href: 'championship.html', label: 'Championship', icon: '🏆' },
+    { href: 'brake.html', label: 'Brake Detect', icon: '🛑' },
+    { href: 'progress.html', label: 'Progress', icon: '📈' },
   ];
+
+  // ── Usage tracking (per-browser, localStorage) ──────────────────────────
+  var VISITS_KEY = 'hch:pageVisits';
+  function getVisits() {
+    try { return JSON.parse(localStorage.getItem(VISITS_KEY) || '{}'); }
+    catch (e) { return {}; }
+  }
+  function recordVisit(page) {
+    try {
+      var v = getVisits();
+      v[page] = (v[page] || 0) + 1;
+      localStorage.setItem(VISITS_KEY, JSON.stringify(v));
+    } catch (e) {}
+  }
+
+  var current = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+  if (LINKS.some(function (l) { return l.href.toLowerCase() === current; })) recordVisit(current);
+
+  // Expose for the Hub's "Most Visited" row (single source of page metadata).
+  window.HCHNav = { links: LINKS, getVisits: getVisits };
 
   var nav = document.querySelector('.header-nav');
   if (!nav) return;
 
   // Render only if the page hasn't supplied its own pills (idempotent).
   if (!nav.querySelector('.nav-pill')) {
-    var current = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
     if (!nav.getAttribute('aria-label')) nav.setAttribute('aria-label', 'Site navigation');
+
+    // Order: Hub always pinned first; the rest sorted by visit count (desc),
+    // with the original order as a stable tiebreak so the bar only re-ranks
+    // gradually rather than reshuffling on every click.
+    var visits = getVisits();
+    var rest = LINKS.slice(1).map(function (l, i) { return { l: l, i: i }; });
+    rest.sort(function (a, b) {
+      var d = (visits[b.l.href] || 0) - (visits[a.l.href] || 0);
+      return d !== 0 ? d : a.i - b.i;
+    });
+    var ordered = [LINKS[0]].concat(rest.map(function (x) { return x.l; }));
+
     var html =
       '<a href="index.html" class="nav-brand">HCH</a>' +
       '<button class="nav-hamburger" aria-label="Toggle navigation" aria-expanded="false">' +
@@ -28,9 +59,9 @@
         '<rect y="6" width="18" height="2" rx="1" fill="currentColor"/>' +
         '<rect y="12" width="18" height="2" rx="1" fill="currentColor"/></svg>' +
       '</button>';
-    LINKS.forEach(function (l) {
-      var active = l[0].toLowerCase() === current ? ' active' : '';
-      html += '<a href="' + l[0] + '" class="nav-pill' + active + '">' + l[1] + '</a>';
+    ordered.forEach(function (l) {
+      var active = l.href.toLowerCase() === current ? ' active' : '';
+      html += '<a href="' + l.href + '" class="nav-pill' + active + '">' + l.label + '</a>';
     });
     nav.innerHTML = html;
   }
