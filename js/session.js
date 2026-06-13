@@ -1337,12 +1337,20 @@ function drawLineChart(mainLaps, compareLapsArray = [], currentVideoTime = null)
   // own lap timing, coloured to match its line, with a driver-initial badge on
   // top so it's obvious which line belongs to which video.
 
-  // Map a video time to an X position on the (lap-number) axis for one session.
-  function effectiveIndexFor(videoTime, laps, videoStartTime) {
-    if (!laps || laps.length === 0) return null;
+  // Per-lap start video-times derived from durations. The main session reuses
+  // the global lapStartTimes (computed once at load) so there is a single
+  // source of truth for lap detection; comparison sessions derive their own.
+  function lapStartsFromDurations(laps, videoStartTime) {
     const starts = [];
     let cum = videoStartTime;
     for (let i = 0; i < laps.length; i++) { starts.push(cum); cum += parseTime(laps[i].time); }
+    return starts;
+  }
+
+  // Map a video time to an X position on the (lap-number) axis for one session,
+  // given that session's per-lap start times.
+  function effectiveIndexFor(videoTime, laps, starts) {
+    if (!laps || laps.length === 0 || !starts || starts.length === 0) return null;
     let lapIdx = 0;
     for (let i = laps.length - 1; i >= 0; i--) {
       if (videoTime >= starts[i]) { lapIdx = i; break; }
@@ -1401,8 +1409,12 @@ function drawLineChart(mainLaps, compareLapsArray = [], currentVideoTime = null)
     mainVideoTime = mainPlayerForHead.getCurrentTime();
   }
   if (mainVideoTime !== null && mainVideoTime !== undefined && mainLaps.length > 0) {
-    const vst = parseTime((currentSessionData && currentSessionData.video_start_time) || "0:00");
-    const ei = effectiveIndexFor(mainVideoTime, mainLaps, vst);
+    // Reuse the global lapStartTimes (single source of truth); fall back to
+    // deriving from durations only if it isn't populated/in sync yet.
+    const mainStarts = (lapStartTimes && lapStartTimes.length === mainLaps.length)
+      ? lapStartTimes.map(l => l.videoTime)
+      : lapStartsFromDurations(mainLaps, parseTime((currentSessionData && currentSessionData.video_start_time) || "0:00"));
+    const ei = effectiveIndexFor(mainVideoTime, mainLaps, mainStarts);
     if (ei !== null) {
       playheads.push({ ei, color: '#ff5252', label: currentSessionData ? currentSessionData.driver : '' });
     }
@@ -1412,8 +1424,8 @@ function drawLineChart(mainLaps, compareLapsArray = [], currentVideoTime = null)
     if (!player || typeof player.getCurrentTime !== 'function') return;
     const laps = comparisonDatasets[index];
     if (!laps || laps.length === 0) return;
-    const vst = parseTime(session.video_start_time || "0:00");
-    const ei = effectiveIndexFor(player.getCurrentTime(), laps, vst);
+    const starts = lapStartsFromDurations(laps, parseTime(session.video_start_time || "0:00"));
+    const ei = effectiveIndexFor(player.getCurrentTime(), laps, starts);
     if (ei === null) return;
     playheads.push({ ei, color: comparisonColors[index % comparisonColors.length].line, label: session.driver });
   });
