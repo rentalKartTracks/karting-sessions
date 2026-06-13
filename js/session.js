@@ -1331,49 +1331,95 @@ function drawLineChart(mainLaps, compareLapsArray = [], currentVideoTime = null)
     ctx.font = 'bold 12px var(--font-family)';
     ctx.fillText(`Best: ${formatTime(overallFastest)}`, padding + 8, baselineY - 8);
   }
-  // Draw current lap marker / Playhead
-  if (currentVideoTime !== null && lapStartTimes.length > 0) {
-    // Find percentage through total laps
-    // We need to map time to X position.
-    // This is tricky because the x-axis is "Lap Number", not time.
-    // So we need to calculate: (CurrentLapIndex) + (ProgressWithinLap)
+  // ===== Playheads — one independent line per video =====
+  // Each driver finishes laps at a different pace, so a single shared playhead
+  // is misleading. We draw one playhead per video, mapped through THAT session's
+  // own lap timing, coloured to match its line, with a driver-initial badge on
+  // top so it's obvious which line belongs to which video.
 
-    const currentLapNum = getCurrentLapNumber(currentVideoTime);
-    const currentLapIdx = currentLapNum - 1;
-
-    const currentLapData = mainLaps[currentLapIdx];
-
-    let progressWithinLap = 0;
-    if (currentLapData) {
-      const lapStartTime = lapStartTimes.find(l => l.lapNumber === currentLapNum)?.videoTime || 0;
-      const timeInLap = currentVideoTime - lapStartTime;
-      const lapDuration = parseTime(currentLapData.time);
-      if (lapDuration > 0) {
-        progressWithinLap = timeInLap / lapDuration;
-        // Clamp to 0-1
-        progressWithinLap = Math.max(0, Math.min(1, progressWithinLap));
-      }
+  // Map a video time to an X position on the (lap-number) axis for one session.
+  function effectiveIndexFor(videoTime, laps, videoStartTime) {
+    if (!laps || laps.length === 0) return null;
+    const starts = [];
+    let cum = videoStartTime;
+    for (let i = 0; i < laps.length; i++) { starts.push(cum); cum += parseTime(laps[i].time); }
+    let lapIdx = 0;
+    for (let i = laps.length - 1; i >= 0; i--) {
+      if (videoTime >= starts[i]) { lapIdx = i; break; }
     }
+    const lapDur = parseTime(laps[lapIdx].time);
+    let prog = lapDur > 0 ? (videoTime - starts[lapIdx]) / lapDur : 0;
+    prog = Math.max(0, Math.min(1, prog));
+    return lapIdx + prog;
+  }
 
-    const effectiveIndex = currentLapIdx + progressWithinLap;
-    const xPos = padding + (chartWidth / (maxLapsCount - 1 || 1)) * effectiveIndex;
+  function initialsOf(name) {
+    return (name || '?').trim().split(/\s+/).map(w => w[0] || '').join('').slice(0, 2).toUpperCase() || '?';
+  }
 
-    // Draw Playhead Line
-    ctx.strokeStyle = '#fff';
+  function drawPlayhead(effIndex, color, label) {
+    const xPos = padding + (chartWidth / (maxLapsCount - 1 || 1)) * effIndex;
+    ctx.save();
+    ctx.shadowBlur = 0;
+    // Vertical line
+    ctx.strokeStyle = color;
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(xPos, padding);
     ctx.lineTo(xPos, rect.height - padding);
     ctx.stroke();
-
-    // Draw Playhead Handle
-    ctx.fillStyle = '#fff';
+    // Bottom handle
+    ctx.fillStyle = color;
     ctx.beginPath();
-    ctx.arc(xPos, padding, 5, 0, Math.PI * 2);
-    ctx.moveTo(xPos, rect.height - padding);
     ctx.arc(xPos, rect.height - padding, 4, 0, Math.PI * 2);
     ctx.fill();
+    // Top driver badge (coloured circle + initials)
+    const r = 9;
+    const by = padding - r - 1;
+    ctx.beginPath();
+    ctx.arc(xPos, by, r, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.55)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 9px var(--font-family)';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(initialsOf(label), xPos, by);
+    ctx.restore();
+  }
 
+  // Collect a playhead for the main session and every comparison session that
+  // has a live video player.
+  const playheads = [];
+  let mainVideoTime = currentVideoTime;
+  const mainPlayerForHead = videoPlayers[sessionId];
+  if ((mainVideoTime === null || mainVideoTime === undefined) &&
+      mainPlayerForHead && typeof mainPlayerForHead.getCurrentTime === 'function') {
+    mainVideoTime = mainPlayerForHead.getCurrentTime();
+  }
+  if (mainVideoTime !== null && mainVideoTime !== undefined && mainLaps.length > 0) {
+    const vst = parseTime((currentSessionData && currentSessionData.video_start_time) || "0:00");
+    const ei = effectiveIndexFor(mainVideoTime, mainLaps, vst);
+    if (ei !== null) {
+      playheads.push({ ei, color: '#ff5252', label: currentSessionData ? currentSessionData.driver : '' });
+    }
+  }
+  comparisonSessions.forEach((session, index) => {
+    const player = videoPlayers[session.id];
+    if (!player || typeof player.getCurrentTime !== 'function') return;
+    const laps = comparisonDatasets[index];
+    if (!laps || laps.length === 0) return;
+    const vst = parseTime(session.video_start_time || "0:00");
+    const ei = effectiveIndexFor(player.getCurrentTime(), laps, vst);
+    if (ei === null) return;
+    playheads.push({ ei, color: comparisonColors[index % comparisonColors.length].line, label: session.driver });
+  });
+
+  if (playheads.length > 0) {
+    playheads.forEach(p => drawPlayhead(p.ei, p.color, p.label));
   } else if (currentLapMarker.lapNumber > 0 && currentLapMarker.lapNumber <= mainLaps.length) {
     // Fallback to old lap marker if no time provided
     const currentIndex = currentLapMarker.lapNumber - 1;
