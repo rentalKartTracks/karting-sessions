@@ -418,7 +418,7 @@
 <!-- TOPBAR -->
 <div class="topbar">
   <div class="topbar-title">Tracks Map</div>
-  <div class="topbar-tag">4 Venues</div>
+  <div class="topbar-tag" id="venue-count">Venues</div>
 </div>
 
 <div class="main">
@@ -489,9 +489,12 @@ fetch(`sessions/tracks-list.json?t=${Date.now()}`)
   .then(data => {
     tracks = data;
     
-    // Update sidebar count
+    // Update sidebar count + topbar tag (only count tracks we can place)
+    const placed = tracks.filter(t => !(t.lat === 0 && t.lng === 0)).length;
     const countEl = document.querySelector('.sidebar-count');
-    if (countEl) countEl.innerHTML = `${tracks.length} <span>tracks</span>`;
+    if (countEl) countEl.innerHTML = `${placed} <span>tracks</span>`;
+    const venueEl = document.getElementById('venue-count');
+    if (venueEl) venueEl.textContent = `${placed} Venues`;
 
     tracks.forEach(t => {
       // Don't draw tracks missing GPS coordinates

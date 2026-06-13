@@ -64,6 +64,123 @@ STATIC_TRACKS = {
         "color": "#4a4ae8",
         "note": "Major Polish venue",
         "outdoor": False
+    },
+    "Sporta komplekss 333": {
+        "id": "sporta_komplekss_333",
+        "lat": 56.9501887,
+        "lng": 24.4123719,
+        "mapsLink": "https://goo.gl/maps/kZR3mou2NyC9NFx26",
+        "color": "#4ae8a0",
+        "note": "Outdoor circuit · Latvia",
+        "outdoor": True
+    },
+    "Serbentų kartodromas": {
+        "id": "serbentu",
+        "lat": 55.9140472,
+        "lng": 23.3348808,
+        "mapsLink": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88",
+        "color": "#4adee8",
+        "note": "Outdoor circuit · Šiauliai",
+        "outdoor": True
+    },
+    "Balčiūnų": {
+        "id": "balciunu",
+        "lat": 55.8984413,
+        "lng": 23.3544845,
+        "mapsLink": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6",
+        "color": "#e84ac8",
+        "note": "Outdoor circuit · Šiauliai",
+        "outdoor": True
+    },
+    "Anykščių kartodromas": {
+        "id": "anyksciu",
+        "lat": 55.518791,
+        "lng": 25.069384,
+        "mapsLink": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8",
+        "color": "#8ce84a",
+        "note": "Outdoor circuit · Anykščiai",
+        "outdoor": True
+    },
+    "Smalininkų kartodromas": {
+        "id": "smalininku",
+        "lat": 55.0787157,
+        "lng": 22.5838659,
+        "mapsLink": "https://maps.app.goo.gl/959ZMAV6acyt6uEr8",
+        "color": "#e8a84a",
+        "note": "Outdoor circuit · Smalininkai",
+        "outdoor": True
+    },
+    "E1GOKART Gdańsk": {
+        "id": "e1gokart_gdansk",
+        "lat": 54.3683641,
+        "lng": 18.4725776,
+        "mapsLink": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8",
+        "color": "#4a8ce8",
+        "note": "Indoor circuit · Gdańsk",
+        "outdoor": False
+    },
+    "Tor Półwysep": {
+        "id": "tor_polwysep",
+        "lat": 54.7891707,
+        "lng": 18.4248715,
+        "mapsLink": "https://maps.app.goo.gl/rAMgznAK6mQx8Nwf6",
+        "color": "#b84ae8",
+        "note": "Outdoor circuit · Władysławowo",
+        "outdoor": True
+    },
+    "KartCenter Sopot": {
+        "id": "kartcenter_sopot",
+        "lat": 54.4339595,
+        "lng": 18.5635584,
+        "mapsLink": "https://maps.app.goo.gl/AXFPcDj5CWT7rPX27",
+        "color": "#e8e84a",
+        "note": "Karting · Gdańsk area",
+        "outdoor": False
+    },
+    "KartCenter Gdańsk Gokarty": {
+        "id": "kartcenter_gdansk",
+        "lat": 54.352628,
+        "lng": 18.5928151,
+        "mapsLink": "https://maps.app.goo.gl/RUBF4Y86mvd37qu67",
+        "color": "#5ab0e8",
+        "note": "Karting · Gdańsk",
+        "outdoor": False
+    },
+    "Race Time": {
+        "id": "race_time",
+        "lat": 55.9084559,
+        "lng": 21.0999881,
+        "mapsLink": "https://maps.app.goo.gl/dRBrDVFfcDvgQaCo6",
+        "color": "#4ae8c8",
+        "note": "Outdoor circuit · Klaipėda",
+        "outdoor": True
+    },
+    "Rudskogen Motorsenter": {
+        "id": "rudskogen",
+        "lat": 59.3679798,
+        "lng": 11.2620216,
+        "mapsLink": "https://maps.app.goo.gl/BHE3Yt1iVqcHmGkv7",
+        "color": "#e85a5a",
+        "note": "Motorsport circuit · Norway",
+        "outdoor": True
+    },
+    "Karting Salou": {
+        "id": "karting_salou",
+        "lat": 41.092111,
+        "lng": 1.1296976,
+        "mapsLink": "https://maps.app.goo.gl/H4DpdF6T1XHRE6239",
+        "color": "#e89a4a",
+        "note": "Outdoor circuit · Spain",
+        "outdoor": True
+    },
+    "Awix Racing Arena": {
+        "id": "awix_racing_arena",
+        "lat": 53.0184783,
+        "lng": 18.5440845,
+        "mapsLink": "https://maps.app.goo.gl/ybcsyhCrN3D1E2XbA",
+        "color": "#9a4ae8",
+        "note": "Karting · Bydgoszcz",
+        "outdoor": False
     }
 }
 
@@ -306,7 +423,7 @@ def generate_sessions_list() -> None:
     # Convert sets to lists and remove internal sorting keys
     final_tracks_list = []
     for t_val in tracks_aggregation.values():
-        t_val["configs"] = list(t_val["configs"])
+        t_val["configs"] = sorted(t_val["configs"])
         if t_val["bestLap_s"] == float('inf'):
             t_val["bestLap_s"] = None
         else:
