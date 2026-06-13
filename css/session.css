@@ -121,7 +121,7 @@ button, a, input, select { -webkit-tap-highlight-color: transparent; }
   width: 100%;
   position: relative;
   z-index: 1;
-  padding-top: 56px;
+  padding-top: var(--nav-h, 56px);
 }
 
 /* ===== GLOBAL ERROR BANNER ===== */

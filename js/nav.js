@@ -1,6 +1,16 @@
 (function () {
   var nav = document.querySelector('.header-nav');
   if (!nav) return;
+
+  // Publish the live nav height so pages can offset content beneath the
+  // fixed bar regardless of how many rows the pills wrap onto.
+  function syncHeight() {
+    document.documentElement.style.setProperty('--nav-h', nav.offsetHeight + 'px');
+  }
+  syncHeight();
+  window.addEventListener('resize', syncHeight);
+  if (window.ResizeObserver) new ResizeObserver(syncHeight).observe(nav);
+
   var btn = nav.querySelector('.nav-hamburger');
   if (!btn) return;
 

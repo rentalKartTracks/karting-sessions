@@ -274,40 +274,10 @@ button,
   }
 }
 
-.header,
-.topbar {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 24px 24px;
-  background: rgba(28,28,30,0.88);
-  border: none;
-  border-bottom: 0.5px solid rgba(255,255,255,0.1);
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-}
-
-.header {
-  justify-content: space-between;
-}
-
-.hero,
-.page-hero {
-  position: relative;
-  padding: 64px 24px;
-  margin-bottom: 32px;
-  background: rgba(28,28,30,0.9);
-  border: 0.5px solid rgba(255,255,255,0.08);
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
+/* NOTE: generic .header/.topbar/.hero card styling intentionally lives in
+   each page's own CSS. The shared sheet only owns the fixed nav, design
+   tokens, and reusable .card/.panel/.box + buttons, so it never clobbers a
+   page's structural header/topbar/hero (which caused content overlap). */
 
 .topbar-title,
 .header-title,
@@ -363,10 +333,13 @@ h3 {
   flex-wrap: wrap;
 }
 
+/* Keep nav pills compact so the bar stays ~54px tall (the global 44px
+   touch-target min-height would otherwise make it 64px and overlap content).
+   On mobile the pills expand to full-width rows for easy tapping. */
 /* Pages opt into clearing the fixed nav with this helper on their first
    scrolling content (full-viewport "app" pages manage their own offset). */
 .has-fixed-nav {
-  padding-top: 52px;
+  padding-top: var(--nav-h, 64px);
 }
 
 /* Place header nav into the header flow to avoid overlapping large hero titles */
