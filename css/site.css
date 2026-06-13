@@ -1056,3 +1056,11 @@ body.remote-page .retry-btn:active {
     display: none !important;
   }
 }
+
+/* The native dropdown list ignores the select's translucent background and
+   renders white-on-white on Windows; force readable dark options. */
+select option,
+select optgroup {
+  background: #1C1C1E;
+  color: #fff;
+}
