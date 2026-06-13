@@ -833,7 +833,10 @@ button, a, input, select { -webkit-tap-highlight-color: transparent; }
   transition: all var(--transition-fast);
 }
 
-.legend-item:hover { transform: scale(1.05); border-color: var(--dim); }
+/* Use a colour/background highlight instead of transform: scale() — scaling a
+   flex item with gaps shifts its edges out from under the cursor near the
+   boundary, which toggles :hover on/off and makes the item flicker. */
+.legend-item:hover { background: var(--surface3); border-color: var(--dim); }
 
 .legend-color {
   width: 14px; height: 14px;
