@@ -514,7 +514,10 @@ const list = document.getElementById('tracks-list');
 let activeId = null;
 
 // ── Location centering (Geolocation API — free, no backend) ──────────────
-const LOC_KEY = 'hch:mapLocation';
+// We remember the user's LAST map view (center + zoom), not a fixed point,
+// so panning is respected on return and a saved spot never goes stale. The
+// "Near me" button always fetches a fresh fix.
+const VIEW_KEY = 'hch:mapView';
 let userMarker = null;
 
 const placedTracks = () => tracks.filter(t => !(t.lat === 0 && t.lng === 0));
@@ -542,9 +545,8 @@ function nearestTrack(lat, lng) {
 }
 
 // Drop a "you are here" marker and frame the user together with their
-// nearest track. Optionally remember the location for next visit.
-function showUserLocation(lat, lng, save) {
-  if (save) { try { localStorage.setItem(LOC_KEY, JSON.stringify({ lat, lng })); } catch (e) {} }
+// nearest track. The resulting view is persisted by the moveend handler.
+function showUserLocation(lat, lng) {
   if (userMarker) map.removeLayer(userMarker);
   const icon = L.divIcon({
     html: '<div class="user-loc-marker"></div>',
@@ -560,16 +562,26 @@ function showUserLocation(lat, lng, save) {
   }
 }
 
-// First view: remembered location if we have one, otherwise frame all tracks
+// Persist the current view so the next visit restores exactly where the user
+// left the map (handles panning — no snapping back to a stale location).
+function saveView() {
+  try {
+    const c = map.getCenter();
+    localStorage.setItem(VIEW_KEY, JSON.stringify({ lat: c.lat, lng: c.lng, zoom: map.getZoom() }));
+  } catch (e) {}
+}
+
+// First view: restore the last view if we have one, otherwise frame all tracks
 // (better than the fixed default — Spain/Norway venues were off-screen).
 function applyInitialView() {
-  let saved = null;
-  try { saved = JSON.parse(localStorage.getItem(LOC_KEY) || 'null'); } catch (e) {}
-  if (saved && typeof saved.lat === 'number' && typeof saved.lng === 'number') {
-    showUserLocation(saved.lat, saved.lng, false);
+  let v = null;
+  try { v = JSON.parse(localStorage.getItem(VIEW_KEY) || 'null'); } catch (e) {}
+  if (v && typeof v.lat === 'number' && typeof v.lng === 'number' && typeof v.zoom === 'number') {
+    map.setView([v.lat, v.lng], v.zoom);
   } else {
     fitAllTracks();
   }
+  map.on('moveend', saveView); // remember subsequent pans/zooms
 }
 
 const nearBtn = document.getElementById('near-me-btn');
@@ -581,14 +593,14 @@ if (nearBtn) {
     navigator.geolocation.getCurrentPosition(
       pos => {
         nearBtn.disabled = false; nearBtn.textContent = '📍 Near me';
-        showUserLocation(pos.coords.latitude, pos.coords.longitude, true);
+        showUserLocation(pos.coords.latitude, pos.coords.longitude);
       },
       err => {
         nearBtn.disabled = false;
         nearBtn.textContent = err.code === 1 ? '📍 Denied' : '📍 Unavailable';
         setTimeout(() => { nearBtn.textContent = '📍 Near me'; }, 2200);
       },
-      { enableHighAccuracy: false, timeout: 8000, maximumAge: 600000 }
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
     );
   });
 }
