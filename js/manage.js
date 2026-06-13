@@ -27,6 +27,29 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('session_date').valueAsDate = new Date();
             sessionIdDisplay.textContent = sessionId;
         }
+
+        populateDatalists();
+    }
+
+    // Fill the form's <datalist> autocompletes with existing names so they're
+    // picked, not retyped — preventing spelling variants ("Ignas M" vs
+    // "Ignas M.") at the source.
+    async function populateDatalists() {
+        try {
+            const res = await fetch('sessions/sessions-list.json', { cache: 'no-cache' });
+            if (!res.ok) return;
+            const sessions = (await res.json()).sessions || [];
+            const fill = (elId, values) => {
+                const dl = document.getElementById(elId);
+                if (!dl) return;
+                dl.innerHTML = [...new Set(values.filter(Boolean))].sort()
+                    .map(v => `<option value="${String(v).replace(/"/g, '&quot;')}"></option>`).join('');
+            };
+            fill('driver-options', sessions.map(s => s.driver));
+            fill('track-options',  sessions.map(s => s.track?.name));
+            fill('config-options', sessions.map(s => s.track?.configuration));
+            fill('kart-options',   sessions.map(s => s.kart));
+        } catch {}
     }
 
     async function loadSession(id) {

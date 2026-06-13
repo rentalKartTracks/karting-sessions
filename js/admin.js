@@ -499,7 +499,24 @@ async function loadAllSessions() {
       (b.session_date || '').localeCompare(a.session_date || '')
     );
     renderSessionList();
+    populateDatalists();
   } catch {}
+}
+
+// Feed the form's <datalist> autocompletes with existing values so names are
+// picked, not retyped — preventing spelling variants like "Ignas M" vs
+// "Ignas M." at the source.
+function populateDatalists() {
+  const fill = (id, values) => {
+    const dl = document.getElementById(id);
+    if (!dl) return;
+    dl.innerHTML = [...new Set(values.filter(Boolean))].sort()
+      .map(v => `<option value="${String(v).replace(/"/g, '&quot;')}"></option>`).join('');
+  };
+  fill('driver-options', allSessions.map(s => s.driver));
+  fill('track-options',  allSessions.map(s => s.track?.name));
+  fill('config-options', allSessions.map(s => s.track?.configuration));
+  fill('kart-options',   allSessions.map(s => s.kart));
 }
 
 async function loadSessionById(id) {

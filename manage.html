@@ -37,7 +37,8 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="driver">Driver Name</label>
-                        <input type="text" id="driver" required placeholder="e.g. John Doe">
+                        <input type="text" id="driver" required placeholder="e.g. John Doe" list="driver-options" autocomplete="off">
+                        <datalist id="driver-options"></datalist>
                     </div>
                     <div class="form-group">
                         <label for="session_date">Date</label>
@@ -45,7 +46,8 @@
                     </div>
                     <div class="form-group">
                         <label for="kart">Engine (e.g. 9AG, 13AG)</label>
-                        <input type="text" id="kart" placeholder="e.g. 9AG or 13AG">
+                        <input type="text" id="kart" placeholder="e.g. 9AG or 13AG" list="kart-options" autocomplete="off">
+                        <datalist id="kart-options"></datalist>
                     </div>
                 </div>
             </div>
@@ -55,11 +57,13 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="track_name">Track Name</label>
-                        <input type="text" id="track_name" required placeholder="e.g. Speedway">
+                        <input type="text" id="track_name" required placeholder="e.g. Speedway" list="track-options" autocomplete="off">
+                        <datalist id="track-options"></datalist>
                     </div>
                     <div class="form-group">
                         <label for="track_config">Configuration</label>
-                        <input type="text" id="track_config" required placeholder="e.g. Configuration A">
+                        <input type="text" id="track_config" required placeholder="e.g. Configuration A" list="config-options" autocomplete="off">
+                        <datalist id="config-options"></datalist>
                     </div>
                     <div class="form-group full-width">
                         <label for="maps_link">Google Maps Link</label>
