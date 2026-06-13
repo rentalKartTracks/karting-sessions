@@ -2797,7 +2797,7 @@ function renderTrack(geom, rline, profile, params) {
   // Everything below is in WORLD coords (track + line + overlays scale with zoom).
   tctx.save();
   const v = customState.view;
-  tctx.setTransform(v.scale, 0, 0, v.scale, v.tx, v.ty);
+  tctx.setTransform(v.scale * DPR, 0, 0, v.scale * DPR, v.tx * DPR, v.ty * DPR);
 
   // track surface (filled band between left and right edges)
   drawTrackSurface(geom);
@@ -6123,7 +6123,7 @@ function renderBuilderEmpty(w, h) {
   // World-space content (background image, edges, scale, kerb strokes)
   tctx.save();
   const v = customState.view;
-  tctx.setTransform(v.scale, 0, 0, v.scale, v.tx, v.ty);
+  tctx.setTransform(v.scale * DPR, 0, 0, v.scale * DPR, v.tx * DPR, v.ty * DPR);
   if (customState.bgImage) drawBgImageFitted(w, h);
   drawBuilderEdge(customState.leftPoints, '#4ecdc4');
   drawBuilderEdge(customState.rightPoints, '#ff7b1c');
@@ -6257,7 +6257,7 @@ function drawScaleMarkers() {
       const mxW = (p1[0] + p2[0]) / 2, myW = (p1[1] + p2[1]) / 2;
       const [mxS, myS] = screenFromWorld(mxW, myW);
       tctx.save();
-      tctx.setTransform(1, 0, 0, 1, 0, 0);
+      tctx.setTransform(DPR, 0, 0, DPR, 0, 0);
       const tag = customState.scaleMeters.toFixed(2) + ' m' + (haveGps ? ' · GPS' : '');
       tctx.font = '600 11px "JetBrains Mono", monospace';
       const tw = tctx.measureText(tag).width + 14;
@@ -6311,7 +6311,7 @@ function renderBuilderOverlay() {
     const rect = trackCanvas.getBoundingClientRect();
     tctx.save();
     const v = customState.view;
-    tctx.setTransform(v.scale, 0, 0, v.scale, v.tx, v.ty);
+    tctx.setTransform(v.scale * DPR, 0, 0, v.scale * DPR, v.tx * DPR, v.ty * DPR);
     tctx.globalCompositeOperation = 'destination-over';
     tctx.globalAlpha = 0.40;
     drawBgImageFitted(rect.width, rect.height);
@@ -6323,7 +6323,7 @@ function renderBuilderOverlay() {
   // Edit / scale / kerb-stroke overlays all live in world coords
   tctx.save();
   const v = customState.view;
-  tctx.setTransform(v.scale, 0, 0, v.scale, v.tx, v.ty);
+  tctx.setTransform(v.scale * DPR, 0, 0, v.scale * DPR, v.tx * DPR, v.ty * DPR);
 
   // Edit handles + control polylines visible in edit mode
   if (customState.mode === 'edit') {
