@@ -58,6 +58,14 @@
   --text-dim: var(--muted-strong);
   --text-mute: var(--muted);
   --txt: var(--text);
+
+  /* Utility */
+  --radius-full: 9999px;
+
+  /* Fastest-lap-projection page vars */
+  --bg-grad-1: #050508;
+  --bg-grad-2: #0a0a12;
+  --cyan: #4EC9E1;
 }
 
 * {
