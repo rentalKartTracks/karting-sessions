@@ -38,7 +38,11 @@
       "header header header"
       "params canvas telemetry"
       "params trace telemetry";
-    height: 100vh;
+    /* Sit below the fixed nav and only fill the remaining viewport, so the
+       grid never overflows (which clipped the bottom of .params and made its
+       lower controls unreachable since body overflow is hidden). */
+    height: calc(100vh - var(--nav-h, 56px));
+    margin-top: var(--nav-h, 56px);
     gap: 1px;
     background: var(--line);
   }
@@ -69,7 +73,6 @@
     align-items: center;
     gap: 32px;
     border-bottom: 0.5px solid rgba(255,255,255,0.1);
-    margin-top: var(--nav-h, 56px);
   }
   .brand {
     display: flex;
