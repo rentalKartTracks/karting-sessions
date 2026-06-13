@@ -355,22 +355,26 @@
     gap: 6px;
     margin-bottom: 8px;
   }
-  .builder-row.two { grid-template-columns: 1fr 1fr; }
-  .builder-row.three { grid-template-columns: 1fr 1fr 1fr; }
-  .builder-row.four { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  /* Auto-fit so option groups collapse to fewer columns (and ultimately a
+     single column) when the ~276px params panel can't fit them side by side,
+     instead of overflowing and clipping the last button. */
+  .builder-row.two { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); }
+  .builder-row.three { grid-template-columns: repeat(auto-fit, minmax(82px, 1fr)); }
+  .builder-row.four { grid-template-columns: repeat(auto-fit, minmax(58px, 1fr)); }
 
   .mode-btn {
-    padding: 12px 14px;
+    padding: 12px 8px;
     background: var(--surface-2);
     border: 1px solid var(--line-bright);
     color: var(--text);
     font-family: var(--font-display);
-    font-size: 13px;
-    letter-spacing: 0.12em;
+    font-size: 12px;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     cursor: pointer;
     transition: all 0.15s;
-    min-width: 140px;
+    /* No rigid min-width — let grid cells shrink so rows fit the panel. */
+    min-width: 0;
     text-align: center;
     border-radius: 10px;
   }
