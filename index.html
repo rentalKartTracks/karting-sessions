@@ -532,6 +532,22 @@
   .card-champ   { --card-accent: var(--gold); }
   .card-telemetry { --card-accent: #4ab8e8; }
 
+  /* Card 5 — Fastest Lap */
+  .card-fastlap {
+    --card-accent: #4EC9E1;
+    --card-bg: linear-gradient(160deg, #08171c 0%, #05101a 50%, #050a12 100%);
+    --card-gradient: linear-gradient(180deg, rgba(7,7,13,0) 0%, rgba(7,7,13,.95) 100%);
+  }
+  .card-fastlap .card-bg {
+    background: linear-gradient(160deg, #0a1a20 0%, #050a12 100%);
+  }
+
+  /* Keep each card's tag in its own accent (shared .card-tag forces the
+     site blue otherwise). */
+  .cards-grid .card-tag {
+    color: var(--card-accent, var(--gold));
+  }
+
   /* Top-right corner label */
   .card-num {
     position: absolute;
@@ -906,6 +922,37 @@
         <p class="card-desc">Extract brake points from footage using computer vision and audio tracking, or sync exact GPS deceleration.</p>
         <div class="card-cta">
           Detect Braking
+          <span class="card-cta-arrow"></span>
+        </div>
+      </div>
+    </a>
+
+    <!-- Card 5 — Fastest Lap -->
+    <a href="fastest-lap-projection.html" class="card card-fastlap">
+      <div class="card-bg"></div>
+
+      <!-- Animated racing line being traced -->
+      <svg style="position:absolute;inset:0;width:100%;height:70%;top:12%;opacity:0.3;z-index:0;" viewBox="0 0 300 150" preserveAspectRatio="none">
+        <path d="M10,130 C60,120 70,40 120,40 C170,40 150,110 200,110 C250,110 260,30 295,25"
+          fill="none" stroke="#4EC9E1" stroke-width="2.5" stroke-linecap="round"
+          stroke-dasharray="600" stroke-dashoffset="600">
+          <animate attributeName="stroke-dashoffset" from="600" to="0" dur="3s" fill="freeze"/>
+        </path>
+        <circle r="4" fill="#4EC9E1">
+          <animateMotion dur="3s" repeatCount="indefinite"
+            path="M10,130 C60,120 70,40 120,40 C170,40 150,110 200,110 C250,110 260,30 295,25"/>
+        </circle>
+      </svg>
+
+      <span class="card-num">05</span>
+      <div class="card-border"></div>
+
+      <div class="card-content">
+        <div class="card-tag">Lap Simulation</div>
+        <h2 class="card-title">Fastest<br>Lap</h2>
+        <p class="card-desc">Build a track from a reference image and project the optimal racing line, speed map, and theoretical lap time.</p>
+        <div class="card-cta">
+          Open Builder
           <span class="card-cta-arrow"></span>
         </div>
       </div>
