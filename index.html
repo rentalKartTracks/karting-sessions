@@ -707,22 +707,27 @@
   }
 </style>
   <link rel="stylesheet" href="css/site.min.css">
+
+  <!-- Favicon / theme / PWA -->
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#07070d">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://helmetcamheroes.com/">
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Helmet Cam Heroes">
+  <meta property="og:title" content="Helmet Cam Heroes — Racing Hub">
+  <meta property="og:description" content="Helmet Cam Heroes — The central hub for kart racing telemetry, track maps, and championship standings.">
+  <meta property="og:url" content="https://helmetcamheroes.com/">
+  <meta property="og:image" content="https://helmetcamheroes.com/og-image.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Helmet Cam Heroes — Racing Hub">
+  <meta name="twitter:description" content="Helmet Cam Heroes — The central hub for kart racing telemetry, track maps, and championship standings.">
+  <meta name="twitter:image" content="https://helmetcamheroes.com/og-image.svg">
 </head>
 <body>
 
-<nav class="header-nav" aria-label="Site navigation">
-  <a href="index.html" class="nav-brand">HCH</a>
-  <button class="nav-hamburger" aria-label="Toggle navigation" aria-expanded="false">
-    <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true"><rect width="18" height="2" rx="1" fill="currentColor"/><rect y="6" width="18" height="2" rx="1" fill="currentColor"/><rect y="12" width="18" height="2" rx="1" fill="currentColor"/></svg>
-  </button>
-  <a href="index.html" class="nav-pill active">Hub</a>
-  <a href="sessions.html" class="nav-pill">Sessions</a>
-  <a href="map.html" class="nav-pill">Map</a>
-  <a href="fastest-lap-projection.html" class="nav-pill">Fastest Lap</a>
-  <a href="championship.html" class="nav-pill">Championship</a>
-  <a href="brake.html" class="nav-pill">Brake Detect</a>
-  <a href="progress.html" class="nav-pill">Progress</a>
-</nav>
+<nav class="header-nav" aria-label="Site navigation"></nav>
 
 <!-- ── HERO ── -->
 <section class="hero">
@@ -976,7 +981,7 @@
   async function loadHubStats() {
     try {
       // 1. Fetch sessions
-      const sessionsRes = await fetch(`sessions/sessions-list.json?t=${Date.now()}`);
+      const sessionsRes = await fetch('sessions/sessions-list.json', { cache: 'no-cache' });
       if (sessionsRes.ok) {
         const data = await sessionsRes.json();
         const sessions = data.sessions || [];
@@ -995,7 +1000,7 @@
       }
       
       // 2. Fetch championship meta
-      const champRes = await fetch(`championship-meta.json?t=${Date.now()}`);
+      const champRes = await fetch('championship-meta.json', { cache: 'no-cache' });
       if (champRes.ok) {
         const champData = await champRes.json();
         const activeSeasonRounds = champData.active_season?.rounds ?? '-';

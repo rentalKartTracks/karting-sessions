@@ -492,7 +492,7 @@ async function handleDelete() {
 // ── Sessions list ──────────────────────────────────────────────────────────
 async function loadAllSessions() {
   try {
-    const res = await fetch('sessions/sessions-list.json?_=' + Date.now());
+    const res = await fetch('sessions/sessions-list.json', { cache: 'no-cache' });
     if (!res.ok) return;
     const data = await res.json();
     allSessions = (data.sessions || []).sort((a, b) =>

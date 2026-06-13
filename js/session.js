@@ -1885,9 +1885,8 @@ async function compareSession() {
   }
 
   // Fetch all comparison sessions
-  const t = new Date().getTime();
   const fetchPromises = sessionIds.map(id =>
-    fetch(`sessions/${id}.json?t=${t}`)
+    fetch(`sessions/${id}.json`, { cache: 'no-cache' })
       .then(r => r.ok ? r.json() : Promise.reject(`Session ${id} not found`))
       .catch(err => ({ error: err }))
   );
@@ -2552,8 +2551,7 @@ function toggleQRPanel() {
 * Load sessions list for autocomplete
 */
 function loadSessionsList() {
-  const t = new Date().getTime();
-  fetch(`sessions/sessions-list.json?t=${t}`)
+  fetch('sessions/sessions-list.json', { cache: 'no-cache' })
     .then(r => r.json())
     .then(data => {
       allSessionsList = data.sessions || [];
@@ -2567,8 +2565,7 @@ function loadSessionsList() {
 * Load main session data
 */
 function loadSessionData() {
-  const t = new Date().getTime();
-  fetch(`sessions/${sessionId}.json?t=${t}`)
+  fetch(`sessions/${sessionId}.json`, { cache: 'no-cache' })
     .then(r => {
       if (!r.ok) throw new Error('Session not found');
       return r.json();

@@ -161,7 +161,7 @@ async function loadAllSessions() {
   showSkeletonLoading();
 
   try {
-    const listResponse = await fetch(`sessions/sessions-list.json?t=${Date.now()}`);
+    const listResponse = await fetch('sessions/sessions-list.json', { cache: 'no-cache' });
 
     if (!listResponse.ok) {
       throw new Error(`Failed to load sessions: ${listResponse.statusText}`);
