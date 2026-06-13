@@ -2706,6 +2706,70 @@ function renderSession(data) {
     lapDisplay = document.getElementById('current-lap-display'); if (lapDisplay) {
       lapDisplay.textContent = `Lap: 1 / ${validLaps.length}`;
     }
+
+  // Lap-by-lap list (click a lap to jump the video to that moment)
+  renderLapList(validLaps, data);
+}
+
+/**
+* Render the clickable lap-by-lap list. Each row seeks the embedded video to
+* the exact second that lap begins (video_start_time + sum of earlier laps,
+* already computed into lapStartTimes), and offers a YouTube deep-link.
+*/
+function renderLapList(validLaps, data) {
+  const wrap = document.getElementById('lap-list');
+  const hint = document.getElementById('lap-list-hint');
+  if (!wrap) return;
+
+  if (!validLaps || !validLaps.length) {
+    wrap.innerHTML = '<div class="lap-list-empty">No lap data.</div>';
+    if (hint) hint.textContent = '';
+    return;
+  }
+
+  const times = validLaps.map(l => parseTime(l.time));
+  const fastest = Math.min(...times.filter(t => t > 0));
+  const ytId = data && data.video_url ? extractYouTubeId(data.video_url) : null;
+  const startSecFor = n => {
+    const o = lapStartTimes.find(l => l.lapNumber === n);
+    return o ? Math.floor(o.videoTime) : null;
+  };
+
+  if (hint) hint.textContent = ytId ? 'Click a lap to jump the video there' : 'No video for this session';
+
+  const rows = validLaps.map((lap, i) => {
+    const n = i + 1;                 // sequential position (matches chart + seekToLap)
+    const t = times[i];
+    const isPB = t > 0 && t === fastest;
+    const delta = isPB ? 'PB' : (t > 0 ? `+${(t - fastest).toFixed(3)}` : '');
+    const vidSec = startSecFor(n);
+    const canWatch = ytId && vidSec != null;
+    const yt = canWatch
+      ? `<a class="lap-yt" href="https://youtu.be/${ytId}?t=${vidSec}" target="_blank" rel="noopener" title="Open on YouTube at this lap" onclick="event.stopPropagation()">↗</a>`
+      : '';
+    return `<button type="button" class="lap-row${isPB ? ' pb' : ''}" role="listitem"
+        ${canWatch ? `onclick="watchLap(${n})"` : 'disabled'}
+        title="${canWatch ? 'Jump the video to this lap' : 'No video available'}">
+        <span class="lap-num">Lap ${n}</span>
+        <span class="lap-time">${(lap.time || '').trim()}</span>
+        <span class="lap-delta${isPB ? ' pb' : ''}">${delta}</span>
+        <span class="lap-watch">${canWatch ? '▶' : ''}</span>
+        ${yt}
+      </button>`;
+  }).join('');
+
+  wrap.innerHTML = rows;
+}
+
+/**
+* Seek the embedded video to a lap and scroll it into view.
+*/
+function watchLap(lapNumber) {
+  seekToLap(lapNumber);
+  const vs = document.getElementById('video-section');
+  if (vs && vs.style.display !== 'none') {
+    vs.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
 }
 
 // ===== EVENT HANDLERS =====
