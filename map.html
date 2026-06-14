@@ -31,10 +31,11 @@
     font-family: 'Barlow', sans-serif;
     color: var(--text);
     height: 100vh;
+    height: 100dvh; /* dvh tracks the mobile URL bar so the map isn't clipped */
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    padding-top: 52px;
+    padding-top: var(--nav-h, 56px); /* live height — nav.js keeps this in sync */
   }
 
   /* ── TOPBAR ── */
@@ -120,6 +121,12 @@
   }
   .near-me-btn:hover { background: rgba(232,200,74,.2); border-color: var(--gold); }
   .near-me-btn:disabled { opacity: .5; cursor: default; }
+
+  /* The shared sheet (loaded after this block) flips .header/.topbar to a
+     stacked column under 900px — which drops "Near me" onto a second row and
+     over the sidebar. This page's topbar is a single row, so keep it one: the
+     extra class outranks the shared rule without needing !important. */
+  .has-fixed-nav .topbar { flex-direction: row; align-items: center; }
 
   /* "You are here" marker */
   .user-loc-marker {
@@ -414,11 +421,62 @@
 
   /* Responsive */
   @media (max-width: 768px) {
-    .sidebar { width: 100%; height: 220px; border-right: none; border-bottom: 1px solid var(--line); }
+    /* Topbar: keep it to one tidy row. Drop the venue tag (redundant with the
+       sidebar count) and shrink the title so the title + "Near me" always fit. */
+    .topbar { padding: 0 14px; height: 50px; gap: 10px; }
+    .topbar-title { font-size: 19px; letter-spacing: 2px; }
+    .topbar-tag { display: none; }
+    .near-me-btn { padding: 6px 12px; font-size: 11px; }
+
     .main { flex-direction: column; }
-    .tracks-list { display: flex; flex-direction: row; overflow-x: auto; overflow-y: hidden; padding: 8px; gap: 4px; }
-    .track-card { min-width: 200px; margin-bottom: 0; }
-    .nav-pill { font-size: 9px; padding: 4px 8px; }
+
+    /* Sidebar becomes a compact horizontal strip so the map gets the room. */
+    .sidebar {
+      width: 100%;
+      height: auto;
+      flex-shrink: 0;
+      border-right: none;
+      border-bottom: 1px solid var(--line);
+    }
+    .sidebar-header {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      padding: 9px 14px;
+    }
+    .sidebar-count { font-size: 24px; }
+    .sidebar-count span { font-size: 12px; }
+
+    .tracks-list {
+      display: flex;
+      flex-direction: row;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 10px 14px;
+      gap: 8px;
+      scroll-snap-type: x proximity;
+      -webkit-overflow-scrolling: touch; /* momentum scroll on iOS */
+      overscroll-behavior-x: contain;    /* don't trigger page/back swipe */
+    }
+    .tracks-list::-webkit-scrollbar { height: 3px; }
+    .track-card {
+      min-width: 78vw;
+      max-width: 78vw;
+      margin-bottom: 0;
+      padding: 12px 14px;
+      scroll-snap-align: start;
+    }
+
+    /* Always leave a usefully large map below the strip. */
+    #map { flex: 1; min-height: 46vh; }
+
+    /* Roomier touch targets on the leaflet zoom buttons. */
+    .leaflet-touch .leaflet-bar a { width: 34px; height: 34px; line-height: 34px; }
+  }
+
+  @media (max-width: 380px) {
+    .topbar-title { font-size: 17px; letter-spacing: 1px; }
+    .track-card { min-width: 84vw; max-width: 84vw; }
   }
 </style>
   <link rel="stylesheet" href="css/site.min.css">
@@ -484,6 +542,16 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
 }).addTo(map);
 
 L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+// Repaint after orientation change / soft-keyboard resize — without this
+// Leaflet leaves grey gaps where tiles didn't lay out for the new size.
+let resizeT;
+const refreshMapSize = () => {
+  clearTimeout(resizeT);
+  resizeT = setTimeout(() => map.invalidateSize(), 150);
+};
+window.addEventListener('resize', refreshMapSize);
+window.addEventListener('orientationchange', refreshMapSize);
 
 const markers = {};
 const popupContent = (t) => `
