@@ -115,8 +115,11 @@ button, a, input, select { -webkit-tap-highlight-color: transparent; }
 }
 
 /* ===== LAYOUT ===== */
+/* Full-width page: use the whole viewport (body already adds a gutter via its
+   padding) so every section — header, stats, video, controls, chart — fills the
+   available space instead of being boxed into a narrow centered column. */
 .container {
-  max-width: 1400px;
+  max-width: none;
   margin: 0 auto;
   width: 100%;
   position: relative;
@@ -1478,7 +1481,6 @@ body.pc-mode .pc-only             { display: flex !important; }
 
 /* ===== RESPONSIVE ===== */
 @media (min-width: 1440px) {
-  .container { max-width: 1600px; }
   /* 6 equal columns: ~200px each, ~152px content after padding */
   .stats-grid { grid-template-columns: repeat(6, 1fr); }
   /* 1.05rem ≈ 16.8px — "00:43.790" (9 chars) × 0.6 × 16.8 ≈ 91px — fits 152px */
