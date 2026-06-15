@@ -439,22 +439,6 @@ button, a, input, select { -webkit-tap-highlight-color: transparent; }
 
 .video-grid.layout-main-side .video-container:first-child { grid-row: span 2; }
 
-/* Full-bleed compare: when more than one video is shown, break the grid (and the
-   surrounding toolbar + playback controls) out of the centered max-width
-   container and span (almost) the full viewport so the frames stay large
-   instead of being boxed into the middle on wide screens. The (50% - 50vw) trick
-   re-anchors the element to the viewport regardless of how the centered
-   container is positioned; the gutter keeps a small edge margin. */
-@media (min-width: 1024px) {
-  .video-grid:not(.single-video),
-  .video-section.compare-wide .video-toolbar,
-  .video-section.compare-wide .playback-controls {
-    width: calc(100vw - 2 * var(--spacing-lg));
-    margin-left: calc(50% - 50vw + var(--spacing-lg));
-    margin-right: calc(50% - 50vw + var(--spacing-lg));
-  }
-}
-
 @media (max-width: 768px) {
   .video-grid.layout-dual,
   .video-grid.layout-main-side,

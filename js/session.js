@@ -758,11 +758,6 @@ function renderVideoGrid() {
   // Update CSS class
   grid.className = `video-grid layout-${activeLayout} ${idsRendering.length === 1 ? 'single-video' : ''}`;
 
-  // Widen the whole video section (toolbar + controls) to match the full-bleed
-  // grid when more than one video is shown, so they don't look inset.
-  const section = document.getElementById('video-section');
-  if (section) section.classList.toggle('compare-wide', idsRendering.length > 1);
-
   updateVideoSelector();
   updateVideoSelectionUI();
   updateAudioState();
