@@ -115,13 +115,15 @@ button, a, input, select { -webkit-tap-highlight-color: transparent; }
 }
 
 /* ===== LAYOUT ===== */
-/* Full-width page: use the whole viewport (body already adds a gutter via its
-   padding) so every section — header, stats, video, controls, chart — fills the
-   available space instead of being boxed into a narrow centered column. */
-.container {
+/* Wide tool page: the session view is data-dense (dual-video compare, chart,
+   lap tables) so it should use far more width than a reading page. Capped at
+   1760px so ultra-wide monitors don't stretch the chart edge-to-edge.
+   Selector is `body .container` to outrank the shared site.css
+   `.container { width: min(1200px, …) }`, which loads after session.css. */
+body .container {
   max-width: none;
   margin: 0 auto;
-  width: 100%;
+  width: min(1760px, calc(100% - 40px));
   position: relative;
   z-index: 1;
   padding-top: var(--nav-h, 56px);
