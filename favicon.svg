@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Helmet Cam Heroes">
+  <rect width="64" height="64" rx="13" fill="#07070d"/>
+  <rect x="15.5" y="15.5" width="33" height="33" rx="3" fill="none" stroke="#e8c84a" stroke-width="1.5" opacity="0.5"/>
+  <g fill="#e8c84a">
+    <rect x="16" y="16" width="8" height="8"/>
+    <rect x="32" y="16" width="8" height="8"/>
+    <rect x="24" y="24" width="8" height="8"/>
+    <rect x="40" y="24" width="8" height="8"/>
+    <rect x="16" y="32" width="8" height="8"/>
+    <rect x="32" y="32" width="8" height="8"/>
+    <rect x="24" y="40" width="8" height="8"/>
+    <rect x="40" y="40" width="8" height="8"/>
+  </g>
+</svg>

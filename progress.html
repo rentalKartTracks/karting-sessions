@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progress — Helmet Cam Heroes</title>
+  <meta name="description" content="Track your lap time progression per circuit across all sessions.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #e8c84a;
+      --gold-dim: rgba(232,200,74,.15);
+      --red: #e84a4a;
+      --green: #4ae8a0;
+      --blue: #4ab8e8;
+      --bg: #07070d;
+      --surface: #0f0f1a;
+      --surface2: #14141f;
+      --line: #1c1c2a;
+      --dim: #333344;
+      --text: #ddddf0;
+      --muted: #666677;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+      --transition: 250ms cubic-bezier(0.4,0,0.2,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      font-family: 'Barlow', sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding: 52px 20px 60px;
+    }
+
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(232,200,74,.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232,200,74,.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridDrift 30s linear infinite;
+      pointer-events: none; z-index: 0;
+    }
+    @keyframes gridDrift { 0% { background-position:0 0; } 100% { background-position:60px 60px; } }
+
+    .page-wrapper { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; }
+
+    /* ── HEADER ── */
+    .header {
+      position: relative;
+      padding: 48px 40px 40px;
+      margin-bottom: 32px;
+      border-bottom: 1px solid var(--line);
+      text-align: center;
+    }
+    .header-glow {
+      position: absolute; top: -40px; left: 50%; transform: translateX(-50%);
+      width: min(600px, 100%); height: 200px;
+      background: radial-gradient(ellipse, rgba(232,200,74,.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700;
+      letter-spacing: 5px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px;
+    }
+    .header h1 {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(40px,8vw,80px); letter-spacing: 4px; line-height: 1; color: #fff;
+    }
+    .header h1 span { color: var(--gold); }
+    .header-sub {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 300;
+      letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-top: 10px;
+    }
+
+    .header-nav {
+      position: absolute; top: 20px; right: 24px;
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end;
+    }
+    .nav-pill {
+      background: rgba(255,255,255,.07); backdrop-filter: blur(8px);
+      color: var(--text); text-decoration: none; padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      transition: all var(--transition); border: 1px solid rgba(255,255,255,.12); white-space: nowrap;
+    }
+    .nav-pill:hover { background: rgba(232,200,74,.15); border-color: rgba(232,200,74,.4); color: var(--gold); transform: translateY(-2px); }
+    .nav-pill.active { background: var(--gold-dim); border-color: rgba(232,200,74,.4); color: var(--gold); }
+
+    /* ── CONTROLS ── */
+    .controls {
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: var(--radius-md); padding: 20px; margin-bottom: 28px;
+      display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+    }
+    .controls-label {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 10px; font-weight: 700;
+      letter-spacing: 3px; text-transform: uppercase; color: var(--muted);
+      white-space: nowrap;
+    }
+    .select-filter {
+      padding: 10px 14px; background: var(--bg); border: 1px solid var(--line);
+      color: var(--text); border-radius: var(--radius-sm);
+      font-family: 'Barlow', sans-serif; font-size: 13px; min-width: 180px;
+      transition: border-color var(--transition); cursor: pointer;
+    }
+    .select-filter:focus { outline: none; border-color: var(--gold); }
+
+    .toggle-group { display: flex; gap: 6px; flex-wrap: wrap; }
+    .toggle-btn {
+      padding: 8px 16px; background: var(--surface2); color: var(--muted);
+      border: 1px solid var(--line); border-radius: var(--radius-sm);
+      font-family: 'Barlow Condensed', sans-serif; font-size: 11px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer;
+      transition: all var(--transition);
+    }
+    .toggle-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .toggle-btn.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
+
+    /* ── SUMMARY STRIP ── */
+    /* Auto-fit card grid — wraps cleanly as cards are added or the viewport
+       narrows. The 1px gap over a --line background draws the separators, so
+       rows/columns stay divided no matter how the grid wraps. */
+    .summary-strip {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+      gap: 1px; margin-bottom: 28px; background: var(--line);
+      border: 1px solid var(--line); border-radius: var(--radius-md); overflow: hidden;
+    }
+    .stat-card {
+      background: var(--surface); padding: 18px 20px; text-align: center;
+      transition: background var(--transition);
+    }
+    .stat-card:hover { background: var(--surface2); }
+    .stat-value.blue { color: var(--blue); }
+    .stat-label {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 9px; font-weight: 600;
+      letter-spacing: 3px; text-transform: uppercase; color: var(--muted);
+      display: block; margin-bottom: 8px;
+    }
+    .stat-value {
+      font-family: 'Bebas Neue', cursive; font-size: clamp(24px,3.5vw,36px);
+      letter-spacing: 2px; color: var(--gold); line-height: 1; display: block;
+    }
+    .stat-value.green { color: var(--green); }
+    .stat-value.red { color: var(--red); }
+
+    /* ── CHART AREA ── */
+    .chart-section {
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: var(--radius-lg); padding: 28px; margin-bottom: 24px;
+    }
+    .chart-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+    }
+    .chart-title {
+      font-family: 'Bebas Neue', cursive; font-size: 28px; letter-spacing: 3px; color: #fff;
+    }
+    .chart-subtitle {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 11px;
+      letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-top: 4px;
+    }
+    .chart-legend { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .legend-line { width: 24px; height: 2px; flex-shrink: 0; }
+
+    canvas { display: block; width: 100%; }
+    #progress-chart { height: 340px; }
+
+    .no-data {
+      text-align: center; padding: 80px 20px; color: var(--muted);
+      font-family: 'Barlow Condensed', sans-serif; font-size: 15px;
+      letter-spacing: 2px; text-transform: uppercase;
+    }
+    .no-data .icon { font-size: 48px; opacity: .4; margin-bottom: 16px; }
+
+    /* ── SESSION TABLE ── */
+    .table-section {
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 24px;
+    }
+    .table-header {
+      padding: 20px 24px; border-bottom: 1px solid var(--line);
+      font-family: 'Bebas Neue', cursive; font-size: 22px; letter-spacing: 2px; color: #fff;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    thead tr { background: var(--surface2); }
+    th {
+      padding: 12px 16px; text-align: left;
+      font-family: 'Barlow Condensed', sans-serif; font-size: 9px; font-weight: 700;
+      letter-spacing: 3px; text-transform: uppercase; color: var(--muted);
+      border-bottom: 1px solid var(--line);
+    }
+    th.ar { text-align: right; }
+    td {
+      padding: 12px 16px; border-bottom: 1px solid var(--line);
+      font-size: 13px; color: var(--text);
+    }
+    td.ar { text-align: right; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--surface2); }
+    .td-lap { font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 700; }
+    .td-pb { color: var(--gold); }
+    .td-delta-pos { color: var(--red); }
+    .td-delta-neg { color: var(--green); }
+    .td-delta-zero { color: var(--muted); }
+    .td-weather { font-size: 11px; color: var(--muted); }
+    .pb-star { color: var(--gold); font-size: 14px; margin-left: 6px; }
+
+    .loading {
+      text-align: center; padding: 60px; color: var(--muted);
+      font-family: 'Barlow Condensed', sans-serif; font-size: 14px; letter-spacing: 2px;
+    }
+
+    @media (max-width: 768px) {
+      body { padding: 0 12px 60px; }
+      .header { padding: 52px 16px 32px; }
+      .header-nav { top: 14px; right: 14px; }
+      .nav-pill { font-size: 10px; padding: 5px 10px; }
+      .summary-strip { grid-template-columns: repeat(2,1fr); }
+      .controls { padding: 14px; }
+      .select-filter { min-width: 140px; }
+      th, td { padding: 10px 12px; }
+      #progress-chart { height: 260px; }
+      .stat-card { padding: 14px 12px; }
+    }
+  </style>
+  <link rel="stylesheet" href="css/site.min.css">
+
+  <!-- Favicon / theme / PWA -->
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#07070d">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://helmetcamheroes.com/progress.html">
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Helmet Cam Heroes">
+  <meta property="og:title" content="Progress — Helmet Cam Heroes">
+  <meta property="og:description" content="Track your lap time progression per circuit across all sessions.">
+  <meta property="og:url" content="https://helmetcamheroes.com/progress.html">
+  <meta property="og:image" content="https://helmetcamheroes.com/og-image.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Progress — Helmet Cam Heroes">
+  <meta name="twitter:description" content="Track your lap time progression per circuit across all sessions.">
+  <meta name="twitter:image" content="https://helmetcamheroes.com/og-image.svg">
+</head>
+<body class="has-fixed-nav">
+
+<nav class="header-nav" aria-label="Site navigation"></nav>
+
+<div class="page-wrapper">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-glow"></div>
+    <div class="header-eyebrow">🏁 Helmet Cam Heroes Racing</div>
+    <h1>Lap Time <span>Progress</span></h1>
+    <div class="header-sub">Personal best evolution per circuit</div>
+
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <span class="controls-label">Track</span>
+    <select id="track-select" class="select-filter">
+      <option value="">All Tracks</option>
+    </select>
+
+    <span class="controls-label">Config</span>
+    <select id="config-select" class="select-filter">
+      <option value="">All Configs</option>
+    </select>
+
+    <span class="controls-label">Driver</span>
+    <select id="driver-select" class="select-filter">
+      <option value="">All Drivers</option>
+    </select>
+
+    <span class="controls-label">View</span>
+    <div class="toggle-group">
+      <button class="toggle-btn active" data-mode="pb">PB Line</button>
+      <button class="toggle-btn" data-mode="all">All Sessions</button>
+      <button class="toggle-btn" data-mode="both">Both</button>
+    </div>
+  </div>
+
+  <!-- SUMMARY STRIP -->
+  <div class="summary-strip">
+    <div class="stat-card">
+      <span class="stat-label">Sessions Shown</span>
+      <span class="stat-value" id="stat-count">—</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Current PB</span>
+      <span class="stat-value" id="stat-pb">—</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Average Lap</span>
+      <span class="stat-value" id="stat-avg">—</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Consistency</span>
+      <span class="stat-value blue" id="stat-consistency">—</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Total Improvement</span>
+      <span class="stat-value" id="stat-improvement">—</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Latest vs PB</span>
+      <span class="stat-value" id="stat-lastgap">—</span>
+    </div>
+  </div>
+
+  <!-- CHART -->
+  <div class="chart-section">
+    <div class="chart-header">
+      <div>
+        <div class="chart-title" id="chart-title">Select a Track</div>
+        <div class="chart-subtitle" id="chart-subtitle">Fastest lap per session over time</div>
+      </div>
+      <div class="chart-legend" id="chart-legend"></div>
+    </div>
+    <div id="chart-wrap" style="position:relative;">
+      <canvas id="progress-chart"></canvas>
+    </div>
+  </div>
+
+  <!-- SESSION TABLE -->
+  <div class="table-section">
+    <div class="table-header">Session Log</div>
+    <div id="table-wrap">
+      <div class="loading">Loading sessions…</div>
+    </div>
+  </div>
+
+</div><!-- /page-wrapper -->
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────────
+let allSessions = [];
+let chartMode = 'pb'; // 'pb' | 'all' | 'both'
+
+// Per (driver+track+config) personal best, computed once from allSessions so
+// the table doesn't recompute a min over the whole dataset for every row.
+const groupPB = new Map();
+const pbKey = s => `${s.driver}|||${s.track}|||${s.config}`;
+
+const COLORS = [
+  '#e8c84a','#4ae8a0','#4ab8e8','#e84a4a','#a84ae8',
+  '#e87a4a','#4a4ae8','#e84aa0','#a0e84a'
+];
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', async () => {
+  try {
+    // Revalidate with the server (ETag) but allow a 304 so the ~73KB list
+    // isn't re-downloaded when it hasn't changed.
+    const res = await fetch('sessions/sessions-list.json', { cache: 'no-cache' });
+    if (!res.ok) throw new Error('Failed to load sessions');
+    const data = await res.json();
+    allSessions = (data.sessions || [])
+      .filter(s => s.fastest_lap_s && s.session_date)
+      .map(s => ({
+        id: s.id,
+        driver: s.driver || 'Unknown',
+        track: s.track?.name || 'N/A',
+        config: s.track?.configuration || 'N/A',
+        date: s.session_date,
+        fastest_s: s.fastest_lap_s,
+        fastest: s.fastest_lap,
+        kart: s.kart || '-',
+        weather: s.weather || null,
+      }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+
+    allSessions.forEach(s => {
+      const k = pbKey(s);
+      if (!groupPB.has(k) || s.fastest_s < groupPB.get(k)) groupPB.set(k, s.fastest_s);
+    });
+
+    populateSelects();
+    render();
+  } catch (e) {
+    document.getElementById('table-wrap').innerHTML =
+      `<div class="no-data"><div class="icon">⚠️</div>${e.message}</div>`;
+  }
+});
+
+// ── SELECTS ────────────────────────────────────────────────────────────────
+function populateSelects() {
+  const tracks  = [...new Set(allSessions.map(s => s.track))].sort();
+  const drivers = [...new Set(allSessions.map(s => s.driver))].sort();
+
+  const trackSel  = document.getElementById('track-select');
+  const driverSel = document.getElementById('driver-select');
+
+  tracks.forEach(t  => trackSel.appendChild(makeOpt(t)));
+  drivers.forEach(d => driverSel.appendChild(makeOpt(d)));
+
+  trackSel.addEventListener('change',  () => { updateConfigSelect(); render(); });
+  document.getElementById('config-select').addEventListener('change', render);
+  driverSel.addEventListener('change', render);
+
+  document.querySelectorAll('.toggle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      chartMode = btn.dataset.mode;
+      render();
+    });
+  });
+}
+
+function updateConfigSelect() {
+  const track  = document.getElementById('track-select').value;
+  const sel    = document.getElementById('config-select');
+  const prev   = sel.value;
+  sel.innerHTML = '<option value="">All Configs</option>';
+  const configs = [...new Set(
+    allSessions.filter(s => !track || s.track === track).map(s => s.config)
+  )].sort();
+  configs.forEach(c => sel.appendChild(makeOpt(c)));
+  if (configs.includes(prev)) sel.value = prev;
+}
+
+function makeOpt(val) {
+  const o = document.createElement('option');
+  o.value = o.textContent = val;
+  return o;
+}
+
+// ── FILTER ────────────────────────────────────────────────────────────────
+function getFiltered() {
+  const track  = document.getElementById('track-select').value;
+  const config = document.getElementById('config-select').value;
+  const driver = document.getElementById('driver-select').value;
+  return allSessions.filter(s =>
+    (!track  || s.track  === track)  &&
+    (!config || s.config === config) &&
+    (!driver || s.driver === driver)
+  );
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────
+function render() {
+  const track  = document.getElementById('track-select').value;
+  const config = document.getElementById('config-select').value;
+  const driver = document.getElementById('driver-select').value;
+
+  // Don't preload all tracks/drivers — require a track first.
+  if (!track) { showPrompt(); return; }
+
+  const sessions = getFiltered();
+
+  // Update chart title
+  document.getElementById('chart-title').textContent =
+    [track, config || '', driver || ''].filter(Boolean).join(' · ');
+
+  if (sessions.length === 0) {
+    resetStats('0');
+    document.getElementById('chart-legend').innerHTML = '';
+    drawEmptyChart();
+    renderTable([]);
+    return;
+  }
+
+  // Group by driver
+  const byDriver = new Map();
+  sessions.forEach(s => {
+    if (!byDriver.has(s.driver)) byDriver.set(s.driver, []);
+    byDriver.get(s.driver).push(s);
+  });
+
+  // Build PB series per driver (running minimum)
+  const pbSeries = new Map();
+  byDriver.forEach((slist, d) => {
+    let pb = Infinity;
+    pbSeries.set(d, slist.map(s => {
+      if (s.fastest_s < pb) pb = s.fastest_s;
+      return { ...s, pb_s: pb };
+    }));
+  });
+
+  // Summary stats over the filtered set.
+  const times = sessions.map(s => s.fastest_s);
+  const bestPB = Math.min(...times);
+  const mean = times.reduce((a, b) => a + b, 0) / times.length;
+  const firstSession = sessions[0];
+  const lastSession = sessions[sessions.length - 1];
+  const improvement = firstSession.fastest_s - bestPB;
+  const lastGap = lastSession.fastest_s - bestPB;
+
+  // Consistency = typical session-to-session spread *within* each driver+config
+  // group. Averaging across mixed configs (very different lap lengths) would
+  // otherwise inflate this into a meaningless number.
+  const groups = new Map();
+  sessions.forEach(s => {
+    const k = pbKey(s);
+    (groups.get(k) || groups.set(k, []).get(k)).push(s.fastest_s);
+  });
+  let spreadNum = 0, spreadDen = 0;
+  groups.forEach(arr => {
+    if (arr.length < 2) return;
+    const m = arr.reduce((a, b) => a + b, 0) / arr.length;
+    const sd = Math.sqrt(arr.reduce((a, t) => a + (t - m) ** 2, 0) / arr.length);
+    spreadNum += sd * arr.length; spreadDen += arr.length;
+  });
+  const consistency = spreadDen ? spreadNum / spreadDen : null;
+
+  document.getElementById('stat-count').textContent = sessions.length;
+  document.getElementById('stat-pb').textContent = formatTime(bestPB);
+  document.getElementById('stat-avg').textContent = formatTime(mean);
+  document.getElementById('stat-consistency').textContent =
+    consistency != null ? `±${consistency.toFixed(3)}s` : '—';
+
+  // Total improvement: lower is better, so a drop reads green.
+  setDeltaStat('stat-improvement', improvement, { reverse: true });
+  // Latest vs PB: 0 means the most recent session set/matched the PB.
+  setDeltaStat('stat-lastgap', -lastGap, { reverse: true, zeroLabel: 'On PB' });
+
+  drawChart(sessions, pbSeries);
+  renderTable(sessions);
+}
+
+// Paints a signed delta stat with sensible colouring. `value` is the raw
+// signed number; with reverse:true a positive value is "good" (green).
+function setDeltaStat(id, value, { reverse = false, zeroLabel = '—' } = {}) {
+  const el = document.getElementById(id);
+  if (Math.abs(value) < 0.001) {
+    el.textContent = zeroLabel;
+    el.className = 'stat-value' + (zeroLabel === '—' ? '' : ' green');
+    return;
+  }
+  const good = reverse ? value > 0 : value < 0;
+  const sign = value > 0 ? '−' : '+'; // a positive improvement shows as a time drop
+  el.textContent = `${sign}${Math.abs(value).toFixed(3)}s`;
+  el.className = 'stat-value ' + (good ? 'green' : 'red');
+}
+
+function resetStats(count = '—') {
+  ['stat-count','stat-pb','stat-avg','stat-consistency','stat-improvement','stat-lastgap']
+    .forEach(id => { const el = document.getElementById(id); el.textContent = '—'; el.className = 'stat-value' + (id === 'stat-consistency' ? ' blue' : ''); });
+  document.getElementById('stat-count').textContent = count;
+}
+
+// ── CHART ─────────────────────────────────────────────────────────────────
+function drawEmptyChart(msg = 'No sessions match the current filters') {
+  const canvas = document.getElementById('progress-chart');
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width  = rect.width  * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, rect.width, rect.height);
+  ctx.fillStyle = 'rgba(255,255,255,0.15)';
+  ctx.font = '14px Barlow, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(msg, rect.width / 2, rect.height / 2);
+}
+
+// Initial / no-track state. Avoids rendering every driver across every track
+// (incomparable axes + an O(n²) table) until the user narrows to a track.
+function showPrompt() {
+  resetStats('—');
+  document.getElementById('chart-legend').innerHTML = '';
+  document.getElementById('chart-title').textContent = 'Select a Track';
+  drawEmptyChart('Choose a track above to see lap-time progression');
+  document.getElementById('table-wrap').innerHTML =
+    '<div class="no-data"><div class="icon">🏁</div>Select a track to view its session log</div>';
+}
+
+function drawChart(sessions, pbSeries) {
+  const canvas = document.getElementById('progress-chart');
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width  = rect.width  * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, rect.width, rect.height);
+
+  const PAD = { top: 24, right: 24, bottom: 56, left: 72 };
+  const W = rect.width  - PAD.left - PAD.right;
+  const H = rect.height - PAD.top  - PAD.bottom;
+
+  // All times for scale
+  const showAll = (chartMode === 'all' || chartMode === 'both');
+  const showPB  = (chartMode === 'pb'  || chartMode === 'both');
+
+  const allTimes = [];
+  if (showAll) sessions.forEach(s => allTimes.push(s.fastest_s));
+  if (showPB)  [...pbSeries.values()].flat().forEach(s => allTimes.push(s.pb_s));
+  if (allTimes.length === 0) { drawEmptyChart(); return; }
+
+  const minT = Math.min(...allTimes);
+  const maxT = Math.max(...allTimes);
+  const rangeT = maxT - minT || 1;
+
+  // Date scale
+  const dates = sessions.map(s => s.date);
+  const minD = dates[0];
+  const maxD = dates[dates.length - 1];
+  const spanMs = (new Date(maxD) - new Date(minD)) || 1;
+
+  function xOf(date) {
+    return PAD.left + ((new Date(date) - new Date(minD)) / spanMs) * W;
+  }
+  function yOf(t) {
+    return PAD.top + H - ((t - minT) / rangeT) * H;
+  }
+
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 5; i++) {
+    const y = PAD.top + (H / 5) * i;
+    ctx.beginPath(); ctx.moveTo(PAD.left, y); ctx.lineTo(PAD.left + W, y); ctx.stroke();
+  }
+
+  // Y-axis labels
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.font = `11px Barlow, sans-serif`;
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  for (let i = 0; i <= 5; i++) {
+    const y = PAD.top + (H / 5) * i;
+    const t = maxT - (rangeT / 5) * i;
+    ctx.fillText(formatTime(t), PAD.left - 8, y);
+  }
+
+  // X-axis labels — fewer on narrow charts so they don't overlap.
+  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  const maxLabels = Math.max(2, Math.min(6, Math.floor(W / 90)));
+  const labelDates = uniqueDateLabels(dates, maxLabels);
+  labelDates.forEach(d => {
+    const x = xOf(d);
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    ctx.fillText(formatDate(d), x, PAD.top + H + 10);
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x, PAD.top); ctx.lineTo(x, PAD.top + H); ctx.stroke();
+  });
+
+  const drivers = [...pbSeries.keys()];
+  const legendItems = [];
+  let trendShown = false;
+
+  drivers.forEach((driver, di) => {
+    const color = COLORS[di % COLORS.length];
+    const dSessions = pbSeries.get(driver);
+
+    // All-sessions dots
+    if (showAll) {
+      dSessions.forEach(s => {
+        const x = xOf(s.date), y = yOf(s.fastest_s);
+        ctx.fillStyle = color + '55';
+        ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = color + '88';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      });
+
+      // Rolling 3-session average — shows form trend through the noise.
+      if (dSessions.length >= 3) {
+        const win = 3;
+        ctx.strokeStyle = color + 'aa';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([5, 4]);
+        ctx.beginPath();
+        dSessions.forEach((s, i) => {
+          const from = Math.max(0, i - win + 1);
+          const slice = dSessions.slice(from, i + 1);
+          const avg = slice.reduce((a, x) => a + x.fastest_s, 0) / slice.length;
+          const x = xOf(s.date), y = yOf(avg);
+          i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+        ctx.setLineDash([]);
+        trendShown = true;
+      }
+    }
+
+    // PB line
+    if (showPB) {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2.5;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 6;
+      ctx.setLineDash([]);
+      ctx.beginPath();
+      dSessions.forEach((s, i) => {
+        const x = xOf(s.date), y = yOf(s.pb_s);
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // PB dots (only where PB actually improved)
+      dSessions.forEach((s, i) => {
+        const isPBMoment = i === 0 || s.pb_s < dSessions[i - 1].pb_s;
+        if (!isPBMoment) return;
+        const x = xOf(s.date), y = yOf(s.pb_s);
+        ctx.fillStyle = color;
+        ctx.beginPath(); ctx.arc(x, y, isPBMoment ? 6 : 4, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 1.5; ctx.stroke();
+
+        // Star label for new PB
+        ctx.fillStyle = color;
+        ctx.font = 'bold 10px Barlow, sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+        ctx.fillText(formatTime(s.pb_s), x, y - 8);
+      });
+    }
+
+    legendItems.push({ color, driver, showPB, showAll });
+  });
+
+  // Legend
+  const legendEl = document.getElementById('chart-legend');
+  legendEl.innerHTML = legendItems.map(l => `
+    <div class="legend-item">
+      <div class="legend-dot" style="background:${l.color};box-shadow:0 0 6px ${l.color}88;"></div>
+      <span>${l.driver}</span>
+    </div>
+    ${l.showAll && l.showPB ? `<div class="legend-item"><div class="legend-dot" style="background:${l.color}44;border:1px solid ${l.color};"></div><span>All laps</span></div>` : ''}
+  `).join('');
+  if (showPB && showAll) {
+    legendEl.innerHTML += `
+      <div class="legend-item">
+        <div style="width:24px;height:2px;background:rgba(255,255,255,0.4);flex-shrink:0;"></div>
+        <span>PB line</span>
+      </div>`;
+  }
+  if (trendShown) {
+    legendEl.innerHTML += `
+      <div class="legend-item">
+        <div style="width:24px;height:0;border-top:2px dashed rgba(255,255,255,0.5);flex-shrink:0;"></div>
+        <span>3-session avg</span>
+      </div>`;
+  }
+}
+
+// ── TABLE ─────────────────────────────────────────────────────────────────
+function renderTable(sessions) {
+  const wrap = document.getElementById('table-wrap');
+
+  if (sessions.length === 0) {
+    wrap.innerHTML = '<div class="no-data"><div class="icon">🏁</div>No sessions found</div>';
+    return;
+  }
+
+  const rows = [...sessions].reverse().map(s => {
+    // Delta vs this driver's PB for this track+config (precomputed once).
+    const overallPB = groupPB.get(pbKey(s)) ?? s.fastest_s;
+    const delta = s.fastest_s - overallPB;
+    const isPB = delta < 0.0005;
+    const deltaClass = isPB ? 'td-delta-zero' : delta > 0 ? 'td-delta-pos' : 'td-delta-neg';
+    const deltaStr  = isPB ? 'PB' : `+${delta.toFixed(3)}s`;
+
+    const weather = s.weather
+      ? `${s.weather.condition} · ${s.weather.temp_max}°/${s.weather.temp_min}°C · 💨${s.weather.wind_kmh}km/h${s.weather.rain_mm > 0 ? ` · 🌧${s.weather.rain_mm}mm` : ''}`
+      : '—';
+
+    return `<tr>
+      <td>${formatDate(s.date)}</td>
+      <td>${s.driver}</td>
+      <td>${s.track}</td>
+      <td>${s.config}</td>
+      <td>${s.kart}</td>
+      <td class="ar td-lap ${isPB ? 'td-pb' : ''}">${s.fastest}${isPB ? '<span class="pb-star">★</span>' : ''}</td>
+      <td class="ar ${deltaClass}">${deltaStr}</td>
+      <td class="td-weather">${weather}</td>
+    </tr>`;
+  }).join('');
+
+  wrap.innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th><th>Driver</th><th>Track</th><th>Config</th><th>Engine</th>
+          <th class="ar">Fastest Lap</th><th class="ar">vs PB</th><th>Weather</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────
+function formatTime(s) {
+  if (!s || !isFinite(s)) return '—';
+  const m = Math.floor(s / 60);
+  const sec = (s % 60).toFixed(3).padStart(6, '0');
+  return m > 0 ? `${m}:${sec}` : `${parseFloat(sec).toFixed(3)}s`;
+}
+
+function formatDate(d) {
+  if (!d) return '—';
+  return new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' });
+}
+
+function uniqueDateLabels(dates, maxCount) {
+  if (dates.length <= maxCount) return [...new Set(dates)];
+  const unique = [...new Set(dates)];
+  const step = Math.ceil(unique.length / maxCount);
+  return unique.filter((_, i) => i % step === 0 || i === unique.length - 1);
+}
+
+let resizeRAF = null;
+window.addEventListener('resize', () => {
+  if (!allSessions.length || resizeRAF) return;
+  resizeRAF = requestAnimationFrame(() => { resizeRAF = null; render(); });
+});
+</script>
+<script src="js/nav.js"></script>
+</body>
+</html>

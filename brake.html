@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Brake Detection</title><style>
+  /* html:root (not :root) so these win over css/site.min.css, which also
+     defines --brake on :root and loads after this inline block. */
+  html:root{
+    /* Detection recoloured to the site's blue accent (was red) so the page
+       matches the rest of the site. Lift stays teal to remain distinct from
+       the now-blue braking. */
+    --brake: var(--accent);
+    --brake-glow: var(--accent-bright);
+    --lift: #2de1c2;
+  }
   html,body{height:100%}
   body{
     background: #000;
@@ -11,7 +21,10 @@
     font-family:var(--mono);
     min-height:100vh;
   }
-  .wrap{max-width:1180px;margin:0 auto;position:relative;z-index:1;padding:80px 24px 24px;}
+  /* Tool/data page: give the video + brake timeline more room (a wider
+     timeline = finer resolution on brake-zone edges). Capped at 1500px so the
+     1fr controls column doesn't over-stretch on ultra-wide monitors. */
+  .wrap{max-width:1500px;margin:0 auto;position:relative;z-index:1;padding:80px 24px 24px;}
 
   header{
     display:flex;align-items:flex-start;justify-content:space-between;
@@ -22,14 +35,14 @@
   .brand .tag{
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     font-size:13px;font-weight:600;letter-spacing:0.2px;
-    color:#FF453A;display:block;text-transform:none;
+    color:var(--brake);display:block;text-transform:none;
   }
   .brand h1{
     font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;
     font-weight:700;font-size:clamp(32px,5vw,52px);
     letter-spacing:-1.5px;line-height:1;color:#fff;text-transform:none;
   }
-  .brand h1 b{color:#FF453A;}
+  .brand h1 b{color:var(--brake);}
   .status{
     font-size:13px;font-weight:500;letter-spacing:0.1px;
     color:rgba(255,255,255,0.5);text-transform:none;
@@ -37,7 +50,7 @@
   }
   .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);box-shadow:0 0 0 0 transparent}
   .dot.live{background:var(--brake);animation:pulse 1s infinite}
-  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,34,51,.6)}70%{box-shadow:0 0 0 9px rgba(255,34,51,0)}100%{box-shadow:0 0 0 0 rgba(255,34,51,0)}}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(10,132,255,.6)}70%{box-shadow:0 0 0 9px rgba(10,132,255,0)}100%{box-shadow:0 0 0 0 rgba(10,132,255,0)}}
 
   /* upload */
   .drop{
@@ -65,22 +78,22 @@
     transition:.08s;
   }
   .brake-light .led{
-    width:18px;height:18px;border-radius:50%;background:#3a1015;
+    width:18px;height:18px;border-radius:50%;background:#14202e;
     box-shadow:inset 0 0 6px #000;transition:.06s;
   }
-  .brake-light .lbl{font-family:var(--disp);font-weight:800;font-size:24px;letter-spacing:3px;color:#5a3035;transition:.06s}
-  .stage.braking .brake-light{background:rgba(40,0,4,.6);border-color:var(--brake)}
+  .brake-light .lbl{font-family:var(--disp);font-weight:800;font-size:24px;letter-spacing:3px;color:#3a4a5a;transition:.06s}
+  .stage.braking .brake-light{background:rgba(0,24,48,.6);border-color:var(--brake)}
   .stage.braking .brake-light .led{background:var(--brake);box-shadow:0 0 18px var(--brake-glow),0 0 40px var(--brake-glow)}
   .stage.braking .brake-light .lbl{color:#fff;text-shadow:0 0 14px var(--brake-glow)}
-  .stage.braking .overlay{box-shadow:inset 0 0 0 4px var(--brake), inset 0 0 60px rgba(255,34,51,.25)}
+  .stage.braking .overlay{box-shadow:inset 0 0 0 4px var(--brake), inset 0 0 60px rgba(10,132,255,.25)}
 
   /* lift state: teal accent, dimmer than braking */
-  .stage.lifting .brake-light{background:rgba(0,30,26,.55);border-color:var(--accent)}
-  .stage.lifting .brake-light .led{background:var(--accent);box-shadow:0 0 14px var(--accent)}
-  .stage.lifting .brake-light .lbl{color:#fff;text-shadow:0 0 12px var(--accent);font-size:0}
+  .stage.lifting .brake-light{background:rgba(0,30,26,.55);border-color:var(--lift)}
+  .stage.lifting .brake-light .led{background:var(--lift);box-shadow:0 0 14px var(--lift)}
+  .stage.lifting .brake-light .lbl{color:#fff;text-shadow:0 0 12px var(--lift);font-size:0}
   .stage.lifting .brake-light .lbl::after{content:"LIFT";font-size:24px}
-  .stage.lifting .overlay{box-shadow:inset 0 0 0 3px var(--accent), inset 0 0 50px rgba(45,225,194,.18)}
-  .stage.lifting .brake-bar .fill{height:55%;background:linear-gradient(0deg,var(--accent),#7df0dd)}
+  .stage.lifting .overlay{box-shadow:inset 0 0 0 3px var(--lift), inset 0 0 50px rgba(45,225,194,.18)}
+  .stage.lifting .brake-bar .fill{height:55%;background:linear-gradient(0deg,var(--lift),#7df0dd)}
 
   /* vertical brake bar */
   .brake-bar{
@@ -104,7 +117,7 @@
   .tl-head .t{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-weight:600;letter-spacing:0.2px;font-size:13px;color:rgba(255,255,255,0.4);text-transform:uppercase;}
   .tl-head .time{font-size:13px;color:var(--accent)}
   .timeline{position:relative;height:46px;background:var(--panel-2);border-radius:8px;cursor:pointer;overflow:hidden;border:1px solid var(--line)}
-  .timeline .seg{position:absolute;top:0;bottom:0;background:linear-gradient(180deg,var(--brake),#b3121f);opacity:.85;border-left:1px solid #ff8088;border-right:1px solid #ff8088}
+  .timeline .seg{position:absolute;top:0;bottom:0;background:linear-gradient(180deg,var(--brake),#0a63c0);opacity:.85;border-left:1px solid #7fb4ff;border-right:1px solid #7fb4ff}
   .timeline .ghost{position:absolute;top:0;bottom:0;background:rgba(255,176,32,.4);border-left:2px solid var(--amber)}
   .timeline .playhead{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--accent);box-shadow:0 0 8px var(--accent);z-index:3}
   .timeline .playhead::before{content:"";position:absolute;top:-2px;left:-4px;width:10px;height:10px;background:var(--accent);transform:rotate(45deg);border-radius:2px}
@@ -139,7 +152,7 @@
   .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
   .stat{background:var(--panel-2);border:0.5px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px}
   .stat .n{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;font-weight:700;font-size:28px;letter-spacing:-0.5px;line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
-  .stat .n.red{color:#FF453A}
+  .stat .n.red{color:var(--brake)}
   .stat .l{font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-size:11px;font-weight:500;letter-spacing:0.2px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:6px}
 
   .pad{
@@ -148,7 +161,7 @@
     font-family:var(--disp);font-weight:800;letter-spacing:3px;font-size:20px;color:var(--muted);
     cursor:pointer;user-select:none;text-transform:uppercase;transition:.06s
   }
-  .pad.armed{color:#fff;border-color:var(--brake);background:#1a0d10}
+  .pad.armed{color:#fff;border-color:var(--brake);background:#0d1622}
   .pad.down{background:var(--brake);color:#fff;border-color:var(--brake-glow);box-shadow:inset 0 0 40px rgba(255,255,255,.25)}
   .pad small{display:block;font-family:var(--mono);font-weight:400;letter-spacing:1px;font-size:11px;text-transform:none;color:inherit;opacity:.7;margin-top:4px}
 
@@ -164,11 +177,11 @@
 
   .segrow .evtog{font-family:var(--disp);font-weight:700;letter-spacing:1px;font-size:11px;padding:4px 8px;border-radius:5px;cursor:pointer;border:1px solid transparent}
   .segrow .evtog.isbrake{background:var(--brake);color:#fff;border-color:var(--brake)}
-  .segrow .evtog.islift{background:transparent;color:var(--accent);border-color:var(--accent)}
-  .segrow.liftrow .idx{color:var(--accent)}
+  .segrow .evtog.islift{background:transparent;color:var(--lift);border-color:var(--lift)}
+  .segrow.liftrow .idx{color:var(--lift)}
 
   /* timeline: lift zones drawn teal/striped to distinguish from red braking */
-  .timeline .seg.lift{background:repeating-linear-gradient(45deg,#1f8f7e 0 6px,#15695d 6px 12px);border-color:var(--accent);opacity:.85}
+  .timeline .seg.lift{background:repeating-linear-gradient(45deg,#1f8f7e 0 6px,#15695d 6px 12px);border-color:var(--lift);opacity:.85}
 
   /* detect panel */
   .detect{margin-top:12px;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:12px}
@@ -228,21 +241,27 @@
   }
 </style>
   <link rel="stylesheet" href="css/site.min.css">
+
+  <!-- Favicon / theme / PWA -->
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#07070d">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://helmetcamheroes.com/brake.html">
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Helmet Cam Heroes">
+  <meta property="og:title" content="Brake Detection">
+  <meta property="og:description" content="Karting session telemetry: lap times, personal bests, track maps and championship standings.">
+  <meta property="og:url" content="https://helmetcamheroes.com/brake.html">
+  <meta property="og:image" content="https://helmetcamheroes.com/og-image.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Brake Detection">
+  <meta name="twitter:description" content="Karting session telemetry: lap times, personal bests, track maps and championship standings.">
+  <meta name="twitter:image" content="https://helmetcamheroes.com/og-image.svg">
 </head>
 <body>
 
-<nav class="header-nav">
-  <a href="index.html" class="nav-brand">HCH</a>
-  <button class="nav-hamburger" aria-label="Toggle navigation" aria-expanded="false">
-    <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true"><rect width="18" height="2" rx="1" fill="currentColor"/><rect y="6" width="18" height="2" rx="1" fill="currentColor"/><rect y="12" width="18" height="2" rx="1" fill="currentColor"/></svg>
-  </button>
-  <a href="index.html" class="nav-pill">Hub</a>
-  <a href="sessions.html" class="nav-pill">Sessions</a>
-  <a href="map.html" class="nav-pill">Map</a>
-  <a href="fastest-lap-projection.html" class="nav-pill">Fastest Lap</a>
-  <a href="championship.html" class="nav-pill">Championship</a>
-  <a href="brake.html" class="nav-pill active">Brake Detect</a>
-</nav>
+<nav class="header-nav" aria-label="Site navigation"></nav>
 
 <div class="wrap">
   <header>
@@ -1379,7 +1398,7 @@
       var r=document.createElementNS("http://www.w3.org/2000/svg","rect");
       r.setAttribute("x",x.toFixed(1)); r.setAttribute("y","0");
       r.setAttribute("width",w.toFixed(1)); r.setAttribute("height",H);
-      r.setAttribute("fill","rgba(255,34,51,0.22)"); r.setAttribute("stroke","rgba(255,34,51,0.6)"); r.setAttribute("stroke-width","0.5");
+      r.setAttribute("fill","rgba(10,132,255,0.22)"); r.setAttribute("stroke","rgba(10,132,255,0.6)"); r.setAttribute("stroke-width","0.5");
       waveZones.appendChild(r);
     });
   }

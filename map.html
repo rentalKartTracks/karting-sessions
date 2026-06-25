@@ -4,64 +4,51 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tracks Map — Helmet Cam Heroes</title>
-<meta name="description" content="Explore every driven circuit and configuration plotted on our interactive map. View distance and layouts for our championship venues."><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<meta name="description" content="Explore every driven circuit and configuration plotted on our interactive map. View distance and layouts for our championship venues.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,400&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
 <style>
+  :root {
+    --gold:   #e8c84a;
+    --green:  #4ae8a0;
+    --blue:   #4ab8e8;
+    --red:    #e84a4a;
+    --bg:     #07070d;
+    --surface: #0f0f1a;
+    --line:   #1c1c2a;
+    --dim:    #333344;
+    --muted:  #666677;
+    --text:   #ddddf0;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
+    background: var(--bg);
+    font-family: 'Barlow', sans-serif;
+    color: var(--text);
     height: 100vh;
+    height: 100dvh; /* dvh tracks the mobile URL bar so the map isn't clipped */
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    padding-top: 56px;
+    padding-top: var(--nav-h, 56px); /* live height — nav.js keeps this in sync */
   }
 
   /* ── TOPBAR ── */
   .topbar {
-    background: rgba(28,28,30,0.95);
-    border-bottom: 0.5px solid rgba(255,255,255,0.1);
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
     padding: 0 24px;
-    min-height: 52px;
+    height: 56px;
     display: flex;
     align-items: center;
     gap: 20px;
     flex-shrink: 0;
-    z-index: 100;
-  }
-  .topbar-brand {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    min-width: 0;
-  }
-  .topbar-title {
-    font-family: 'Bebas Neue', cursive;
-    font-size: 22px;
-    letter-spacing: 3px;
-    color: #fff;
-    flex: 0 1 auto;
-    min-width: 0;
-    white-space: nowrap;
-  }
-  .topbar-tag {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--green);
-    background: rgba(74,232,160,.1);
-    border: 1px solid rgba(74,232,160,.2);
-    padding: 4px 10px;
-    border-radius: 3px;
-    flex: 0 0 auto;
-    white-space: nowrap;
-  }
-  .header-nav {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    align-items: center;
+    z-index: 1000;
   }
 
   .back-btn {
@@ -90,28 +77,26 @@
   }
 
   .topbar-title {
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-    font-size: 17px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 22px;
+    letter-spacing: 3px;
     color: #fff;
     flex: 1;
   }
-  .header-nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 3px;
-    padding: 10px 24px;
-    background: rgba(0,0,0,0.72);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 0.5px solid rgba(255,255,255,0.1);
-    z-index: 2000;
-    flex-wrap: wrap;
+  .header-nav { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+  .nav-pill {
+    background: rgba(255,255,255,.06); backdrop-filter: blur(8px);
+    color: var(--muted); text-decoration: none; padding: 5px 12px;
+    border-radius: 6px; font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; transition: all .2s;
+    border: 1px solid var(--line); white-space: nowrap;
   }
+  .nav-pill:hover {
+    background: rgba(232,200,74,.15); border-color: rgba(232,200,74,.4);
+    color: var(--gold); transform: translateY(-2px);
+  }
+
   .topbar-tag {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 9px;
@@ -123,6 +108,36 @@
     border: 1px solid rgba(74,232,160,.2);
     padding: 4px 10px;
     border-radius: 3px;
+  }
+
+  .near-me-btn {
+    margin-left: auto;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--gold); background: rgba(232,200,74,.1);
+    border: 1px solid rgba(232,200,74,.3);
+    padding: 6px 14px; border-radius: 6px; cursor: pointer;
+    white-space: nowrap; transition: all .2s;
+  }
+  .near-me-btn:hover { background: rgba(232,200,74,.2); border-color: var(--gold); }
+  .near-me-btn:disabled { opacity: .5; cursor: default; }
+
+  /* The shared sheet (loaded after this block) flips .header/.topbar to a
+     stacked column under 900px — which drops "Near me" onto a second row and
+     over the sidebar. This page's topbar is a single row, so keep it one: the
+     extra class outranks the shared rule without needing !important. */
+  .has-fixed-nav .topbar { flex-direction: row; align-items: center; }
+
+  /* "You are here" marker */
+  .user-loc-marker {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: #4ab8e8; border: 2px solid #fff;
+    box-shadow: 0 0 0 4px rgba(74,184,232,.3), 0 0 14px rgba(74,184,232,.6);
+    animation: userPulse 2s ease-in-out infinite;
+  }
+  @keyframes userPulse {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(74,184,232,.3), 0 0 14px rgba(74,184,232,.6); }
+    50%      { box-shadow: 0 0 0 9px rgba(74,184,232,.12), 0 0 14px rgba(74,184,232,.6); }
   }
 
   /* ── LAYOUT ── */
@@ -159,20 +174,19 @@
   }
 
   .sidebar-count {
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-    font-size: 32px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 36px;
+    letter-spacing: 2px;
     color: var(--green);
     line-height: 1;
   }
 
   .sidebar-count span {
-    font-size: 13px;
-    font-weight: 500;
+    font-size: 14px;
     color: var(--muted);
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
-    letter-spacing: 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 1px;
+    font-weight: 400;
   }
 
   .tracks-list {
@@ -297,10 +311,9 @@
   }
 
   .track-best-time {
-    font-family: ui-monospace, 'SF Mono', 'Fira Code', monospace;
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: 0;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 18px;
+    letter-spacing: 1px;
     color: var(--gold);
   }
 
@@ -345,10 +358,9 @@
   }
 
   .popup-title {
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
-    font-size: 17px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 22px;
+    letter-spacing: 2px;
     color: #fff;
     margin-bottom: 4px;
   }
@@ -371,10 +383,9 @@
   }
 
   .popup-stat-val {
-    font-family: ui-monospace, 'SF Mono', 'Fira Code', monospace;
-    font-size: 18px;
-    font-weight: 600;
-    letter-spacing: 0;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 24px;
+    letter-spacing: 1px;
     color: var(--gold);
     display: block;
     line-height: 1;
@@ -410,38 +421,92 @@
 
   /* Responsive */
   @media (max-width: 768px) {
-    .header-nav { position: fixed !important; top: 0 !important; }
-    .sidebar { width: 100%; height: 220px; border-right: none; border-bottom: 1px solid var(--line); }
+    /* Topbar: keep it to one tidy row. Drop the venue tag (redundant with the
+       sidebar count) and shrink the title so the title + "Near me" always fit. */
+    .topbar { padding: 0 14px; height: 50px; gap: 10px; }
+    .topbar-title { font-size: 19px; letter-spacing: 2px; }
+    .topbar-tag { display: none; }
+    .near-me-btn { padding: 6px 12px; font-size: 11px; }
+
     .main { flex-direction: column; }
-    .tracks-list { display: flex; flex-direction: row; overflow-x: auto; overflow-y: hidden; padding: 8px; gap: 4px; }
-    .track-card { min-width: 200px; margin-bottom: 0; }
-    .leaflet-popup-content-wrapper { max-width: calc(100vw - 48px) !important; }
-    .leaflet-popup-content { max-width: 100% !important; overflow: hidden !important; }
+
+    /* Sidebar becomes a compact horizontal strip so the map gets the room. */
+    .sidebar {
+      width: 100%;
+      height: auto;
+      flex-shrink: 0;
+      border-right: none;
+      border-bottom: 1px solid var(--line);
+    }
+    .sidebar-header {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      padding: 9px 14px;
+    }
+    .sidebar-count { font-size: 24px; }
+    .sidebar-count span { font-size: 12px; }
+
+    .tracks-list {
+      display: flex;
+      flex-direction: row;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 10px 14px;
+      gap: 8px;
+      scroll-snap-type: x proximity;
+      -webkit-overflow-scrolling: touch; /* momentum scroll on iOS */
+      overscroll-behavior-x: contain;    /* don't trigger page/back swipe */
+    }
+    .tracks-list::-webkit-scrollbar { height: 3px; }
+    .track-card {
+      min-width: 78vw;
+      max-width: 78vw;
+      margin-bottom: 0;
+      padding: 12px 14px;
+      scroll-snap-align: start;
+    }
+
+    /* Always leave a usefully large map below the strip. */
+    #map { flex: 1; min-height: 46vh; }
+
+    /* Roomier touch targets on the leaflet zoom buttons. */
+    .leaflet-touch .leaflet-bar a { width: 34px; height: 34px; line-height: 34px; }
+  }
+
+  @media (max-width: 380px) {
+    .topbar-title { font-size: 17px; letter-spacing: 1px; }
+    .track-card { min-width: 84vw; max-width: 84vw; }
   }
 </style>
   <link rel="stylesheet" href="css/site.min.css">
-</head>
-<body>
 
-<nav class="header-nav">
-  <a href="index.html" class="nav-brand">HCH</a>
-  <button class="nav-hamburger" aria-label="Toggle navigation" aria-expanded="false">
-    <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true"><rect width="18" height="2" rx="1" fill="currentColor"/><rect y="6" width="18" height="2" rx="1" fill="currentColor"/><rect y="12" width="18" height="2" rx="1" fill="currentColor"/></svg>
-  </button>
-  <a href="index.html" class="nav-pill">Hub</a>
-  <a href="sessions.html" class="nav-pill">Sessions</a>
-  <a href="map.html" class="nav-pill active">Map</a>
-  <a href="fastest-lap-projection.html" class="nav-pill">Fastest Lap</a>
-  <a href="championship.html" class="nav-pill">Championship</a>
-  <a href="brake.html" class="nav-pill">Brake Detect</a>
-</nav>
+  <!-- Favicon / theme / PWA -->
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#07070d">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://helmetcamheroes.com/map.html">
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Helmet Cam Heroes">
+  <meta property="og:title" content="Tracks Map — Helmet Cam Heroes">
+  <meta property="og:description" content="Explore every driven circuit and configuration plotted on our interactive map. View distance and layouts for our championship venues.">
+  <meta property="og:url" content="https://helmetcamheroes.com/map.html">
+  <meta property="og:image" content="https://helmetcamheroes.com/og-image.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Tracks Map — Helmet Cam Heroes">
+  <meta name="twitter:description" content="Explore every driven circuit and configuration plotted on our interactive map. View distance and layouts for our championship venues.">
+  <meta name="twitter:image" content="https://helmetcamheroes.com/og-image.svg">
+</head>
+<body class="has-fixed-nav">
+
+<nav class="header-nav" aria-label="Site navigation"></nav>
 
 <!-- TOPBAR -->
 <div class="topbar">
-  <div class="topbar-brand">
-    <div class="topbar-title">Tracks Map</div>
-    <div class="topbar-tag" id="venues-tag">— Venues</div>
-  </div>
+  <div class="topbar-title">Tracks Map</div>
+  <div class="topbar-tag" id="venue-count">Venues</div>
+  <button class="near-me-btn" id="near-me-btn" title="Center the map on your location">📍 Near me</button>
 </div>
 
 <div class="main">
@@ -449,7 +514,7 @@
   <div class="sidebar">
     <div class="sidebar-header">
       <div class="sidebar-label">Circuits Driven</div>
-      <div class="sidebar-count">— <span>tracks</span></div>
+      <div class="sidebar-count">4 <span>tracks</span></div>
     </div>
     <div class="tracks-list" id="tracks-list"></div>
   </div>
@@ -478,16 +543,21 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
 
 L.control.zoom({ position: 'bottomright' }).addTo(map);
 
+// Repaint after orientation change / soft-keyboard resize — without this
+// Leaflet leaves grey gaps where tiles didn't lay out for the new size.
+let resizeT;
+const refreshMapSize = () => {
+  clearTimeout(resizeT);
+  resizeT = setTimeout(() => map.invalidateSize(), 150);
+};
+window.addEventListener('resize', refreshMapSize);
+window.addEventListener('orientationchange', refreshMapSize);
+
 const markers = {};
-
-// Convert hsl(...) to hsla(...) for glow effects
-const colorAlpha = (color, alpha) => color.startsWith('hsl(')
-  ? color.replace('hsl(', 'hsla(').replace(')', `, ${alpha})`)
-  : color;
-
 const popupContent = (t) => `
-  <div style="padding:4px;width:240px;max-width:calc(100vw - 56px);">
+  <div style="padding:4px;min-width:200px;">
     <div class="popup-title">${t.name}</div>
+    <span class="popup-tag">${t.note}</span>
     <div class="popup-stats">
       <div>
         <span class="popup-stat-val">${t.sessions}</span>
@@ -503,8 +573,7 @@ const popupContent = (t) => `
       </div>
     </div>
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:#666677;margin-bottom:4px;">By ${t.bestDriver || 'N/A'}</div>
-    <a href="sessions.html?track=${encodeURIComponent(t.name)}" class="popup-link" style="margin-top:6px;">View Sessions →</a>
-    <a href="${t.mapsLink}" target="_blank" class="popup-link" style="margin-top:6px;background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.12);color:var(--muted);">Open in Google Maps ↗</a>
+    <a href="${t.mapsLink}" target="_blank" class="popup-link">Open in Google Maps ↗</a>
   </div>
 `;
 
@@ -512,17 +581,110 @@ const popupContent = (t) => `
 const list = document.getElementById('tracks-list');
 let activeId = null;
 
+// ── Location centering (Geolocation API — free, no backend) ──────────────
+// We remember the user's LAST map view (center + zoom), not a fixed point,
+// so panning is respected on return and a saved spot never goes stale. The
+// "Near me" button always fetches a fresh fix.
+const VIEW_KEY = 'hch:mapView';
+let userMarker = null;
+
+const placedTracks = () => tracks.filter(t => !(t.lat === 0 && t.lng === 0));
+
+function fitAllTracks() {
+  const pts = placedTracks().map(t => [t.lat, t.lng]);
+  if (pts.length) map.fitBounds(L.latLngBounds(pts), { padding: [50, 50], maxZoom: 11 });
+}
+
+function haversine(aLat, aLng, bLat, bLng) {
+  const R = 6371, toRad = d => d * Math.PI / 180;
+  const dLat = toRad(bLat - aLat), dLng = toRad(bLng - aLng);
+  const s = Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(aLat)) * Math.cos(toRad(bLat)) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(s));
+}
+
+function nearestTrack(lat, lng) {
+  let best = null, bestD = Infinity;
+  placedTracks().forEach(t => {
+    const d = haversine(lat, lng, t.lat, t.lng);
+    if (d < bestD) { bestD = d; best = t; }
+  });
+  return best;
+}
+
+// Drop a "you are here" marker and frame the user together with their
+// nearest track. The resulting view is persisted by the moveend handler.
+function showUserLocation(lat, lng) {
+  if (userMarker) map.removeLayer(userMarker);
+  const icon = L.divIcon({
+    html: '<div class="user-loc-marker"></div>',
+    className: '', iconSize: [18, 18], iconAnchor: [9, 9],
+  });
+  userMarker = L.marker([lat, lng], { icon, zIndexOffset: 1000 })
+    .addTo(map).bindPopup('You are here');
+  const near = nearestTrack(lat, lng);
+  if (near) {
+    map.fitBounds(L.latLngBounds([[lat, lng], [near.lat, near.lng]]), { padding: [70, 70], maxZoom: 12 });
+  } else {
+    map.setView([lat, lng], 10, { animate: true });
+  }
+}
+
+// Persist the current view so the next visit restores exactly where the user
+// left the map (handles panning — no snapping back to a stale location).
+function saveView() {
+  try {
+    const c = map.getCenter();
+    localStorage.setItem(VIEW_KEY, JSON.stringify({ lat: c.lat, lng: c.lng, zoom: map.getZoom() }));
+  } catch (e) {}
+}
+
+// First view: restore the last view if we have one, otherwise frame all tracks
+// (better than the fixed default — Spain/Norway venues were off-screen).
+function applyInitialView() {
+  let v = null;
+  try { v = JSON.parse(localStorage.getItem(VIEW_KEY) || 'null'); } catch (e) {}
+  if (v && typeof v.lat === 'number' && typeof v.lng === 'number' && typeof v.zoom === 'number') {
+    map.setView([v.lat, v.lng], v.zoom);
+  } else {
+    fitAllTracks();
+  }
+  map.on('moveend', saveView); // remember subsequent pans/zooms
+}
+
+const nearBtn = document.getElementById('near-me-btn');
+if (nearBtn) {
+  if (!('geolocation' in navigator)) { nearBtn.disabled = true; nearBtn.title = 'Geolocation not supported'; }
+  nearBtn.addEventListener('click', () => {
+    if (!('geolocation' in navigator)) return;
+    nearBtn.disabled = true; nearBtn.textContent = '📍 Locating…';
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        nearBtn.disabled = false; nearBtn.textContent = '📍 Near me';
+        showUserLocation(pos.coords.latitude, pos.coords.longitude);
+      },
+      err => {
+        nearBtn.disabled = false;
+        nearBtn.textContent = err.code === 1 ? '📍 Denied' : '📍 Unavailable';
+        setTimeout(() => { nearBtn.textContent = '📍 Near me'; }, 2200);
+      },
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+    );
+  });
+}
+
 // Fetch auto-generated map data
-fetch('sessions/tracks-list.json')
+fetch('sessions/tracks-list.json', { cache: 'no-cache' })
   .then(res => res.json())
   .then(data => {
     tracks = data;
     
-    // Update sidebar count and topbar tag
+    // Update sidebar count + topbar tag (only count tracks we can place)
+    const placed = tracks.filter(t => !(t.lat === 0 && t.lng === 0)).length;
     const countEl = document.querySelector('.sidebar-count');
-    if (countEl) countEl.innerHTML = `${tracks.length} <span>tracks</span>`;
-    const tagEl = document.getElementById('venues-tag');
-    if (tagEl) tagEl.textContent = `${tracks.length} Venues`;
+    if (countEl) countEl.innerHTML = `${placed} <span>tracks</span>`;
+    const venueEl = document.getElementById('venue-count');
+    if (venueEl) venueEl.textContent = `${placed} Venues`;
 
     tracks.forEach(t => {
       // Don't draw tracks missing GPS coordinates
@@ -535,7 +697,7 @@ fetch('sessions/tracks-list.json')
           border-radius:50% 50% 50% 0;
           transform:rotate(-45deg);
           display:flex;align-items:center;justify-content:center;
-          box-shadow:0 4px 20px rgba(0,0,0,.5), 0 0 20px ${colorAlpha(t.color, 0.27)};
+          box-shadow:0 4px 20px rgba(0,0,0,.5), 0 0 20px ${t.color}44;
         "><div style="width:12px;height:12px;border-radius:50%;background:rgba(0,0,0,.5);"></div></div>`,
         className: '',
         iconSize: [36, 36],
@@ -555,9 +717,12 @@ fetch('sessions/tracks-list.json')
       card.id = `card-${t.id}`;
       card.innerHTML = `
         <div class="track-card-header">
-          <div class="track-dot" style="background:${t.color};box-shadow:0 0 8px ${colorAlpha(t.color, 0.4)};"></div>
+          <div class="track-dot" style="background:${t.color};box-shadow:0 0 8px ${t.color}66;"></div>
           <div class="track-name">${t.name}</div>
           <div class="track-sessions">${t.sessions} sessions</div>
+        </div>
+        <div class="track-meta">
+          <div class="track-meta-item">📍 ${t.note}</div>
         </div>
         <div class="track-configs">
           ${(t.configs || []).map(c => `<span class="config-tag">${c}</span>`).join('')}
@@ -580,6 +745,8 @@ fetch('sessions/tracks-list.json')
 
       list.appendChild(card);
     });
+
+    applyInitialView();
   })
   .catch(err => {
     console.error("Error loading map data:", err);

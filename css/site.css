@@ -58,6 +58,14 @@
   --text-dim: var(--muted-strong);
   --text-mute: var(--muted);
   --txt: var(--text);
+
+  /* Utility */
+  --radius-full: 9999px;
+
+  /* Fastest-lap-projection page vars */
+  --bg-grad-1: #050508;
+  --bg-grad-2: #0a0a12;
+  --cyan: #4EC9E1;
 }
 
 * {
@@ -266,40 +274,10 @@ button,
   }
 }
 
-.header,
-.topbar {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 24px 24px;
-  background: rgba(28,28,30,0.88);
-  border: none;
-  border-bottom: 0.5px solid rgba(255,255,255,0.1);
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-}
-
-.header {
-  justify-content: space-between;
-}
-
-.hero,
-.page-hero {
-  position: relative;
-  padding: 64px 24px;
-  margin-bottom: 32px;
-  background: rgba(28,28,30,0.9);
-  border: 0.5px solid rgba(255,255,255,0.08);
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
+/* NOTE: generic .header/.topbar/.hero card styling intentionally lives in
+   each page's own CSS. The shared sheet only owns the fixed nav, design
+   tokens, and reusable .card/.panel/.box + buttons, so it never clobbers a
+   page's structural header/topbar/hero (which caused content overlap). */
 
 .topbar-title,
 .header-title,
@@ -334,9 +312,34 @@ h3 {
   align-items: center;
 }
 
-/* Ensure header navigation floats above hero/title elements */
+/* ─── Canonical fixed top navigation (shared by every page) ─── */
 .header-nav {
-  z-index: 20;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 24px;
+  margin: 0;
+  background: rgba(0,0,0,0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: none;
+  border-bottom: 0.5px solid rgba(255,255,255,0.1);
+  z-index: 2000;
+  flex-wrap: wrap;
+}
+
+/* Keep nav pills compact so the bar stays ~54px tall (the global 44px
+   touch-target min-height would otherwise make it 64px and overlap content).
+   On mobile the pills expand to full-width rows for easy tapping. */
+/* Pages opt into clearing the fixed nav with this helper on their first
+   scrolling content (full-viewport "app" pages manage their own offset). */
+.has-fixed-nav {
+  padding-top: var(--nav-h, 64px);
 }
 
 /* Place header nav into the header flow to avoid overlapping large hero titles */
@@ -1052,4 +1055,12 @@ body.remote-page .retry-btn:active {
   .header-nav a[href="brake.html"]:not(.active) {
     display: none !important;
   }
+}
+
+/* The native dropdown list ignores the select's translucent background and
+   renders white-on-white on Windows; force readable dark options. */
+select option,
+select optgroup {
+  background: #1C1C1E;
+  color: #fff;
 }

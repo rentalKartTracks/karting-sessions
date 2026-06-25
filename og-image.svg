@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Helmet Cam Heroes — Karting Telemetry">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b0b14"/>
+      <stop offset="1" stop-color="#07070d"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.32" r="0.6">
+      <stop offset="0" stop-color="#e8c84a" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#e8c84a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <!-- grid -->
+  <g stroke="#e8c84a" stroke-opacity="0.05" stroke-width="1">
+    <line x1="0" y1="105" x2="1200" y2="105"/><line x1="0" y1="210" x2="1200" y2="210"/>
+    <line x1="0" y1="315" x2="1200" y2="315"/><line x1="0" y1="420" x2="1200" y2="420"/>
+    <line x1="0" y1="525" x2="1200" y2="525"/>
+    <line x1="200" y1="0" x2="200" y2="630"/><line x1="400" y1="0" x2="400" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/><line x1="800" y1="0" x2="800" y2="630"/>
+    <line x1="1000" y1="0" x2="1000" y2="630"/>
+  </g>
+  <!-- checker mark -->
+  <g fill="#e8c84a" transform="translate(96,238)">
+    <rect x="0" y="0" width="38" height="38"/><rect x="76" y="0" width="38" height="38"/>
+    <rect x="38" y="38" width="38" height="38"/><rect x="114" y="38" width="38" height="38"/>
+    <rect x="0" y="76" width="38" height="38"/><rect x="76" y="76" width="38" height="38"/>
+  </g>
+  <text x="96" y="455" font-family="'Bebas Neue', Impact, sans-serif" font-size="150" letter-spacing="6" fill="#ffffff">HELMET CAM <tspan fill="#e8c84a">HEROES</tspan></text>
+  <text x="100" y="520" font-family="'Barlow Condensed', Arial, sans-serif" font-size="34" letter-spacing="8" fill="#8a8a99">KARTING TELEMETRY · LAP TIMES · TRACK MAPS · CHAMPIONSHIPS</text>
+</svg>

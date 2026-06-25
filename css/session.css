@@ -115,13 +115,18 @@ button, a, input, select { -webkit-tap-highlight-color: transparent; }
 }
 
 /* ===== LAYOUT ===== */
-.container {
-  max-width: 1400px;
+/* Wide tool page: the session view is data-dense (dual-video compare, chart,
+   lap tables) so it should use far more width than a reading page. Capped at
+   1760px so ultra-wide monitors don't stretch the chart edge-to-edge.
+   Selector is `body .container` to outrank the shared site.css
+   `.container { width: min(1200px, …) }`, which loads after session.css. */
+body .container {
+  max-width: none;
   margin: 0 auto;
-  width: 100%;
+  width: min(1760px, calc(100% - 40px));
   position: relative;
   z-index: 1;
-  padding-top: 56px;
+  padding-top: var(--nav-h, 56px);
 }
 
 /* ===== GLOBAL ERROR BANNER ===== */
@@ -833,7 +838,10 @@ button, a, input, select { -webkit-tap-highlight-color: transparent; }
   transition: all var(--transition-fast);
 }
 
-.legend-item:hover { transform: scale(1.05); border-color: var(--dim); }
+/* Use a colour/background highlight instead of transform: scale() — scaling a
+   flex item with gaps shifts its edges out from under the cursor near the
+   boundary, which toggles :hover on/off and makes the item flicker. */
+.legend-item:hover { background: var(--surface3); border-color: var(--dim); }
 
 .legend-color {
   width: 14px; height: 14px;
@@ -1475,7 +1483,6 @@ body.pc-mode .pc-only             { display: flex !important; }
 
 /* ===== RESPONSIVE ===== */
 @media (min-width: 1440px) {
-  .container { max-width: 1600px; }
   /* 6 equal columns: ~200px each, ~152px content after padding */
   .stats-grid { grid-template-columns: repeat(6, 1fr); }
   /* 1.05rem ≈ 16.8px — "00:43.790" (9 chars) × 0.6 × 16.8 ≈ 91px — fits 152px */
@@ -1557,3 +1564,16 @@ body.pc-mode .pc-only             { display: flex !important; }
   .share-btn, .btn { display: none !important; }
   .chart-container, .stat-card { break-inside: avoid; }
 }
+
+/* "Share the fastest lap on YouTube" link on the Fastest Lap stat card */
+.yt-share {
+  display: inline-block;
+  margin-left: 6px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.85em;
+  padding: 1px 5px;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+.yt-share:hover { color: var(--gold); background: rgba(232,200,74,.12); }
