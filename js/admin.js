@@ -168,6 +168,7 @@ function buildSessionData() {
     kart: document.getElementById('kart').value.trim(),
     video_start_time: document.getElementById('video_start_time').value.trim(),
     video_url: document.getElementById('video_url').value.trim(),
+    ...(document.getElementById('hq_video_url').value.trim() && { hq_video_url: document.getElementById('hq_video_url').value.trim() }),
     session_date: document.getElementById('session_date').value,
     laps
   };
@@ -187,6 +188,7 @@ function loadIntoForm(data) {
   document.getElementById('maps_link').value = data.track?.maps_link || '';
   document.getElementById('video_url').value = data.video_url || '';
   document.getElementById('video_start_time').value = data.video_start_time || '';
+  document.getElementById('hq_video_url').value = data.hq_video_url || '';
 
   laps = (data.laps || []).map(l => ({ ...l }));
   renderLaps();

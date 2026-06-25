@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self' https://www.youtube.com https://s.ytimg.com https://www.google.com https://static.doubleclick.net https://unpkg.com https://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com https://www.google.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://www.google.com https://www.youtube.com https://static.doubleclick.net wss: https:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';">
+    content="default-src 'self'; script-src 'self' https://www.youtube.com https://s.ytimg.com https://www.google.com https://static.doubleclick.net https://unpkg.com https://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com https://www.google.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://www.google.com https://www.youtube.com https://static.doubleclick.net wss: https:; media-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';">
   <meta http-equiv="X-XSS-Protection" content="1; mode=block">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <title>Karting Session Viewer</title>
@@ -124,6 +124,7 @@
             <span class="layout-icon layout-icon-pip"></span>
           </button>
         </div>
+        <button id="hq-toggle-btn" class="layout-btn" style="display:none;font-size:11px;font-weight:600;padding:6px 10px;letter-spacing:.5px;" onclick="toggleHQMode()" title="Switch to High Quality video">HQ</button>
         <div class="driver-selector-container" id="driver-selector-container">
           <!-- Populated by JS -->
         </div>
