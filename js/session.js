@@ -1061,9 +1061,20 @@ function toggleHQMode() {
     wrapper.innerHTML = `<video id="hq-video-${sessionId}" src="${hqVideoUrl}" controls style="position:absolute;top:0;left:0;width:100%;height:100%;background:#000;display:block;" preload="metadata"></video>`;
     const videoEl = document.getElementById(`hq-video-${sessionId}`);
     videoEl.currentTime = startTime;
+    videoEl.addEventListener('error', () => {
+      hqModeActive = false;
+      const btn = document.getElementById('hq-toggle-btn');
+      if (btn) { btn.textContent = 'HQ'; btn.classList.remove('active'); }
+      delete videoPlayers[sessionId];
+      wrapper.innerHTML = `<div id="player-${sessionId}"></div>`;
+      if (window.YT && window.YT.Player && videoConfigs[sessionId]) createPlayer(sessionId, videoConfigs[sessionId]);
+      const err = document.getElementById('global-error-text');
+      const errBanner = document.getElementById('global-error-display');
+      if (err && errBanner) { err.textContent = 'HQ video unavailable — switched back to YouTube.'; errBanner.style.display = 'flex'; }
+    });
     videoPlayers[sessionId] = {
       seekTo: (t) => { videoEl.currentTime = t; },
-      playVideo: () => videoEl.play(),
+      playVideo: () => videoEl.play().catch(() => {}),
       pauseVideo: () => videoEl.pause(),
       getPlayerState: () => videoEl.paused ? YT.PlayerState.PAUSED : YT.PlayerState.PLAYING,
       destroy: () => { videoEl.src = ''; }
