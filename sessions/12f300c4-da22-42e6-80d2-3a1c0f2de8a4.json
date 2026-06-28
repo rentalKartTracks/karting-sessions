@@ -1,0 +1,61 @@
+{
+  "session_id": "12f300c4-da22-42e6-80d2-3a1c0f2de8a4",
+  "driver": "Povilas L.",
+  "fastest_lap": "01:11.334",
+  "track": {
+    "name": "Kartlandas Vilnius",
+    "configuration": "2026",
+    "maps_link": "https://maps.app.goo.gl/gdUVyVfv8P7JUnzH6"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "00:44",
+  "video_url": "https://youtu.be/iHSTVxLowFs",
+  "hq_video_url": "https://f003.backblazeb2.com/file/helmetcamheroes-videos/session-2026-06-27.mp4",
+  "session_date": "2026-06-27",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "01:16.094"
+    },
+    {
+      "lap": 2,
+      "time": "01:14.034"
+    },
+    {
+      "lap": 3,
+      "time": "01:13.073"
+    },
+    {
+      "lap": 4,
+      "time": "01:15.027"
+    },
+    {
+      "lap": 5,
+      "time": "01:12.749"
+    },
+    {
+      "lap": 6,
+      "time": "01:14.135"
+    },
+    {
+      "lap": 7,
+      "time": "01:11.619"
+    },
+    {
+      "lap": 8,
+      "time": "01:12.198"
+    },
+    {
+      "lap": 9,
+      "time": "01:11.822"
+    },
+    {
+      "lap": 10,
+      "time": "01:11.334"
+    },
+    {
+      "lap": 11,
+      "time": "01:12.543"
+    }
+  ]
+}

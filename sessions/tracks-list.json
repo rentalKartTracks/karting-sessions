@@ -264,6 +264,21 @@
         "bestDriver": "Povilas L."
     },
     {
+        "id": "kartlandas_vilnius",
+        "name": "Kartlandas Vilnius",
+        "lat": 0,
+        "lng": 0,
+        "mapsLink": "https://maps.app.goo.gl/gdUVyVfv8P7JUnzH6",
+        "color": "#aaaaaa",
+        "note": "Generated circuit",
+        "configs": [
+            "2026"
+        ],
+        "sessions": 1,
+        "bestLap": "01:11.334",
+        "bestDriver": "Povilas L."
+    },
+    {
         "id": "gokarting_center_krakow",
         "name": "GOKARTING CENTER KRAKOW",
         "lat": 50.02719152362129,
