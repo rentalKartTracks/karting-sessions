@@ -2209,9 +2209,10 @@ function setupAutocomplete() {
 
     if (lastQuery.length < 2) { resultsBox.style.display = 'none'; return; } const
       filtered = allSessionsList.filter(session =>
-        session.id.toLowerCase().includes(lastQuery) ||
+        session.id !== sessionId &&
+        (session.id.toLowerCase().includes(lastQuery) ||
         session.driver.toLowerCase().includes(lastQuery) ||
-        session.track.name.toLowerCase().includes(lastQuery)
+        session.track.name.toLowerCase().includes(lastQuery))
       ).slice(0, 8);
 
     if (filtered.length > 0) {
@@ -2552,6 +2553,94 @@ function toggleQRPanel() {
   }
 }
 
+// ===== BROWSE MODAL =====
+
+function updateSameTrackBtn() {
+  const btn = document.getElementById('same-track-btn');
+  if (!btn || !currentSessionData || allSessionsList.length === 0) return;
+  const hasSameTrack = allSessionsList.some(s =>
+    s.id !== sessionId &&
+    s.track.name === currentSessionData.track.name &&
+    s.track.configuration === currentSessionData.track.configuration
+  );
+  btn.style.display = hasSameTrack ? 'inline-flex' : 'none';
+}
+
+function compareSameTrack() {
+  if (!currentSessionData) return;
+  const match = allSessionsList
+    .filter(s =>
+      s.id !== sessionId &&
+      s.track.name === currentSessionData.track.name &&
+      s.track.configuration === currentSessionData.track.configuration
+    )
+    .sort((a, b) => new Date(b.session_date) - new Date(a.session_date))[0];
+  if (!match) return;
+  const input = document.getElementById('compare-id-input');
+  if (input) input.value = match.id;
+  compareSession();
+}
+
+function openBrowseModal() {
+  const modal = document.getElementById('browse-modal');
+  if (!modal) return;
+  modal.style.display = 'flex';
+  const search = document.getElementById('browse-search');
+  if (search) { search.value = ''; search.focus(); }
+  renderBrowseList('');
+}
+
+function closeBrowseModal(e) {
+  if (e && e.target !== document.getElementById('browse-modal')) return;
+  const modal = document.getElementById('browse-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+function renderBrowseList(query) {
+  const list = document.getElementById('browse-list');
+  if (!list) return;
+  const q = (query || '').toLowerCase().trim();
+  const filtered = allSessionsList
+    .filter(s =>
+      s.id !== sessionId &&
+      (!q ||
+        s.driver.toLowerCase().includes(q) ||
+        s.track.name.toLowerCase().includes(q) ||
+        (s.track.configuration || '').toLowerCase().includes(q))
+    )
+    .sort((a, b) => new Date(b.session_date) - new Date(a.session_date));
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="browse-empty">No sessions found</div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(s => {
+    const date = new Date(s.session_date).toLocaleDateString('en-GB', {
+      day: 'numeric', month: 'short', year: 'numeric'
+    });
+    const dot = s.has_video
+      ? '<div class="browse-video-dot" title="Has video"></div>'
+      : '<div class="browse-no-video-dot"></div>';
+    return `<div class="browse-item" onclick="selectBrowseSession('${s.id}')">
+      ${dot}
+      <div class="browse-item-info">
+        <div class="browse-item-title">${s.driver} · ${s.track.name}</div>
+        <div class="browse-item-meta">${s.track.configuration || ''} · ${date}</div>
+      </div>
+      <div class="browse-item-lap">${s.fastest_lap || '—'}</div>
+    </div>`;
+  }).join('');
+}
+
+function selectBrowseSession(id) {
+  const modal = document.getElementById('browse-modal');
+  if (modal) modal.style.display = 'none';
+  const input = document.getElementById('compare-id-input');
+  if (input) input.value = id;
+  compareSession();
+}
+
 // ===== DATA LOADING =====
 
 /**
@@ -2563,6 +2652,7 @@ function loadSessionsList() {
     .then(data => {
       allSessionsList = data.sessions || [];
       setupAutocomplete();
+      updateSameTrackBtn();
     })
     .catch(err => {
     });
@@ -2713,6 +2803,8 @@ function renderSession(data) {
     lapDisplay = document.getElementById('current-lap-display'); if (lapDisplay) {
       lapDisplay.textContent = `Lap: 1 / ${validLaps.length}`;
     }
+
+  updateSameTrackBtn();
 }
 
 // ===== EVENT HANDLERS =====
@@ -2784,6 +2876,14 @@ document.addEventListener('keydown', (e) => {
         }
       }
       break;
+    case 'Escape': {
+      const modal = document.getElementById('browse-modal');
+      if (modal && modal.style.display !== 'none') {
+        modal.style.display = 'none';
+        e.preventDefault();
+      }
+      break;
+    }
   }
 });
 

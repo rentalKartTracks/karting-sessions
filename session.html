@@ -233,6 +233,14 @@
             <span>Share</span>
           </button>
         </div>
+        <div class="compare-quick-actions">
+          <button id="same-track-btn" class="btn btn-secondary" onclick="compareSameTrack()" style="display:none">
+            <span>↩</span><span>Same Track</span>
+          </button>
+          <button class="btn btn-secondary" onclick="openBrowseModal()">
+            <span>📋</span><span>Browse</span>
+          </button>
+        </div>
         <div class="comparison-input-wrapper">
           <input type="text" id="compare-id-input" class="comparison-input"
             placeholder="Search session ID or driver name…" aria-label="Search sessions to compare"
@@ -269,6 +277,20 @@
 
   <!-- Tooltip -->
   <div id="chart-tooltip" class="tooltip" role="tooltip" aria-hidden="true"></div>
+
+  <!-- Browse Sessions Modal -->
+  <div class="browse-modal-overlay" id="browse-modal" style="display:none" onclick="closeBrowseModal(event)">
+    <div class="browse-modal" role="dialog" aria-label="Browse sessions">
+      <div class="browse-modal-header">
+        <span class="browse-modal-title">Select Session to Compare</span>
+        <button class="browse-close-btn" onclick="closeBrowseModal()" aria-label="Close">✕</button>
+      </div>
+      <input type="text" class="browse-search" id="browse-search"
+        placeholder="Filter by driver or track…" oninput="renderBrowseList(this.value)"
+        onkeydown="if(event.key==='Escape')closeBrowseModal()" autocomplete="off">
+      <div class="browse-list" id="browse-list"></div>
+    </div>
+  </div>
 
   <script src="js/session.js"></script>
   <script src="js/nav.js"></script>
