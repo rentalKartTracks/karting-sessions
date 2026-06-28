@@ -232,15 +232,6 @@ function applyMode(mode) {
       renderTVStats();
     }
 
-    // Auto-play video in TV mode
-    // Auto-play video in TV mode
-    if (Object.keys(videoPlayers).length > 0) {
-      setTimeout(() => {
-        Object.values(videoPlayers).forEach(p => {
-          if (typeof p.playVideo === 'function') p.playVideo();
-        });
-      }, 1000);
-    }
   } else {
     // PC Mode: Full view
     if (comparisonSection) comparisonSection.style.display = 'block';
@@ -500,10 +491,15 @@ function onPlayerReady(event, id) {
   if (id === sessionId) {
     seekToLap(currentLapMarker.lapNumber || 1);
 
-    // Show QR panel if TV mode
+    // Show QR panel and auto-play in TV mode
     if (currentMode === 'tv') {
       const qrPanel = document.getElementById('qr-panel');
       if (qrPanel) qrPanel.style.display = 'block';
+      setTimeout(() => {
+        if (videoPlayers[sessionId] && typeof videoPlayers[sessionId].playVideo === 'function') {
+          videoPlayers[sessionId].playVideo();
+        }
+      }, 500);
     }
     // If main player is running, sync this one to the current session time/lap
     const mainP = videoPlayers[sessionId];
