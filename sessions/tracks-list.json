@@ -294,21 +294,6 @@
         "bestDriver": "Ignas M."
     },
     {
-        "id": "kartlandas_vilnius",
-        "name": "Kartlandas Vilnius",
-        "lat": 54.6930088,
-        "lng": 25.4389705,
-        "mapsLink": "https://maps.app.goo.gl/ZtWbcCq3bZorD8ij9",
-        "color": "#4ae860",
-        "note": "Indoor circuit · Vilnius",
-        "configs": [
-            "2026"
-        ],
-        "sessions": 1,
-        "bestLap": "",
-        "bestDriver": ""
-    },
-    {
         "id": "race_time",
         "name": "Race Time",
         "lat": 55.9084559,
