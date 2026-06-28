@@ -487,7 +487,6 @@ function onPlayerReady(event, id) {
   // Set initial audio state
   updateAudioState();
 
-  // Sync logic
   if (id === sessionId) {
     seekToLap(currentLapMarker.lapNumber || 1);
 
@@ -501,56 +500,48 @@ function onPlayerReady(event, id) {
         }
       }, 500);
     }
-    // If main player is running, sync this one to the current session time/lap
+  } else {
+    // Comparison player ready: sync to wherever the main player currently is
     const mainP = videoPlayers[sessionId];
     if (mainP && typeof mainP.getCurrentTime === 'function') {
       const mainConfig = videoConfigs[sessionId];
       const newConfig = videoConfigs[id];
 
       if (mainConfig && newConfig) {
-        // Calculate current session time from main player
         const mainVideoTime = mainP.getCurrentTime();
         const mainStartOffset = mainConfig.startTimeSeconds || 0;
         const currentSessionTime = mainVideoTime - mainStartOffset;
 
         let targetTime = newConfig.startTimeSeconds || 0;
 
-        // Try to find the exact lap offset if we are on a specific lap
         if (currentLapMarker && currentLapMarker.lapNumber) {
           const lapNum = currentLapMarker.lapNumber;
-          let sessionDataToUse = comparisonSessions.find(s => s.id === id);
-          let mainSessionData = currentSessionData;
+          const compSession = comparisonSessions.find(s => s.id === id);
 
-          if (sessionDataToUse && sessionDataToUse.laps && lapNum <= sessionDataToUse.laps.length &&
-            mainSessionData && mainSessionData.laps && lapNum <= mainSessionData.laps.length) {
+          if (compSession && compSession.laps && lapNum <= compSession.laps.length &&
+            currentSessionData && currentSessionData.laps && lapNum <= currentSessionData.laps.length) {
 
-            // Calculate how far into the current lap the main video is
             let mainAccumulatedTime = 0;
             for (let i = 0; i < lapNum - 1; i++) {
-              mainAccumulatedTime += parseTime(mainSessionData.laps[i].time);
+              mainAccumulatedTime += parseTime(currentSessionData.laps[i].time);
             }
             const timeIntoLap = currentSessionTime - mainAccumulatedTime;
 
-            // Calculate the base start time for this specific lap on the new video
             let newAccumulatedTime = 0;
             for (let i = 0; i < lapNum - 1; i++) {
-              newAccumulatedTime += parseTime(sessionDataToUse.laps[i].time);
+              newAccumulatedTime += parseTime(compSession.laps[i].time);
             }
 
-            // The target time is its start offset + its lap base time + how far into the lap we are
             targetTime = (newConfig.startTimeSeconds || 0) + newAccumulatedTime + timeIntoLap;
           } else {
-            // Fallback if lap data missing: just add raw session time
             targetTime += currentSessionTime;
           }
         } else {
-          // Fallback if no lap marker
           targetTime += currentSessionTime;
         }
 
         player.seekTo(targetTime, true);
       } else {
-        // Fallback to simple sync if configs are missing
         player.seekTo(mainP.getCurrentTime(), true);
       }
 
