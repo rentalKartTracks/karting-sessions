@@ -1058,7 +1058,7 @@ function toggleHQMode() {
       videoPlayers[sessionId].destroy();
     }
     const startTime = videoConfigs[sessionId]?.startTimeSeconds || 0;
-    wrapper.innerHTML = `<video id="hq-video-${sessionId}" src="${hqVideoUrl}" controls style="width:100%;height:100%;background:#000;display:block;" preload="metadata"></video>`;
+    wrapper.innerHTML = `<video id="hq-video-${sessionId}" src="${hqVideoUrl}" controls style="position:absolute;top:0;left:0;width:100%;height:100%;background:#000;display:block;" preload="metadata"></video>`;
     const videoEl = document.getElementById(`hq-video-${sessionId}`);
     videoEl.currentTime = startTime;
     videoPlayers[sessionId] = {
