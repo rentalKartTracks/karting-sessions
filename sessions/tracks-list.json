@@ -307,5 +307,18 @@
         "sessions": 2,
         "bestLap": "01:15.999",
         "bestDriver": "Povilas L."
+    },
+    {
+        "id": "k1_speed_santa_clara",
+        "name": "K1 Speed Santa Clara",
+        "lat": 37.3723025,
+        "lng": -121.9806889,
+        "mapsLink": "https://maps.app.goo.gl/Y8HwJiDPBqKbrkks7",
+        "color": "#e84a70",
+        "note": "Indoor circuit · Santa Clara, CA",
+        "configs": [],
+        "sessions": 0,
+        "bestLap": "",
+        "bestDriver": ""
     }
 ]
