@@ -20,10 +20,6 @@ let activeLayout = 'single';
 let firstSelectedVideoId = null; // for swapping videos
 let activeAudioSessionId = null; // tracks which video plays sound
 
-// HQ video
-let hqVideoUrl = null;
-let hqModeActive = false;
-
 // Lap tracking
 let lapStartTimes = [];
 let currentLapMarker = { lapNumber: 1 };
@@ -1029,65 +1025,6 @@ function renderVideoPlayer(videoUrl, videoStartTime, isMainPlayer = true) {
     // Legacy call for comparison? compareSession should handle this itself via showComparisonVideo.
     // If we are here, it might be a direct call?
     // For safety, warn or try to register if we can guess ID?
-  }
-}
-
-function setHqVideoUrl(url) {
-  hqVideoUrl = url || null;
-  const btn = document.getElementById('hq-toggle-btn');
-  if (btn) btn.style.display = hqVideoUrl ? 'flex' : 'none';
-}
-
-function toggleHQMode() {
-  if (!hqVideoUrl) return;
-  hqModeActive = !hqModeActive;
-
-  const btn = document.getElementById('hq-toggle-btn');
-  if (btn) {
-    btn.textContent = hqModeActive ? 'YT' : 'HQ';
-    btn.classList.toggle('active', hqModeActive);
-  }
-
-  const container = document.getElementById(`container-${sessionId}`);
-  if (!container) return;
-  const wrapper = container.querySelector('.video-wrapper');
-  if (!wrapper) return;
-
-  if (hqModeActive) {
-    if (videoPlayers[sessionId] && typeof videoPlayers[sessionId].destroy === 'function') {
-      videoPlayers[sessionId].destroy();
-    }
-    const startTime = videoConfigs[sessionId]?.startTimeSeconds || 0;
-    wrapper.innerHTML = `<video id="hq-video-${sessionId}" src="${hqVideoUrl}" controls style="position:absolute;top:0;left:0;width:100%;height:100%;background:#000;display:block;" preload="metadata"></video>`;
-    const videoEl = document.getElementById(`hq-video-${sessionId}`);
-    videoEl.currentTime = startTime;
-    videoEl.addEventListener('error', () => {
-      hqModeActive = false;
-      const btn = document.getElementById('hq-toggle-btn');
-      if (btn) { btn.textContent = 'HQ'; btn.classList.remove('active'); }
-      delete videoPlayers[sessionId];
-      wrapper.innerHTML = `<div id="player-${sessionId}"></div>`;
-      if (window.YT && window.YT.Player && videoConfigs[sessionId]) createPlayer(sessionId, videoConfigs[sessionId]);
-      const err = document.getElementById('global-error-text');
-      const errBanner = document.getElementById('global-error-display');
-      if (err && errBanner) { err.textContent = 'HQ video unavailable — switched back to YouTube.'; errBanner.style.display = 'flex'; }
-    });
-    videoPlayers[sessionId] = {
-      seekTo: (t) => { videoEl.currentTime = t; },
-      playVideo: () => videoEl.play().catch(() => {}),
-      pauseVideo: () => videoEl.pause(),
-      getPlayerState: () => videoEl.paused ? YT.PlayerState.PAUSED : YT.PlayerState.PLAYING,
-      destroy: () => { videoEl.src = ''; }
-    };
-  } else {
-    if (videoPlayers[sessionId] && typeof videoPlayers[sessionId].destroy === 'function') {
-      videoPlayers[sessionId].destroy();
-    }
-    delete videoPlayers[sessionId];
-    wrapper.innerHTML = `<div id="player-${sessionId}"></div>`;
-    if (window.YT && window.YT.Player && videoConfigs[sessionId]) {
-      createPlayer(sessionId, videoConfigs[sessionId]);
-    }
   }
 }
 
@@ -2751,7 +2688,6 @@ function renderSession(data) {
 
   // Setup video player
   renderVideoPlayer(data.video_url, data.video_start_time, true);
-  setHqVideoUrl(data.hq_video_url);
 
   // Setup video slider (Time based)
   // Setup video slider (Time based) - REMOVED
