@@ -2750,6 +2750,20 @@ function renderSession(data) {
     sessionTrackEl.innerHTML = `<span>🏁</span><span>${data.track.name}</span>`;
   }
 
+  // Update page title, canonical and OG tags for SEO
+  const shortDate = new Date(data.session_date).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
+  const pageTitle = `${data.driver} @ ${data.track.name} · ${shortDate} — Helmet Cam Heroes`;
+  const pageDesc = `Karting session telemetry for ${data.driver} at ${data.track.name} (${data.track.configuration}), ${shortDate}. Fastest lap: ${data.fastest_lap || 'N/A'}.`;
+  const canonicalUrl = `https://helmetcamheroes.com/session.html?id=${data.id}`;
+  document.title = pageTitle;
+  document.querySelector('meta[name="description"]')?.setAttribute('content', pageDesc);
+  document.querySelector('link[rel="canonical"]')?.setAttribute('href', canonicalUrl);
+  document.querySelector('meta[property="og:title"]')?.setAttribute('content', pageTitle);
+  document.querySelector('meta[property="og:description"]')?.setAttribute('content', pageDesc);
+  document.querySelector('meta[property="og:url"]')?.setAttribute('content', canonicalUrl);
+  document.querySelector('meta[name="twitter:title"]')?.setAttribute('content', pageTitle);
+  document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', pageDesc);
+
   // Render UUID
   const uuidContainer = document.getElementById('session-uuid-container');
   const uuidDisplay = document.getElementById('session-uuid-display');

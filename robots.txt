@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /admin.html
+Disallow: /manage.html
+Disallow: /remote.html
+Disallow: /brake.html
+Disallow: /fastest-lap-projection.html
+
+Sitemap: https://helmetcamheroes.com/sitemap.xml
