@@ -199,7 +199,7 @@
         "configs": [
             "2024"
         ],
-        "sessions": 4,
+        "sessions": 5,
         "bestLap": "00:59.000",
         "bestDriver": "Povilas L."
     },
@@ -247,22 +247,6 @@
         "sessions": 1,
         "bestLap": "00:51.862",
         "bestDriver": "Justas Ž."
-    },
-    {
-        "id": "*smalininkai*",
-        "name": "*Smalininkai*",
-        "lat": 0,
-        "lng": 0,
-        "mapsLink": "https://maps.app.goo.gl/QzKoAhmFUwNUtwkC6",
-        "color": "#aaaaaa",
-        "note": "Generated circuit",
-        "configs": [
-            "2024"
-        ],
-        "sessions": 1,
-        "bestLap": null,
-        "bestLap_s": null,
-        "bestDriver": null
     },
     {
         "id": "awix_racing_arena",
