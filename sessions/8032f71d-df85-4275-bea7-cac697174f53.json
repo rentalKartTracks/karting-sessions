@@ -1,0 +1,72 @@
+{
+  "session_id": "8032f71d-df85-4275-bea7-cac697174f53",
+  "driver": "Povilas L.",
+  "fastest_lap": "00‎:59.266",
+  "track": {
+    "name": "*Smalininkai*",
+    "configuration": "2024",
+    "maps_link": "https://maps.app.goo.gl/QzKoAhmFUwNUtwkC6"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "00:21",
+  "video_url": "https://youtu.be/viZhPcprF6U?si=iNjEJv_GfCSckD1m",
+  "session_date": "2026-04-18",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "01‎:10.472"
+    },
+    {
+      "lap": 2,
+      "time": "01‎:00.568"
+    },
+    {
+      "lap": 3,
+      "time": "01‎:01.493"
+    },
+    {
+      "lap": 4,
+      "time": "01‎:00.360"
+    },
+    {
+      "lap": 5,
+      "time": "01‎:00.216"
+    },
+    {
+      "lap": 6,
+      "time": "00‎:59.748"
+    },
+    {
+      "lap": 7,
+      "time": "01‎:00.481"
+    },
+    {
+      "lap": 8,
+      "time": "00‎:59.774"
+    },
+    {
+      "lap": 9,
+      "time": "00‎:59.582"
+    },
+    {
+      "lap": 10,
+      "time": "00‎:59.879"
+    },
+    {
+      "lap": 11,
+      "time": "01‎:00.374"
+    },
+    {
+      "lap": 12,
+      "time": "00‎:59.932"
+    },
+    {
+      "lap": 13,
+      "time": "00‎:59.266"
+    },
+    {
+      "lap": 14,
+      "time": "00‎:59.735"
+    }
+  ]
+}
