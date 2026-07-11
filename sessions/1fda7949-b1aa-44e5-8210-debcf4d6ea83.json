@@ -1,0 +1,68 @@
+{
+  "session_id": "1fda7949-b1aa-44e5-8210-debcf4d6ea83",
+  "driver": "Ignas M.",
+  "fastest_lap": "00:44.301",
+  "track": {
+    "name": "Plytinė",
+    "configuration": "Summer",
+    "maps_link": "https://maps.app.goo.gl/8y38AAXx2MhmxR7T9"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "00:17",
+  "video_url": "https://youtu.be/BqnfVv4ONNg",
+  "session_date": "2026-07-11",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "00:49.010"
+    },
+    {
+      "lap": 2,
+      "time": "00:45.113"
+    },
+    {
+      "lap": 3,
+      "time": "00:45.774"
+    },
+    {
+      "lap": 4,
+      "time": "00:44.707"
+    },
+    {
+      "lap": 5,
+      "time": "00:45.444"
+    },
+    {
+      "lap": 6,
+      "time": "00:44.743"
+    },
+    {
+      "lap": 7,
+      "time": "00:45.836"
+    },
+    {
+      "lap": 8,
+      "time": "00:44.909"
+    },
+    {
+      "lap": 9,
+      "time": "00:46.161"
+    },
+    {
+      "lap": 10,
+      "time": "00:46.800"
+    },
+    {
+      "lap": 11,
+      "time": "00:44.693"
+    },
+    {
+      "lap": 12,
+      "time": "00:44.301"
+    },
+    {
+      "lap": 13,
+      "time": "00:44.939"
+    }
+  ]
+}
