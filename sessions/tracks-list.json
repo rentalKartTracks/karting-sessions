@@ -128,6 +128,21 @@
         "bestDriver": "Ignas M."
     },
     {
+        "id": "plytinė",
+        "name": "Plytinė",
+        "lat": 0,
+        "lng": 0,
+        "mapsLink": "https://maps.app.goo.gl/8y38AAXx2MhmxR7T9",
+        "color": "#aaaaaa",
+        "note": "Generated circuit",
+        "configs": [
+            "Summer"
+        ],
+        "sessions": 1,
+        "bestLap": "00:44.301",
+        "bestDriver": "Ignas M."
+    },
+    {
         "id": "balciunu",
         "name": "Balčiūnų",
         "lat": 55.8984413,
