@@ -215,6 +215,15 @@ STATIC_TRACKS = {
         "color": "#9a4ae8",
         "note": "Karting · Bydgoszcz",
         "outdoor": False
+    },
+    "Blāzma": {
+        "id": "blāzma",
+        "lat": 55.84813,
+        "lng": 26.53592,
+        "mapsLink": "https://www.google.com/maps/search/?api=1&query=55.84813,26.53592",
+        "color": "#4a6ae8",
+        "note": "Outdoor circuit · Daugavpils, Latvia",
+        "outdoor": True
     }
 }
 
