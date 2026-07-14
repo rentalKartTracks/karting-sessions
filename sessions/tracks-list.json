@@ -204,6 +204,22 @@
         "bestDriver": "Povilas L."
     },
     {
+        "id": "blāzma",
+        "name": "Blāzma",
+        "lat": 0,
+        "lng": 0,
+        "mapsLink": "https://maps.app.goo.gl/89z8cReFfaaWGKtHA",
+        "color": "#aaaaaa",
+        "note": "Generated circuit",
+        "configs": [
+            "2026"
+        ],
+        "sessions": 1,
+        "bestLap": null,
+        "bestLap_s": null,
+        "bestDriver": null
+    },
+    {
         "id": "smalininku",
         "name": "Smalininkų kartodromas",
         "lat": 55.0787157,
