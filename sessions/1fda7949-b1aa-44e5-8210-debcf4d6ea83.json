@@ -3,7 +3,7 @@
   "driver": "Ignas M.",
   "fastest_lap": "00:44.301",
   "track": {
-    "name": "Plytinė",
+    "name": "Plytinės Kartodromas",
     "configuration": "Summer",
     "maps_link": "https://maps.app.goo.gl/8y38AAXx2MhmxR7T9"
   },
@@ -64,6 +64,5 @@
       "lap": 13,
       "time": "00:44.939"
     }
-  ],
-  "video_available": true
+  ]
 }
