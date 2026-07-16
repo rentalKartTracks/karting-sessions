@@ -1,39 +1,39 @@
 {
     "sessions": [
         {
-            "id": "0e70ce26-9c64-4dc1-9fe7-1392630d394f",
-            "driver": "Kęstas Č.",
+            "id": "3cba0319-864d-4ab1-a689-c57e79eff33e",
+            "driver": "Povilas L.",
             "track": {
-                "name": "Serbentų kartodromas",
+                "name": "Plytinės Kartodromas",
                 "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/1oCzCX2u3d3UXAmg9"
+                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
             },
-            "session_date": "2026-06-07",
+            "session_date": "2026-04-10",
             "kart": "9 Ag",
             "has_video": true,
             "weather": {
-                "temp_max": 22.5,
-                "temp_min": 11.3,
-                "wind_kmh": 7.6,
-                "rain_mm": 1.4,
-                "condition": "Light drizzle"
+                "temp_max": 9.9,
+                "temp_min": -1.5,
+                "wind_kmh": 16.0,
+                "rain_mm": 0.0,
+                "condition": "Overcast"
             },
-            "fastest_lap": "01:07.241",
-            "average_lap": "01:09.186",
-            "fastest_lap_s": 67.241,
-            "average_lap_s": 69.18575,
-            "laps_count": 8
+            "fastest_lap": "00:44.341",
+            "average_lap": "00:45.479",
+            "fastest_lap_s": 44.341,
+            "average_lap_s": 45.47853846153846,
+            "laps_count": 13
         },
         {
-            "id": "5dccd612-73fb-484b-a1bf-70658ddcb609",
-            "driver": "Vaidas R.",
+            "id": "fdf6cd0e-ca2d-4a87-baf7-dbd45601db46",
+            "driver": "Ignas M.",
             "track": {
                 "name": "Speedway",
                 "configuration": "3 konfiguracija",
                 "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
             },
             "session_date": "2026-03-29",
-            "kart": "13 Ag",
+            "kart": "9 Ag",
             "has_video": true,
             "weather": {
                 "temp_max": 16.6,
@@ -42,10 +42,58 @@
                 "rain_mm": 0.0,
                 "condition": "Overcast"
             },
-            "fastest_lap": "01:01.504",
-            "average_lap": "01:02.801",
-            "fastest_lap_s": 61.504,
-            "average_lap_s": 62.800888888888885,
+            "fastest_lap": "00:59.463",
+            "average_lap": "01:02.608",
+            "fastest_lap_s": 59.463,
+            "average_lap_s": 62.608,
+            "laps_count": 9
+        },
+        {
+            "id": "55859a7b-9438-422f-b9cd-ca68816ecc95",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Balčiūnų",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6"
+            },
+            "session_date": "2025-07-13",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 24.5,
+                "temp_min": 13.2,
+                "wind_kmh": 8.9,
+                "rain_mm": 0.5,
+                "condition": "Light drizzle"
+            },
+            "fastest_lap": "01:04.020",
+            "average_lap": "01:04.954",
+            "fastest_lap_s": 64.02,
+            "average_lap_s": 64.95375,
+            "laps_count": 8
+        },
+        {
+            "id": "9eb0f970-685b-4b3c-99b6-8e73a190fc9a",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Speedway",
+                "configuration": "3 konfiguracija",
+                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+            },
+            "session_date": "2026-03-29",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 16.6,
+                "temp_min": 0.9,
+                "wind_kmh": 12.8,
+                "rain_mm": 0.0,
+                "condition": "Overcast"
+            },
+            "fastest_lap": "00:59.598",
+            "average_lap": "01:00.827",
+            "fastest_lap_s": 59.598,
+            "average_lap_s": 60.82688888888889,
             "laps_count": 9
         },
         {
@@ -73,73 +121,97 @@
             "laps_count": 13
         },
         {
-            "id": "3bb6a720-be41-4da9-b037-5763911769fe",
-            "driver": "Povilas L.",
+            "id": "ccf8543c-46c2-4a15-91eb-b435c7832b45",
+            "driver": "Justas Ž.",
             "track": {
-                "name": "E1GOKART Gdańsk",
-                "configuration": "2025",
-                "maps_link": "https://maps.app.goo.gl/wr4dY7tgiYpgngB77"
+                "name": "Serbentų kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/V8ir9cZW4CiqPsT17"
             },
-            "session_date": "2025-05-23",
-            "kart": "",
+            "session_date": "2026-06-07",
+            "kart": "9 Ag",
             "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:56.240",
-            "average_lap": "00:56.773",
-            "fastest_lap_s": 56.24,
-            "average_lap_s": 56.773125,
+            "weather": {
+                "temp_max": 22.5,
+                "temp_min": 11.3,
+                "wind_kmh": 7.6,
+                "rain_mm": 1.4,
+                "condition": "Light drizzle"
+            },
+            "fastest_lap": "01:07.209",
+            "average_lap": "01:09.415",
+            "fastest_lap_s": 67.209,
+            "average_lap_s": 69.415125,
             "laps_count": 8
         },
         {
-            "id": "9ed1dd59-7858-4b43-85d0-8e909b3e62ed",
-            "driver": "Romualdas P.",
+            "id": "b03a20c8-5571-4690-988e-e34c5b00d760",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Serbentų kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/V8ir9cZW4CiqPsT17"
+            },
+            "session_date": "2026-06-07",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 22.5,
+                "temp_min": 11.3,
+                "wind_kmh": 7.6,
+                "rain_mm": 1.4,
+                "condition": "Light drizzle"
+            },
+            "fastest_lap": "01:07.246",
+            "average_lap": "01:10.063",
+            "fastest_lap_s": 67.246,
+            "average_lap_s": 70.062625,
+            "laps_count": 8
+        },
+        {
+            "id": "0cea4ced-a510-4f82-be70-d9afecaf65bf",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Plytinės Kartodromas",
+                "configuration": "Winter",
+                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
+            },
+            "session_date": "2026-02-08",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "01:29.578",
+            "average_lap": "02:14.836",
+            "fastest_lap_s": 89.578,
+            "average_lap_s": 134.83625,
+            "laps_count": 4
+        },
+        {
+            "id": "2ffe82e0-f2df-4334-80ba-c3e6125b82c9",
+            "driver": "Povilas L.",
             "track": {
                 "name": "Plytinės Kartodromas",
                 "configuration": "Summer",
                 "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
             },
-            "session_date": "2026-04-01",
+            "session_date": "2025-07-17",
             "kart": "9 Ag",
             "has_video": true,
             "weather": {
-                "temp_max": 13.1,
-                "temp_min": 4.0,
-                "wind_kmh": 17.1,
+                "temp_max": 23.2,
+                "temp_min": 13.5,
+                "wind_kmh": 10.5,
                 "rain_mm": 0.1,
                 "condition": "Light drizzle"
             },
-            "fastest_lap": "00:45.741",
-            "average_lap": "76:15.064",
-            "fastest_lap_s": 45.741,
-            "average_lap_s": 4575.0635,
-            "laps_count": 12
+            "fastest_lap": "00:44.030",
+            "average_lap": "00:44.598",
+            "fastest_lap_s": 44.03,
+            "average_lap_s": 44.598461538461535,
+            "laps_count": 13
         },
         {
-            "id": "2f7a66f1-14bf-47a0-860f-ce1886739604",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Speedway",
-                "configuration": "long",
-                "maps_link": "https://maps.app.goo.gl/UKjf5X7JGVfx8h2c8"
-            },
-            "session_date": "2025-04-25",
-            "kart": "13 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 12.0,
-                "temp_min": 4.4,
-                "wind_kmh": 21.1,
-                "rain_mm": 0.0,
-                "condition": "Overcast"
-            },
-            "fastest_lap": "00:57.483",
-            "average_lap": "00:58.276",
-            "fastest_lap_s": 57.483,
-            "average_lap_s": 58.275888888888886,
-            "laps_count": 9
-        },
-        {
-            "id": "52a13f05-fabe-4f5d-b1ac-1ac55e28ff8a",
+            "id": "0df0c18d-8cea-4cfd-9e23-7ee108a541fd",
             "driver": "Ignas M.",
             "track": {
                 "name": "E1GOKART Gdańsk",
@@ -157,16 +229,40 @@
             "laps_count": 8
         },
         {
-            "id": "07d186ce-34b4-4fd1-809d-0f060705b0e2",
-            "driver": "Kęstas Č.",
+            "id": "9fdee29c-c4af-490a-adce-5cbbbab68d89",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Tor Półwysep",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/EmVwycty7FxrB8TH7"
+            },
+            "session_date": "2024-06-26",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 23.4,
+                "temp_min": 14.9,
+                "wind_kmh": 18.4,
+                "rain_mm": 0.0,
+                "condition": "Overcast"
+            },
+            "fastest_lap": "00:25.733",
+            "average_lap": "00:28.274",
+            "fastest_lap_s": 25.733,
+            "average_lap_s": 28.274124999999998,
+            "laps_count": 16
+        },
+        {
+            "id": "48de1510-3317-4fdd-90a1-39b5243c7b44",
+            "driver": "Justas Ž.",
             "track": {
                 "name": "Speedway",
                 "configuration": "3 konfiguracija",
                 "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
             },
             "session_date": "2026-03-29",
-            "kart": "9 Ag",
-            "has_video": false,
+            "kart": "13 Ag",
+            "has_video": true,
             "weather": {
                 "temp_max": 16.6,
                 "temp_min": 0.9,
@@ -174,33 +270,171 @@
                 "rain_mm": 0.0,
                 "condition": "Overcast"
             },
-            "fastest_lap": "00:59.196",
-            "average_lap": "01:01.157",
-            "fastest_lap_s": 59.196,
-            "average_lap_s": 61.15688888888889,
+            "fastest_lap": "01:00.941",
+            "average_lap": "01:02.804",
+            "fastest_lap_s": 60.941,
+            "average_lap_s": 62.803555555555555,
             "laps_count": 9
         },
         {
-            "id": "bba25b2e-9a78-464f-b68e-c29697ddcfb2",
+            "id": "c28a9346-1205-48e3-bb9d-efa3f21b0418",
             "driver": "Kęstas Č.",
+            "track": {
+                "name": "Smalininkų kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/959ZMAV6acyt6uEr8"
+            },
+            "session_date": "2024-04-27",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 16.5,
+                "temp_min": 4.7,
+                "wind_kmh": 23.4,
+                "rain_mm": 0.1,
+                "condition": "Light drizzle"
+            },
+            "fastest_lap": "00:59.698",
+            "average_lap": "01:00.247",
+            "fastest_lap_s": 59.698,
+            "average_lap_s": 60.24699999999999,
+            "laps_count": 9
+        },
+        {
+            "id": "04e898e9-0c52-42bf-b01f-bbebee490945",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Smalininkų kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/959ZMAV6acyt6..."
+            },
+            "session_date": "2024-04-27",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 16.5,
+                "temp_min": 4.7,
+                "wind_kmh": 23.4,
+                "rain_mm": 0.1,
+                "condition": "Light drizzle"
+            },
+            "fastest_lap": "00:59.000",
+            "average_lap": "01:01.382",
+            "fastest_lap_s": 59.0,
+            "average_lap_s": 61.38211111111111,
+            "laps_count": 9
+        },
+        {
+            "id": "cd56b050-af11-419d-9186-5fe0cd49b904",
+            "driver": "Romualdas P.",
+            "track": {
+                "name": "Speedway",
+                "configuration": "3 konfiguracija",
+                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+            },
+            "session_date": "2026-03-29",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 16.6,
+                "temp_min": 0.9,
+                "wind_kmh": 12.8,
+                "rain_mm": 0.0,
+                "condition": "Overcast"
+            },
+            "fastest_lap": "01:00.764",
+            "average_lap": "01:01.976",
+            "fastest_lap_s": 60.764,
+            "average_lap_s": 61.976333333333336,
+            "laps_count": 9
+        },
+        {
+            "id": "88edc64e-f0f2-43b3-ac04-397ccdc424b8",
+            "driver": "Justas Ž.",
+            "track": {
+                "name": "Balčiūnų",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6"
+            },
+            "session_date": "2025-07-13",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 24.5,
+                "temp_min": 13.2,
+                "wind_kmh": 8.9,
+                "rain_mm": 0.5,
+                "condition": "Light drizzle"
+            },
+            "fastest_lap": "01:04.090",
+            "average_lap": "01:06.131",
+            "fastest_lap_s": 64.09,
+            "average_lap_s": 66.13125,
+            "laps_count": 8
+        },
+        {
+            "id": "90a12d0f-14b0-41e7-9f57-6fa9c696ae64",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Balčiūnų",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6"
+            },
+            "session_date": "2025-07-13",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "01:04.555",
+            "average_lap": "01:05.747",
+            "fastest_lap_s": 64.555,
+            "average_lap_s": 65.747375,
+            "laps_count": 8
+        },
+        {
+            "id": "5dccd612-73fb-484b-a1bf-70658ddcb609",
+            "driver": "Vaidas R.",
+            "track": {
+                "name": "Speedway",
+                "configuration": "3 konfiguracija",
+                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+            },
+            "session_date": "2026-03-29",
+            "kart": "13 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 16.6,
+                "temp_min": 0.9,
+                "wind_kmh": 12.8,
+                "rain_mm": 0.0,
+                "condition": "Overcast"
+            },
+            "fastest_lap": "01:01.504",
+            "average_lap": "01:02.801",
+            "fastest_lap_s": 61.504,
+            "average_lap_s": 62.800888888888885,
+            "laps_count": 9
+        },
+        {
+            "id": "a7d61fbf-6d41-4b59-abd0-63454ab69dc0",
+            "driver": "Povilas L.",
             "track": {
                 "name": "Kartlandas Kaunas",
                 "configuration": "2025",
                 "maps_link": "https://maps.app.goo.gl/7Q9SbwwcmwyNqUH56"
             },
-            "session_date": "2025-10-11",
+            "session_date": "2026-02-14",
             "kart": "9 Ag",
             "has_video": true,
             "weather": null,
-            "fastest_lap": "00:26.124",
-            "average_lap": "00:28.265",
-            "fastest_lap_s": 26.124,
-            "average_lap_s": 28.2647,
+            "fastest_lap": "00:25.906",
+            "average_lap": "00:28.676",
+            "fastest_lap_s": 25.906,
+            "average_lap_s": 28.6764,
             "laps_count": 30
         },
         {
-            "id": "182f5046-4c4d-4da5-9d53-552a2622506b",
-            "driver": "Vaidas R.",
+            "id": "2e651a94-2d89-4dd0-b963-2b1febbb9db7",
+            "driver": "Ignas I.",
             "track": {
                 "name": "Kartlandas Max",
                 "configuration": "Kartlandas Max 2026",
@@ -210,47 +444,407 @@
             "kart": "9 Ag",
             "has_video": true,
             "weather": null,
-            "fastest_lap": "00:38.701",
-            "average_lap": "00:40.396",
-            "fastest_lap_s": 38.701,
-            "average_lap_s": 40.39566666666666,
+            "fastest_lap": "00:38.655",
+            "average_lap": "00:40.336",
+            "fastest_lap_s": 38.655,
+            "average_lap_s": 40.33557142857143,
             "laps_count": 21
         },
         {
-            "id": "f1bd3b18-24e6-4f21-bbc1-395bce3d0b03",
-            "driver": "Justas Ž.",
+            "id": "ce80f760-e117-4739-b711-573e8dbf7bb3",
+            "driver": "Povilas L.",
             "track": {
-                "name": "E1GOKART Gdańsk",
-                "configuration": "2025",
-                "maps_link": "https://maps.app.goo.gl/wr4dY7tgiYpgngB77"
+                "name": "Awix Racing Arena",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/ybcsyhCrN3D1E2XbA"
             },
-            "session_date": "2025-05-23",
-            "kart": "",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:57.516",
-            "average_lap": "00:58.723",
-            "fastest_lap_s": 57.516,
-            "average_lap_s": 58.723,
-            "laps_count": 8
-        },
-        {
-            "id": "c74839e7-1346-4027-ad80-dd3bc2a631dd",
-            "driver": "Kęstas Č.",
-            "track": {
-                "name": "Vilko Kartodromas",
-                "configuration": "wolf 2025",
-                "maps_link": "https://maps.app.goo.gl/9erykKE9f58EYZ9TA"
-            },
-            "session_date": "2025-10-11",
+            "session_date": "2024-06-04",
             "kart": "9 Ag",
             "has_video": true,
             "weather": null,
-            "fastest_lap": "00:18.050",
-            "average_lap": "00:19.246",
-            "fastest_lap_s": 18.05,
-            "average_lap_s": 19.246488888888887,
-            "laps_count": 45
+            "fastest_lap": "01:02.505",
+            "average_lap": "01:04.998",
+            "fastest_lap_s": 62.505,
+            "average_lap_s": 64.9983,
+            "laps_count": 10
+        },
+        {
+            "id": "d9c6c024-298b-44d4-9290-d5448cfc01eb",
+            "driver": "Julius B.",
+            "track": {
+                "name": "E1GOKART Gdańsk",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8"
+            },
+            "session_date": "2024-07-29",
+            "kart": "",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:58.225",
+            "average_lap": "00:59.634",
+            "fastest_lap_s": 58.225,
+            "average_lap_s": 59.63428571428572,
+            "laps_count": 7
+        },
+        {
+            "id": "b424ec42-4be0-44bc-bf6d-a989c9506ecb",
+            "driver": "Ignas M.",
+            "track": {
+                "name": "Speedway",
+                "configuration": "Rain",
+                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+            },
+            "session_date": "2025-11-09",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 5.3,
+                "temp_min": 3.6,
+                "wind_kmh": 11.2,
+                "rain_mm": 0.0,
+                "condition": "Overcast"
+            },
+            "fastest_lap": "01:25.862",
+            "average_lap": "01:27.118",
+            "fastest_lap_s": 85.862,
+            "average_lap_s": 87.1176,
+            "laps_count": 5
+        },
+        {
+            "id": "2dd469fc-e230-4c9f-a463-570b425ed44e",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Anykščių kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8"
+            },
+            "session_date": "2024-09-08",
+            "kart": "13 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 24.2,
+                "temp_min": 13.7,
+                "wind_kmh": 15.1,
+                "rain_mm": 0.0,
+                "condition": "Partly cloudy"
+            },
+            "fastest_lap": "00:45.330",
+            "average_lap": "00:46.381",
+            "fastest_lap_s": 45.33,
+            "average_lap_s": 46.38083333333333,
+            "laps_count": 12
+        },
+        {
+            "id": "784594f9-e230-4397-a8ce-4643d32b65df",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Speedway",
+                "configuration": "Winter 2026",
+                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+            },
+            "session_date": "2026-01-04",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": -2.2,
+                "temp_min": -5.9,
+                "wind_kmh": 19.0,
+                "rain_mm": 0.6,
+                "condition": "Snow"
+            },
+            "fastest_lap": "00:46.013",
+            "average_lap": "00:49.714",
+            "fastest_lap_s": 46.013,
+            "average_lap_s": 49.71363636363637,
+            "laps_count": 11
+        },
+        {
+            "id": "fb6cb98e-b9f2-4b12-a4b2-4ef08257da5a",
+            "driver": "Ignas M.",
+            "track": {
+                "name": "Serbentų kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88"
+            },
+            "session_date": "2024-07-06",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 23.5,
+                "temp_min": 11.7,
+                "wind_kmh": 21.6,
+                "rain_mm": 0.1,
+                "condition": "Light drizzle"
+            },
+            "fastest_lap": "01:08.293",
+            "average_lap": "01:10.679",
+            "fastest_lap_s": 68.293,
+            "average_lap_s": 70.67914285714286,
+            "laps_count": 7
+        },
+        {
+            "id": "cea04830-8538-461f-a99b-373599fd0368",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Balčiūnų",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6"
+            },
+            "session_date": "2025-07-13",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 24.5,
+                "temp_min": 13.2,
+                "wind_kmh": 8.9,
+                "rain_mm": 0.5,
+                "condition": "Light drizzle"
+            },
+            "fastest_lap": "01:04.660",
+            "average_lap": "01:05.782",
+            "fastest_lap_s": 64.66,
+            "average_lap_s": 65.7825,
+            "laps_count": 8
+        },
+        {
+            "id": "728b61b0-5dc4-401e-9ded-9259bd2b17fd",
+            "driver": "Ignas M.",
+            "track": {
+                "name": "Plytinės Kartodromas",
+                "configuration": "Winter",
+                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
+            },
+            "session_date": "2026-01-02",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 0.8,
+                "temp_min": -2.9,
+                "wind_kmh": 23.9,
+                "rain_mm": 7.2,
+                "condition": "Heavy snow"
+            },
+            "fastest_lap": "01:23.385",
+            "average_lap": "01:25.938",
+            "fastest_lap_s": 83.385,
+            "average_lap_s": 85.93757142857143,
+            "laps_count": 7
+        },
+        {
+            "id": "0e70ce26-9c64-4dc1-9fe7-1392630d394f",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Serbentų kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/1oCzCX2u3d3UXAmg9"
+            },
+            "session_date": "2026-06-07",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "01:07.241",
+            "average_lap": "01:09.186",
+            "fastest_lap_s": 67.241,
+            "average_lap_s": 69.18575,
+            "laps_count": 8
+        },
+        {
+            "id": "c0e2f16a-5005-4796-8401-15e3e3ae3b3c",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Anykščių kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8"
+            },
+            "session_date": "2024-09-08",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 24.2,
+                "temp_min": 13.7,
+                "wind_kmh": 15.1,
+                "rain_mm": 0.0,
+                "condition": "Partly cloudy"
+            },
+            "fastest_lap": "00:47.200",
+            "average_lap": "00:47.933",
+            "fastest_lap_s": 47.2,
+            "average_lap_s": 47.93333333333334,
+            "laps_count": 12
+        },
+        {
+            "id": "b602fe86-8dc2-4d43-baa8-fb43d6c0ca78",
+            "driver": "Ignas M.",
+            "track": {
+                "name": "KartCenter Sopot",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/t4cWok3pkRS21u6k9"
+            },
+            "session_date": "2025-05-23",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:40.573",
+            "average_lap": "00:41.561",
+            "fastest_lap_s": 40.573,
+            "average_lap_s": 41.561090909090915,
+            "laps_count": 11
+        },
+        {
+            "id": "45fde364-025f-4519-a6c2-4b4c49126db2",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Smalininkų kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/959ZMAV6acyt6uEr8"
+            },
+            "session_date": "2024-04-27",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 16.5,
+                "temp_min": 4.7,
+                "wind_kmh": 23.4,
+                "rain_mm": 0.1,
+                "condition": "Light drizzle"
+            },
+            "fastest_lap": "00:59.878",
+            "average_lap": "01:00.842",
+            "fastest_lap_s": 59.878,
+            "average_lap_s": 60.841555555555566,
+            "laps_count": 9
+        },
+        {
+            "id": "12f300c4-da22-42e6-80d2-3a1c0f2de8a4",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Kartlandas Vilnius",
+                "configuration": "2026",
+                "maps_link": "https://maps.app.goo.gl/gdUVyVfv8P7JUnzH6"
+            },
+            "session_date": "2026-06-27",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "01:11.334",
+            "average_lap": "01:13.148",
+            "fastest_lap_s": 71.334,
+            "average_lap_s": 73.14800000000001,
+            "laps_count": 11
+        },
+        {
+            "id": "2ee6b65c-2542-4d3c-91bb-7a4d29442509",
+            "driver": "Ignas M.",
+            "track": {
+                "name": "Anykščių kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8"
+            },
+            "session_date": "2024-09-08",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 24.2,
+                "temp_min": 13.7,
+                "wind_kmh": 15.1,
+                "rain_mm": 0.0,
+                "condition": "Partly cloudy"
+            },
+            "fastest_lap": "00:49.500",
+            "average_lap": "00:51.955",
+            "fastest_lap_s": 49.5,
+            "average_lap_s": 51.95454545454545,
+            "laps_count": 11
+        },
+        {
+            "id": "d8625020-03cc-45a0-a876-13f4af92d5a8",
+            "driver": "Vaidas R.",
+            "track": {
+                "name": "Rudskogen Motorsenter",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/BHE3Yt1iVqcHmGkv7"
+            },
+            "session_date": "2025-07-17",
+            "kart": "13 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 28.6,
+                "temp_min": 16.4,
+                "wind_kmh": 14.4,
+                "rain_mm": 0.0,
+                "condition": "Mainly clear"
+            },
+            "fastest_lap": "01:07.080",
+            "average_lap": "01:08.020",
+            "fastest_lap_s": 67.08,
+            "average_lap_s": 68.01975,
+            "laps_count": 8
+        },
+        {
+            "id": "565e7836-a2ec-4ca2-9d20-54c17261648d",
+            "driver": "Julius B.",
+            "track": {
+                "name": "Speedway",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/UKjf5X7JGVfx8h2c8"
+            },
+            "session_date": "2024-10-16",
+            "kart": "13 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 9.4,
+                "temp_min": 2.6,
+                "wind_kmh": 11.3,
+                "rain_mm": 0.0,
+                "condition": "Overcast"
+            },
+            "fastest_lap": "01:05.026",
+            "average_lap": "01:08.719",
+            "fastest_lap_s": 65.026,
+            "average_lap_s": 68.71900000000001,
+            "laps_count": 7
+        },
+        {
+            "id": "9ed1dd59-7858-4b43-85d0-8e909b3e62ed",
+            "driver": "Romualdas P.",
+            "track": {
+                "name": "Plytinės Kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
+            },
+            "session_date": "2026-04-01",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:45.741",
+            "average_lap": "76:15.064",
+            "fastest_lap_s": 45.741,
+            "average_lap_s": 4575.0635,
+            "laps_count": 12
+        },
+        {
+            "id": "1c01555c-bf1d-4e72-b62b-4def48812c97",
+            "driver": "Romualdas P.",
+            "track": {
+                "name": "Plytinės Kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
+            },
+            "session_date": "2026-04-10",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 9.9,
+                "temp_min": -1.5,
+                "wind_kmh": 16.0,
+                "rain_mm": 0.0,
+                "condition": "Overcast"
+            },
+            "fastest_lap": "00:45.092",
+            "average_lap": "00:46.352",
+            "fastest_lap_s": 45.092,
+            "average_lap_s": 46.35246153846154,
+            "laps_count": 13
         },
         {
             "id": "5e5ba0d7-d3d5-421a-8982-04dd5d8279a7",
@@ -277,22 +871,124 @@
             "laps_count": 7
         },
         {
-            "id": "b602fe86-8dc2-4d43-baa8-fb43d6c0ca78",
+            "id": "5a51fadf-76ca-491c-965a-2b3de21a13c6",
             "driver": "Ignas M.",
             "track": {
-                "name": "KartCenter Sopot",
-                "configuration": "2025",
-                "maps_link": "https://maps.app.goo.gl/t4cWok3pkRS21u6k9"
+                "name": "Anykščių kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8"
             },
-            "session_date": "2025-05-23",
+            "session_date": "2024-09-08",
+            "kart": "13 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 24.2,
+                "temp_min": 13.7,
+                "wind_kmh": 15.1,
+                "rain_mm": 0.0,
+                "condition": "Partly cloudy"
+            },
+            "fastest_lap": "00:47.400",
+            "average_lap": "00:51.291",
+            "fastest_lap_s": 47.4,
+            "average_lap_s": 51.290909090909096,
+            "laps_count": 11
+        },
+        {
+            "id": "2f7a66f1-14bf-47a0-860f-ce1886739604",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Speedway",
+                "configuration": "long",
+                "maps_link": "https://maps.app.goo.gl/UKjf5X7JGVfx8h2c8"
+            },
+            "session_date": "2025-04-25",
+            "kart": "13 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 12.0,
+                "temp_min": 4.4,
+                "wind_kmh": 21.1,
+                "rain_mm": 0.0,
+                "condition": "Overcast"
+            },
+            "fastest_lap": "00:57.483",
+            "average_lap": "00:58.276",
+            "fastest_lap_s": 57.483,
+            "average_lap_s": 58.275888888888886,
+            "laps_count": 9
+        },
+        {
+            "id": "61364232-2096-419c-afef-be3d844f1533",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Tor Półwysep",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/rAMgznAK6mQx8Nwf6"
+            },
+            "session_date": "2025-05-28",
             "kart": "9 Ag",
             "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:40.573",
-            "average_lap": "00:41.561",
-            "fastest_lap_s": 40.573,
-            "average_lap_s": 41.561090909090915,
-            "laps_count": 11
+            "weather": {
+                "temp_max": 20.0,
+                "temp_min": 12.7,
+                "wind_kmh": 15.3,
+                "rain_mm": 5.1,
+                "condition": "Light rain"
+            },
+            "fastest_lap": "00:25.180",
+            "average_lap": "00:26.317",
+            "fastest_lap_s": 25.18,
+            "average_lap_s": 26.316764705882353,
+            "laps_count": 17
+        },
+        {
+            "id": "cf5d9f8e-5fe0-4273-b822-e66f88cdba66",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Plytinės Kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
+            },
+            "session_date": "2026-04-10",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 9.9,
+                "temp_min": -1.5,
+                "wind_kmh": 16.0,
+                "rain_mm": 0.0,
+                "condition": "Overcast"
+            },
+            "fastest_lap": "00:43.590",
+            "average_lap": "00:44.611",
+            "fastest_lap_s": 43.59,
+            "average_lap_s": 44.61123076923077,
+            "laps_count": 13
+        },
+        {
+            "id": "07d186ce-34b4-4fd1-809d-0f060705b0e2",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Speedway",
+                "configuration": "3 konfiguracija",
+                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+            },
+            "session_date": "2026-03-29",
+            "kart": "9 Ag",
+            "has_video": false,
+            "weather": {
+                "temp_max": 16.6,
+                "temp_min": 0.9,
+                "wind_kmh": 12.8,
+                "rain_mm": 0.0,
+                "condition": "Overcast"
+            },
+            "fastest_lap": "00:59.196",
+            "average_lap": "01:01.157",
+            "fastest_lap_s": 59.196,
+            "average_lap_s": 61.15688888888889,
+            "laps_count": 9
         },
         {
             "id": "1fda7949-b1aa-44e5-8210-debcf4d6ea83",
@@ -305,18 +1001,420 @@
             "session_date": "2026-07-11",
             "kart": "9 Ag",
             "has_video": true,
-            "weather": {
-                "temp_max": 17.3,
-                "temp_min": 10.7,
-                "wind_kmh": 12.6,
-                "rain_mm": 6.4,
-                "condition": "Light rain"
-            },
+            "weather": null,
             "fastest_lap": "00:44.301",
             "average_lap": "00:45.572",
             "fastest_lap_s": 44.301,
             "average_lap_s": 45.57153846153846,
             "laps_count": 13
+        },
+        {
+            "id": "f90e38ad-684a-4fb1-aea5-d0115793aa7d",
+            "driver": "Vaidas R.",
+            "track": {
+                "name": "Rudskogen Motorsenter",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/F1Skt3aC7h4SPi856"
+            },
+            "session_date": "2025-07-17",
+            "kart": "13 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 28.6,
+                "temp_min": 16.4,
+                "wind_kmh": 14.4,
+                "rain_mm": 0.0,
+                "condition": "Mainly clear"
+            },
+            "fastest_lap": "01:07.244",
+            "average_lap": "01:09.246",
+            "fastest_lap_s": 67.244,
+            "average_lap_s": 69.24549999999999,
+            "laps_count": 8
+        },
+        {
+            "id": "52a13f05-fabe-4f5d-b1ac-1ac55e28ff8a",
+            "driver": "Ignas M.",
+            "track": {
+                "name": "E1GOKART Gdańsk",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/X4x15zAeCHb2NFjz7"
+            },
+            "session_date": "2025-05-23",
+            "kart": "",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:56.220",
+            "average_lap": "00:57.584",
+            "fastest_lap_s": 56.22,
+            "average_lap_s": 57.583625,
+            "laps_count": 8
+        },
+        {
+            "id": "3b4e5b90-fb54-4667-823c-18758eece338",
+            "driver": "Justas Ž.",
+            "track": {
+                "name": "Balčiūnų",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6"
+            },
+            "session_date": "2025-07-13",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 24.5,
+                "temp_min": 13.2,
+                "wind_kmh": 8.9,
+                "rain_mm": 0.5,
+                "condition": "Light drizzle"
+            },
+            "fastest_lap": "01:05.830",
+            "average_lap": "01:07.054",
+            "fastest_lap_s": 65.83,
+            "average_lap_s": 67.05444444444444,
+            "laps_count": 9
+        },
+        {
+            "id": "346e55c3-7d4c-4441-8791-4c9efe9aff73",
+            "driver": "Romualdas P.",
+            "track": {
+                "name": "Plytinės Kartodromas",
+                "configuration": "Winter",
+                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
+            },
+            "session_date": "2026-01-02",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 0.8,
+                "temp_min": -2.9,
+                "wind_kmh": 23.9,
+                "rain_mm": 7.2,
+                "condition": "Heavy snow"
+            },
+            "fastest_lap": "01:28.358",
+            "average_lap": "01:47.720",
+            "fastest_lap_s": 88.358,
+            "average_lap_s": 107.7202,
+            "laps_count": 5
+        },
+        {
+            "id": "d4f4584a-1fbc-44c0-bf48-6906a98548cf",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Speedway",
+                "configuration": "Rain",
+                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+            },
+            "session_date": "2025-11-09",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 5.3,
+                "temp_min": 3.6,
+                "wind_kmh": 11.2,
+                "rain_mm": 0.0,
+                "condition": "Overcast"
+            },
+            "fastest_lap": "01:26.116",
+            "average_lap": "01:31.214",
+            "fastest_lap_s": 86.116,
+            "average_lap_s": 91.2136,
+            "laps_count": 5
+        },
+        {
+            "id": "0d0f436d-a2f9-4e03-bd54-8f1c633c675a",
+            "driver": "Ignas M.",
+            "track": {
+                "name": "Speedway",
+                "configuration": "Winter 2026",
+                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+            },
+            "session_date": "2026-01-04",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": -2.2,
+                "temp_min": -5.9,
+                "wind_kmh": 19.0,
+                "rain_mm": 0.6,
+                "condition": "Snow"
+            },
+            "fastest_lap": "00:47.989",
+            "average_lap": "01:03.316",
+            "fastest_lap_s": 47.989,
+            "average_lap_s": 63.316375,
+            "laps_count": 8
+        },
+        {
+            "id": "182f5046-4c4d-4da5-9d53-552a2622506b",
+            "driver": "Vaidas R.",
+            "track": {
+                "name": "Kartlandas Max",
+                "configuration": "Kartlandas Max 2026",
+                "maps_link": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7"
+            },
+            "session_date": "2026-03-15",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:38.701",
+            "average_lap": "00:40.396",
+            "fastest_lap_s": 38.701,
+            "average_lap_s": 40.39566666666666,
+            "laps_count": 21
+        },
+        {
+            "id": "c74839e7-1346-4027-ad80-dd3bc2a631dd",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Vilko Kartodromas",
+                "configuration": "wolf 2025",
+                "maps_link": "https://maps.app.goo.gl/9erykKE9f58EYZ9TA"
+            },
+            "session_date": "2025-10-11",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:18.050",
+            "average_lap": "00:19.246",
+            "fastest_lap_s": 18.05,
+            "average_lap_s": 19.246488888888887,
+            "laps_count": 45
+        },
+        {
+            "id": "11eb97b2-c016-4e40-97ef-065ab445993e",
+            "driver": "Ernest S.",
+            "track": {
+                "name": "Plytinės Kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
+            },
+            "session_date": "2026-04-10",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 9.9,
+                "temp_min": -1.5,
+                "wind_kmh": 16.0,
+                "rain_mm": 0.0,
+                "condition": "Overcast"
+            },
+            "fastest_lap": "00:47.800",
+            "average_lap": "00:49.887",
+            "fastest_lap_s": 47.8,
+            "average_lap_s": 49.88691666666667,
+            "laps_count": 12
+        },
+        {
+            "id": "1d7a6432-0394-4808-b7b6-c48127b40c5d",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "E1GOKART Gdańsk",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8"
+            },
+            "session_date": "2024-06-18",
+            "kart": "",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:57.748",
+            "average_lap": "00:58.479",
+            "fastest_lap_s": 57.748,
+            "average_lap_s": 58.478571428571435,
+            "laps_count": 7
+        },
+        {
+            "id": "103721eb-ac5d-44e7-8d40-efb94fd7b191",
+            "driver": "Justas Ž.",
+            "track": {
+                "name": "Plytinės Kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
+            },
+            "session_date": "2026-04-10",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 9.9,
+                "temp_min": -1.5,
+                "wind_kmh": 16.0,
+                "rain_mm": 0.0,
+                "condition": "Overcast"
+            },
+            "fastest_lap": "00:43.735",
+            "average_lap": "00:44.643",
+            "fastest_lap_s": 43.735,
+            "average_lap_s": 44.64338461538462,
+            "laps_count": 13
+        },
+        {
+            "id": "7aad12f4-6619-4bf6-ae8a-c313d966d54c",
+            "driver": "Ignas M.",
+            "track": {
+                "name": "Plytinės Kartodromas",
+                "configuration": "Winter",
+                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
+            },
+            "session_date": "2026-02-08",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": -4.5,
+                "temp_min": -12.3,
+                "wind_kmh": 20.9,
+                "rain_mm": 0.1,
+                "condition": "Light snow"
+            },
+            "fastest_lap": "01:30.043",
+            "average_lap": "01:48.379",
+            "fastest_lap_s": 90.043,
+            "average_lap_s": 108.37899999999999,
+            "laps_count": 5
+        },
+        {
+            "id": "9f89f48b-f323-4337-b9ec-bff68395a623",
+            "driver": "Romualdas P.",
+            "track": {
+                "name": "Kartlandas Max",
+                "configuration": "Kartlandas Max 2026",
+                "maps_link": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7"
+            },
+            "session_date": "2026-03-15",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:38.701",
+            "average_lap": "00:40.396",
+            "fastest_lap_s": 38.701,
+            "average_lap_s": 40.39566666666666,
+            "laps_count": 21
+        },
+        {
+            "id": "bba25b2e-9a78-464f-b68e-c29697ddcfb2",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Kartlandas Kaunas",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/7Q9SbwwcmwyNqUH56"
+            },
+            "session_date": "2025-10-11",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:26.124",
+            "average_lap": "00:28.265",
+            "fastest_lap_s": 26.124,
+            "average_lap_s": 28.2647,
+            "laps_count": 30
+        },
+        {
+            "id": "5e710b4b-c8f3-46c0-9707-090b1f41508d",
+            "driver": "Ignas M.",
+            "track": {
+                "name": "Kartlandas Max",
+                "configuration": "Kartlandas Max 2026",
+                "maps_link": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7"
+            },
+            "session_date": "2026-03-15",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:38.614",
+            "average_lap": "00:40.268",
+            "fastest_lap_s": 38.614,
+            "average_lap_s": 40.26763636363636,
+            "laps_count": 22
+        },
+        {
+            "id": "3a7d895c-8279-43ec-9817-b84e6ccaa55f",
+            "driver": "Justas Ž.",
+            "track": {
+                "name": "Kartlandas Max",
+                "configuration": "Kartlandas Max 2026",
+                "maps_link": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7"
+            },
+            "session_date": "2026-04-03",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:38.437",
+            "average_lap": "00:39.504",
+            "fastest_lap_s": 38.437,
+            "average_lap_s": 39.50373333333334,
+            "laps_count": 15
+        },
+        {
+            "id": "79e0981a-ffac-4bad-896d-0aa2a4e7feb0",
+            "driver": "Justas Ž.",
+            "track": {
+                "name": "Kartlandas Max",
+                "configuration": "Kartlandas Max 2026",
+                "maps_link": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7"
+            },
+            "session_date": "2026-03-15",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:39.566",
+            "average_lap": "00:41.359",
+            "fastest_lap_s": 39.566,
+            "average_lap_s": 41.35857142857143,
+            "laps_count": 21
+        },
+        {
+            "id": "a92abab9-ced6-451e-8599-2c45498a7d1c",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "KartCenter Gdańsk Gokarty",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/RUBF4Y86mvd37qu67"
+            },
+            "session_date": "2025-05-28",
+            "kart": "",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:22.840",
+            "average_lap": "00:23.530",
+            "fastest_lap_s": 22.84,
+            "average_lap_s": 23.529571428571426,
+            "laps_count": 14
+        },
+        {
+            "id": "a9663237-6649-486e-b5e9-08931eab826c",
+            "driver": "Ignas I.",
+            "track": {
+                "name": "Plytinės Kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
+            },
+            "session_date": "2026-04-24",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:44.480",
+            "average_lap": "00:45.699",
+            "fastest_lap_s": 44.48,
+            "average_lap_s": 45.69907692307692,
+            "laps_count": 13
+        },
+        {
+            "id": "f1ad89eb-a8a6-42fb-9cfc-2c98bb59d91c",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "E1GOKART Gdańsk",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8"
+            },
+            "session_date": "2024-06-23",
+            "kart": "",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:58.777",
+            "average_lap": "01:03.443",
+            "fastest_lap_s": 58.777,
+            "average_lap_s": 63.44316666666666,
+            "laps_count": 6
         },
         {
             "id": "a83ba663-64f8-43f8-9734-027b3f5bc645",
@@ -340,6 +1438,780 @@
             "average_lap": "00:47.596",
             "fastest_lap_s": 45.792,
             "average_lap_s": 47.59558333333334,
+            "laps_count": 12
+        },
+        {
+            "id": "86f78cf4-917b-4a55-9839-1cb2b585a036",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Blāzma",
+                "configuration": "2026",
+                "maps_link": "https://www.google.com/maps/search/?api=1&query=55.84813,26.53592"
+            },
+            "session_date": "2026-06-24",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 19.8,
+                "temp_min": 11.0,
+                "wind_kmh": 15.4,
+                "rain_mm": 2.8,
+                "condition": "Heavy drizzle"
+            },
+            "fastest_lap": "00:22.451",
+            "average_lap": "00:23.812",
+            "fastest_lap_s": 22.451,
+            "average_lap_s": 23.81234285714286,
+            "laps_count": 35
+        },
+        {
+            "id": "e70daded-d3da-461a-b9bc-a5f714338580",
+            "driver": "Justas Ž.",
+            "track": {
+                "name": "Serbentų kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88"
+            },
+            "session_date": "2024-07-06",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 23.5,
+                "temp_min": 11.7,
+                "wind_kmh": 21.6,
+                "rain_mm": 0.1,
+                "condition": "Light drizzle"
+            },
+            "fastest_lap": "01:08.110",
+            "average_lap": "01:10.438",
+            "fastest_lap_s": 68.11,
+            "average_lap_s": 70.43828571428571,
+            "laps_count": 7
+        },
+        {
+            "id": "3bb6a720-be41-4da9-b037-5763911769fe",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "E1GOKART Gdańsk",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/wr4dY7tgiYpgngB77"
+            },
+            "session_date": "2025-05-23",
+            "kart": "",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:56.240",
+            "average_lap": "00:56.773",
+            "fastest_lap_s": 56.24,
+            "average_lap_s": 56.773125,
+            "laps_count": 8
+        },
+        {
+            "id": "a4c8b460-6d87-4939-87e6-03f571b5a23e",
+            "driver": "Ignas I.",
+            "track": {
+                "name": "Serbentų kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88"
+            },
+            "session_date": "2024-07-06",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 23.5,
+                "temp_min": 11.7,
+                "wind_kmh": 21.6,
+                "rain_mm": 0.1,
+                "condition": "Light drizzle"
+            },
+            "fastest_lap": "01:10.648",
+            "average_lap": "01:13.127",
+            "fastest_lap_s": 70.648,
+            "average_lap_s": 73.12671428571429,
+            "laps_count": 7
+        },
+        {
+            "id": "c0e2bd20-b6a7-4d41-8204-a70761853005",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Plytinės Kartodromas",
+                "configuration": "Winter",
+                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
+            },
+            "session_date": "2026-01-02",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 0.8,
+                "temp_min": -2.9,
+                "wind_kmh": 23.9,
+                "rain_mm": 7.2,
+                "condition": "Heavy snow"
+            },
+            "fastest_lap": "01:20.385",
+            "average_lap": "01:24.502",
+            "fastest_lap_s": 80.385,
+            "average_lap_s": 84.50157142857142,
+            "laps_count": 7
+        },
+        {
+            "id": "6ca0eb3e-ac7c-4478-baf8-806850e79e98",
+            "driver": "Ignas M.",
+            "track": {
+                "name": "GOKARTING CENTER KRAKOW",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/fbAaPCaugyx4FDjYA"
+            },
+            "session_date": "2026-02-21",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:28.790",
+            "average_lap": "00:30.082",
+            "fastest_lap_s": 28.79,
+            "average_lap_s": 30.081533333333333,
+            "laps_count": 15
+        },
+        {
+            "id": "13acce39-6093-4ace-99c0-541006106be6",
+            "driver": "Justas Ž.",
+            "track": {
+                "name": "Karting Salou",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/H4DpdF6T1XHRE6239"
+            },
+            "session_date": "2024-05-07",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 24.1,
+                "temp_min": 13.3,
+                "wind_kmh": 26.0,
+                "rain_mm": 0.0,
+                "condition": "Partly cloudy"
+            },
+            "fastest_lap": "00:51.862",
+            "average_lap": "00:52.982",
+            "fastest_lap_s": 51.862,
+            "average_lap_s": 52.981700000000004,
+            "laps_count": 10
+        },
+        {
+            "id": "d403a989-0073-4a7a-8905-5fda13e845d5",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Plytinės Kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
+            },
+            "session_date": "2026-05-01",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 15.2,
+                "temp_min": 5.0,
+                "wind_kmh": 10.4,
+                "rain_mm": 0.0,
+                "condition": "Overcast"
+            },
+            "fastest_lap": "00:43.790",
+            "average_lap": "00:44.428",
+            "fastest_lap_s": 43.79,
+            "average_lap_s": 44.42753846153846,
+            "laps_count": 13
+        },
+        {
+            "id": "08109fcd-966c-4db7-8d9a-a2e0818fa43f",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Sporta komplekss 333",
+                "configuration": "2024",
+                "maps_link": "https://goo.gl/maps/kZR3mou2NyC9NFx26"
+            },
+            "session_date": "2024-08-16",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:51.010",
+            "average_lap": "00:54.737",
+            "fastest_lap_s": 51.01,
+            "average_lap_s": 54.7375,
+            "laps_count": 8
+        },
+        {
+            "id": "788bbf09-1f4e-4380-88af-c6bc46d1cb35",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Speedway",
+                "configuration": "Winter 2026",
+                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+            },
+            "session_date": "2026-01-04",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": -2.2,
+                "temp_min": -5.9,
+                "wind_kmh": 19.0,
+                "rain_mm": 0.6,
+                "condition": "Snow"
+            },
+            "fastest_lap": "00:44.327",
+            "average_lap": "00:47.862",
+            "fastest_lap_s": 44.327,
+            "average_lap_s": 47.86241666666667,
+            "laps_count": 12
+        },
+        {
+            "id": "9da53414-8e0c-4434-9651-63fe6e46edac",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Kartlandas Kaunas",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/7Q9SbwwcmwyNqUH56"
+            },
+            "session_date": "2025-10-11",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:27.118",
+            "average_lap": "00:30.136",
+            "fastest_lap_s": 27.118,
+            "average_lap_s": 30.136068965517243,
+            "laps_count": 29
+        },
+        {
+            "id": "0a4f1c75-fd73-48ab-b595-7bf48c7b7f1f",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Smalininkų kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/959ZMAV6acyt6..."
+            },
+            "session_date": "2024-04-27",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 16.5,
+                "temp_min": 4.7,
+                "wind_kmh": 23.4,
+                "rain_mm": 0.1,
+                "condition": "Light drizzle"
+            },
+            "fastest_lap": "00:59.348",
+            "average_lap": "01:00.389",
+            "fastest_lap_s": 59.348,
+            "average_lap_s": 60.389111111111106,
+            "laps_count": 9
+        },
+        {
+            "id": "3a779710-d89b-4289-a354-06fcf53cd020",
+            "driver": "Julius B.",
+            "track": {
+                "name": "E1GOKART Gdańsk",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8"
+            },
+            "session_date": "2024-07-29",
+            "kart": "",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:59.532",
+            "average_lap": "01:02.406",
+            "fastest_lap_s": 59.532,
+            "average_lap_s": 62.405833333333334,
+            "laps_count": 6
+        },
+        {
+            "id": "0fa36c4c-c818-4dde-8e5f-24a83bd110e3",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Serbentų kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88"
+            },
+            "session_date": "2024-07-06",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 23.5,
+                "temp_min": 11.7,
+                "wind_kmh": 21.6,
+                "rain_mm": 0.1,
+                "condition": "Light drizzle"
+            },
+            "fastest_lap": "01:07.525",
+            "average_lap": "01:09.647",
+            "fastest_lap_s": 67.525,
+            "average_lap_s": 69.64742857142858,
+            "laps_count": 7
+        },
+        {
+            "id": "4a326eb4-ced0-490b-a4e8-edc211b65437",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Vilko Kartodromas",
+                "configuration": "wolf 2025",
+                "maps_link": "https://maps.app.goo.gl/9erykKE9f58EYZ9TA"
+            },
+            "session_date": "2025-10-11",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:18.534",
+            "average_lap": "00:19.400",
+            "fastest_lap_s": 18.534,
+            "average_lap_s": 19.399866666666668,
+            "laps_count": 45
+        },
+        {
+            "id": "6196da7a-0988-4ebf-952d-e4782047b5d9",
+            "driver": "Ignas I.",
+            "track": {
+                "name": "Speedway",
+                "configuration": "3 konfiguracija",
+                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+            },
+            "session_date": "2026-03-29",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 16.6,
+                "temp_min": 0.9,
+                "wind_kmh": 12.8,
+                "rain_mm": 0.0,
+                "condition": "Overcast"
+            },
+            "fastest_lap": "01:01.978",
+            "average_lap": "01:03.596",
+            "fastest_lap_s": 61.978,
+            "average_lap_s": 63.59633333333333,
+            "laps_count": 9
+        },
+        {
+            "id": "57431016-4e12-4bdd-bfc3-f8099a7fd9c4",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Plytinės Kartodromas",
+                "configuration": "Winter",
+                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
+            },
+            "session_date": "2026-01-11",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": -12.2,
+                "temp_min": -17.4,
+                "wind_kmh": 8.4,
+                "rain_mm": 0.4,
+                "condition": "Light snow"
+            },
+            "fastest_lap": "01:22.892",
+            "average_lap": "01:30.504",
+            "fastest_lap_s": 82.892,
+            "average_lap_s": 90.50450000000001,
+            "laps_count": 6
+        },
+        {
+            "id": "06dff852-f279-4308-885f-0e5678be537f",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Vilko Kartodromas",
+                "configuration": "2025",
+                "maps_link": "https://rentalkarttracks.github.io/karting-sessions/session.html?id=4a326eb4-ced0-490b-a4e8-edc211b65437"
+            },
+            "session_date": "2025-09-11",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:18.534",
+            "average_lap": "00:19.400",
+            "fastest_lap_s": 18.534,
+            "average_lap_s": 19.399866666666668,
+            "laps_count": 45
+        },
+        {
+            "id": "7a884ece-ef91-4dd8-a793-e162bd4e9dc5",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Race Time",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/4RT2QjMpYtWP6mh26"
+            },
+            "session_date": "2026-06-06",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 17.8,
+                "temp_min": 12.8,
+                "wind_kmh": 17.8,
+                "rain_mm": 8.9,
+                "condition": "Light rain"
+            },
+            "fastest_lap": "01:15.999",
+            "average_lap": "01:20.276",
+            "fastest_lap_s": 75.999,
+            "average_lap_s": 80.27583333333332,
+            "laps_count": 6
+        },
+        {
+            "id": "dcb058c8-d72c-48a8-9209-98886d636ee6",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Plytinės Kartodromas",
+                "configuration": "Winter",
+                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
+            },
+            "session_date": "2026-01-02",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "01:22.452",
+            "average_lap": "01:25.132",
+            "fastest_lap_s": 82.452,
+            "average_lap_s": 85.13228571428571,
+            "laps_count": 7
+        },
+        {
+            "id": "4857ba13-85ea-4ed9-ad0d-cd49562db1e0",
+            "driver": "Vaidas R.",
+            "track": {
+                "name": "Plytinės Kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
+            },
+            "session_date": "2026-04-10",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 9.9,
+                "temp_min": -1.5,
+                "wind_kmh": 16.0,
+                "rain_mm": 0.0,
+                "condition": "Overcast"
+            },
+            "fastest_lap": "00:43.810",
+            "average_lap": "00:44.930",
+            "fastest_lap_s": 43.81,
+            "average_lap_s": 44.93030769230769,
+            "laps_count": 13
+        },
+        {
+            "id": "14bf7186-e5c5-401e-8ae0-9cbbb0142523",
+            "driver": "Romualdas P.",
+            "track": {
+                "name": "Speedway",
+                "configuration": "Rain",
+                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+            },
+            "session_date": "2025-11-09",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 5.3,
+                "temp_min": 3.6,
+                "wind_kmh": 11.2,
+                "rain_mm": 0.0,
+                "condition": "Overcast"
+            },
+            "fastest_lap": "01:43.262",
+            "average_lap": "01:54.329",
+            "fastest_lap_s": 103.262,
+            "average_lap_s": 114.32925,
+            "laps_count": 4
+        },
+        {
+            "id": "6761734c-c0c5-4545-9a34-24b48a43303f",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Tor Półwysep",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/EmVwycty7FxrB8TH7"
+            },
+            "session_date": "2024-06-26",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 23.4,
+                "temp_min": 14.9,
+                "wind_kmh": 18.4,
+                "rain_mm": 0.0,
+                "condition": "Overcast"
+            },
+            "fastest_lap": "00:25.352",
+            "average_lap": "00:26.554",
+            "fastest_lap_s": 25.352,
+            "average_lap_s": 26.55405882352941,
+            "laps_count": 17
+        },
+        {
+            "id": "7e3792e8-31e9-458d-85a3-9114833d1146",
+            "driver": "Vaidas R.",
+            "track": {
+                "name": "Balčiūnų",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6"
+            },
+            "session_date": "2025-07-13",
+            "kart": "",
+            "has_video": true,
+            "weather": {
+                "temp_max": 24.5,
+                "temp_min": 13.2,
+                "wind_kmh": 8.9,
+                "rain_mm": 0.5,
+                "condition": "Light drizzle"
+            },
+            "fastest_lap": "01:04.500",
+            "average_lap": "01:06.284",
+            "fastest_lap_s": 64.5,
+            "average_lap_s": 66.28444444444443,
+            "laps_count": 9
+        },
+        {
+            "id": "53332571-f519-4b5d-8f60-831b8328ece5",
+            "driver": "Justas Ž.",
+            "track": {
+                "name": "Serbentų kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88"
+            },
+            "session_date": "2024-07-06",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 23.5,
+                "temp_min": 11.7,
+                "wind_kmh": 21.6,
+                "rain_mm": 0.1,
+                "condition": "Light drizzle"
+            },
+            "fastest_lap": "01:07.915",
+            "average_lap": "01:09.807",
+            "fastest_lap_s": 67.915,
+            "average_lap_s": 69.80728571428571,
+            "laps_count": 7
+        },
+        {
+            "id": "f5ae1534-60dd-46aa-a549-06ce3c9c0b9e",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Plytinės Kartodromas",
+                "configuration": "Winter",
+                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
+            },
+            "session_date": "2026-02-08",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": -4.5,
+                "temp_min": -12.3,
+                "wind_kmh": 20.9,
+                "rain_mm": 0.1,
+                "condition": "Light snow"
+            },
+            "fastest_lap": "01:28.533",
+            "average_lap": "01:35.394",
+            "fastest_lap_s": 88.533,
+            "average_lap_s": 95.39383333333332,
+            "laps_count": 6
+        },
+        {
+            "id": "8024a6e4-05ec-4a11-b2c4-eb6ddd6b6027",
+            "driver": "Ignas I.",
+            "track": {
+                "name": "Serbentų kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/V8ir9cZW4CiqPsT17"
+            },
+            "session_date": "2026-06-07",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 22.5,
+                "temp_min": 11.3,
+                "wind_kmh": 7.6,
+                "rain_mm": 1.4,
+                "condition": "Light drizzle"
+            },
+            "fastest_lap": "01:08.584",
+            "average_lap": "01:10.049",
+            "fastest_lap_s": 68.584,
+            "average_lap_s": 70.04875,
+            "laps_count": 8
+        },
+        {
+            "id": "477e60fd-e72d-4d1d-9c42-514e0b3ba2d4",
+            "driver": "Ignas M.",
+            "track": {
+                "name": "Plytinės Kartodromas",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
+            },
+            "session_date": "2026-05-01",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:43.150",
+            "average_lap": "00:51.824",
+            "fastest_lap_s": 43.15,
+            "average_lap_s": 51.82445454545454,
+            "laps_count": 11
+        },
+        {
+            "id": "f1bd3b18-24e6-4f21-bbc1-395bce3d0b03",
+            "driver": "Justas Ž.",
+            "track": {
+                "name": "E1GOKART Gdańsk",
+                "configuration": "2025",
+                "maps_link": "https://maps.app.goo.gl/wr4dY7tgiYpgngB77"
+            },
+            "session_date": "2025-05-23",
+            "kart": "",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:57.516",
+            "average_lap": "00:58.723",
+            "fastest_lap_s": 57.516,
+            "average_lap_s": 58.723,
+            "laps_count": 8
+        },
+        {
+            "id": "8032f71d-df85-4275-bea7-cac697174f53",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "Smalininkų kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/QzKoAhmFUwNUtwkC6"
+            },
+            "session_date": "2026-04-18",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 16.2,
+                "temp_min": 4.0,
+                "wind_kmh": 12.5,
+                "rain_mm": 0.0,
+                "condition": "Overcast"
+            },
+            "fastest_lap": "00:59.266",
+            "average_lap": "01:00.849",
+            "fastest_lap_s": 59.266,
+            "average_lap_s": 60.848571428571425,
+            "laps_count": 14
+        },
+        {
+            "id": "1731bcde-c037-418e-acdf-e168be28f9a7",
+            "driver": "Julius B.",
+            "track": {
+                "name": "Anykščių kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8"
+            },
+            "session_date": "2024-07-16",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 28.6,
+                "temp_min": 16.1,
+                "wind_kmh": 12.6,
+                "rain_mm": 0.0,
+                "condition": "Overcast"
+            },
+            "fastest_lap": "00:52.760",
+            "average_lap": "00:56.511",
+            "fastest_lap_s": 52.76,
+            "average_lap_s": 56.511,
+            "laps_count": 10
+        },
+        {
+            "id": "4d8008ee-c155-4ab6-8371-25cb378c9a08",
+            "driver": "Povilas L.",
+            "track": {
+                "name": "KartCenter Sopot",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/AXFPcDj5CWT7rPX27"
+            },
+            "session_date": "2024-06-20",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": null,
+            "fastest_lap": "00:43.333",
+            "average_lap": "00:43.672",
+            "fastest_lap_s": 43.333,
+            "average_lap_s": 43.67177777777778,
+            "laps_count": 9
+        },
+        {
+            "id": "8c41672f-7a9e-4b6e-bc57-4b232e5d79cb",
+            "driver": "Romualdas P.",
+            "track": {
+                "name": "Speedway",
+                "configuration": "Winter 2026",
+                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
+            },
+            "session_date": "2026-01-04",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": -2.2,
+                "temp_min": -5.9,
+                "wind_kmh": 19.0,
+                "rain_mm": 0.6,
+                "condition": "Snow"
+            },
+            "fastest_lap": "00:51.584",
+            "average_lap": "00:55.315",
+            "fastest_lap_s": 51.584,
+            "average_lap_s": 55.315200000000004,
+            "laps_count": 10
+        },
+        {
+            "id": "72dc8f88-6d97-4e79-a754-2a0ba1e4921d",
+            "driver": "Justas Ž.",
+            "track": {
+                "name": "Race Time",
+                "configuration": "Summer",
+                "maps_link": "https://maps.app.goo.gl/dRBrDVFfcDvgQaCo6"
+            },
+            "session_date": "2024-08-08",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 24.6,
+                "temp_min": 14.8,
+                "wind_kmh": 9.1,
+                "rain_mm": 0.1,
+                "condition": "Light drizzle"
+            },
+            "fastest_lap": "01:18.546",
+            "average_lap": "01:20.307",
+            "fastest_lap_s": 78.54599999999999,
+            "average_lap_s": 80.30733333333333,
+            "laps_count": 6
+        },
+        {
+            "id": "eacc44fc-49fb-4315-8e38-42d193c05b4a",
+            "driver": "Kęstas Č.",
+            "track": {
+                "name": "Anykščių kartodromas",
+                "configuration": "2024",
+                "maps_link": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8"
+            },
+            "session_date": "2024-09-08",
+            "kart": "9 Ag",
+            "has_video": true,
+            "weather": {
+                "temp_max": 24.2,
+                "temp_min": 13.7,
+                "wind_kmh": 15.1,
+                "rain_mm": 0.0,
+                "condition": "Partly cloudy"
+            },
+            "fastest_lap": "00:47.300",
+            "average_lap": "00:49.325",
+            "fastest_lap_s": 47.3,
+            "average_lap_s": 49.324999999999996,
             "laps_count": 12
         },
         {
@@ -377,564 +2249,18 @@
             "session_date": "2026-04-30",
             "kart": "9 Ag",
             "has_video": true,
-            "weather": null,
+            "weather": {
+                "temp_max": 9.1,
+                "temp_min": -2.2,
+                "wind_kmh": 13.2,
+                "rain_mm": 0.3,
+                "condition": "Light drizzle"
+            },
             "fastest_lap": "00:43.506",
             "average_lap": "00:44.052",
             "fastest_lap_s": 43.506,
             "average_lap_s": 44.05238461538462,
             "laps_count": 13
-        },
-        {
-            "id": "4857ba13-85ea-4ed9-ad0d-cd49562db1e0",
-            "driver": "Vaidas R.",
-            "track": {
-                "name": "Plytinės Kartodromas",
-                "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
-            },
-            "session_date": "2026-04-10",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 9.9,
-                "temp_min": -1.5,
-                "wind_kmh": 16.0,
-                "rain_mm": 0.0,
-                "condition": "Overcast"
-            },
-            "fastest_lap": "00:43.810",
-            "average_lap": "00:44.930",
-            "fastest_lap_s": 43.81,
-            "average_lap_s": 44.93030769230769,
-            "laps_count": 13
-        },
-        {
-            "id": "2dd469fc-e230-4c9f-a463-570b425ed44e",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Anykščių kartodromas",
-                "configuration": "2024",
-                "maps_link": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8"
-            },
-            "session_date": "2024-09-08",
-            "kart": "13 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 24.2,
-                "temp_min": 13.7,
-                "wind_kmh": 15.1,
-                "rain_mm": 0.0,
-                "condition": "Partly cloudy"
-            },
-            "fastest_lap": "00:45.330",
-            "average_lap": "00:46.381",
-            "fastest_lap_s": 45.33,
-            "average_lap_s": 46.38083333333333,
-            "laps_count": 12
-        },
-        {
-            "id": "1731bcde-c037-418e-acdf-e168be28f9a7",
-            "driver": "Julius B.",
-            "track": {
-                "name": "Anykščių kartodromas",
-                "configuration": "2024",
-                "maps_link": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8"
-            },
-            "session_date": "2024-07-16",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 28.6,
-                "temp_min": 16.1,
-                "wind_kmh": 12.6,
-                "rain_mm": 0.0,
-                "condition": "Overcast"
-            },
-            "fastest_lap": "00:52.760",
-            "average_lap": "00:56.511",
-            "fastest_lap_s": 52.76,
-            "average_lap_s": 56.511,
-            "laps_count": 10
-        },
-        {
-            "id": "6196da7a-0988-4ebf-952d-e4782047b5d9",
-            "driver": "Ignas I.",
-            "track": {
-                "name": "Speedway",
-                "configuration": "3 konfiguracija",
-                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
-            },
-            "session_date": "2026-03-29",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 16.6,
-                "temp_min": 0.9,
-                "wind_kmh": 12.8,
-                "rain_mm": 0.0,
-                "condition": "Overcast"
-            },
-            "fastest_lap": "01:01.978",
-            "average_lap": "01:03.596",
-            "fastest_lap_s": 61.978,
-            "average_lap_s": 63.59633333333333,
-            "laps_count": 9
-        },
-        {
-            "id": "0cea4ced-a510-4f82-be70-d9afecaf65bf",
-            "driver": "Kęstas Č.",
-            "track": {
-                "name": "Plytinės Kartodromas",
-                "configuration": "Winter",
-                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
-            },
-            "session_date": "2026-02-08",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": -4.5,
-                "temp_min": -12.3,
-                "wind_kmh": 20.9,
-                "rain_mm": 0.1,
-                "condition": "Light snow"
-            },
-            "fastest_lap": "01:29.578",
-            "average_lap": "02:14.836",
-            "fastest_lap_s": 89.578,
-            "average_lap_s": 134.83625,
-            "laps_count": 4
-        },
-        {
-            "id": "c0e2bd20-b6a7-4d41-8204-a70761853005",
-            "driver": "Kęstas Č.",
-            "track": {
-                "name": "Plytinės Kartodromas",
-                "configuration": "Winter",
-                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
-            },
-            "session_date": "2026-01-02",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 0.8,
-                "temp_min": -2.9,
-                "wind_kmh": 23.9,
-                "rain_mm": 7.2,
-                "condition": "Heavy snow"
-            },
-            "fastest_lap": "01:20.385",
-            "average_lap": "01:24.502",
-            "fastest_lap_s": 80.385,
-            "average_lap_s": 84.50157142857142,
-            "laps_count": 7
-        },
-        {
-            "id": "08109fcd-966c-4db7-8d9a-a2e0818fa43f",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Sporta komplekss 333",
-                "configuration": "2024",
-                "maps_link": "https://goo.gl/maps/kZR3mou2NyC9NFx26"
-            },
-            "session_date": "2024-08-16",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 24.9,
-                "temp_min": 17.1,
-                "wind_kmh": 15.6,
-                "rain_mm": 0.5,
-                "condition": "Light drizzle"
-            },
-            "fastest_lap": "00:51.010",
-            "average_lap": "00:54.737",
-            "fastest_lap_s": 51.01,
-            "average_lap_s": 54.7375,
-            "laps_count": 8
-        },
-        {
-            "id": "0df0c18d-8cea-4cfd-9e23-7ee108a541fd",
-            "driver": "Ignas M.",
-            "track": {
-                "name": "E1GOKART Gdańsk",
-                "configuration": "2025",
-                "maps_link": "https://maps.app.goo.gl/X4x15zAeCHb2NFjz7"
-            },
-            "session_date": "2025-05-23",
-            "kart": "",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:56.220",
-            "average_lap": "00:57.584",
-            "fastest_lap_s": 56.22,
-            "average_lap_s": 57.583625,
-            "laps_count": 8
-        },
-        {
-            "id": "2e651a94-2d89-4dd0-b963-2b1febbb9db7",
-            "driver": "Ignas I.",
-            "track": {
-                "name": "Kartlandas Max",
-                "configuration": "Kartlandas Max 2026",
-                "maps_link": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7"
-            },
-            "session_date": "2026-03-15",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:38.655",
-            "average_lap": "00:40.336",
-            "fastest_lap_s": 38.655,
-            "average_lap_s": 40.33557142857143,
-            "laps_count": 21
-        },
-        {
-            "id": "a4c8b460-6d87-4939-87e6-03f571b5a23e",
-            "driver": "Ignas I.",
-            "track": {
-                "name": "Serbentų kartodromas",
-                "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88"
-            },
-            "session_date": "2024-07-06",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 23.5,
-                "temp_min": 11.7,
-                "wind_kmh": 21.6,
-                "rain_mm": 0.1,
-                "condition": "Light drizzle"
-            },
-            "fastest_lap": "01:10.648",
-            "average_lap": "01:13.127",
-            "fastest_lap_s": 70.648,
-            "average_lap_s": 73.12671428571429,
-            "laps_count": 7
-        },
-        {
-            "id": "eacc44fc-49fb-4315-8e38-42d193c05b4a",
-            "driver": "Kęstas Č.",
-            "track": {
-                "name": "Anykščių kartodromas",
-                "configuration": "2024",
-                "maps_link": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8"
-            },
-            "session_date": "2024-09-08",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 24.2,
-                "temp_min": 13.7,
-                "wind_kmh": 15.1,
-                "rain_mm": 0.0,
-                "condition": "Partly cloudy"
-            },
-            "fastest_lap": "00:47.300",
-            "average_lap": "00:49.325",
-            "fastest_lap_s": 47.3,
-            "average_lap_s": 49.324999999999996,
-            "laps_count": 12
-        },
-        {
-            "id": "c0e2f16a-5005-4796-8401-15e3e3ae3b3c",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Anykščių kartodromas",
-                "configuration": "2024",
-                "maps_link": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8"
-            },
-            "session_date": "2024-09-08",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:47.200",
-            "average_lap": "00:47.933",
-            "fastest_lap_s": 47.2,
-            "average_lap_s": 47.93333333333334,
-            "laps_count": 12
-        },
-        {
-            "id": "9da53414-8e0c-4434-9651-63fe6e46edac",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Kartlandas Kaunas",
-                "configuration": "2025",
-                "maps_link": "https://maps.app.goo.gl/7Q9SbwwcmwyNqUH56"
-            },
-            "session_date": "2025-10-11",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:27.118",
-            "average_lap": "00:30.136",
-            "fastest_lap_s": 27.118,
-            "average_lap_s": 30.136068965517243,
-            "laps_count": 29
-        },
-        {
-            "id": "9fdee29c-c4af-490a-adce-5cbbbab68d89",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Tor Półwysep",
-                "configuration": "2024",
-                "maps_link": "https://maps.app.goo.gl/EmVwycty7FxrB8TH7"
-            },
-            "session_date": "2024-06-26",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 23.4,
-                "temp_min": 14.9,
-                "wind_kmh": 18.4,
-                "rain_mm": 0.0,
-                "condition": "Overcast"
-            },
-            "fastest_lap": "00:25.733",
-            "average_lap": "00:28.274",
-            "fastest_lap_s": 25.733,
-            "average_lap_s": 28.274124999999998,
-            "laps_count": 16
-        },
-        {
-            "id": "5e710b4b-c8f3-46c0-9707-090b1f41508d",
-            "driver": "Ignas M.",
-            "track": {
-                "name": "Kartlandas Max",
-                "configuration": "Kartlandas Max 2026",
-                "maps_link": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7"
-            },
-            "session_date": "2026-03-15",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:38.614",
-            "average_lap": "00:40.268",
-            "fastest_lap_s": 38.614,
-            "average_lap_s": 40.26763636363636,
-            "laps_count": 22
-        },
-        {
-            "id": "cf2b478d-a16e-4c8e-bd3a-96c332893bfb",
-            "driver": "Kęstas Č.",
-            "track": {
-                "name": "Serbentų kartodromas",
-                "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88"
-            },
-            "session_date": "2024-07-06",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 23.5,
-                "temp_min": 11.7,
-                "wind_kmh": 21.6,
-                "rain_mm": 0.1,
-                "condition": "Light drizzle"
-            },
-            "fastest_lap": "01:07.211",
-            "average_lap": "01:08.533",
-            "fastest_lap_s": 67.211,
-            "average_lap_s": 68.53257142857143,
-            "laps_count": 7
-        },
-        {
-            "id": "61364232-2096-419c-afef-be3d844f1533",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Tor Półwysep",
-                "configuration": "2025",
-                "maps_link": "https://maps.app.goo.gl/rAMgznAK6mQx8Nwf6"
-            },
-            "session_date": "2025-05-28",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 20.0,
-                "temp_min": 12.7,
-                "wind_kmh": 15.3,
-                "rain_mm": 5.1,
-                "condition": "Light rain"
-            },
-            "fastest_lap": "00:25.180",
-            "average_lap": "00:26.317",
-            "fastest_lap_s": 25.18,
-            "average_lap_s": 26.316764705882353,
-            "laps_count": 17
-        },
-        {
-            "id": "7aad12f4-6619-4bf6-ae8a-c313d966d54c",
-            "driver": "Ignas M.",
-            "track": {
-                "name": "Plytinės Kartodromas",
-                "configuration": "Winter",
-                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
-            },
-            "session_date": "2026-02-08",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": -4.5,
-                "temp_min": -12.3,
-                "wind_kmh": 20.9,
-                "rain_mm": 0.1,
-                "condition": "Light snow"
-            },
-            "fastest_lap": "01:30.043",
-            "average_lap": "01:48.379",
-            "fastest_lap_s": 90.043,
-            "average_lap_s": 108.37899999999999,
-            "laps_count": 5
-        },
-        {
-            "id": "86f78cf4-917b-4a55-9839-1cb2b585a036",
-            "driver": "Kęstas Č.",
-            "track": {
-                "name": "Blāzma",
-                "configuration": "2026",
-                "maps_link": "https://www.google.com/maps/search/?api=1&query=55.84813,26.53592"
-            },
-            "session_date": "2026-06-24",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 19.8,
-                "temp_min": 11.0,
-                "wind_kmh": 15.4,
-                "rain_mm": 2.8,
-                "condition": "Heavy drizzle"
-            },
-            "fastest_lap": "00:22.451",
-            "average_lap": "00:23.812",
-            "fastest_lap_s": 22.451,
-            "average_lap_s": 23.81234285714286,
-            "laps_count": 35
-        },
-        {
-            "id": "4a326eb4-ced0-490b-a4e8-edc211b65437",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Vilko Kartodromas",
-                "configuration": "wolf 2025",
-                "maps_link": "https://maps.app.goo.gl/9erykKE9f58EYZ9TA"
-            },
-            "session_date": "2025-10-11",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:18.534",
-            "average_lap": "00:19.400",
-            "fastest_lap_s": 18.534,
-            "average_lap_s": 19.399866666666668,
-            "laps_count": 45
-        },
-        {
-            "id": "cea04830-8538-461f-a99b-373599fd0368",
-            "driver": "Kęstas Č.",
-            "track": {
-                "name": "Balčiūnų",
-                "configuration": "2025",
-                "maps_link": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6"
-            },
-            "session_date": "2025-07-13",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 24.5,
-                "temp_min": 13.2,
-                "wind_kmh": 8.9,
-                "rain_mm": 0.5,
-                "condition": "Light drizzle"
-            },
-            "fastest_lap": "01:04.660",
-            "average_lap": "01:05.782",
-            "fastest_lap_s": 64.66,
-            "average_lap_s": 65.7825,
-            "laps_count": 8
-        },
-        {
-            "id": "d403a989-0073-4a7a-8905-5fda13e845d5",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Plytinės Kartodromas",
-                "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
-            },
-            "session_date": "2026-05-01",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 15.2,
-                "temp_min": 5.0,
-                "wind_kmh": 10.4,
-                "rain_mm": 0.0,
-                "condition": "Overcast"
-            },
-            "fastest_lap": "00:43.790",
-            "average_lap": "00:44.428",
-            "fastest_lap_s": 43.79,
-            "average_lap_s": 44.42753846153846,
-            "laps_count": 13
-        },
-        {
-            "id": "04e898e9-0c52-42bf-b01f-bbebee490945",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Smalininkų kartodromas",
-                "configuration": "2024",
-                "maps_link": "https://maps.app.goo.gl/959ZMAV6acyt6..."
-            },
-            "session_date": "2024-04-27",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 16.5,
-                "temp_min": 4.7,
-                "wind_kmh": 23.4,
-                "rain_mm": 0.1,
-                "condition": "Light drizzle"
-            },
-            "fastest_lap": "00:59.000",
-            "average_lap": "01:01.382",
-            "fastest_lap_s": 59.0,
-            "average_lap_s": 61.38211111111111,
-            "laps_count": 9
-        },
-        {
-            "id": "9f89f48b-f323-4337-b9ec-bff68395a623",
-            "driver": "Romualdas P.",
-            "track": {
-                "name": "Kartlandas Max",
-                "configuration": "Kartlandas Max 2026",
-                "maps_link": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7"
-            },
-            "session_date": "2026-03-15",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:38.701",
-            "average_lap": "00:40.396",
-            "fastest_lap_s": 38.701,
-            "average_lap_s": 40.39566666666666,
-            "laps_count": 21
-        },
-        {
-            "id": "f90e38ad-684a-4fb1-aea5-d0115793aa7d",
-            "driver": "Vaidas R.",
-            "track": {
-                "name": "Rudskogen Motorsenter",
-                "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/F1Skt3aC7h4SPi856"
-            },
-            "session_date": "2025-07-17",
-            "kart": "13 Ag",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "01:07.244",
-            "average_lap": "01:09.246",
-            "fastest_lap_s": 67.244,
-            "average_lap_s": 69.24549999999999,
-            "laps_count": 8
         },
         {
             "id": "0ba6fa36-0416-48a0-a322-7ee6a67f513d",
@@ -961,768 +2287,6 @@
             "laps_count": 5
         },
         {
-            "id": "a7d61fbf-6d41-4b59-abd0-63454ab69dc0",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Kartlandas Kaunas",
-                "configuration": "2025",
-                "maps_link": "https://maps.app.goo.gl/7Q9SbwwcmwyNqUH56"
-            },
-            "session_date": "2026-02-14",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:25.906",
-            "average_lap": "00:28.676",
-            "fastest_lap_s": 25.906,
-            "average_lap_s": 28.6764,
-            "laps_count": 30
-        },
-        {
-            "id": "11eb97b2-c016-4e40-97ef-065ab445993e",
-            "driver": "Ernest S.",
-            "track": {
-                "name": "Plytinės Kartodromas",
-                "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
-            },
-            "session_date": "2026-04-10",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 9.9,
-                "temp_min": -1.5,
-                "wind_kmh": 16.0,
-                "rain_mm": 0.0,
-                "condition": "Overcast"
-            },
-            "fastest_lap": "00:47.800",
-            "average_lap": "00:49.887",
-            "fastest_lap_s": 47.8,
-            "average_lap_s": 49.88691666666667,
-            "laps_count": 12
-        },
-        {
-            "id": "a92abab9-ced6-451e-8599-2c45498a7d1c",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "KartCenter Gdańsk Gokarty",
-                "configuration": "2025",
-                "maps_link": "https://maps.app.goo.gl/RUBF4Y86mvd37qu67"
-            },
-            "session_date": "2025-05-28",
-            "kart": "",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:22.840",
-            "average_lap": "00:23.530",
-            "fastest_lap_s": 22.84,
-            "average_lap_s": 23.529571428571426,
-            "laps_count": 14
-        },
-        {
-            "id": "346e55c3-7d4c-4441-8791-4c9efe9aff73",
-            "driver": "Romualdas P.",
-            "track": {
-                "name": "Plytinės Kartodromas",
-                "configuration": "Winter",
-                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
-            },
-            "session_date": "2026-01-02",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 0.8,
-                "temp_min": -2.9,
-                "wind_kmh": 23.9,
-                "rain_mm": 7.2,
-                "condition": "Heavy snow"
-            },
-            "fastest_lap": "01:28.358",
-            "average_lap": "01:47.720",
-            "fastest_lap_s": 88.358,
-            "average_lap_s": 107.7202,
-            "laps_count": 5
-        },
-        {
-            "id": "53332571-f519-4b5d-8f60-831b8328ece5",
-            "driver": "Justas Ž.",
-            "track": {
-                "name": "Serbentų kartodromas",
-                "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88"
-            },
-            "session_date": "2024-07-06",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 23.5,
-                "temp_min": 11.7,
-                "wind_kmh": 21.6,
-                "rain_mm": 0.1,
-                "condition": "Light drizzle"
-            },
-            "fastest_lap": "01:07.915",
-            "average_lap": "01:09.807",
-            "fastest_lap_s": 67.915,
-            "average_lap_s": 69.80728571428571,
-            "laps_count": 7
-        },
-        {
-            "id": "cf5d9f8e-5fe0-4273-b822-e66f88cdba66",
-            "driver": "Kęstas Č.",
-            "track": {
-                "name": "Plytinės Kartodromas",
-                "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
-            },
-            "session_date": "2026-04-10",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 9.9,
-                "temp_min": -1.5,
-                "wind_kmh": 16.0,
-                "rain_mm": 0.0,
-                "condition": "Overcast"
-            },
-            "fastest_lap": "00:43.590",
-            "average_lap": "00:44.611",
-            "fastest_lap_s": 43.59,
-            "average_lap_s": 44.61123076923077,
-            "laps_count": 13
-        },
-        {
-            "id": "9eb0f970-685b-4b3c-99b6-8e73a190fc9a",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Speedway",
-                "configuration": "3 konfiguracija",
-                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
-            },
-            "session_date": "2026-03-29",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 16.6,
-                "temp_min": 0.9,
-                "wind_kmh": 12.8,
-                "rain_mm": 0.0,
-                "condition": "Overcast"
-            },
-            "fastest_lap": "00:59.598",
-            "average_lap": "01:00.827",
-            "fastest_lap_s": 59.598,
-            "average_lap_s": 60.82688888888889,
-            "laps_count": 9
-        },
-        {
-            "id": "8c41672f-7a9e-4b6e-bc57-4b232e5d79cb",
-            "driver": "Romualdas P.",
-            "track": {
-                "name": "Speedway",
-                "configuration": "Winter 2026",
-                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
-            },
-            "session_date": "2026-01-04",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": -2.2,
-                "temp_min": -5.9,
-                "wind_kmh": 19.0,
-                "rain_mm": 0.6,
-                "condition": "Snow"
-            },
-            "fastest_lap": "00:51.584",
-            "average_lap": "00:55.315",
-            "fastest_lap_s": 51.584,
-            "average_lap_s": 55.315200000000004,
-            "laps_count": 10
-        },
-        {
-            "id": "90a12d0f-14b0-41e7-9f57-6fa9c696ae64",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Balčiūnų",
-                "configuration": "2025",
-                "maps_link": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6"
-            },
-            "session_date": "2025-07-13",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 24.5,
-                "temp_min": 13.2,
-                "wind_kmh": 8.9,
-                "rain_mm": 0.5,
-                "condition": "Light drizzle"
-            },
-            "fastest_lap": "01:04.555",
-            "average_lap": "01:05.747",
-            "fastest_lap_s": 64.555,
-            "average_lap_s": 65.747375,
-            "laps_count": 8
-        },
-        {
-            "id": "d9c6c024-298b-44d4-9290-d5448cfc01eb",
-            "driver": "Julius B.",
-            "track": {
-                "name": "E1GOKART Gdańsk",
-                "configuration": "2024",
-                "maps_link": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8"
-            },
-            "session_date": "2024-07-29",
-            "kart": "",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:58.225",
-            "average_lap": "00:59.634",
-            "fastest_lap_s": 58.225,
-            "average_lap_s": 59.63428571428572,
-            "laps_count": 7
-        },
-        {
-            "id": "13acce39-6093-4ace-99c0-541006106be6",
-            "driver": "Justas Ž.",
-            "track": {
-                "name": "Karting Salou",
-                "configuration": "2024",
-                "maps_link": "https://maps.app.goo.gl/H4DpdF6T1XHRE6239"
-            },
-            "session_date": "2024-05-07",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 24.1,
-                "temp_min": 13.3,
-                "wind_kmh": 26.0,
-                "rain_mm": 0.0,
-                "condition": "Partly cloudy"
-            },
-            "fastest_lap": "00:51.862",
-            "average_lap": "00:52.982",
-            "fastest_lap_s": 51.862,
-            "average_lap_s": 52.981700000000004,
-            "laps_count": 10
-        },
-        {
-            "id": "1d7a6432-0394-4808-b7b6-c48127b40c5d",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "E1GOKART Gdańsk",
-                "configuration": "2024",
-                "maps_link": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8"
-            },
-            "session_date": "2024-06-18",
-            "kart": "",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:57.748",
-            "average_lap": "00:58.479",
-            "fastest_lap_s": 57.748,
-            "average_lap_s": 58.478571428571435,
-            "laps_count": 7
-        },
-        {
-            "id": "48de1510-3317-4fdd-90a1-39b5243c7b44",
-            "driver": "Justas Ž.",
-            "track": {
-                "name": "Speedway",
-                "configuration": "3 konfiguracija",
-                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
-            },
-            "session_date": "2026-03-29",
-            "kart": "13 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 16.6,
-                "temp_min": 0.9,
-                "wind_kmh": 12.8,
-                "rain_mm": 0.0,
-                "condition": "Overcast"
-            },
-            "fastest_lap": "01:00.941",
-            "average_lap": "01:02.804",
-            "fastest_lap_s": 60.941,
-            "average_lap_s": 62.803555555555555,
-            "laps_count": 9
-        },
-        {
-            "id": "6761734c-c0c5-4545-9a34-24b48a43303f",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Tor Półwysep",
-                "configuration": "2024",
-                "maps_link": "https://maps.app.goo.gl/EmVwycty7FxrB8TH7"
-            },
-            "session_date": "2024-06-26",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:25.352",
-            "average_lap": "00:26.554",
-            "fastest_lap_s": 25.352,
-            "average_lap_s": 26.55405882352941,
-            "laps_count": 17
-        },
-        {
-            "id": "14bf7186-e5c5-401e-8ae0-9cbbb0142523",
-            "driver": "Romualdas P.",
-            "track": {
-                "name": "Speedway",
-                "configuration": "Rain",
-                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
-            },
-            "session_date": "2025-11-09",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 5.3,
-                "temp_min": 3.6,
-                "wind_kmh": 11.2,
-                "rain_mm": 0.0,
-                "condition": "Overcast"
-            },
-            "fastest_lap": "01:43.262",
-            "average_lap": "01:54.329",
-            "fastest_lap_s": 103.262,
-            "average_lap_s": 114.32925,
-            "laps_count": 4
-        },
-        {
-            "id": "c28a9346-1205-48e3-bb9d-efa3f21b0418",
-            "driver": "Kęstas Č.",
-            "track": {
-                "name": "Smalininkų kartodromas",
-                "configuration": "2024",
-                "maps_link": "https://maps.app.goo.gl/959ZMAV6acyt6uEr8"
-            },
-            "session_date": "2024-04-27",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 16.5,
-                "temp_min": 4.7,
-                "wind_kmh": 23.4,
-                "rain_mm": 0.1,
-                "condition": "Light drizzle"
-            },
-            "fastest_lap": "00:59.698",
-            "average_lap": "01:00.247",
-            "fastest_lap_s": 59.698,
-            "average_lap_s": 60.24699999999999,
-            "laps_count": 9
-        },
-        {
-            "id": "788bbf09-1f4e-4380-88af-c6bc46d1cb35",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Speedway",
-                "configuration": "Winter 2026",
-                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
-            },
-            "session_date": "2026-01-04",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": -2.2,
-                "temp_min": -5.9,
-                "wind_kmh": 19.0,
-                "rain_mm": 0.6,
-                "condition": "Snow"
-            },
-            "fastest_lap": "00:44.327",
-            "average_lap": "00:47.862",
-            "fastest_lap_s": 44.327,
-            "average_lap_s": 47.86241666666667,
-            "laps_count": 12
-        },
-        {
-            "id": "ccf8543c-46c2-4a15-91eb-b435c7832b45",
-            "driver": "Justas Ž.",
-            "track": {
-                "name": "Serbentų kartodromas",
-                "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/V8ir9cZW4CiqPsT17"
-            },
-            "session_date": "2026-06-07",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 22.5,
-                "temp_min": 11.3,
-                "wind_kmh": 7.6,
-                "rain_mm": 1.4,
-                "condition": "Light drizzle"
-            },
-            "fastest_lap": "01:07.209",
-            "average_lap": "01:09.415",
-            "fastest_lap_s": 67.209,
-            "average_lap_s": 69.415125,
-            "laps_count": 8
-        },
-        {
-            "id": "fb6cb98e-b9f2-4b12-a4b2-4ef08257da5a",
-            "driver": "Ignas M.",
-            "track": {
-                "name": "Serbentų kartodromas",
-                "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88"
-            },
-            "session_date": "2024-07-06",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 23.5,
-                "temp_min": 11.7,
-                "wind_kmh": 21.6,
-                "rain_mm": 0.1,
-                "condition": "Light drizzle"
-            },
-            "fastest_lap": "01:08.293",
-            "average_lap": "01:10.679",
-            "fastest_lap_s": 68.293,
-            "average_lap_s": 70.67914285714286,
-            "laps_count": 7
-        },
-        {
-            "id": "3a7d895c-8279-43ec-9817-b84e6ccaa55f",
-            "driver": "Justas Ž.",
-            "track": {
-                "name": "Kartlandas Max",
-                "configuration": "Kartlandas Max 2026",
-                "maps_link": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7"
-            },
-            "session_date": "2026-04-03",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:38.437",
-            "average_lap": "00:39.504",
-            "fastest_lap_s": 38.437,
-            "average_lap_s": 39.50373333333334,
-            "laps_count": 15
-        },
-        {
-            "id": "3a779710-d89b-4289-a354-06fcf53cd020",
-            "driver": "Julius B.",
-            "track": {
-                "name": "E1GOKART Gdańsk",
-                "configuration": "2024",
-                "maps_link": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8"
-            },
-            "session_date": "2024-07-29",
-            "kart": "",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:59.532",
-            "average_lap": "01:02.406",
-            "fastest_lap_s": 59.532,
-            "average_lap_s": 62.405833333333334,
-            "laps_count": 6
-        },
-        {
-            "id": "8032f71d-df85-4275-bea7-cac697174f53",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Smalininkų kartodromas",
-                "configuration": "2024",
-                "maps_link": "https://maps.app.goo.gl/QzKoAhmFUwNUtwkC6"
-            },
-            "session_date": "2026-04-18",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 16.2,
-                "temp_min": 4.0,
-                "wind_kmh": 12.5,
-                "rain_mm": 0.0,
-                "condition": "Overcast"
-            },
-            "fastest_lap": "00:59.266",
-            "average_lap": "01:00.849",
-            "fastest_lap_s": 59.266,
-            "average_lap_s": 60.848571428571425,
-            "laps_count": 14
-        },
-        {
-            "id": "4d8008ee-c155-4ab6-8371-25cb378c9a08",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "KartCenter Sopot",
-                "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/AXFPcDj5CWT7rPX27"
-            },
-            "session_date": "2024-06-20",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:43.333",
-            "average_lap": "00:43.672",
-            "fastest_lap_s": 43.333,
-            "average_lap_s": 43.67177777777778,
-            "laps_count": 9
-        },
-        {
-            "id": "cd56b050-af11-419d-9186-5fe0cd49b904",
-            "driver": "Romualdas P.",
-            "track": {
-                "name": "Speedway",
-                "configuration": "3 konfiguracija",
-                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
-            },
-            "session_date": "2026-03-29",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 16.6,
-                "temp_min": 0.9,
-                "wind_kmh": 12.8,
-                "rain_mm": 0.0,
-                "condition": "Overcast"
-            },
-            "fastest_lap": "01:00.764",
-            "average_lap": "01:01.976",
-            "fastest_lap_s": 60.764,
-            "average_lap_s": 61.976333333333336,
-            "laps_count": 9
-        },
-        {
-            "id": "3b4e5b90-fb54-4667-823c-18758eece338",
-            "driver": "Justas Ž.",
-            "track": {
-                "name": "Balčiūnų",
-                "configuration": "2025",
-                "maps_link": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6"
-            },
-            "session_date": "2025-07-13",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 24.5,
-                "temp_min": 13.2,
-                "wind_kmh": 8.9,
-                "rain_mm": 0.5,
-                "condition": "Light drizzle"
-            },
-            "fastest_lap": "01:05.830",
-            "average_lap": "01:07.054",
-            "fastest_lap_s": 65.83,
-            "average_lap_s": 67.05444444444444,
-            "laps_count": 9
-        },
-        {
-            "id": "ce80f760-e117-4739-b711-573e8dbf7bb3",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Awix Racing Arena",
-                "configuration": "2024",
-                "maps_link": "https://maps.app.goo.gl/ybcsyhCrN3D1E2XbA"
-            },
-            "session_date": "2024-06-04",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "01:02.505",
-            "average_lap": "01:04.998",
-            "fastest_lap_s": 62.505,
-            "average_lap_s": 64.9983,
-            "laps_count": 10
-        },
-        {
-            "id": "2ee6b65c-2542-4d3c-91bb-7a4d29442509",
-            "driver": "Ignas M.",
-            "track": {
-                "name": "Anykščių kartodromas",
-                "configuration": "2024",
-                "maps_link": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8"
-            },
-            "session_date": "2024-09-08",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:49.500",
-            "average_lap": "00:51.955",
-            "fastest_lap_s": 49.5,
-            "average_lap_s": 51.95454545454545,
-            "laps_count": 11
-        },
-        {
-            "id": "d8625020-03cc-45a0-a876-13f4af92d5a8",
-            "driver": "Vaidas R.",
-            "track": {
-                "name": "Rudskogen Motorsenter",
-                "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/BHE3Yt1iVqcHmGkv7"
-            },
-            "session_date": "2025-07-17",
-            "kart": "13 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 28.6,
-                "temp_min": 16.4,
-                "wind_kmh": 14.4,
-                "rain_mm": 0.0,
-                "condition": "Mainly clear"
-            },
-            "fastest_lap": "01:07.080",
-            "average_lap": "01:08.020",
-            "fastest_lap_s": 67.08,
-            "average_lap_s": 68.01975,
-            "laps_count": 8
-        },
-        {
-            "id": "12f300c4-da22-42e6-80d2-3a1c0f2de8a4",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Kartlandas Vilnius",
-                "configuration": "2026",
-                "maps_link": "https://maps.app.goo.gl/gdUVyVfv8P7JUnzH6"
-            },
-            "session_date": "2026-06-27",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "01:11.334",
-            "average_lap": "01:13.148",
-            "fastest_lap_s": 71.334,
-            "average_lap_s": 73.14800000000001,
-            "laps_count": 11
-        },
-        {
-            "id": "3cba0319-864d-4ab1-a689-c57e79eff33e",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Plytinės Kartodromas",
-                "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
-            },
-            "session_date": "2026-04-10",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 9.9,
-                "temp_min": -1.5,
-                "wind_kmh": 16.0,
-                "rain_mm": 0.0,
-                "condition": "Overcast"
-            },
-            "fastest_lap": "00:44.341",
-            "average_lap": "00:45.479",
-            "fastest_lap_s": 44.341,
-            "average_lap_s": 45.47853846153846,
-            "laps_count": 13
-        },
-        {
-            "id": "45fde364-025f-4519-a6c2-4b4c49126db2",
-            "driver": "Kęstas Č.",
-            "track": {
-                "name": "Smalininkų kartodromas",
-                "configuration": "2024",
-                "maps_link": "https://maps.app.goo.gl/959ZMAV6acyt6uEr8"
-            },
-            "session_date": "2024-04-27",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 16.5,
-                "temp_min": 4.7,
-                "wind_kmh": 23.4,
-                "rain_mm": 0.1,
-                "condition": "Light drizzle"
-            },
-            "fastest_lap": "00:59.878",
-            "average_lap": "01:00.842",
-            "fastest_lap_s": 59.878,
-            "average_lap_s": 60.841555555555566,
-            "laps_count": 9
-        },
-        {
-            "id": "88edc64e-f0f2-43b3-ac04-397ccdc424b8",
-            "driver": "Justas Ž.",
-            "track": {
-                "name": "Balčiūnų",
-                "configuration": "2025",
-                "maps_link": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6"
-            },
-            "session_date": "2025-07-13",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 24.5,
-                "temp_min": 13.2,
-                "wind_kmh": 8.9,
-                "rain_mm": 0.5,
-                "condition": "Light drizzle"
-            },
-            "fastest_lap": "01:04.090",
-            "average_lap": "01:06.131",
-            "fastest_lap_s": 64.09,
-            "average_lap_s": 66.13125,
-            "laps_count": 8
-        },
-        {
-            "id": "6ca0eb3e-ac7c-4478-baf8-806850e79e98",
-            "driver": "Ignas M.",
-            "track": {
-                "name": "GOKARTING CENTER KRAKOW",
-                "configuration": "2025",
-                "maps_link": "https://maps.app.goo.gl/fbAaPCaugyx4FDjYA"
-            },
-            "session_date": "2026-02-21",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:28.790",
-            "average_lap": "00:30.082",
-            "fastest_lap_s": 28.79,
-            "average_lap_s": 30.081533333333333,
-            "laps_count": 15
-        },
-        {
-            "id": "72dc8f88-6d97-4e79-a754-2a0ba1e4921d",
-            "driver": "Justas Ž.",
-            "track": {
-                "name": "Race Time",
-                "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/dRBrDVFfcDvgQaCo6"
-            },
-            "session_date": "2024-08-08",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 24.6,
-                "temp_min": 14.8,
-                "wind_kmh": 9.1,
-                "rain_mm": 0.1,
-                "condition": "Light drizzle"
-            },
-            "fastest_lap": "01:18.546",
-            "average_lap": "01:20.307",
-            "fastest_lap_s": 78.54599999999999,
-            "average_lap_s": 80.30733333333333,
-            "laps_count": 6
-        },
-        {
-            "id": "79e0981a-ffac-4bad-896d-0aa2a4e7feb0",
-            "driver": "Justas Ž.",
-            "track": {
-                "name": "Kartlandas Max",
-                "configuration": "Kartlandas Max 2026",
-                "maps_link": "https://maps.app.goo.gl/ZuopMfesFBDBQPQN7"
-            },
-            "session_date": "2026-03-15",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:39.566",
-            "average_lap": "00:41.359",
-            "fastest_lap_s": 39.566,
-            "average_lap_s": 41.35857142857143,
-            "laps_count": 21
-        },
-        {
             "id": "7b2fdc80-5f92-49eb-8227-067b1496c122",
             "driver": "Kęstas Č.",
             "track": {
@@ -1741,50 +2305,8 @@
             "laps_count": 22
         },
         {
-            "id": "8024a6e4-05ec-4a11-b2c4-eb6ddd6b6027",
-            "driver": "Ignas I.",
-            "track": {
-                "name": "Serbentų kartodromas",
-                "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/V8ir9cZW4CiqPsT17"
-            },
-            "session_date": "2026-06-07",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 22.5,
-                "temp_min": 11.3,
-                "wind_kmh": 7.6,
-                "rain_mm": 1.4,
-                "condition": "Light drizzle"
-            },
-            "fastest_lap": "01:08.584",
-            "average_lap": "01:10.049",
-            "fastest_lap_s": 68.584,
-            "average_lap_s": 70.04875,
-            "laps_count": 8
-        },
-        {
-            "id": "f1ad89eb-a8a6-42fb-9cfc-2c98bb59d91c",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "E1GOKART Gdańsk",
-                "configuration": "2024",
-                "maps_link": "https://maps.app.goo.gl/CVJR4ztgxxvVeGDv8"
-            },
-            "session_date": "2024-06-23",
-            "kart": "",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:58.777",
-            "average_lap": "01:03.443",
-            "fastest_lap_s": 58.777,
-            "average_lap_s": 63.44316666666666,
-            "laps_count": 6
-        },
-        {
-            "id": "0fa36c4c-c818-4dde-8e5f-24a83bd110e3",
-            "driver": "Povilas L.",
+            "id": "cf2b478d-a16e-4c8e-bd3a-96c332893bfb",
+            "driver": "Kęstas Č.",
             "track": {
                 "name": "Serbentų kartodromas",
                 "configuration": "Summer",
@@ -1793,552 +2315,12 @@
             "session_date": "2024-07-06",
             "kart": "9 Ag",
             "has_video": true,
-            "weather": {
-                "temp_max": 23.5,
-                "temp_min": 11.7,
-                "wind_kmh": 21.6,
-                "rain_mm": 0.1,
-                "condition": "Light drizzle"
-            },
-            "fastest_lap": "01:07.525",
-            "average_lap": "01:09.647",
-            "fastest_lap_s": 67.525,
-            "average_lap_s": 69.64742857142858,
-            "laps_count": 7
-        },
-        {
-            "id": "06dff852-f279-4308-885f-0e5678be537f",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Vilko Kartodromas",
-                "configuration": "2025",
-                "maps_link": "https://rentalkarttracks.github.io/karting-sessions/session.html?id=4a326eb4-ced0-490b-a4e8-edc211b65437"
-            },
-            "session_date": "2025-09-11",
-            "kart": "9 Ag",
-            "has_video": true,
             "weather": null,
-            "fastest_lap": "00:18.534",
-            "average_lap": "00:19.400",
-            "fastest_lap_s": 18.534,
-            "average_lap_s": 19.399866666666668,
-            "laps_count": 45
-        },
-        {
-            "id": "e70daded-d3da-461a-b9bc-a5f714338580",
-            "driver": "Justas Ž.",
-            "track": {
-                "name": "Serbentų kartodromas",
-                "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88"
-            },
-            "session_date": "2024-07-06",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 23.5,
-                "temp_min": 11.7,
-                "wind_kmh": 21.6,
-                "rain_mm": 0.1,
-                "condition": "Light drizzle"
-            },
-            "fastest_lap": "01:08.110",
-            "average_lap": "01:10.438",
-            "fastest_lap_s": 68.11,
-            "average_lap_s": 70.43828571428571,
+            "fastest_lap": "01:07.211",
+            "average_lap": "01:08.533",
+            "fastest_lap_s": 67.211,
+            "average_lap_s": 68.53257142857143,
             "laps_count": 7
-        },
-        {
-            "id": "0d0f436d-a2f9-4e03-bd54-8f1c633c675a",
-            "driver": "Ignas M.",
-            "track": {
-                "name": "Speedway",
-                "configuration": "Winter 2026",
-                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
-            },
-            "session_date": "2026-01-04",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": -2.2,
-                "temp_min": -5.9,
-                "wind_kmh": 19.0,
-                "rain_mm": 0.6,
-                "condition": "Snow"
-            },
-            "fastest_lap": "00:47.989",
-            "average_lap": "01:03.316",
-            "fastest_lap_s": 47.989,
-            "average_lap_s": 63.316375,
-            "laps_count": 8
-        },
-        {
-            "id": "103721eb-ac5d-44e7-8d40-efb94fd7b191",
-            "driver": "Justas Ž.",
-            "track": {
-                "name": "Plytinės Kartodromas",
-                "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
-            },
-            "session_date": "2026-04-10",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 9.9,
-                "temp_min": -1.5,
-                "wind_kmh": 16.0,
-                "rain_mm": 0.0,
-                "condition": "Overcast"
-            },
-            "fastest_lap": "00:43.735",
-            "average_lap": "00:44.643",
-            "fastest_lap_s": 43.735,
-            "average_lap_s": 44.64338461538462,
-            "laps_count": 13
-        },
-        {
-            "id": "2ffe82e0-f2df-4334-80ba-c3e6125b82c9",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Plytinės Kartodromas",
-                "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
-            },
-            "session_date": "2025-07-17",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:44.030",
-            "average_lap": "00:44.598",
-            "fastest_lap_s": 44.03,
-            "average_lap_s": 44.598461538461535,
-            "laps_count": 13
-        },
-        {
-            "id": "565e7836-a2ec-4ca2-9d20-54c17261648d",
-            "driver": "Julius B.",
-            "track": {
-                "name": "Speedway",
-                "configuration": "2024",
-                "maps_link": "https://maps.app.goo.gl/UKjf5X7JGVfx8h2c8"
-            },
-            "session_date": "2024-10-16",
-            "kart": "13 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 9.4,
-                "temp_min": 2.6,
-                "wind_kmh": 11.3,
-                "rain_mm": 0.0,
-                "condition": "Overcast"
-            },
-            "fastest_lap": "01:05.026",
-            "average_lap": "01:08.719",
-            "fastest_lap_s": 65.026,
-            "average_lap_s": 68.71900000000001,
-            "laps_count": 7
-        },
-        {
-            "id": "0a4f1c75-fd73-48ab-b595-7bf48c7b7f1f",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Smalininkų kartodromas",
-                "configuration": "2024",
-                "maps_link": "https://maps.app.goo.gl/959ZMAV6acyt6..."
-            },
-            "session_date": "2024-04-27",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 16.5,
-                "temp_min": 4.7,
-                "wind_kmh": 23.4,
-                "rain_mm": 0.1,
-                "condition": "Light drizzle"
-            },
-            "fastest_lap": "00:59.348",
-            "average_lap": "01:00.389",
-            "fastest_lap_s": 59.348,
-            "average_lap_s": 60.389111111111106,
-            "laps_count": 9
-        },
-        {
-            "id": "b424ec42-4be0-44bc-bf6d-a989c9506ecb",
-            "driver": "Ignas M.",
-            "track": {
-                "name": "Speedway",
-                "configuration": "Rain",
-                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
-            },
-            "session_date": "2025-11-09",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 5.3,
-                "temp_min": 3.6,
-                "wind_kmh": 11.2,
-                "rain_mm": 0.0,
-                "condition": "Overcast"
-            },
-            "fastest_lap": "01:25.862",
-            "average_lap": "01:27.118",
-            "fastest_lap_s": 85.862,
-            "average_lap_s": 87.1176,
-            "laps_count": 5
-        },
-        {
-            "id": "b03a20c8-5571-4690-988e-e34c5b00d760",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Serbentų kartodromas",
-                "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/V8ir9cZW4CiqPsT17"
-            },
-            "session_date": "2026-06-07",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 22.5,
-                "temp_min": 11.3,
-                "wind_kmh": 7.6,
-                "rain_mm": 1.4,
-                "condition": "Light drizzle"
-            },
-            "fastest_lap": "01:07.246",
-            "average_lap": "01:10.063",
-            "fastest_lap_s": 67.246,
-            "average_lap_s": 70.062625,
-            "laps_count": 8
-        },
-        {
-            "id": "57431016-4e12-4bdd-bfc3-f8099a7fd9c4",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Plytinės Kartodromas",
-                "configuration": "Winter",
-                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
-            },
-            "session_date": "2026-01-11",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": -12.2,
-                "temp_min": -17.4,
-                "wind_kmh": 8.4,
-                "rain_mm": 0.4,
-                "condition": "Light snow"
-            },
-            "fastest_lap": "01:22.892",
-            "average_lap": "01:30.504",
-            "fastest_lap_s": 82.892,
-            "average_lap_s": 90.50450000000001,
-            "laps_count": 6
-        },
-        {
-            "id": "1c01555c-bf1d-4e72-b62b-4def48812c97",
-            "driver": "Romualdas P.",
-            "track": {
-                "name": "Plytinės Kartodromas",
-                "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
-            },
-            "session_date": "2026-04-10",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 9.9,
-                "temp_min": -1.5,
-                "wind_kmh": 16.0,
-                "rain_mm": 0.0,
-                "condition": "Overcast"
-            },
-            "fastest_lap": "00:45.092",
-            "average_lap": "00:46.352",
-            "fastest_lap_s": 45.092,
-            "average_lap_s": 46.35246153846154,
-            "laps_count": 13
-        },
-        {
-            "id": "477e60fd-e72d-4d1d-9c42-514e0b3ba2d4",
-            "driver": "Ignas M.",
-            "track": {
-                "name": "Plytinės Kartodromas",
-                "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
-            },
-            "session_date": "2026-05-01",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 15.2,
-                "temp_min": 5.0,
-                "wind_kmh": 10.4,
-                "rain_mm": 0.0,
-                "condition": "Overcast"
-            },
-            "fastest_lap": "00:43.150",
-            "average_lap": "00:51.824",
-            "fastest_lap_s": 43.15,
-            "average_lap_s": 51.82445454545454,
-            "laps_count": 11
-        },
-        {
-            "id": "f5ae1534-60dd-46aa-a549-06ce3c9c0b9e",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Plytinės Kartodromas",
-                "configuration": "Winter",
-                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
-            },
-            "session_date": "2026-02-08",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": -4.5,
-                "temp_min": -12.3,
-                "wind_kmh": 20.9,
-                "rain_mm": 0.1,
-                "condition": "Light snow"
-            },
-            "fastest_lap": "01:28.533",
-            "average_lap": "01:35.394",
-            "fastest_lap_s": 88.533,
-            "average_lap_s": 95.39383333333332,
-            "laps_count": 6
-        },
-        {
-            "id": "dcb058c8-d72c-48a8-9209-98886d636ee6",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Plytinės Kartodromas",
-                "configuration": "Winter",
-                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
-            },
-            "session_date": "2026-01-02",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 0.8,
-                "temp_min": -2.9,
-                "wind_kmh": 23.9,
-                "rain_mm": 7.2,
-                "condition": "Heavy snow"
-            },
-            "fastest_lap": "01:22.452",
-            "average_lap": "01:25.132",
-            "fastest_lap_s": 82.452,
-            "average_lap_s": 85.13228571428571,
-            "laps_count": 7
-        },
-        {
-            "id": "fdf6cd0e-ca2d-4a87-baf7-dbd45601db46",
-            "driver": "Ignas M.",
-            "track": {
-                "name": "Speedway",
-                "configuration": "3 konfiguracija",
-                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
-            },
-            "session_date": "2026-03-29",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": null,
-            "fastest_lap": "00:59.463",
-            "average_lap": "01:02.608",
-            "fastest_lap_s": 59.463,
-            "average_lap_s": 62.608,
-            "laps_count": 9
-        },
-        {
-            "id": "7e3792e8-31e9-458d-85a3-9114833d1146",
-            "driver": "Vaidas R.",
-            "track": {
-                "name": "Balčiūnų",
-                "configuration": "2025",
-                "maps_link": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6"
-            },
-            "session_date": "2025-07-13",
-            "kart": "",
-            "has_video": true,
-            "weather": {
-                "temp_max": 24.5,
-                "temp_min": 13.2,
-                "wind_kmh": 8.9,
-                "rain_mm": 0.5,
-                "condition": "Light drizzle"
-            },
-            "fastest_lap": "01:04.500",
-            "average_lap": "01:06.284",
-            "fastest_lap_s": 64.5,
-            "average_lap_s": 66.28444444444443,
-            "laps_count": 9
-        },
-        {
-            "id": "a9663237-6649-486e-b5e9-08931eab826c",
-            "driver": "Ignas I.",
-            "track": {
-                "name": "Plytinės Kartodromas",
-                "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
-            },
-            "session_date": "2026-04-24",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 11.2,
-                "temp_min": 0.8,
-                "wind_kmh": 18.2,
-                "rain_mm": 0.1,
-                "condition": "Light drizzle"
-            },
-            "fastest_lap": "00:44.480",
-            "average_lap": "00:45.699",
-            "fastest_lap_s": 44.48,
-            "average_lap_s": 45.69907692307692,
-            "laps_count": 13
-        },
-        {
-            "id": "7a884ece-ef91-4dd8-a793-e162bd4e9dc5",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Race Time",
-                "configuration": "Summer",
-                "maps_link": "https://maps.app.goo.gl/4RT2QjMpYtWP6mh26"
-            },
-            "session_date": "2026-06-06",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 17.8,
-                "temp_min": 12.8,
-                "wind_kmh": 17.8,
-                "rain_mm": 8.9,
-                "condition": "Light rain"
-            },
-            "fastest_lap": "01:15.999",
-            "average_lap": "01:20.276",
-            "fastest_lap_s": 75.999,
-            "average_lap_s": 80.27583333333332,
-            "laps_count": 6
-        },
-        {
-            "id": "5a51fadf-76ca-491c-965a-2b3de21a13c6",
-            "driver": "Ignas M.",
-            "track": {
-                "name": "Anykščių kartodromas",
-                "configuration": "2024",
-                "maps_link": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8"
-            },
-            "session_date": "2024-09-08",
-            "kart": "13 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 24.2,
-                "temp_min": 13.7,
-                "wind_kmh": 15.1,
-                "rain_mm": 0.0,
-                "condition": "Partly cloudy"
-            },
-            "fastest_lap": "00:47.400",
-            "average_lap": "00:51.291",
-            "fastest_lap_s": 47.4,
-            "average_lap_s": 51.290909090909096,
-            "laps_count": 11
-        },
-        {
-            "id": "728b61b0-5dc4-401e-9ded-9259bd2b17fd",
-            "driver": "Ignas M.",
-            "track": {
-                "name": "Plytinės Kartodromas",
-                "configuration": "Winter",
-                "maps_link": "https://maps.app.goo.gl/AmF51NGm8bysceeN9"
-            },
-            "session_date": "2026-01-02",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 0.8,
-                "temp_min": -2.9,
-                "wind_kmh": 23.9,
-                "rain_mm": 7.2,
-                "condition": "Heavy snow"
-            },
-            "fastest_lap": "01:23.385",
-            "average_lap": "01:25.938",
-            "fastest_lap_s": 83.385,
-            "average_lap_s": 85.93757142857143,
-            "laps_count": 7
-        },
-        {
-            "id": "784594f9-e230-4397-a8ce-4643d32b65df",
-            "driver": "Kęstas Č.",
-            "track": {
-                "name": "Speedway",
-                "configuration": "Winter 2026",
-                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
-            },
-            "session_date": "2026-01-04",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": -2.2,
-                "temp_min": -5.9,
-                "wind_kmh": 19.0,
-                "rain_mm": 0.6,
-                "condition": "Snow"
-            },
-            "fastest_lap": "00:46.013",
-            "average_lap": "00:49.714",
-            "fastest_lap_s": 46.013,
-            "average_lap_s": 49.71363636363637,
-            "laps_count": 11
-        },
-        {
-            "id": "d4f4584a-1fbc-44c0-bf48-6906a98548cf",
-            "driver": "Povilas L.",
-            "track": {
-                "name": "Speedway",
-                "configuration": "Rain",
-                "maps_link": "https://maps.app.goo.gl/oYmMNt3N2fXehzVf9"
-            },
-            "session_date": "2025-11-09",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 5.3,
-                "temp_min": 3.6,
-                "wind_kmh": 11.2,
-                "rain_mm": 0.0,
-                "condition": "Overcast"
-            },
-            "fastest_lap": "01:26.116",
-            "average_lap": "01:31.214",
-            "fastest_lap_s": 86.116,
-            "average_lap_s": 91.2136,
-            "laps_count": 5
-        },
-        {
-            "id": "55859a7b-9438-422f-b9cd-ca68816ecc95",
-            "driver": "Kęstas Č.",
-            "track": {
-                "name": "Balčiūnų",
-                "configuration": "2025",
-                "maps_link": "https://maps.app.goo.gl/TW61veC3NJhRTdWq6"
-            },
-            "session_date": "2025-07-13",
-            "kart": "9 Ag",
-            "has_video": true,
-            "weather": {
-                "temp_max": 24.5,
-                "temp_min": 13.2,
-                "wind_kmh": 8.9,
-                "rain_mm": 0.5,
-                "condition": "Light drizzle"
-            },
-            "fastest_lap": "01:04.020",
-            "average_lap": "01:04.954",
-            "fastest_lap_s": 64.02,
-            "average_lap_s": 64.95375,
-            "laps_count": 8
         }
     ]
 }
