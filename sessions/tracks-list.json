@@ -1,18 +1,33 @@
 [
     {
-        "id": "plytines",
-        "name": "Plytinės Kartodromas",
-        "lat": 54.724858099752225,
-        "lng": 25.349237826984915,
-        "mapsLink": "https://maps.app.goo.gl/AmF51NGm8bysceeN9",
-        "color": "#a84ae8",
-        "note": "Professional karting circuit",
+        "id": "awix_racing_arena",
+        "name": "Awix Racing Arena",
+        "lat": 53.0184783,
+        "lng": 18.5440845,
+        "mapsLink": "https://maps.app.goo.gl/ybcsyhCrN3D1E2XbA",
+        "color": "#9a4ae8",
+        "note": "Karting · Bydgoszcz",
         "configs": [
-            "Summer",
-            "Winter"
+            "2024"
         ],
-        "sessions": 25,
-        "bestLap": "00:43.150",
+        "sessions": 1,
+        "bestLap": "01:02.505",
+        "bestDriver": "Povilas L."
+    },
+    {
+        "id": "kartcenter_sopot",
+        "name": "KartCenter Sopot",
+        "lat": 54.4339595,
+        "lng": 18.5635584,
+        "mapsLink": "https://maps.app.goo.gl/AXFPcDj5CWT7rPX27",
+        "color": "#e8e84a",
+        "note": "Karting · Gdańsk area",
+        "configs": [
+            "2025",
+            "Summer"
+        ],
+        "sessions": 2,
+        "bestLap": "00:40.573",
         "bestDriver": "Ignas M."
     },
     {
@@ -35,6 +50,22 @@
         "bestDriver": "Povilas L."
     },
     {
+        "id": "plytines",
+        "name": "Plytinės Kartodromas",
+        "lat": 54.724858099752225,
+        "lng": 25.349237826984915,
+        "mapsLink": "https://maps.app.goo.gl/AmF51NGm8bysceeN9",
+        "color": "#a84ae8",
+        "note": "Professional karting circuit",
+        "configs": [
+            "Summer",
+            "Winter"
+        ],
+        "sessions": 25,
+        "bestLap": "00:43.150",
+        "bestDriver": "Ignas M."
+    },
+    {
         "id": "balciunu",
         "name": "Balčiūnų",
         "lat": 55.8984413,
@@ -47,21 +78,6 @@
         ],
         "sessions": 7,
         "bestLap": "01:04.020",
-        "bestDriver": "Kęstas Č."
-    },
-    {
-        "id": "serbentu",
-        "name": "Serbentų kartodromas",
-        "lat": 55.9140472,
-        "lng": 23.3348808,
-        "mapsLink": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88",
-        "color": "#4adee8",
-        "note": "Outdoor circuit · Šiauliai",
-        "configs": [
-            "Summer"
-        ],
-        "sessions": 11,
-        "bestLap": "01:06.823",
         "bestDriver": "Kęstas Č."
     },
     {
@@ -81,50 +97,34 @@
         "bestDriver": "Ignas M."
     },
     {
-        "id": "tor_polwysep",
-        "name": "Tor Półwysep",
-        "lat": 54.7891707,
-        "lng": 18.4248715,
-        "mapsLink": "https://maps.app.goo.gl/rAMgznAK6mQx8Nwf6",
-        "color": "#b84ae8",
-        "note": "Outdoor circuit · Władysławowo",
+        "id": "race_time",
+        "name": "Race Time",
+        "lat": 55.9084559,
+        "lng": 21.0999881,
+        "mapsLink": "https://maps.app.goo.gl/dRBrDVFfcDvgQaCo6",
+        "color": "#4ae8c8",
+        "note": "Outdoor circuit · Klaipėda",
         "configs": [
-            "2024",
-            "2025"
+            "Summer"
         ],
-        "sessions": 3,
-        "bestLap": "00:25.180",
+        "sessions": 2,
+        "bestLap": "01:15.999",
         "bestDriver": "Povilas L."
     },
     {
-        "id": "smalininku",
-        "name": "Smalininkų kartodromas",
-        "lat": 55.0787157,
-        "lng": 22.5838659,
-        "mapsLink": "https://maps.app.goo.gl/959ZMAV6acyt6uEr8",
-        "color": "#e8a84a",
-        "note": "Outdoor circuit · Smalininkai",
+        "id": "karting_salou",
+        "name": "Karting Salou",
+        "lat": 41.092111,
+        "lng": 1.1296976,
+        "mapsLink": "https://maps.app.goo.gl/H4DpdF6T1XHRE6239",
+        "color": "#e89a4a",
+        "note": "Outdoor circuit · Spain",
         "configs": [
             "2024"
         ],
-        "sessions": 5,
-        "bestLap": "00:59.000",
-        "bestDriver": "Povilas L."
-    },
-    {
-        "id": "kartlandas",
-        "name": "Kartlandas Kaunas",
-        "lat": 54.91482127742085,
-        "lng": 23.84298728162076,
-        "mapsLink": "https://maps.app.goo.gl/7Q9SbwwcmwyNqUH56",
-        "color": "#e8c84a",
-        "note": "High-speed Kaunas circuit",
-        "configs": [
-            "2025"
-        ],
-        "sessions": 3,
-        "bestLap": "00:25.906",
-        "bestDriver": "Povilas L."
+        "sessions": 1,
+        "bestLap": "00:51.862",
+        "bestDriver": "Justas Ž."
     },
     {
         "id": "kartlandas_max",
@@ -142,125 +142,18 @@
         "bestDriver": "Kęstas Č."
     },
     {
-        "id": "awix_racing_arena",
-        "name": "Awix Racing Arena",
-        "lat": 53.0184783,
-        "lng": 18.5440845,
-        "mapsLink": "https://maps.app.goo.gl/ybcsyhCrN3D1E2XbA",
-        "color": "#9a4ae8",
-        "note": "Karting · Bydgoszcz",
-        "configs": [
-            "2024"
-        ],
-        "sessions": 1,
-        "bestLap": "01:02.505",
-        "bestDriver": "Povilas L."
-    },
-    {
-        "id": "anyksciu",
-        "name": "Anykščių kartodromas",
-        "lat": 55.518791,
-        "lng": 25.069384,
-        "mapsLink": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8",
-        "color": "#8ce84a",
-        "note": "Outdoor circuit · Anykščiai",
-        "configs": [
-            "2024"
-        ],
-        "sessions": 6,
-        "bestLap": "00:45.330",
-        "bestDriver": "Povilas L."
-    },
-    {
-        "id": "kartcenter_sopot",
-        "name": "KartCenter Sopot",
-        "lat": 54.4339595,
-        "lng": 18.5635584,
-        "mapsLink": "https://maps.app.goo.gl/AXFPcDj5CWT7rPX27",
-        "color": "#e8e84a",
-        "note": "Karting · Gdańsk area",
-        "configs": [
-            "2025",
-            "Summer"
-        ],
-        "sessions": 2,
-        "bestLap": "00:40.573",
-        "bestDriver": "Ignas M."
-    },
-    {
-        "id": "kartlandas_vilnius",
-        "name": "Kartlandas Vilnius",
-        "lat": 0,
-        "lng": 0,
-        "mapsLink": "https://maps.app.goo.gl/gdUVyVfv8P7JUnzH6",
-        "color": "#aaaaaa",
-        "note": "Generated circuit",
-        "configs": [
-            "2026"
-        ],
-        "sessions": 1,
-        "bestLap": "01:11.334",
-        "bestDriver": "Povilas L."
-    },
-    {
-        "id": "rudskogen",
-        "name": "Rudskogen Motorsenter",
-        "lat": 59.3679798,
-        "lng": 11.2620216,
-        "mapsLink": "https://maps.app.goo.gl/BHE3Yt1iVqcHmGkv7",
-        "color": "#e85a5a",
-        "note": "Motorsport circuit · Norway",
+        "id": "serbentu",
+        "name": "Serbentų kartodromas",
+        "lat": 55.9140472,
+        "lng": 23.3348808,
+        "mapsLink": "https://maps.app.goo.gl/8BmeaARd6nH8iZQ88",
+        "color": "#4adee8",
+        "note": "Outdoor circuit · Šiauliai",
         "configs": [
             "Summer"
         ],
-        "sessions": 2,
-        "bestLap": "01:07.080",
-        "bestDriver": "Vaidas R."
-    },
-    {
-        "id": "vilko",
-        "name": "Vilko Kartodromas",
-        "lat": 54.88831631453673,
-        "lng": 23.922075279103808,
-        "mapsLink": "https://maps.app.goo.gl/9erykKE9f58EYZ9TA",
-        "color": "#e84a4a",
-        "note": "Technical indoor circuit",
-        "configs": [
-            "2025",
-            "wolf 2025"
-        ],
-        "sessions": 3,
-        "bestLap": "00:18.050",
-        "bestDriver": "Kęstas Č."
-    },
-    {
-        "id": "kartcenter_gdansk",
-        "name": "KartCenter Gdańsk Gokarty",
-        "lat": 54.352628,
-        "lng": 18.5928151,
-        "mapsLink": "https://maps.app.goo.gl/RUBF4Y86mvd37qu67",
-        "color": "#5ab0e8",
-        "note": "Karting · Gdańsk",
-        "configs": [
-            "2025"
-        ],
-        "sessions": 1,
-        "bestLap": "00:22.840",
-        "bestDriver": "Povilas L."
-    },
-    {
-        "id": "blāzma",
-        "name": "Blāzma",
-        "lat": 55.84813,
-        "lng": 26.53592,
-        "mapsLink": "https://www.google.com/maps/search/?api=1&query=55.84813,26.53592",
-        "color": "#4a6ae8",
-        "note": "Outdoor circuit · Daugavpils, Latvia",
-        "configs": [
-            "2026"
-        ],
-        "sessions": 1,
-        "bestLap": "00:22.451",
+        "sessions": 11,
+        "bestLap": "01:06.823",
         "bestDriver": "Kęstas Č."
     },
     {
@@ -279,19 +172,126 @@
         "bestDriver": "Ignas M."
     },
     {
-        "id": "karting_salou",
-        "name": "Karting Salou",
-        "lat": 41.092111,
-        "lng": 1.1296976,
-        "mapsLink": "https://maps.app.goo.gl/H4DpdF6T1XHRE6239",
-        "color": "#e89a4a",
-        "note": "Outdoor circuit · Spain",
+        "id": "anyksciu",
+        "name": "Anykščių kartodromas",
+        "lat": 55.518791,
+        "lng": 25.069384,
+        "mapsLink": "https://maps.app.goo.gl/2J7pGZfQs3f174tR8",
+        "color": "#8ce84a",
+        "note": "Outdoor circuit · Anykščiai",
         "configs": [
             "2024"
         ],
+        "sessions": 6,
+        "bestLap": "00:45.330",
+        "bestDriver": "Povilas L."
+    },
+    {
+        "id": "smalininku",
+        "name": "Smalininkų kartodromas",
+        "lat": 55.0787157,
+        "lng": 22.5838659,
+        "mapsLink": "https://maps.app.goo.gl/959ZMAV6acyt6uEr8",
+        "color": "#e8a84a",
+        "note": "Outdoor circuit · Smalininkai",
+        "configs": [
+            "2024"
+        ],
+        "sessions": 5,
+        "bestLap": "00:59.000",
+        "bestDriver": "Povilas L."
+    },
+    {
+        "id": "kartlandas_vilnius",
+        "name": "Kartlandas Vilnius",
+        "lat": 0,
+        "lng": 0,
+        "mapsLink": "https://maps.app.goo.gl/gdUVyVfv8P7JUnzH6",
+        "color": "#aaaaaa",
+        "note": "Generated circuit",
+        "configs": [
+            "2026"
+        ],
         "sessions": 1,
-        "bestLap": "00:51.862",
-        "bestDriver": "Justas Ž."
+        "bestLap": "01:11.334",
+        "bestDriver": "Povilas L."
+    },
+    {
+        "id": "kartlandas",
+        "name": "Kartlandas Kaunas",
+        "lat": 54.91482127742085,
+        "lng": 23.84298728162076,
+        "mapsLink": "https://maps.app.goo.gl/7Q9SbwwcmwyNqUH56",
+        "color": "#e8c84a",
+        "note": "High-speed Kaunas circuit",
+        "configs": [
+            "2025"
+        ],
+        "sessions": 3,
+        "bestLap": "00:25.906",
+        "bestDriver": "Povilas L."
+    },
+    {
+        "id": "tor_polwysep",
+        "name": "Tor Półwysep",
+        "lat": 54.7891707,
+        "lng": 18.4248715,
+        "mapsLink": "https://maps.app.goo.gl/rAMgznAK6mQx8Nwf6",
+        "color": "#b84ae8",
+        "note": "Outdoor circuit · Władysławowo",
+        "configs": [
+            "2024",
+            "2025"
+        ],
+        "sessions": 3,
+        "bestLap": "00:25.180",
+        "bestDriver": "Povilas L."
+    },
+    {
+        "id": "kartcenter_gdansk",
+        "name": "KartCenter Gdańsk Gokarty",
+        "lat": 54.352628,
+        "lng": 18.5928151,
+        "mapsLink": "https://maps.app.goo.gl/RUBF4Y86mvd37qu67",
+        "color": "#5ab0e8",
+        "note": "Karting · Gdańsk",
+        "configs": [
+            "2025"
+        ],
+        "sessions": 1,
+        "bestLap": "00:22.840",
+        "bestDriver": "Povilas L."
+    },
+    {
+        "id": "vilko",
+        "name": "Vilko Kartodromas",
+        "lat": 54.88831631453673,
+        "lng": 23.922075279103808,
+        "mapsLink": "https://maps.app.goo.gl/9erykKE9f58EYZ9TA",
+        "color": "#e84a4a",
+        "note": "Technical indoor circuit",
+        "configs": [
+            "2025",
+            "wolf 2025"
+        ],
+        "sessions": 3,
+        "bestLap": "00:18.050",
+        "bestDriver": "Kęstas Č."
+    },
+    {
+        "id": "blāzma",
+        "name": "Blāzma",
+        "lat": 55.84813,
+        "lng": 26.53592,
+        "mapsLink": "https://www.google.com/maps/search/?api=1&query=55.84813,26.53592",
+        "color": "#4a6ae8",
+        "note": "Outdoor circuit · Daugavpils, Latvia",
+        "configs": [
+            "2026"
+        ],
+        "sessions": 1,
+        "bestLap": "00:22.451",
+        "bestDriver": "Kęstas Č."
     },
     {
         "id": "sporta_komplekss_333",
@@ -309,18 +309,18 @@
         "bestDriver": "Povilas L."
     },
     {
-        "id": "race_time",
-        "name": "Race Time",
-        "lat": 55.9084559,
-        "lng": 21.0999881,
-        "mapsLink": "https://maps.app.goo.gl/dRBrDVFfcDvgQaCo6",
-        "color": "#4ae8c8",
-        "note": "Outdoor circuit · Klaipėda",
+        "id": "rudskogen",
+        "name": "Rudskogen Motorsenter",
+        "lat": 59.3679798,
+        "lng": 11.2620216,
+        "mapsLink": "https://maps.app.goo.gl/BHE3Yt1iVqcHmGkv7",
+        "color": "#e85a5a",
+        "note": "Motorsport circuit · Norway",
         "configs": [
             "Summer"
         ],
         "sessions": 2,
-        "bestLap": "01:15.999",
-        "bestDriver": "Povilas L."
+        "bestLap": "01:07.080",
+        "bestDriver": "Vaidas R."
     }
 ]
