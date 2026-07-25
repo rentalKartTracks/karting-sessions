@@ -204,8 +204,8 @@
     {
         "id": "kartlandas_vilnius",
         "name": "Kartlandas Vilnius",
-        "lat": 0,
-        "lng": 0,
+        "lat": 54.6930088,
+        "lng": 25.4389705,
         "mapsLink": "https://maps.app.goo.gl/gdUVyVfv8P7JUnzH6",
         "color": "#aaaaaa",
         "note": "Generated circuit",
@@ -326,8 +326,8 @@
     {
         "id": "k1_speed_santa_clara",
         "name": "K1 Speed Santa Clara",
-        "lat": 0,
-        "lng": 0,
+        "lat": 37.3723025,
+        "lng": -121.9806889,
         "mapsLink": "https://maps.app.goo.gl/uFRSgqpdqrsfUGxT6",
         "color": "#aaaaaa",
         "note": "Generated circuit",
