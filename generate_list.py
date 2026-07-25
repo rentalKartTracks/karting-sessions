@@ -227,6 +227,34 @@ STATIC_TRACKS = {
     }
 }
 
+# --- Coordinate Resolution ---
+
+def resolve_coordinates_from_maps_link(maps_link: Optional[str]) -> Optional[Dict[str, float]]:
+    """
+    Resolves a Google Maps link (e.g. a maps.app.goo.gl short link) to lat/lng
+    by following its redirect and parsing the destination URL. Prefers the
+    place pin's exact !3d/!4d coordinates over the coarser @lat,lng viewport
+    center, and falls back to a bare query=lat,lng if present.
+    """
+    if not maps_link:
+        return None
+    try:
+        req = urllib.request.Request(maps_link, method="HEAD", headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=8) as resp:
+            final_url = resp.geturl()
+    except Exception as e:
+        print(f"  [geocode] failed to resolve {maps_link}: {e}")
+        return None
+
+    for pattern in (r"!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)", r"query=(-?\d+\.\d+),(-?\d+\.\d+)", r"@(-?\d+\.\d+),(-?\d+\.\d+)"):
+        m = re.search(pattern, final_url)
+        if m:
+            return {"lat": float(m.group(1)), "lng": float(m.group(2))}
+
+    print(f"  [geocode] could not parse coordinates from {final_url}")
+    return None
+
+
 # --- Weather Fetch ---
 
 def fetch_weather(lat: float, lng: float, date: str) -> Optional[Dict]:
@@ -437,9 +465,20 @@ def generate_sessions_list() -> None:
         print(f"  [canonical] folded {len(folded)} name variant(s): " +
               ", ".join(f"{k!r}->{v!r}" for k, v in folded.items()))
 
+    # Cache of previously-resolved coordinates (keyed by track name) so tracks
+    # outside STATIC_TRACKS only get geocoded once, not on every run.
+    resolved_coords_cache: Dict[str, Dict[str, float]] = {}
+    if TRACKS_OUTPUT_FILE.exists():
+        try:
+            for t in json.loads(TRACKS_OUTPUT_FILE.read_text(encoding="utf-8")):
+                if t.get("lat") or t.get("lng"):
+                    resolved_coords_cache[t["name"]] = {"lat": t["lat"], "lng": t["lng"]}
+        except (json.JSONDecodeError, OSError):
+            pass
+
     all_sessions_summary: List[Dict[str, Any]] = []
     tracks_aggregation: Dict[str, Any] = {}
-    
+
     # Use pathlib to glob json files
     try:
         for filepath in SESSIONS_DIR.glob("*.json"):
@@ -459,12 +498,27 @@ def generate_sessions_list() -> None:
                 
                 if track_name not in tracks_aggregation:
                     static_info = STATIC_TRACKS.get(track_name, {})
+                    maps_link = static_info.get("mapsLink", track_data.get("maps_link") if isinstance(track_data, dict) else "") or ""
+
+                    if static_info:
+                        lat, lng = static_info["lat"], static_info["lng"]
+                    elif track_name in resolved_coords_cache:
+                        lat, lng = resolved_coords_cache[track_name]["lat"], resolved_coords_cache[track_name]["lng"]
+                    else:
+                        print(f"  [geocode] resolving coordinates for new track {track_name!r}…")
+                        resolved = resolve_coordinates_from_maps_link(maps_link)
+                        if resolved:
+                            lat, lng = resolved["lat"], resolved["lng"]
+                            print(f"  [geocode] -> ({lat}, {lng})")
+                        else:
+                            lat, lng = 0, 0
+
                     tracks_aggregation[track_name] = {
                         "id": static_info.get("id", track_name.lower().replace(" ", "_")),
                         "name": track_name,
-                        "lat": static_info.get("lat", 0),
-                        "lng": static_info.get("lng", 0),
-                        "mapsLink": static_info.get("mapsLink", track_data.get("maps_link") if isinstance(track_data, dict) else ""),
+                        "lat": lat,
+                        "lng": lng,
+                        "mapsLink": maps_link,
                         "color": static_info.get("color", "#aaaaaa"),
                         "note": static_info.get("note", "Generated circuit"),
                         "configs": set(),
