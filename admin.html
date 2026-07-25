@@ -178,6 +178,42 @@
 
     .hidden { display: none !important; }
 
+    /* ── Championship editor ── */
+    .champ-select {
+      flex: 1; min-width: 180px; background: #2C2C2E; border: 0.5px solid rgba(255,255,255,0.1);
+      border-radius: 10px; padding: 9px 12px; color: #fff; font-family: inherit; font-size: 14px;
+    }
+    .champ-select:focus { outline: none; border-color: #0A84FF; }
+    .venue-row, .driver-row {
+      display: flex; align-items: center; gap: 8px;
+      background: #2C2C2E; border-radius: 8px; padding: 7px 10px;
+      border: 0.5px solid rgba(255,255,255,0.07); margin-bottom: 6px;
+    }
+    .venue-row input[type="text"], .driver-row input[type="text"] {
+      flex: 1; background: transparent; border: none; color: #fff;
+      font-family: inherit; font-size: 13px; padding: 0; width: auto;
+    }
+    .venue-row input[type="text"]:focus, .driver-row input[type="text"]:focus { outline: none; }
+    .venue-row select {
+      background: #1C1C1E; border: 0.5px solid rgba(255,255,255,0.1); border-radius: 6px;
+      color: #fff; font-family: inherit; font-size: 12px; padding: 4px 6px; width: auto;
+    }
+    .venue-row .done-label { display: flex; align-items: center; gap: 4px; font-size: 11px; color: rgba(255,255,255,0.4); white-space: nowrap; }
+    .venue-row .done-label input { width: auto; }
+    .row-btn { border: none; background: none; color: rgba(255,255,255,0.3); cursor: pointer; padding: 2px 5px; font-size: 12px; line-height: 1; flex-shrink: 0; }
+    .row-btn:hover { color: #fff; }
+    .row-btn.row-del:hover { color: #FF453A; }
+    .champ-times-wrap { overflow-x: auto; }
+    .champ-times-table { border-collapse: collapse; }
+    .champ-times-table th, .champ-times-table td { padding: 6px 8px; text-align: left; border-bottom: 0.5px solid rgba(255,255,255,0.07); white-space: nowrap; }
+    .champ-times-table th { color: rgba(255,255,255,0.4); font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.4px; }
+    .champ-times-table input {
+      width: 90px; background: #2C2C2E; border: 0.5px solid rgba(255,255,255,0.1); border-radius: 6px;
+      padding: 5px 7px; color: #fff; font-family: monospace; font-size: 12px;
+    }
+    .champ-times-table input:focus { outline: none; border-color: #0A84FF; }
+    .champ-empty { color: rgba(255,255,255,0.3); font-size: 12px; padding: 10px 2px; }
+
     @media (max-width: 600px) {
       .form-grid { grid-template-columns: 1fr; }
       .laps-grid  { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
@@ -214,6 +250,7 @@
   <div class="tabs">
     <button class="tab-btn active" id="tab-new"    onclick="resetForm(); showTab('new')">➕ New Session</button>
     <button class="tab-btn"        id="tab-manage" onclick="showTab('manage')">📋 All Sessions</button>
+    <button class="tab-btn"        id="tab-champ"  onclick="showTab('champ')">🏆 Championship</button>
   </div>
 
   <!-- ── CREATE / EDIT PANEL ── -->
@@ -328,6 +365,76 @@
     <div class="sessions-list" id="sessions-list">
       <div style="color:rgba(255,255,255,0.3);padding:24px;text-align:center;font-size:13px">Loading…</div>
     </div>
+  </div>
+
+  <!-- ── CHAMPIONSHIP PANEL ── -->
+  <div id="panel-champ" class="hidden">
+
+    <div class="form-section">
+      <h3>Season</h3>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <select class="champ-select" id="champ-season-select" onchange="selectSeason(this.value)"></select>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="newSeason()">+ New Season</button>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>Season Details</h3>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Year</label>
+          <input type="number" id="champ-year" placeholder="2027">
+        </div>
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" id="champ-name" placeholder="Spring Challenge">
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="champ-status">
+            <option value="upcoming">Upcoming</option>
+            <option value="active">Active</option>
+            <option value="complete">Complete</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="laps-head">
+        <h3>Venues</h3>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="addVenue()">+ Add Venue</button>
+      </div>
+      <div id="champ-venues-list"></div>
+    </div>
+
+    <div class="form-section">
+      <div class="laps-head">
+        <h3>Drivers</h3>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="addDriver()">+ Add Driver</button>
+      </div>
+      <div id="champ-drivers-list"></div>
+    </div>
+
+    <div class="form-section">
+      <h3>Best Lap Times</h3>
+      <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:10px">One best lap per driver per venue &nbsp;·&nbsp; format MM:SS.mmm &nbsp;·&nbsp; leave blank for DNS</div>
+      <div class="champ-times-wrap">
+        <table class="champ-times-table" id="champ-times-table"></table>
+      </div>
+    </div>
+
+    <!-- Sticky action bar -->
+    <div class="form-actions">
+      <div class="session-id-label">championship-data.json</div>
+      <div id="champ-status-msg" class="status-msg"></div>
+      <div class="actions-right">
+        <button type="button" class="btn btn-danger btn-sm" id="champ-delete-btn" onclick="handleChampDelete()">🗑 Delete Season</button>
+        <button type="button" class="btn btn-secondary" onclick="handleChampDownload()">⤓ Download</button>
+        <button type="button" class="btn btn-primary" id="champ-publish-btn" onclick="handleChampPublish()">🚀 Publish to GitHub</button>
+      </div>
+    </div>
+
   </div>
 
 </div>

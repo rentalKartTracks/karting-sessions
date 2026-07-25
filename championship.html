@@ -674,168 +674,15 @@
   <nav class="header-nav" aria-label="Site navigation"></nav>
 
   <div class="topbar" style="margin-top:var(--nav-h,56px);">
-    <div class="topbar-title">Spring Challenge</div>
+    <div class="topbar-title" id="topbar-title">Championship</div>
   </div>
 
   <div class="year-switcher-bar">
-    <div class="year-switcher" id="year-switcher">
-      <button class="year-btn" data-year="2025">2025</button>
-      <button class="year-btn active" data-year="2026">2026</button>
-      <button class="year-btn" data-year="2027">2027</button>
-    </div>
+    <div class="year-switcher" id="year-switcher"></div>
   </div>
 
-  <!-- ═══════════════ 2025 PANEL ═══════════════ -->
-  <div class="season-panel" id="panel-2025">
-    <div class="champ-wrap">
-      <div class="header">
-        <div class="season-pill">2025 Season</div>
-        <h2 class="champ-title">Spring Challenge</h2>
-        <div class="subtitle">GoKart Championship &nbsp;·&nbsp; 4 Venues</div>
-      </div>
-      <div class="status-bar">
-        <div class="status-chip status-done">
-          <div class="status-dot dot-done"></div>Kartlandas Max — Done
-        </div>
-        <div class="status-chip status-done">
-          <div class="status-dot dot-done"></div>Kartlandas Vilnius — Done
-        </div>
-        <div class="status-chip status-done">
-          <div class="status-dot dot-done"></div>Speedway — Done
-        </div>
-        <div class="status-chip status-done">
-          <div class="status-dot dot-done"></div>Plytinė — Done
-        </div>
-      </div>
-      <div class="rule-note">Scoring: <span>Sum of best lap</span> per session &nbsp;·&nbsp; Lowest total wins
-        &nbsp;·&nbsp; DNS = slowest time of that session</div>
-      <div class="table-scroll">
-        <table>
-          <colgroup>
-            <col style="width:44px"> <!-- # -->
-            <col> <!-- Driver -->
-            <col style="width:104px"> <!-- Kartlandas Max -->
-            <col style="width:104px"> <!-- Kartlandas Vilnius -->
-            <col style="width:104px"> <!-- Speedway -->
-            <col style="width:104px"> <!-- Plytinė -->
-            <col style="width:110px"> <!-- Total -->
-            <col style="width:96px"> <!-- Gap -->
-            <col style="width:84px"> <!-- Interval -->
-            <col style="width:96px"> <!-- Pace -->
-          </colgroup>
-          <thead>
-            <tr class="thead-group">
-              <th colspan="2"></th>
-              <th class="th-ses-label" style="color:var(--gold);border-color:#e8c84a44">Kartlandas Max</th>
-              <th class="th-ses-label" style="color:var(--green);border-color:#4ae8a044">Kartlandas Vilnius</th>
-              <th class="th-ses-label" style="color:var(--blue);border-color:#4ab8e822">Speedway</th>
-              <th class="th-ses-label" style="color:var(--purple);border-color:#a84ae822">Plytinė</th>
-              <th class="th-results-label" colspan="4">Championship</th>
-            </tr>
-            <tr class="thead-sub">
-              <th class="ac">#</th>
-              <th class="al">Driver</th>
-              <th class="ac">Best Lap</th>
-              <th class="ac">Best Lap</th>
-              <th class="ac">Best Lap</th>
-              <th class="ac">Best Lap</th>
-              <th class="gold">Total</th>
-              <th class="ar">Gap to Leader</th>
-              <th class="ar">Interval</th>
-              <th class="ar">Pace</th>
-            </tr>
-          </thead>
-          <tbody id="tbody-2025"></tbody>
-        </table>
-      </div>
-      <div class="champ-footer">Kartlandas Max &nbsp;·&nbsp; Kartlandas Vilnius &nbsp;·&nbsp; Speedway &nbsp;·&nbsp;
-        Plytinė &nbsp;·&nbsp; Best lap sum &nbsp;·&nbsp; Lowest total wins</div>
-    </div>
-  </div>
-
-  <!-- ═══════════════ 2026 PANEL ═══════════════ -->
-  <div class="season-panel active" id="panel-2026">
-    <div class="champ-wrap">
-      <div class="header">
-        <div class="season-pill">2026 Season</div>
-        <h2 class="champ-title">Spring Challenge</h2>
-        <div class="subtitle">GoKart Championship &nbsp;·&nbsp; 3 Venues</div>
-      </div>
-      <div class="status-bar">
-        <div class="status-chip status-done">
-          <div class="status-dot dot-done"></div>Kartlandas Max — Done
-        </div>
-        <div class="status-chip status-done">
-          <div class="status-dot dot-done"></div>Speedway — Done
-        </div>
-        <div class="status-chip status-done">
-          <div class="status-dot dot-done"></div>Plytinė — Done
-        </div>
-      </div>
-      <div class="rule-note">Scoring: <span>Sum of best lap</span> per session &nbsp;·&nbsp; Lowest total wins
-        &nbsp;·&nbsp; DNS = slowest time of that session</div>
-      <div class="table-scroll">
-        <table>
-          <colgroup>
-            <col style="width:44px">
-            <col>
-            <col style="width:104px">
-            <col style="width:104px">
-            <col style="width:104px">
-            <col style="width:110px">
-            <col style="width:96px">
-            <col style="width:84px">
-            <col style="width:96px">
-          </colgroup>
-          <thead>
-            <tr class="thead-group">
-              <th colspan="2"></th>
-              <th class="th-ses-label" style="color:var(--gold);border-color:#e8c84a44">Kartlandas Max</th>
-              <th class="th-ses-label" style="color:var(--blue);border-color:#4ab8e822">Speedway</th>
-              <th class="th-ses-label" style="color:var(--purple);border-color:#a84ae822">Plytinė</th>
-              <th class="th-results-label" colspan="4">Championship</th>
-            </tr>
-            <tr class="thead-sub">
-              <th class="ac">#</th>
-              <th class="al">Driver</th>
-              <th class="ac">Best Lap</th>
-              <th class="ac">Best Lap</th>
-              <th class="ac">Best Lap</th>
-              <th class="gold">Total</th>
-              <th class="ar">Gap to Leader</th>
-              <th class="ar">Interval</th>
-              <th class="ar">Pace</th>
-            </tr>
-          </thead>
-          <tbody id="tbody-2026"></tbody>
-        </table>
-      </div>
-      <div class="champ-footer">Kartlandas &nbsp;·&nbsp; Speedway &nbsp;·&nbsp; Plytinė &nbsp;·&nbsp; Best lap sum
-        &nbsp;·&nbsp; Lowest total wins</div>
-    </div>
-  </div>
-
-  <!-- ═══════════════ 2027 PANEL ═══════════════ -->
-  <div class="season-panel" id="panel-2027">
-    <div class="champ-wrap">
-      <div class="header">
-        <div class="season-pill">2027 Season</div>
-        <h2 class="champ-title">Spring Challenge</h2>
-        <div class="subtitle">GoKart Championship &nbsp;·&nbsp; Coming Soon</div>
-      </div>
-      <div class="upcoming-placeholder">
-        <span class="upcoming-icon">🏁</span>
-        <div class="upcoming-title">Season Not Yet Started</div>
-        <div class="upcoming-sub">
-          Venues, dates and drivers for the 2027 Spring Challenge<br>
-          will be announced closer to the season opener.
-        </div>
-        <div class="upcoming-badge">
-          <div class="upcoming-dot"></div>
-          Stay tuned for updates
-        </div>
-      </div>
-    </div>
+  <div id="season-panels">
+    <div style="text-align:center;padding:80px 20px;color:rgba(255,255,255,0.35);font-family:-apple-system,BlinkMacSystemFont,sans-serif">Loading championship…</div>
   </div>
 
   <script>
@@ -859,7 +706,23 @@
     function posClass(p) { return { 1: 'pm-1', 2: 'pm-2', 3: 'pm-3' }[p] ?? 'pm-x'; }
     function posSuffix(p) { return { 1: 'st', 2: 'nd', 3: 'rd' }[p] ?? 'th'; }
 
-    // ── RENDERER ─────────────────────────────────────────────────
+    // Venue accent colors, keyed by the `color` name stored per-venue in
+    // championship-data.json. Text uses the page's CSS custom properties
+    // (some of which — --purple, --silver, --bronze, --dim — aren't defined
+    // in site.min.css and fall back to inherited color); the border is a
+    // literal translucent hex so the underline stays visible either way.
+    const PALETTE = {
+      gold:   { text: 'var(--gold)',   border: '#e8c84a44' },
+      green:  { text: 'var(--green)',  border: '#4ae8a044' },
+      blue:   { text: 'var(--blue)',   border: '#4ab8e822' },
+      purple: { text: 'var(--purple)', border: '#a84ae822' },
+      red:    { text: 'var(--red)',    border: '#e84a4a22' },
+      cyan:   { text: 'var(--cyan)',   border: '#4ec9e122' },
+    };
+    const PALETTE_ORDER = Object.keys(PALETTE);
+    function paletteFor(venue, i) { return PALETTE[venue.color] || PALETTE[PALETTE_ORDER[i % PALETTE_ORDER.length]]; }
+
+    // ── STANDINGS RENDERER ──────────────────────────────────────────
     function buildSeason(sessions, drivers, tbodyId) {
       const slowestOf = ses => Math.max(...Object.values(ses.times), 0);
 
@@ -883,6 +746,8 @@
         if ((a.total !== null) !== (b.total !== null)) return a.total !== null ? -1 : 1;
         return (a.total ?? a.partialTotal) - (b.total ?? b.partialTotal);
       });
+
+      if (!rows.length) return;
 
       const leaderRef = rows[0].total ?? rows[0].partialTotal;
       const slowestRef = rows[rows.length - 1].total ?? rows[rows.length - 1].partialTotal;
@@ -928,119 +793,164 @@
       });
     }
 
-    // 2025
-    buildSeason(
-      [
-        {
-          done: true, label: 'Kartlandas Max',
-          times: {
-            'Kęstas Č.': toMs('00:44.169'),
-            'Povilas L.': toMs('00:44.577'),
-            'Ignas M.': toMs('00:44.997'),
-            'Ignas I.': toMs('00:45.622'),
-            'Vaidas R.': toMs('00:44.914'),
-            'Julius B.': toMs('00:46.122'),
-            'Justas Ž.': toMs('00:45.421'),
-          }
-        },
-        {
-          done: true, label: 'Kartlandas Vilnius',
-          times: {
-            'Kęstas Č.': toMs('00:29.591'),
-            'Povilas L.': toMs('00:30.216'),
-            'Ignas M.': toMs('00:30.213'),
-            'Ignas I.': toMs('00:30.487'),
-            'Vaidas R.': toMs('00:30.887'),
-            'Julius B.': toMs('00:31.523'),
-            'Justas Ž.': toMs('00:31.323'),
-          }
-        },
-        {
-          done: true, label: 'Speedway',
-          times: {
-            'Kęstas Č.': toMs('00:56.804'),
-            'Povilas L.': toMs('00:57.530'),
-            'Ignas M.': toMs('00:59.539'),
-            'Ignas I.': toMs('00:58.315'),
-            'Vaidas R.': toMs('00:58.572'),
-            'Julius B.': toMs('00:59.739'),
-            'Justas Ž.': toMs('00:58.152'),
-          }
-        },
-        {
-          done: true, label: 'Plytinė',
-          times: {
-            'Kęstas Č.': toMs('00:44.396'),
-            'Povilas L.': toMs('00:43.822'),
-            'Ignas M.': toMs('00:43.978'),
-            'Ignas I.': toMs('00:44.468'),
-            'Vaidas R.': toMs('00:45.676'),
-            'Julius B.': toMs('00:45.876'),
-            'Justas Ž.': toMs('00:44.491'),
-          }
-        }
-      ],
-      ['Kęstas Č.', 'Povilas L.', 'Ignas M.', 'Ignas I.', 'Vaidas R.', 'Julius B.', 'Justas Ž.'],
-      'tbody-2025'
-    );
+    // ── PAGE ASSEMBLY ────────────────────────────────────────────────
+    function statusChip(venue, state) {
+      const cfg = {
+        done: ['status-done', 'dot-done', 'Done'],
+        next: ['status-next', 'dot-next', 'Next'],
+        pend: ['status-pend', 'dot-pend', 'Upcoming'],
+      }[state];
+      return `<div class="status-chip ${cfg[0]}"><div class="status-dot ${cfg[1]}"></div>${venue.label} — ${cfg[2]}</div>`;
+    }
 
-    // 2026
-    buildSeason(
-      [
-        {
-          done: true, label: 'Kartlandas Max',
-          times: {
-            'Kęstas Č.': toMs('00:38.361'),
-            'Povilas L.': toMs('00:38.565'),
-            'Ignas M.': toMs('00:38.614'),
-            'Ignas I.': toMs('00:38.655'),
-            'Vaidas R.': toMs('00:38.701'),
-            'Romualdas P.': toMs('00:38.787'),
-            'Justas Ž.': toMs('00:39.566'),
-            'Ernest S.': toMs('00:40.142'),
-          }
-        },
-        {
-          done: true, label: 'Speedway',
-          times: {
-            'Kęstas Č.': toMs('00:59.196'),
-            'Povilas L.': toMs('00:59.598'),
-            'Ignas M.': toMs('00:59.463'),
-            'Ignas I.': toMs('01:01.978'),
-            'Vaidas R.': toMs('01:01.504'),
-            'Romualdas P.': toMs('01:00.764'),
-            'Justas Ž.': toMs('01:00.941'),
-            'Ernest S.': toMs('01:01.715'),
-          }
-        },
-        {
-          done: true, label: 'Plytinė',
-          times: {
-            'Kęstas Č.': toMs('00:43.590'),
-            'Povilas L.': toMs('00:44.341'),
-            'Ignas M.': toMs('00:44.055'),
-            'Ignas I.': toMs('00:44.480'),
-            'Vaidas R.': toMs('00:43.810'),
-            'Romualdas P.': toMs('00:45.092'),
-            'Justas Ž.': toMs('00:43.735'),
-            'Ernest S.': toMs('00:47.800'),
-          }
-        }
-      ],
-      ['Kęstas Č.', 'Povilas L.', 'Ignas M.', 'Ignas I.', 'Vaidas R.', 'Romualdas P.', 'Justas Ž.', 'Ernest S.'],
-      'tbody-2026'
-    );
+    function renderSeasonPanel(season, active) {
+      const venues = season.venues || [];
+      const drivers = season.drivers || [];
+      const tbodyId = `tbody-${season.year}`;
 
-    // ── YEAR SWITCHER ─────────────────────────────────────────────
-    document.querySelectorAll('.year-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const year = btn.dataset.year;
-        document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('.season-panel').forEach(p => p.classList.remove('active'));
-        document.getElementById(`panel-${year}`)?.classList.add('active');
+      if (!venues.length) {
+        return `
+        <div class="season-panel${active ? ' active' : ''}" id="panel-${season.year}">
+          <div class="champ-wrap">
+            <div class="header">
+              <div class="season-pill">${season.year} Season</div>
+              <h2 class="champ-title">${season.name}</h2>
+              <div class="subtitle">GoKart Championship &nbsp;·&nbsp; Coming Soon</div>
+            </div>
+            <div class="upcoming-placeholder">
+              <span class="upcoming-icon">🏁</span>
+              <div class="upcoming-title">Season Not Yet Started</div>
+              <div class="upcoming-sub">
+                Venues, dates and drivers for the ${season.year} ${season.name}<br>
+                will be announced closer to the season opener.
+              </div>
+              <div class="upcoming-badge">
+                <div class="upcoming-dot"></div>
+                Stay tuned for updates
+              </div>
+            </div>
+          </div>
+        </div>`;
+      }
+
+      let firstPending = true;
+      const statusBar = venues.map(v => {
+        if (v.done) return statusChip(v, 'done');
+        const state = firstPending ? 'next' : 'pend';
+        firstPending = false;
+        return statusChip(v, state);
+      }).join('\n          ');
+
+      const colgroup = [
+        '<col style="width:44px">',
+        '<col>',
+        ...venues.map(() => '<col style="width:104px">'),
+        '<col style="width:110px">',
+        '<col style="width:96px">',
+        '<col style="width:84px">',
+        '<col style="width:96px">',
+      ].join('\n            ');
+
+      const venueHeaders = venues.map((v, i) => {
+        const c = paletteFor(v, i);
+        return `<th class="th-ses-label" style="color:${c.text};border-color:${c.border}">${v.label}</th>`;
+      }).join('\n              ');
+
+      const venueSubHeaders = venues.map(() => '<th class="ac">Best Lap</th>').join('\n              ');
+
+      return `
+        <div class="season-panel${active ? ' active' : ''}" id="panel-${season.year}">
+          <div class="champ-wrap">
+            <div class="header">
+              <div class="season-pill">${season.year} Season</div>
+              <h2 class="champ-title">${season.name}</h2>
+              <div class="subtitle">GoKart Championship &nbsp;·&nbsp; ${venues.length} Venue${venues.length === 1 ? '' : 's'}</div>
+            </div>
+            <div class="status-bar">
+              ${statusBar}
+            </div>
+            <div class="rule-note">Scoring: <span>Sum of best lap</span> per session &nbsp;·&nbsp; Lowest total wins
+              &nbsp;·&nbsp; DNS = slowest time of that session</div>
+            <div class="table-scroll">
+              <table>
+                <colgroup>
+                  ${colgroup}
+                </colgroup>
+                <thead>
+                  <tr class="thead-group">
+                    <th colspan="2"></th>
+                    ${venueHeaders}
+                    <th class="th-results-label" colspan="4">Championship</th>
+                  </tr>
+                  <tr class="thead-sub">
+                    <th class="ac">#</th>
+                    <th class="al">Driver</th>
+                    ${venueSubHeaders}
+                    <th class="gold">Total</th>
+                    <th class="ar">Gap to Leader</th>
+                    <th class="ar">Interval</th>
+                    <th class="ar">Pace</th>
+                  </tr>
+                </thead>
+                <tbody id="${tbodyId}"></tbody>
+              </table>
+            </div>
+            <div class="champ-footer">${venues.map(v => v.label).join(' &nbsp;·&nbsp; ')} &nbsp;·&nbsp; Best lap sum
+              &nbsp;·&nbsp; Lowest total wins</div>
+          </div>
+        </div>`;
+    }
+
+    function renderApp(data) {
+      const seasons = (data.seasons || []).slice().sort((a, b) => a.year - b.year);
+      if (!seasons.length) {
+        document.getElementById('season-panels').innerHTML =
+          '<div style="text-align:center;padding:80px 20px;color:rgba(255,255,255,0.35)">No championship seasons published yet.</div>';
+        return;
+      }
+
+      const activeSeason = seasons.find(s => s.status === 'active') || seasons[seasons.length - 1];
+      document.getElementById('topbar-title').textContent = activeSeason.name;
+
+      document.getElementById('year-switcher').innerHTML = seasons.map(s =>
+        `<button class="year-btn${s.year === activeSeason.year ? ' active' : ''}" data-year="${s.year}">${s.year}</button>`
+      ).join('');
+
+      document.getElementById('season-panels').innerHTML = seasons.map(s =>
+        renderSeasonPanel(s, s.year === activeSeason.year)
+      ).join('\n');
+
+      seasons.forEach(season => {
+        const venues = season.venues || [];
+        if (!venues.length) return;
+        const sessions = venues.map(v => ({
+          done: !!v.done,
+          label: v.label,
+          times: Object.fromEntries(
+            Object.entries((season.times || {})[v.label] || {}).map(([driver, t]) => [driver, toMs(t)])
+          ),
+        }));
+        buildSeason(sessions, season.drivers || [], `tbody-${season.year}`);
       });
-    });
+
+      document.querySelectorAll('.year-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const year = btn.dataset.year;
+          document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          document.querySelectorAll('.season-panel').forEach(p => p.classList.remove('active'));
+          document.getElementById(`panel-${year}`)?.classList.add('active');
+        });
+      });
+    }
+
+    fetch('championship-data.json', { cache: 'no-cache' })
+      .then(res => res.json())
+      .then(renderApp)
+      .catch(() => {
+        document.getElementById('season-panels').innerHTML =
+          '<div style="text-align:center;padding:80px 20px;color:rgba(255,255,255,0.35)">Could not load championship data.</div>';
+      });
   </script>
   <script src="js/nav.js"></script>
 </body>

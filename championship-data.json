@@ -1,0 +1,105 @@
+{
+  "seasons": [
+    {
+      "year": 2025,
+      "name": "Spring Challenge",
+      "status": "complete",
+      "venues": [
+        { "label": "Kartlandas Max", "color": "gold", "done": true },
+        { "label": "Kartlandas Vilnius", "color": "green", "done": true },
+        { "label": "Speedway", "color": "blue", "done": true },
+        { "label": "Plytinė", "color": "purple", "done": true }
+      ],
+      "drivers": ["Kęstas Č.", "Povilas L.", "Ignas M.", "Ignas I.", "Vaidas R.", "Julius B.", "Justas Ž."],
+      "times": {
+        "Kartlandas Max": {
+          "Kęstas Č.": "00:44.169",
+          "Povilas L.": "00:44.577",
+          "Ignas M.": "00:44.997",
+          "Ignas I.": "00:45.622",
+          "Vaidas R.": "00:44.914",
+          "Julius B.": "00:46.122",
+          "Justas Ž.": "00:45.421"
+        },
+        "Kartlandas Vilnius": {
+          "Kęstas Č.": "00:29.591",
+          "Povilas L.": "00:30.216",
+          "Ignas M.": "00:30.213",
+          "Ignas I.": "00:30.487",
+          "Vaidas R.": "00:30.887",
+          "Julius B.": "00:31.523",
+          "Justas Ž.": "00:31.323"
+        },
+        "Speedway": {
+          "Kęstas Č.": "00:56.804",
+          "Povilas L.": "00:57.530",
+          "Ignas M.": "00:59.539",
+          "Ignas I.": "00:58.315",
+          "Vaidas R.": "00:58.572",
+          "Julius B.": "00:59.739",
+          "Justas Ž.": "00:58.152"
+        },
+        "Plytinė": {
+          "Kęstas Č.": "00:44.396",
+          "Povilas L.": "00:43.822",
+          "Ignas M.": "00:43.978",
+          "Ignas I.": "00:44.468",
+          "Vaidas R.": "00:45.676",
+          "Julius B.": "00:45.876",
+          "Justas Ž.": "00:44.491"
+        }
+      }
+    },
+    {
+      "year": 2026,
+      "name": "Spring Challenge",
+      "status": "active",
+      "venues": [
+        { "label": "Kartlandas Max", "color": "gold", "done": true },
+        { "label": "Speedway", "color": "blue", "done": true },
+        { "label": "Plytinė", "color": "purple", "done": true }
+      ],
+      "drivers": ["Kęstas Č.", "Povilas L.", "Ignas M.", "Ignas I.", "Vaidas R.", "Romualdas P.", "Justas Ž.", "Ernest S."],
+      "times": {
+        "Kartlandas Max": {
+          "Kęstas Č.": "00:38.361",
+          "Povilas L.": "00:38.565",
+          "Ignas M.": "00:38.614",
+          "Ignas I.": "00:38.655",
+          "Vaidas R.": "00:38.701",
+          "Romualdas P.": "00:38.787",
+          "Justas Ž.": "00:39.566",
+          "Ernest S.": "00:40.142"
+        },
+        "Speedway": {
+          "Kęstas Č.": "00:59.196",
+          "Povilas L.": "00:59.598",
+          "Ignas M.": "00:59.463",
+          "Ignas I.": "01:01.978",
+          "Vaidas R.": "01:01.504",
+          "Romualdas P.": "01:00.764",
+          "Justas Ž.": "01:00.941",
+          "Ernest S.": "01:01.715"
+        },
+        "Plytinė": {
+          "Kęstas Č.": "00:43.590",
+          "Povilas L.": "00:44.341",
+          "Ignas M.": "00:44.055",
+          "Ignas I.": "00:44.480",
+          "Vaidas R.": "00:43.810",
+          "Romualdas P.": "00:45.092",
+          "Justas Ž.": "00:43.735",
+          "Ernest S.": "00:47.800"
+        }
+      }
+    },
+    {
+      "year": 2027,
+      "name": "Spring Challenge",
+      "status": "upcoming",
+      "venues": [],
+      "drivers": [],
+      "times": {}
+    }
+  ]
+}

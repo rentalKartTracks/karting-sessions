@@ -1047,11 +1047,13 @@
         document.getElementById('hub-sessions-count').textContent = sessions.length;
       }
       
-      // 2. Fetch championship meta
-      const champRes = await fetch('championship-meta.json', { cache: 'no-cache' });
+      // 2. Fetch championship data
+      const champRes = await fetch('championship-data.json', { cache: 'no-cache' });
       if (champRes.ok) {
         const champData = await champRes.json();
-        const activeSeasonRounds = champData.active_season?.rounds ?? '-';
+        const seasons = champData.seasons || [];
+        const activeSeason = seasons.find(s => s.status === 'active') || seasons[seasons.length - 1];
+        const activeSeasonRounds = activeSeason?.venues?.length ?? '-';
         document.getElementById('hub-championships-count').textContent = activeSeasonRounds;
       }
     } catch (e) {

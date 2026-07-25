@@ -20,14 +20,32 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const id = new URLSearchParams(location.search).get('id');
   if (id) loadSessionById(id);
+
+  document.getElementById('champ-year').addEventListener('change', e => {
+    if (!currentSeason) return;
+    const y = parseInt(e.target.value, 10);
+    if (!Number.isFinite(y)) { e.target.value = currentSeason.year; return; }
+    currentSeason.year = y;
+    champData.seasons.sort((a, b) => a.year - b.year);
+    renderChampSeasonSelect();
+  });
+  document.getElementById('champ-name').addEventListener('input', e => {
+    if (currentSeason) currentSeason.name = e.target.value;
+  });
+  document.getElementById('champ-status').addEventListener('change', e => {
+    if (currentSeason) currentSeason.status = e.target.value;
+  });
 });
 
 // ── Tabs ───────────────────────────────────────────────────────────────────
 function showTab(name) {
   document.getElementById('panel-new').classList.toggle('hidden', name !== 'new');
   document.getElementById('panel-manage').classList.toggle('hidden', name !== 'manage');
+  document.getElementById('panel-champ').classList.toggle('hidden', name !== 'champ');
   document.getElementById('tab-new').classList.toggle('active', name === 'new');
   document.getElementById('tab-manage').classList.toggle('active', name === 'manage');
+  document.getElementById('tab-champ').classList.toggle('active', name === 'champ');
+  if (name === 'champ' && !champLoaded) loadChampData();
 }
 
 // ── Token management ───────────────────────────────────────────────────────
@@ -38,6 +56,8 @@ function renderTokenStatus() {
   document.getElementById('token-dot').className = 'token-dot' + (ok ? ' ok' : '');
   document.getElementById('token-chip-text').textContent = ok ? 'GitHub: ready' : 'GitHub: set up token';
   document.getElementById('publish-btn').disabled = !ok;
+  const champBtn = document.getElementById('champ-publish-btn');
+  if (champBtn) champBtn.disabled = !ok;
 }
 
 function openTokenModal() {
@@ -600,4 +620,326 @@ function parseTime(t) {
 
 function esc(str) {
   return (str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+}
+
+function escHtml(str) {
+  return String(str ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// ── Championship editor ──────────────────────────────────────────────────
+const CHAMP_COLORS = ['gold', 'green', 'blue', 'purple', 'red', 'cyan'];
+let champData = null;
+let currentSeason = null;
+let champLoaded = false;
+
+async function loadChampData() {
+  try {
+    const res = await fetch('championship-data.json', { cache: 'no-cache' });
+    champData = res.ok ? await res.json() : { seasons: [] };
+  } catch {
+    champData = { seasons: [] };
+  }
+  champData.seasons = (champData.seasons || []).sort((a, b) => a.year - b.year);
+  champData.seasons.forEach(s => {
+    s.venues = s.venues || [];
+    s.drivers = s.drivers || [];
+    s.times = s.times || {};
+  });
+  currentSeason = champData.seasons.find(s => s.status === 'active') || champData.seasons[champData.seasons.length - 1] || null;
+  champLoaded = true;
+  renderChampSeasonSelect();
+  renderChampForm();
+}
+
+function renderChampSeasonSelect() {
+  const sel = document.getElementById('champ-season-select');
+  if (!champData || !champData.seasons.length) {
+    sel.innerHTML = '<option>No seasons yet</option>';
+    return;
+  }
+  sel.innerHTML = champData.seasons.map((s, i) =>
+    `<option value="${i}" ${s === currentSeason ? 'selected' : ''}>${s.year} — ${escHtml(s.name)} (${s.status})</option>`
+  ).join('');
+}
+
+function selectSeason(idxStr) {
+  currentSeason = champData.seasons[parseInt(idxStr, 10)] || null;
+  renderChampForm();
+}
+
+function newSeason() {
+  if (!champData) return;
+  const years = champData.seasons.map(s => s.year);
+  const year = years.length ? Math.max(...years) + 1 : new Date().getFullYear();
+  const season = {
+    year,
+    name: champData.seasons[champData.seasons.length - 1]?.name || 'Spring Challenge',
+    status: 'upcoming',
+    venues: [],
+    drivers: [],
+    times: {}
+  };
+  champData.seasons.push(season);
+  champData.seasons.sort((a, b) => a.year - b.year);
+  currentSeason = season;
+  renderChampSeasonSelect();
+  renderChampForm();
+  setChampStatus('', '');
+}
+
+function renderChampForm() {
+  const yearInput = document.getElementById('champ-year');
+  const nameInput = document.getElementById('champ-name');
+  const statusSelect = document.getElementById('champ-status');
+  const deleteBtn = document.getElementById('champ-delete-btn');
+
+  if (!currentSeason) {
+    yearInput.value = '';
+    nameInput.value = '';
+    statusSelect.value = 'upcoming';
+    deleteBtn.classList.add('hidden');
+    document.getElementById('champ-venues-list').innerHTML = '';
+    document.getElementById('champ-drivers-list').innerHTML = '';
+    document.getElementById('champ-times-table').innerHTML = '';
+    return;
+  }
+
+  deleteBtn.classList.remove('hidden');
+  yearInput.value = currentSeason.year;
+  nameInput.value = currentSeason.name;
+  statusSelect.value = currentSeason.status;
+
+  renderVenues();
+  renderDrivers();
+  renderTimesTable();
+}
+
+// ── Venues ──────────────────────────────────────────────────────────────
+function renderVenues() {
+  const c = document.getElementById('champ-venues-list');
+  const venues = currentSeason.venues;
+  if (!venues.length) { c.innerHTML = '<div class="champ-empty">No venues yet. Add one above.</div>'; return; }
+  c.innerHTML = venues.map((v, i) => `
+    <div class="venue-row">
+      <input type="text" value="${escHtml(v.label)}" placeholder="Venue name" onchange="renameVenue(${i}, this.value)">
+      <select onchange="setVenueColor(${i}, this.value)">
+        ${CHAMP_COLORS.map(c => `<option value="${c}" ${v.color === c ? 'selected' : ''}>${c}</option>`).join('')}
+      </select>
+      <label class="done-label"><input type="checkbox" ${v.done ? 'checked' : ''} onchange="setVenueDone(${i}, this.checked)"> Done</label>
+      <button type="button" class="row-btn" title="Move up" onclick="moveVenue(${i}, -1)" ${i === 0 ? 'disabled' : ''}>▲</button>
+      <button type="button" class="row-btn" title="Move down" onclick="moveVenue(${i}, 1)" ${i === venues.length - 1 ? 'disabled' : ''}>▼</button>
+      <button type="button" class="row-btn row-del" title="Remove venue" onclick="removeVenue(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function addVenue() {
+  if (!currentSeason) return;
+  const used = currentSeason.venues.map(v => v.color);
+  const color = CHAMP_COLORS.find(c => !used.includes(c)) || CHAMP_COLORS[currentSeason.venues.length % CHAMP_COLORS.length];
+  currentSeason.venues.push({ label: 'New Venue', color, done: false });
+  renderVenues();
+  renderTimesTable();
+}
+
+function renameVenue(i, newLabelRaw) {
+  const newLabel = newLabelRaw.trim();
+  const venue = currentSeason.venues[i];
+  if (!newLabel) { renderVenues(); return; }
+  if (newLabel !== venue.label) {
+    if (currentSeason.times[venue.label]) {
+      currentSeason.times[newLabel] = currentSeason.times[venue.label];
+      delete currentSeason.times[venue.label];
+    }
+    venue.label = newLabel;
+    renderTimesTable();
+  }
+}
+
+function setVenueColor(i, val) { currentSeason.venues[i].color = val; }
+function setVenueDone(i, val) { currentSeason.venues[i].done = val; }
+
+function moveVenue(i, dir) {
+  const arr = currentSeason.venues;
+  const j = i + dir;
+  if (j < 0 || j >= arr.length) return;
+  [arr[i], arr[j]] = [arr[j], arr[i]];
+  renderVenues();
+  renderTimesTable();
+}
+
+function removeVenue(i) {
+  const venue = currentSeason.venues[i];
+  if (!confirm(`Remove venue "${venue.label}"? This also clears its recorded lap times.`)) return;
+  delete currentSeason.times[venue.label];
+  currentSeason.venues.splice(i, 1);
+  renderVenues();
+  renderTimesTable();
+}
+
+// ── Drivers ─────────────────────────────────────────────────────────────
+function renderDrivers() {
+  const c = document.getElementById('champ-drivers-list');
+  const drivers = currentSeason.drivers;
+  if (!drivers.length) { c.innerHTML = '<div class="champ-empty">No drivers yet. Add one above.</div>'; return; }
+  c.innerHTML = drivers.map((d, i) => `
+    <div class="driver-row">
+      <input type="text" value="${escHtml(d)}" placeholder="Driver name" list="driver-options" onchange="renameDriver(${i}, this.value)">
+      <button type="button" class="row-btn" title="Move up" onclick="moveDriver(${i}, -1)" ${i === 0 ? 'disabled' : ''}>▲</button>
+      <button type="button" class="row-btn" title="Move down" onclick="moveDriver(${i}, 1)" ${i === drivers.length - 1 ? 'disabled' : ''}>▼</button>
+      <button type="button" class="row-btn row-del" title="Remove driver" onclick="removeDriver(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function addDriver() {
+  if (!currentSeason) return;
+  currentSeason.drivers.push('');
+  renderDrivers();
+  renderTimesTable();
+  const inputs = document.querySelectorAll('#champ-drivers-list input[type="text"]');
+  inputs[inputs.length - 1]?.focus();
+}
+
+function renameDriver(i, newNameRaw) {
+  const newName = newNameRaw.trim();
+  const oldName = currentSeason.drivers[i];
+  if (!newName) { renderDrivers(); return; }
+  if (newName !== oldName) {
+    Object.values(currentSeason.times).forEach(venueTimes => {
+      if (venueTimes[oldName] !== undefined) {
+        venueTimes[newName] = venueTimes[oldName];
+        delete venueTimes[oldName];
+      }
+    });
+    currentSeason.drivers[i] = newName;
+    renderTimesTable();
+  }
+}
+
+function moveDriver(i, dir) {
+  const arr = currentSeason.drivers;
+  const j = i + dir;
+  if (j < 0 || j >= arr.length) return;
+  [arr[i], arr[j]] = [arr[j], arr[i]];
+  renderDrivers();
+  renderTimesTable();
+}
+
+function removeDriver(i) {
+  const name = currentSeason.drivers[i];
+  if (!confirm(`Remove driver "${name}"? This also clears their recorded lap times.`)) return;
+  Object.values(currentSeason.times).forEach(venueTimes => { delete venueTimes[name]; });
+  currentSeason.drivers.splice(i, 1);
+  renderDrivers();
+  renderTimesTable();
+}
+
+// ── Lap times grid ──────────────────────────────────────────────────────
+function normalizeLapTime(raw) {
+  const clean = raw.trim();
+  if (!clean) return '';
+  const looksLikeTime = /^\d{1,2}:\d{2}(\.\d+)?$|^\d{1,3}(\.\d+)?$/.test(clean);
+  return looksLikeTime ? fmtLapTime(clean) : clean;
+}
+
+function setTime(vi, di, value) {
+  const label = currentSeason.venues[vi].label;
+  const driver = currentSeason.drivers[di];
+  const clean = normalizeLapTime(value);
+  if (!currentSeason.times[label]) currentSeason.times[label] = {};
+  if (clean) currentSeason.times[label][driver] = clean;
+  else delete currentSeason.times[label][driver];
+}
+
+function renderTimesTable() {
+  const table = document.getElementById('champ-times-table');
+  const { venues, drivers, times } = currentSeason;
+  if (!venues.length || !drivers.length) {
+    table.innerHTML = '<tr><td class="champ-empty">Add at least one venue and one driver to enter lap times.</td></tr>';
+    return;
+  }
+  table.innerHTML = `
+    <thead><tr><th>Driver</th>${venues.map(v => `<th>${escHtml(v.label)}</th>`).join('')}</tr></thead>
+    <tbody>
+      ${drivers.map((d, di) => `
+        <tr>
+          <td>${escHtml(d)}</td>
+          ${venues.map((v, vi) => `<td><input type="text" placeholder="00:00.000" value="${escHtml(times[v.label]?.[d] || '')}" onchange="setTime(${vi}, ${di}, this.value)"></td>`).join('')}
+        </tr>
+      `).join('')}
+    </tbody>
+  `;
+}
+
+// ── Status / download / publish / delete ───────────────────────────────
+function setChampStatus(type, msg) {
+  const el = document.getElementById('champ-status-msg');
+  el.textContent = msg;
+  el.className = 'status-msg' + (type ? ' ' + type : '');
+}
+
+function handleChampDownload() {
+  if (!champData) return;
+  const blob = new Blob([JSON.stringify(champData, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = Object.assign(document.createElement('a'), { href: url, download: 'championship-data.json' });
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+async function commitChampData(message) {
+  if (!getToken()) { setChampStatus('err', '✗ Set a GitHub token first'); return; }
+
+  const btn = document.getElementById('champ-publish-btn');
+  const prevText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = '⏳ Publishing…';
+  setChampStatus('busy', 'Committing to GitHub…');
+
+  const path = 'championship-data.json';
+  const sha = await getFileSha(path);
+
+  try {
+    const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+      method: 'PUT',
+      headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message,
+        content: toBase64(JSON.stringify(champData, null, 2)),
+        ...(sha && { sha })
+      })
+    });
+
+    if (res.ok) {
+      setChampStatus('ok', '✓ Published! Championship page updates in ~30 seconds.');
+    } else {
+      const err = await res.json();
+      setChampStatus('err', '✗ ' + (err.message || 'GitHub error'));
+    }
+  } catch (ex) {
+    setChampStatus('err', '✗ Network error: ' + ex.message);
+  }
+
+  btn.disabled = false;
+  btn.textContent = prevText;
+  renderTokenStatus();
+}
+
+async function handleChampPublish() {
+  if (!champData) return;
+  await commitChampData(currentSeason ? `Update championship: ${currentSeason.year} ${currentSeason.name}` : 'Update championship data');
+}
+
+async function handleChampDelete() {
+  if (!currentSeason) return;
+  if (!confirm(`Delete the ${currentSeason.year} season? This cannot be undone once published.`)) return;
+  const removed = currentSeason;
+  champData.seasons = champData.seasons.filter(s => s !== removed);
+  currentSeason = champData.seasons.find(s => s.status === 'active') || champData.seasons[champData.seasons.length - 1] || null;
+  renderChampSeasonSelect();
+  renderChampForm();
+  await commitChampData(`Delete championship season: ${removed.year}`);
 }
