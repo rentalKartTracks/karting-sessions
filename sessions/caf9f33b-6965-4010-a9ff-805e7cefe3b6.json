@@ -1,0 +1,64 @@
+{
+  "session_id": "caf9f33b-6965-4010-a9ff-805e7cefe3b6",
+  "driver": "Vaidas R.",
+  "fastest_lap": "00:27.761",
+  "track": {
+    "name": "K1 Speed Santa Clara",
+    "configuration": "2026",
+    "maps_link": "https://maps.app.goo.gl/uFRSgqpdqrsfUGxT6"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "01:04",
+  "video_url": "https://youtu.be/p53CVYFWIzg",
+  "session_date": "2026-05-25",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "00:70.071"
+    },
+    {
+      "lap": 2,
+      "time": "00:28.464"
+    },
+    {
+      "lap": 3,
+      "time": "00:28.169"
+    },
+    {
+      "lap": 4,
+      "time": "00:28.373"
+    },
+    {
+      "lap": 5,
+      "time": "00:27.866"
+    },
+    {
+      "lap": 6,
+      "time": "00:27.895"
+    },
+    {
+      "lap": 7,
+      "time": "00:44.995"
+    },
+    {
+      "lap": 8,
+      "time": "00:47.451"
+    },
+    {
+      "lap": 9,
+      "time": "00:28.700"
+    },
+    {
+      "lap": 10,
+      "time": "00:27.761"
+    },
+    {
+      "lap": 11,
+      "time": "00:28.029"
+    },
+    {
+      "lap": 12,
+      "time": "00:27.796"
+    }
+  ]
+}
