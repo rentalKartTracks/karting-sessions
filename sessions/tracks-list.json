@@ -322,5 +322,20 @@
         "sessions": 2,
         "bestLap": "01:07.080",
         "bestDriver": "Vaidas R."
+    },
+    {
+        "id": "k1_speed_santa_clara",
+        "name": "K1 Speed Santa Clara",
+        "lat": 0,
+        "lng": 0,
+        "mapsLink": "https://maps.app.goo.gl/uFRSgqpdqrsfUGxT6",
+        "color": "#aaaaaa",
+        "note": "Generated circuit",
+        "configs": [
+            "2026"
+        ],
+        "sessions": 1,
+        "bestLap": "00:27.761",
+        "bestDriver": "Vaidas R."
     }
 ]
