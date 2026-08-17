@@ -295,6 +295,21 @@
         "bestDriver": "Povilas L."
     },
     {
+        "id": "e1gokart_kielce",
+        "name": "E1GOKART Kielce",
+        "lat": 50.8078787,
+        "lng": 20.6287389,
+        "mapsLink": "https://maps.app.goo.gl/DmD22PksfEKSzrxQ8",
+        "color": "#ba57db",
+        "note": "E1GOKART Kielce is a modern, two-level karting track in Kielce, Poland. The circuit features a 400 m indoor section plus a 250 m outdoor section, giving the layout a total length of around 650 m when the outdoor section is open.",
+        "configs": [
+            "2026"
+        ],
+        "sessions": 1,
+        "bestLap": "00:53.194",
+        "bestDriver": "Ignas M."
+    },
+    {
         "id": "awix_racing_arena",
         "name": "Awix Racing Arena",
         "lat": 53.0184783,
