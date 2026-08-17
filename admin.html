@@ -251,6 +251,7 @@
     <button class="tab-btn active" id="tab-new"    onclick="resetForm(); showTab('new')">➕ New Session</button>
     <button class="tab-btn"        id="tab-manage" onclick="showTab('manage')">📋 All Sessions</button>
     <button class="tab-btn"        id="tab-champ"  onclick="showTab('champ')">🏆 Championship</button>
+    <button class="tab-btn"        id="tab-track"  onclick="showTab('track')">🗺️ Add Track</button>
   </div>
 
   <!-- ── CREATE / EDIT PANEL ── -->
@@ -435,6 +436,55 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- ── ADD TRACK PANEL ── -->
+  <div id="panel-track" class="hidden">
+    <form id="track-form" onsubmit="handleTrackPublish(event)">
+
+      <div class="form-section">
+        <h3>Track Details</h3>
+        <div class="form-grid">
+          <div class="form-group full">
+            <label>Track Name</label>
+            <input type="text" id="track-name-input" required placeholder="K1 Speed Santa Clara" autocomplete="off">
+          </div>
+          <div class="form-group full">
+            <label>Note / Location</label>
+            <input type="text" id="track-note-input" placeholder="Indoor circuit · Santa Clara, CA">
+          </div>
+          <div class="form-group">
+            <label>Configuration</label>
+            <input type="text" id="track-config-input" placeholder="2026 (optional)">
+          </div>
+          <div class="form-group">
+            <label>Marker Color</label>
+            <input type="color" id="track-color-input" value="#4ab8e8" style="padding:4px;height:37px">
+          </div>
+          <div class="form-group full">
+            <label>Google Maps Link</label>
+            <input type="url" id="track-maps-link-input" placeholder="https://maps.app.goo.gl/…">
+          </div>
+        </div>
+      </div>
+
+      <!-- Sticky action bar -->
+      <div class="form-actions">
+        <div class="session-id-label" id="track-form-label">New track</div>
+        <div id="track-status" class="status-msg"></div>
+        <div class="actions-right">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="resetTrackForm()">Reset</button>
+          <button type="submit" class="btn btn-primary" id="track-publish-btn">🚀 Publish to GitHub</button>
+        </div>
+      </div>
+
+    </form>
+
+    <div class="form-section" style="margin-top:20px">
+      <h3>Registered Tracks</h3>
+      <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:10px">Tracks pre-registered here, plus any track already used by a session — coordinates are auto-resolved from the Maps link the next time the site rebuilds.</div>
+      <div id="manual-tracks-list"><div class="champ-empty">Loading…</div></div>
+    </div>
   </div>
 
 </div>

@@ -11,6 +11,8 @@ from typing import Optional, Dict, List, Any
 SESSIONS_DIR = Path("sessions")
 OUTPUT_FILE = SESSIONS_DIR / "sessions-list.json"
 TRACKS_OUTPUT_FILE = SESSIONS_DIR / "tracks-list.json"
+MANUAL_TRACKS_FILE = SESSIONS_DIR / "tracks-manual.json"
+NON_SESSION_FILES = ["sessions-list.json", "tracks-list.json", "tracks-manual.json"]
 
 # Canonical-name maps (populated per run from all source files). They collapse
 # accidental spelling variants — trailing-period, stray dots, emoji prefixes,
@@ -449,7 +451,7 @@ def generate_sessions_list() -> None:
     raw_drivers: List[Optional[str]] = []
     raw_tracks: List[Optional[str]] = []
     for filepath in SESSIONS_DIR.glob("*.json"):
-        if filepath.name in ["sessions-list.json", "tracks-list.json"]:
+        if filepath.name in NON_SESSION_FILES:
             continue
         try:
             d = json.loads(filepath.read_text(encoding="utf-8"))
@@ -476,15 +478,27 @@ def generate_sessions_list() -> None:
         except (json.JSONDecodeError, OSError):
             pass
 
+    # Tracks registered by hand via the admin UI (sessions/tracks-manual.json),
+    # for tracks that have no STATIC_TRACKS entry — supplies note/color/mapsLink
+    # defaults and lets a track appear on the map before it has any sessions.
+    manual_tracks: Dict[str, Dict[str, Any]] = {}
+    if MANUAL_TRACKS_FILE.exists():
+        try:
+            for t in json.loads(MANUAL_TRACKS_FILE.read_text(encoding="utf-8")):
+                if t.get("name"):
+                    manual_tracks[t["name"]] = t
+        except (json.JSONDecodeError, OSError):
+            pass
+
     all_sessions_summary: List[Dict[str, Any]] = []
     tracks_aggregation: Dict[str, Any] = {}
 
     # Use pathlib to glob json files
     try:
         for filepath in SESSIONS_DIR.glob("*.json"):
-            if filepath.name in ["sessions-list.json", "tracks-list.json"]:
+            if filepath.name in NON_SESSION_FILES:
                 continue
-                
+
             summary = process_session_file(filepath)
             if summary:
                 all_sessions_summary.append(summary)
@@ -493,12 +507,18 @@ def generate_sessions_list() -> None:
                 track_data = summary.get("track")
                 if not track_data:
                     continue
-                    
+
                 track_name = track_data.get("name") if isinstance(track_data, dict) else str(track_data)
-                
+
                 if track_name not in tracks_aggregation:
                     static_info = STATIC_TRACKS.get(track_name, {})
-                    maps_link = static_info.get("mapsLink", track_data.get("maps_link") if isinstance(track_data, dict) else "") or ""
+                    manual_info = manual_tracks.get(track_name, {})
+                    maps_link = (
+                        static_info.get("mapsLink")
+                        or manual_info.get("mapsLink")
+                        or (track_data.get("maps_link") if isinstance(track_data, dict) else "")
+                        or ""
+                    )
 
                     if static_info:
                         lat, lng = static_info["lat"], static_info["lng"]
@@ -514,13 +534,13 @@ def generate_sessions_list() -> None:
                             lat, lng = 0, 0
 
                     tracks_aggregation[track_name] = {
-                        "id": static_info.get("id", track_name.lower().replace(" ", "_")),
+                        "id": static_info.get("id") or manual_info.get("id") or track_name.lower().replace(" ", "_"),
                         "name": track_name,
                         "lat": lat,
                         "lng": lng,
                         "mapsLink": maps_link,
-                        "color": static_info.get("color", "#aaaaaa"),
-                        "note": static_info.get("note", "Generated circuit"),
+                        "color": static_info.get("color") or manual_info.get("color") or "#aaaaaa",
+                        "note": static_info.get("note") or manual_info.get("note") or "Generated circuit",
                         "configs": set(),
                         "sessions": 0,
                         "bestLap": None,
@@ -545,14 +565,44 @@ def generate_sessions_list() -> None:
         print(f"Error scanning directory: {e}")
         return
 
+    # Register manually-added tracks that have no sessions yet, so they can
+    # show up on the map ahead of the first logged session.
+    for name, info in manual_tracks.items():
+        if name in tracks_aggregation:
+            continue
+
+        maps_link = info.get("mapsLink") or ""
+        if name in resolved_coords_cache:
+            lat, lng = resolved_coords_cache[name]["lat"], resolved_coords_cache[name]["lng"]
+        else:
+            print(f"  [geocode] resolving coordinates for new track {name!r}…")
+            resolved = resolve_coordinates_from_maps_link(maps_link)
+            if resolved:
+                lat, lng = resolved["lat"], resolved["lng"]
+                print(f"  [geocode] -> ({lat}, {lng})")
+            else:
+                lat, lng = 0, 0
+
+        tracks_aggregation[name] = {
+            "id": info.get("id", name.lower().replace(" ", "_")),
+            "name": name,
+            "lat": lat,
+            "lng": lng,
+            "mapsLink": maps_link,
+            "color": info.get("color", "#aaaaaa"),
+            "note": info.get("note", "Generated circuit"),
+            "configs": {info["configuration"]} if info.get("configuration") else set(),
+            "sessions": 0,
+            "bestLap": None,
+            "bestLap_s": float('inf'),
+            "bestDriver": None
+        }
+
     # Convert sets to lists and remove internal sorting keys
     final_tracks_list = []
     for t_val in tracks_aggregation.values():
         t_val["configs"] = sorted(t_val["configs"])
-        if t_val["bestLap_s"] == float('inf'):
-            t_val["bestLap_s"] = None
-        else:
-            del t_val["bestLap_s"]
+        del t_val["bestLap_s"]
         final_tracks_list.append(t_val)
 
     final_output = {

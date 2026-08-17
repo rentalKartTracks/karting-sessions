@@ -35,6 +35,8 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('champ-status').addEventListener('change', e => {
     if (currentSeason) currentSeason.status = e.target.value;
   });
+
+  document.getElementById('track-color-input').value = randomTrackColor();
 });
 
 // ── Tabs ───────────────────────────────────────────────────────────────────
@@ -42,10 +44,13 @@ function showTab(name) {
   document.getElementById('panel-new').classList.toggle('hidden', name !== 'new');
   document.getElementById('panel-manage').classList.toggle('hidden', name !== 'manage');
   document.getElementById('panel-champ').classList.toggle('hidden', name !== 'champ');
+  document.getElementById('panel-track').classList.toggle('hidden', name !== 'track');
   document.getElementById('tab-new').classList.toggle('active', name === 'new');
   document.getElementById('tab-manage').classList.toggle('active', name === 'manage');
   document.getElementById('tab-champ').classList.toggle('active', name === 'champ');
+  document.getElementById('tab-track').classList.toggle('active', name === 'track');
   if (name === 'champ' && !champLoaded) loadChampData();
+  if (name === 'track' && !manualTracksLoaded) loadManualTracks();
 }
 
 // ── Token management ───────────────────────────────────────────────────────
@@ -58,6 +63,8 @@ function renderTokenStatus() {
   document.getElementById('publish-btn').disabled = !ok;
   const champBtn = document.getElementById('champ-publish-btn');
   if (champBtn) champBtn.disabled = !ok;
+  const trackBtn = document.getElementById('track-publish-btn');
+  if (trackBtn) trackBtn.disabled = !ok;
 }
 
 function openTokenModal() {
@@ -942,4 +949,159 @@ async function handleChampDelete() {
   renderChampSeasonSelect();
   renderChampForm();
   await commitChampData(`Delete championship season: ${removed.year}`);
+}
+
+// ── Track registry (sessions/tracks-manual.json) ───────────────────────────
+let manualTracks = [];
+let manualTracksLoaded = false;
+let editingTrackName = null;
+
+function randomTrackColor() {
+  const hue = Math.floor(Math.random() * 360);
+  return hslToHex(hue, 65, 60);
+}
+
+function hslToHex(h, s, l) {
+  s /= 100; l /= 100;
+  const k = n => (n + h / 30) % 12;
+  const a = s * Math.min(l, 1 - l);
+  const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+  const toHex = x => Math.round(255 * x).toString(16).padStart(2, '0');
+  return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;
+}
+
+async function loadManualTracks() {
+  try {
+    const res = await fetch('sessions/tracks-manual.json', { cache: 'no-cache' });
+    manualTracks = res.ok ? await res.json() : [];
+  } catch {
+    manualTracks = [];
+  }
+  manualTracksLoaded = true;
+  renderManualTracksList();
+}
+
+function renderManualTracksList() {
+  const el = document.getElementById('manual-tracks-list');
+  if (!manualTracks.length) {
+    el.innerHTML = '<div class="champ-empty">No manually-registered tracks yet.</div>';
+    return;
+  }
+  el.innerHTML = manualTracks.map(t => `
+    <div class="venue-row">
+      <span style="width:12px;height:12px;border-radius:50%;background:${escHtml(t.color || '#aaaaaa')};flex-shrink:0"></span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px">${escHtml(t.name)}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.35)">${escHtml(t.note || '')}</div>
+      </div>
+      <button type="button" class="row-btn" title="Edit" onclick="editManualTrack('${esc(t.name)}')">✎</button>
+      <button type="button" class="row-btn row-del" title="Remove" onclick="deleteManualTrack('${esc(t.name)}')">✕</button>
+    </div>
+  `).join('');
+}
+
+function buildTrackData() {
+  const name = document.getElementById('track-name-input').value.trim();
+  if (!name) { alert('Track name is required.'); return null; }
+  return {
+    name,
+    note: document.getElementById('track-note-input').value.trim(),
+    configuration: document.getElementById('track-config-input').value.trim(),
+    color: document.getElementById('track-color-input').value,
+    mapsLink: document.getElementById('track-maps-link-input').value.trim()
+  };
+}
+
+function setTrackStatus(type, msg) {
+  const el = document.getElementById('track-status');
+  el.textContent = msg;
+  el.className = 'status-msg' + (type ? ' ' + type : '');
+}
+
+function resetTrackForm() {
+  document.getElementById('track-form').reset();
+  document.getElementById('track-color-input').value = randomTrackColor();
+  editingTrackName = null;
+  document.getElementById('track-form-label').textContent = 'New track';
+  setTrackStatus('', '');
+}
+
+function editManualTrack(name) {
+  const t = manualTracks.find(t => t.name === name);
+  if (!t) return;
+  editingTrackName = t.name;
+  document.getElementById('track-name-input').value = t.name || '';
+  document.getElementById('track-note-input').value = t.note || '';
+  document.getElementById('track-config-input').value = t.configuration || '';
+  document.getElementById('track-color-input').value = t.color || '#4ab8e8';
+  document.getElementById('track-maps-link-input').value = t.mapsLink || '';
+  document.getElementById('track-form-label').textContent = 'Editing: ' + t.name;
+  setTrackStatus('', '');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function commitManualTracks(message) {
+  const path = 'sessions/tracks-manual.json';
+  const sha = await getFileSha(path);
+  return fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+    method: 'PUT',
+    headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      message,
+      content: toBase64(JSON.stringify(manualTracks, null, 2)),
+      ...(sha && { sha })
+    })
+  });
+}
+
+async function handleTrackPublish(e) {
+  e.preventDefault();
+  const data = buildTrackData();
+  if (!data) return;
+
+  const nameTaken = [
+    ...allSessions.map(s => s.track?.name),
+    ...manualTracks.map(t => t.name)
+  ].some(n => n && n === data.name && n !== editingTrackName);
+  if (nameTaken) { alert('A track with this name already exists.'); return; }
+
+  const btn = document.getElementById('track-publish-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Publishing…';
+  setTrackStatus('busy', 'Committing to GitHub…');
+
+  const idx = editingTrackName ? manualTracks.findIndex(t => t.name === editingTrackName) : -1;
+  if (idx >= 0) manualTracks[idx] = data;
+  else manualTracks.push(data);
+
+  try {
+    const res = await commitManualTracks(`${editingTrackName ? 'Update' : 'Add'} track: ${data.name}`);
+    if (res.ok) {
+      setTrackStatus('ok', '✓ Published! Map updates in ~30 seconds.');
+      editingTrackName = null;
+      document.getElementById('track-form-label').textContent = 'New track';
+      renderManualTracksList();
+    } else {
+      const err = await res.json();
+      setTrackStatus('err', '✗ ' + (err.message || 'GitHub error'));
+    }
+  } catch (ex) {
+    setTrackStatus('err', '✗ Network error: ' + ex.message);
+  }
+
+  btn.disabled = false;
+  btn.textContent = '🚀 Publish to GitHub';
+  renderTokenStatus();
+}
+
+async function deleteManualTrack(name) {
+  if (!confirm(`Remove track "${name}" from the registry?\n\nIf it already has sessions it'll still appear on the map — this only removes the manual pre-registration.`)) return;
+  manualTracks = manualTracks.filter(t => t.name !== name);
+  try {
+    const res = await commitManualTracks(`Remove track: ${name}`);
+    if (res.ok) renderManualTracksList();
+    else { const err = await res.json(); alert('Error: ' + (err.message || 'Unknown error')); }
+  } catch (ex) {
+    alert('Network error: ' + ex.message);
+  }
 }
