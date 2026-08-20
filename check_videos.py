@@ -17,7 +17,7 @@ import urllib.request
 from pathlib import Path
 
 SESSIONS_DIR = Path("sessions")
-SKIP_FILES   = {"sessions-list.json", "tracks-list.json"}
+SKIP_FILES   = {"sessions-list.json", "tracks-list.json", "tracks-manual.json"}
 REQUEST_DELAY = 0.4   # seconds between requests — be polite to YouTube
 TIMEOUT       = 10    # seconds per request
 
