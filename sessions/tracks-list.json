@@ -250,6 +250,21 @@
         "bestDriver": "Povilas L."
     },
     {
+        "id": "top1_karting",
+        "name": "TOP1 KARTING",
+        "lat": 51.0975075,
+        "lng": 16.9303563,
+        "mapsLink": "https://maps.app.goo.gl/sbwevAw7bukSFkMv6",
+        "color": "#aaaaaa",
+        "note": "Generated circuit",
+        "configs": [
+            "2026"
+        ],
+        "sessions": 1,
+        "bestLap": "00:49.478",
+        "bestDriver": "Ignas M."
+    },
+    {
         "id": "rudskogen",
         "name": "Rudskogen Motorsenter",
         "lat": 59.3679798,
