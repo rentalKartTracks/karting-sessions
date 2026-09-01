@@ -1,0 +1,52 @@
+{
+  "session_id": "a38b1696-8e52-4562-9fae-267b23cbc3b3",
+  "driver": "Ignas M.",
+  "fastest_lap": "00:49.478",
+  "track": {
+    "name": "TOP1 KARTING",
+    "configuration": "2026",
+    "maps_link": "https://maps.app.goo.gl/sbwevAw7bukSFkMv6"
+  },
+  "kart": "9 Ag",
+  "video_start_time": "01:06",
+  "video_url": "https://youtu.be/bhMbsydeNt4",
+  "session_date": "2026-08-09",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "00:54.315"
+    },
+    {
+      "lap": 2,
+      "time": "00:51.330"
+    },
+    {
+      "lap": 3,
+      "time": "00:50.752"
+    },
+    {
+      "lap": 4,
+      "time": "00:53.000"
+    },
+    {
+      "lap": 5,
+      "time": "00:50.543"
+    },
+    {
+      "lap": 6,
+      "time": "00:50.037"
+    },
+    {
+      "lap": 7,
+      "time": "00:49.807"
+    },
+    {
+      "lap": 8,
+      "time": "00:53.023"
+    },
+    {
+      "lap": 9,
+      "time": "00:49.478"
+    }
+  ]
+}
