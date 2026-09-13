@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>Scooter ETA</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UILaunchScreen</key>
+	<dict/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+
+	<!-- Location: Always is needed so a trip can start automatically from a
+	     geofence crossing without the app being open. -->
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Scooter ETA starts logging your commute automatically when you leave home or work, so you never have to press start.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Scooter ETA records your route while a ride is in progress to learn how long your commute takes.</string>
+
+	<!-- Motion: distinguishes riding from standing still, and measures road
+	     roughness from the accelerometer. -->
+	<key>NSMotionUsageDescription</key>
+	<string>Scooter ETA uses motion to tell riding apart from standing still and to sense how rough the road is.</string>
+
+	<!-- Calendar is a Phase 3 feature and is requested lazily, not on first
+	     launch — but the string must exist for the entitlement. -->
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>Scooter ETA can read your calendar to know when you need to arrive, so it can tell you when to leave.</string>
+
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+		<string>processing</string>
+	</array>
+</dict>
+</plist>
