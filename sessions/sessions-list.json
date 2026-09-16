@@ -275,13 +275,7 @@
             "session_date": "2025-07-13",
             "kart": "9 Ag",
             "has_video": true,
-            "weather": {
-                "temp_max": 24.5,
-                "temp_min": 13.2,
-                "wind_kmh": 8.9,
-                "rain_mm": 0.5,
-                "condition": "Light drizzle"
-            },
+            "weather": null,
             "fastest_lap": "01:04.660",
             "average_lap": "01:05.782",
             "fastest_lap_s": 64.66,
@@ -389,7 +383,13 @@
             "session_date": "2026-04-10",
             "kart": "9 Ag",
             "has_video": true,
-            "weather": null,
+            "weather": {
+                "temp_max": 9.9,
+                "temp_min": -1.5,
+                "wind_kmh": 16.0,
+                "rain_mm": 0.0,
+                "condition": "Overcast"
+            },
             "fastest_lap": "00:43.735",
             "average_lap": "00:44.643",
             "fastest_lap_s": 43.735,
@@ -611,13 +611,7 @@
             "session_date": "2026-01-11",
             "kart": "9 Ag",
             "has_video": true,
-            "weather": {
-                "temp_max": -12.2,
-                "temp_min": -17.4,
-                "wind_kmh": 8.4,
-                "rain_mm": 0.4,
-                "condition": "Light snow"
-            },
+            "weather": null,
             "fastest_lap": "01:22.892",
             "average_lap": "01:30.504",
             "fastest_lap_s": 82.892,
@@ -923,7 +917,13 @@
             "session_date": "2026-06-07",
             "kart": "9 Ag",
             "has_video": true,
-            "weather": null,
+            "weather": {
+                "temp_max": 22.5,
+                "temp_min": 11.3,
+                "wind_kmh": 7.6,
+                "rain_mm": 1.4,
+                "condition": "Light drizzle"
+            },
             "fastest_lap": "01:07.241",
             "average_lap": "01:09.186",
             "fastest_lap_s": 67.241,
@@ -1001,13 +1001,7 @@
             "session_date": "2026-07-11",
             "kart": "9 Ag",
             "has_video": true,
-            "weather": {
-                "temp_max": 17.3,
-                "temp_min": 10.7,
-                "wind_kmh": 12.6,
-                "rain_mm": 6.4,
-                "condition": "Light rain"
-            },
+            "weather": null,
             "fastest_lap": "00:44.301",
             "average_lap": "00:45.572",
             "fastest_lap_s": 44.301,
@@ -1367,13 +1361,7 @@
             "session_date": "2025-07-17",
             "kart": "13 Ag",
             "has_video": true,
-            "weather": {
-                "temp_max": 28.6,
-                "temp_min": 16.4,
-                "wind_kmh": 14.4,
-                "rain_mm": 0.0,
-                "condition": "Mainly clear"
-            },
+            "weather": null,
             "fastest_lap": "01:07.080",
             "average_lap": "01:08.020",
             "fastest_lap_s": 67.08,
@@ -1457,7 +1445,13 @@
             "session_date": "2026-06-07",
             "kart": "9 Ag",
             "has_video": true,
-            "weather": null,
+            "weather": {
+                "temp_max": 22.5,
+                "temp_min": 11.3,
+                "wind_kmh": 7.6,
+                "rain_mm": 1.4,
+                "condition": "Light drizzle"
+            },
             "fastest_lap": "01:07.246",
             "average_lap": "01:10.063",
             "fastest_lap_s": 67.246,
@@ -1703,13 +1697,7 @@
             "session_date": "2025-07-13",
             "kart": "9 Ag",
             "has_video": true,
-            "weather": {
-                "temp_max": 24.5,
-                "temp_min": 13.2,
-                "wind_kmh": 8.9,
-                "rain_mm": 0.5,
-                "condition": "Light drizzle"
-            },
+            "weather": null,
             "fastest_lap": "01:04.020",
             "average_lap": "01:04.954",
             "fastest_lap_s": 64.02,
@@ -1985,7 +1973,13 @@
             "session_date": "2026-05-01",
             "kart": "9 Ag",
             "has_video": true,
-            "weather": null,
+            "weather": {
+                "temp_max": 15.2,
+                "temp_min": 5.0,
+                "wind_kmh": 10.4,
+                "rain_mm": 0.0,
+                "condition": "Overcast"
+            },
             "fastest_lap": "00:43.150",
             "average_lap": "00:51.824",
             "fastest_lap_s": 43.15,
@@ -2111,13 +2105,7 @@
             "session_date": "2026-06-07",
             "kart": "9 Ag",
             "has_video": true,
-            "weather": {
-                "temp_max": 22.5,
-                "temp_min": 11.3,
-                "wind_kmh": 7.6,
-                "rain_mm": 1.4,
-                "condition": "Light drizzle"
-            },
+            "weather": null,
             "fastest_lap": "01:07.209",
             "average_lap": "01:09.415",
             "fastest_lap_s": 67.209,
