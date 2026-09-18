@@ -77,6 +77,21 @@
         "bestDriver": "Povilas L."
     },
     {
+        "id": "☀️_pitstop",
+        "name": "☀️ PITSTOP",
+        "lat": 54.3897236,
+        "lng": 18.6372263,
+        "mapsLink": "https://maps.app.goo.gl/ngiWJVHsjK6jQjNq7",
+        "color": "#aaaaaa",
+        "note": "Generated circuit",
+        "configs": [
+            "2026"
+        ],
+        "sessions": 1,
+        "bestLap": "00:52.194",
+        "bestDriver": "Kęstas Č."
+    },
+    {
         "id": "speedway",
         "name": "Speedway",
         "lat": 54.7974894630313,
