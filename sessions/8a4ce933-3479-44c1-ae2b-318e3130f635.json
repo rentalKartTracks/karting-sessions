@@ -1,0 +1,84 @@
+{
+  "session_id": "8a4ce933-3479-44c1-ae2b-318e3130f635",
+  "driver": "Kęstas Č.",
+  "fastest_lap": "00:25.222",
+  "track": {
+    "name": "☀️ Tor Półwysep",
+    "configuration": "2026",
+    "maps_link": "https://maps.app.goo.gl/VFZJd5BvmupSbgxi8"
+  },
+  "kart": "",
+  "video_start_time": "00:09",
+  "video_url": "https://www.youtube.com/watch?v=KICv_36IBls",
+  "session_date": "2026-08-21",
+  "laps": [
+    {
+      "lap": 1,
+      "time": "00:30.243"
+    },
+    {
+      "lap": 2,
+      "time": "00:26.524"
+    },
+    {
+      "lap": 3,
+      "time": "00:26.239"
+    },
+    {
+      "lap": 4,
+      "time": "00:26.112"
+    },
+    {
+      "lap": 5,
+      "time": "00:26.033"
+    },
+    {
+      "lap": 6,
+      "time": "00:25.446"
+    },
+    {
+      "lap": 7,
+      "time": "00:25.522"
+    },
+    {
+      "lap": 8,
+      "time": "00:25.555"
+    },
+    {
+      "lap": 9,
+      "time": "00:25.921"
+    },
+    {
+      "lap": 10,
+      "time": "00:25.496"
+    },
+    {
+      "lap": 11,
+      "time": "00:25.595"
+    },
+    {
+      "lap": 12,
+      "time": "00:25.270"
+    },
+    {
+      "lap": 13,
+      "time": "00:25.571"
+    },
+    {
+      "lap": 14,
+      "time": "00:25.607"
+    },
+    {
+      "lap": 15,
+      "time": "00:25.222"
+    },
+    {
+      "lap": 16,
+      "time": "00:25.383"
+    },
+    {
+      "lap": 17,
+      "time": "00:25.288"
+    }
+  ]
+}
