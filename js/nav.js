@@ -4,13 +4,9 @@
   // page active by filename — so adding/renaming a page is a one-line change
   // here instead of an edit across every HTML file.
   var LINKS = [
-    { href: 'index.html', label: 'Hub', icon: '🏁' },
+    { href: 'index.html', label: 'Home', icon: '🏁' },
     { href: 'sessions.html', label: 'Sessions', icon: '📊' },
-    { href: 'map.html', label: 'Map', icon: '🗺️' },
-    { href: 'fastest-lap-projection.html', label: 'Fastest Lap', icon: '⚡' },
     { href: 'championship.html', label: 'Championship', icon: '🏆' },
-    { href: 'brake.html', label: 'Brake Detect', icon: '🛑' },
-    { href: 'progress.html', label: 'Progress', icon: '📈' },
   ];
 
   // ── Usage tracking (per-browser, localStorage) ──────────────────────────
@@ -40,7 +36,7 @@
   if (!nav.querySelector('.nav-pill')) {
     if (!nav.getAttribute('aria-label')) nav.setAttribute('aria-label', 'Site navigation');
 
-    // Order: Hub always pinned first; the rest sorted by visit count (desc),
+    // Order: Home always pinned first; the rest sorted by visit count (desc),
     // with the original order as a stable tiebreak so the bar only re-ranks
     // gradually rather than reshuffling on every click.
     var visits = getVisits();
