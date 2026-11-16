@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>HelmetCamHeroes — Ride along</title>
+  <title>HelmetCamHeroes — Rental kart tracks &amp; helmet-cam rides</title>
   <meta name="description" content="Explore our rental kart tracks and watch the latest helmet-cam ride.">
   <link rel="canonical" href="https://helmetcamheroes.com/">
   <link rel="icon" href="favicon.svg">
@@ -17,16 +17,10 @@
 <body>
 <header><div class="bar"><a class="brand" href="./">HelmetCamHeroes</a><a href="https://www.youtube.com/@HelmetCamHeroes">YouTube ↗</a></div></header>
 <main>
-  <h1>Ride along<span>.</span></h1>
-  <p class="intro">Explore rental kart tracks from the driver’s seat.</p>
+  <h1>Rental kart tracks<span>.</span></h1>
+  <p class="intro">Watch our latest helmet-cam ride or pick a track to see footage from that circuit.</p>
   <div class="grid">
-    <section class="map-panel" aria-label="Tracks we’ve driven">
-      <label for="track">Track map</label>
-      <select id="track"><option value="">All tracks</option></select>
-      <div id="map" aria-label="Interactive track map"></div>
-      <p id="map-status" hidden></p>
-    </section>
-    <article aria-live="polite">
+    <article id="ride" aria-live="polite">
       <a id="cover" hidden aria-label="Watch featured video on YouTube"><img id="thumbnail" alt=""><span class="play" aria-hidden="true">▶</span></a>
       <div class="detail">
         <p class="eyebrow" id="label">Latest on HelmetCamHeroes</p>
@@ -37,6 +31,15 @@
         <button id="reset" hidden>Back to latest upload</button>
       </div>
     </article>
+    <section class="map-panel" aria-label="Tracks we’ve driven">
+      <div class="map-controls">
+        <label for="track">Track map</label>
+        <select id="track"><option value="">All tracks</option></select>
+      </div>
+      <div id="map" aria-label="Interactive track map"></div>
+      <a id="view-ride" href="#ride" hidden>View selected track’s ride ↑</a>
+      <p id="map-status" hidden></p>
+    </section>
   </div>
   <footer><a href="sessions.html">Session archive →</a></footer>
 </main>

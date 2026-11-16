@@ -36,12 +36,19 @@ function videoId(raw) {
   } catch { /* Older sessions may have no URL. */ }
 }
 
+function showAllMarkers() {
+  if (markers.size) {
+    const positions = Array.from(markers.values(), marker => marker.getLatLng());
+    map.fitBounds(positions, {padding:[24,24], maxZoom:12});
+  }
+}
+
 function showLatest() {
   requestNumber++;
   el('track').value = '';
-  el('archive').hidden = el('reset').hidden = true;
+  el('view-ride').hidden = el('archive').hidden = el('reset').hidden = true;
   for (const marker of markers.values()) marker.closeTooltip();
-  map?.setView([55.25,23.8], 6);
+  showAllMarkers();
   render('Latest on HelmetCamHeroes', featured?.title || 'Watch the latest upload',
     featured ? dates.format(new Date(featured.published)) : '', featured?.id,
     featured ? 'https://youtu.be/' + featured.id : channel);
@@ -57,7 +64,7 @@ async function selectTrack(name) {
     marker.openTooltip();
   }
   el('archive').href = 'sessions.html?track=' + encodeURIComponent(name);
-  el('archive').hidden = el('reset').hidden = false;
+  el('view-ride').hidden = el('archive').hidden = el('reset').hidden = false;
   render('Latest recorded ride', name, 'Looking up recorded sessions…');
   try {
     const candidates = sessions.filter(s => s.track?.name === name && s.has_video)
@@ -96,6 +103,7 @@ async function loadMap() {
         .addTo(map).bindTooltip(label).on('click', () => selectTrack(track.name));
       markers.set(track.name,marker);
     }
+    showAllMarkers();
   } catch {
     el('map-status').textContent = tracks.length ? 'Map unavailable. Choose a track above.' : 'Track data unavailable. Browse the session archive below.';
     el('map-status').hidden = false;

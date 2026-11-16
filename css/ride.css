@@ -12,10 +12,14 @@ h1 span,.eyebrow { color:#ff7755 }
 .intro { margin:0 0 28px }
 .grid { display:grid; grid-template-columns:1fr 1fr; gap:18px }
 article,.map-panel { min-width:0; background:#171d24; border:1px solid #353b43; border-radius:14px; overflow:hidden }
-.map-panel { display:flex; flex-wrap:wrap; align-items:center; gap:12px; align-content:flex-start }
-.map-panel label { font-weight:750; padding:16px 0 4px 16px }
-select { min-width:0; max-width:58%; margin:12px 12px 0 auto; padding:8px; color:inherit; background:#242c36; border:1px solid #59616d; border-radius:6px }
-#map { width:100%; min-height:320px; height:calc(100% - 62px); background:#26303a; z-index:0 }
+.map-panel { display:flex; flex-direction:column }
+.map-controls { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px }
+.map-controls label { font-weight:750 }
+select { min-width:0; max-width:65%; padding:8px; color:inherit; background:#242c36; border:1px solid #59616d; border-radius:6px }
+#map { flex:1; min-height:320px; background:#26303a; z-index:0 }
+#view-ride { display:none }
+#watch { display:inline-block; background:#ff7755; color:#18110e; border-radius:6px; padding:10px 16px; text-decoration:none; font-weight:750 }
+a:focus-visible, button:focus-visible, select:focus-visible { outline:3px solid #ffbc75; outline-offset:3px }
 #map-status { margin:15px }
 .map-panel:has(#map-status:not([hidden])) #map { display:none }
 #cover { aspect-ratio:16/9; display:grid; place-items:center; position:relative; background:#252f39; text-decoration:none }
@@ -27,5 +31,5 @@ h2 { font-size:clamp(24px,2.7vw,40px); line-height:1.1; letter-spacing:-.035em; 
 #archive,button { display:inline-block; margin:8px 0 0 12px }
 button { background:transparent; color:#c0c5ca; border:0; text-decoration:underline; cursor:pointer }
 footer { padding:22px 0; color:#bcc1c7 }
-[hidden],#cover[hidden] { display:none }
-@media(max-width:740px) { .grid { grid-template-columns:1fr } article { grid-row:1 } #map { height:350px } .bar { height:56px } }
+[hidden],#watch[hidden],#cover[hidden] { display:none }
+@media(max-width:740px) { .grid { grid-template-columns:1fr } #map { min-height:350px } #view-ride:not([hidden]) { display:block; padding:12px 16px } .bar { height:56px } }
