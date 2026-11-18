@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Karting Telemetry — Sessions Dashboard</title>
+  <title>Session archive — HelmetCamHeroes</title>
   <meta name="description"
     content="Full session dashboard with lap-by-lap analysis, personal bests, trend tracking, and video replay.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1051,32 +1051,34 @@
   <!-- Open Graph / Twitter -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Helmet Cam Heroes">
-  <meta property="og:title" content="Karting Telemetry — Sessions Dashboard">
+  <meta property="og:title" content="Session archive — HelmetCamHeroes">
   <meta property="og:description" content="Karting session telemetry: lap times, personal bests, track maps and championship standings.">
   <meta property="og:url" content="https://helmetcamheroes.com/sessions.html">
   <meta property="og:image" content="https://helmetcamheroes.com/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Karting Telemetry — Sessions Dashboard">
+  <meta name="twitter:title" content="Session archive — HelmetCamHeroes">
   <meta name="twitter:description" content="Karting session telemetry: lap times, personal bests, track maps and championship standings.">
   <meta name="twitter:image" content="https://helmetcamheroes.com/og-image.png">
+  <link rel="stylesheet" href="css/brand.css?v=20261118">
 </head>
 
 <body class="has-fixed-nav">
 
-  <nav class="header-nav" aria-label="Site navigation"></nav>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+<nav class="header-nav" aria-label="Site navigation"></nav>
 
-  <div class="page-wrapper">
+  <main class="page-wrapper" id="main-content" tabindex="-1">
 
     <!-- HEADER -->
     <div class="header">
       <div class="header-glow"></div>
-      <div class="header-eyebrow">🏁 Helmet Cam Heroes Racing</div>
-      <h1>Karting <span>Telemetry</span></h1>
-      <div class="header-sub">Track your performance across all sessions</div>
+      <div class="header-eyebrow">HelmetCamHeroes</div>
+      <h1>Session <span>archive</span></h1>
+      <div class="header-sub">Find a ride, compare lap times, and watch the action.</div>
     </div>
 
     <!-- STATS STRIP -->
-    <div class="stats-strip" id="summary-stats">
+    <div class="stats-strip" id="summary-stats" aria-live="polite">
       <div class="stat-card">
         <span class="stat-label">Total Sessions</span>
         <span class="filtered-stat-value" id="filtered-sessions-count">-</span>
@@ -1086,8 +1088,8 @@
         <span class="filtered-stat-value" id="filtered-total-laps">-</span>
       </div>
       <div class="stat-card">
-        <span class="stat-label">Best Lap Ever</span>
-        <span class="filtered-stat-value" id="filtered-best-lap">-</span>
+        <span class="stat-label">Best lap · same layout</span>
+        <span class="filtered-stat-value" id="filtered-best-lap">-</span><small class="lap-context">Choose one track and layout.</small>
       </div>
       <div class="stat-card">
         <span class="stat-label">Tracks Driven</span>
@@ -1097,19 +1099,19 @@
 
     <!-- CONTROLS -->
     <div class="controls">
-      <input type="text" id="search-input" class="search-box" placeholder="Search driver, track, or kart…">
+      <input type="text" id="search-input" aria-label="Search driver, track, or kart" class="search-box" placeholder="Search driver, track, or kart…">
 
       <div class="filter-group">
-        <select id="driver-filter" class="select-filter">
+        <select id="driver-filter" aria-label="Driver" class="select-filter">
           <option value="">All Drivers</option>
         </select>
-        <select id="track-filter" class="select-filter">
+        <select id="track-filter" aria-label="Track" class="select-filter">
           <option value="">All Tracks</option>
         </select>
-        <select id="config-filter" class="select-filter">
+        <select id="config-filter" aria-label="Track configuration" class="select-filter">
           <option value="">All Configurations</option>
         </select>
-        <select id="date-filter" class="select-filter">
+        <select id="date-filter" aria-label="Date range" class="select-filter">
           <option value="all">All Dates</option>
           <option value="today">Today</option>
           <option value="week">Last 7 Days</option>
@@ -1121,11 +1123,11 @@
       <div class="date-filter-group" id="custom-date-range" style="display: none;">
         <div class="date-range">
           <span>From:</span>
-          <input type="date" id="date-from" class="date-input">
+          <input type="date" id="date-from" aria-label="From date" class="date-input">
         </div>
         <div class="date-range">
           <span>To:</span>
-          <input type="date" id="date-to" class="date-input">
+          <input type="date" id="date-to" aria-label="To date" class="date-input">
         </div>
       </div>
 
@@ -1141,7 +1143,7 @@
       <div id="skeleton-loader"></div>
     </div>
 
-  </div><!-- /page-wrapper -->
+  </main><!-- /page-wrapper -->
 
   <!-- INFO FAB -->
   <button class="info-button" id="info-button" title="Show Legend & Info">ℹ️</button>
@@ -1207,8 +1209,10 @@
     </div>
   </div>
 
-  <script src="js/index.js"></script>
-  <script src="js/nav.js"></script>
+  <script src="js/index.js?v=20261118"></script>
+  <script src="js/nav.js?v=20261118"></script>
+<footer class="site-footer"><a class="footer-brand" href="index.html">HelmetCamHeroes</a><p>Rental karting from the driver’s seat.</p><nav aria-label="Footer"><a href="https://www.youtube.com/@HelmetCamHeroes">YouTube ↗</a><a href="about.html">About &amp; privacy</a><a href="#main-content">Back to top ↑</a></nav></footer>
+<noscript><p class="site-footer">Enable JavaScript to load the interactive content. <a href="https://www.youtube.com/@HelmetCamHeroes">Watch HelmetCamHeroes on YouTube</a>.</p></noscript>
 </body>
 
 </html>

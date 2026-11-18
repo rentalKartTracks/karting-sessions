@@ -461,13 +461,16 @@ function updateFilteredSummaryStats() {
     .map(s => parseTime(s.fastest_lap))
     .filter(t => t !== Infinity);
 
-  const bestLapEver = allFastestLaps.length > 0 ? Math.min(...allFastestLaps) : null;
+  const layouts = new Set(sessionsToUse.map(s => JSON.stringify([s.track_name, s.track_config])));
+  const bestLapEver = layouts.size === 1 && allFastestLaps.length > 0 ? Math.min(...allFastestLaps) : null;
   const uniqueTrackNames = new Set(sessionsToUse.map(s => s.track_name).filter(n => n && n !== 'N/A'));
 
   document.getElementById('filtered-sessions-count').textContent = totalSessions;
   document.getElementById('filtered-total-laps').textContent = totalLaps;
   document.getElementById('filtered-tracks-count').textContent = uniqueTrackNames.size;
-  document.getElementById('filtered-best-lap').textContent = bestLapEver !== null ? formatTime(bestLapEver) : '-';
+  document.getElementById('filtered-best-lap').textContent = bestLapEver !== null ? formatTime(bestLapEver) : '—';
+  document.querySelector('.lap-context').hidden = layouts.size <= 1;
+  document.getElementById('filtered-best-lap').title = layouts.size > 1 ? 'Choose one track and configuration to compare lap times.' : 'Best recorded lap in the current selection.';
 }
 
 function renderSessions() {

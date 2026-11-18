@@ -36,19 +36,10 @@
   if (!nav.querySelector('.nav-pill')) {
     if (!nav.getAttribute('aria-label')) nav.setAttribute('aria-label', 'Site navigation');
 
-    // Order: Home always pinned first; the rest sorted by visit count (desc),
-    // with the original order as a stable tiebreak so the bar only re-ranks
-    // gradually rather than reshuffling on every click.
-    var visits = getVisits();
-    var rest = LINKS.slice(1).map(function (l, i) { return { l: l, i: i }; });
-    rest.sort(function (a, b) {
-      var d = (visits[b.l.href] || 0) - (visits[a.l.href] || 0);
-      return d !== 0 ? d : a.i - b.i;
-    });
-    var ordered = [LINKS[0]].concat(rest.map(function (x) { return x.l; }));
+    var ordered = LINKS;
 
     var html =
-      '<a href="index.html" class="nav-brand">HCH</a>' +
+      '<a href="index.html" class="nav-brand">HelmetCamHeroes</a>' +
       '<button class="nav-hamburger" aria-label="Toggle navigation" aria-expanded="false">' +
         '<svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true">' +
         '<rect width="18" height="2" rx="1" fill="currentColor"/>' +
@@ -57,7 +48,8 @@
       '</button>';
     ordered.forEach(function (l) {
       var active = l.href.toLowerCase() === current ? ' active' : '';
-      html += '<a href="' + l.href + '" class="nav-pill' + active + '">' + l.label + '</a>';
+      var ariaCurrent = active ? ' aria-current="page"' : '';
+      html += '<a href="' + l.href + '" class="nav-pill' + active + '"' + ariaCurrent + '>' + l.label + '</a>';
     });
     nav.innerHTML = html;
   }

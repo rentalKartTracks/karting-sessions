@@ -10,18 +10,25 @@
   <meta property="og:title" content="Ride along with HelmetCamHeroes">
   <meta property="og:image" content="https://helmetcamheroes.com/og-image.png">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="css/ride.css">
+  <link rel="stylesheet" href="css/ride.css?v=20261118">
   <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script defer src="js/ride.js"></script>
+  <script defer src="js/ride.js?v=20261118"></script>
+  <link rel="stylesheet" href="css/brand.css?v=20261118">
+<meta name="theme-color" content="#0d1117">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://helmetcamheroes.com/">
+<meta property="og:description" content="Explore rental kart tracks and watch our latest helmet-cam ride.">
+<meta name="twitter:card" content="summary_large_image">
 </head>
-<body>
-<header><div class="bar"><a class="brand" href="./">HelmetCamHeroes</a><a href="https://www.youtube.com/@HelmetCamHeroes">YouTube ↗</a></div></header>
-<main>
+<body class="home-page has-fixed-nav">
+<a class="skip-link" href="#main-content">Skip to content</a>
+<nav class="header-nav" aria-label="Site navigation"><a href="index.html">Home</a><a href="sessions.html">Sessions</a><a href="championship.html">Championship</a></nav>
+<main id="main-content" tabindex="-1">
   <h1>Rental kart tracks<span>.</span></h1>
   <p class="intro">Watch our latest helmet-cam ride or pick a track to see footage from that circuit.</p>
   <div class="grid">
     <article id="ride" aria-live="polite">
-      <a id="cover" hidden aria-label="Watch featured video on YouTube"><img id="thumbnail" alt=""><span class="play" aria-hidden="true">▶</span></a>
+      <a id="cover" hidden aria-label="Watch featured video on YouTube"><img id="thumbnail" alt="" width="480" height="360" decoding="async"><span class="play" aria-hidden="true">▶</span></a>
       <div class="detail">
         <p class="eyebrow" id="label">Latest on HelmetCamHeroes</p>
         <h2 id="title">Watch the latest upload</h2>
@@ -41,7 +48,10 @@
       <p id="map-status" hidden></p>
     </section>
   </div>
-  <footer><a href="sessions.html">Session archive →</a></footer>
+
 </main>
+<footer class="site-footer"><a class="footer-brand" href="index.html">HelmetCamHeroes</a><p>Rental karting from the driver’s seat.</p><nav aria-label="Footer"><a href="https://www.youtube.com/@HelmetCamHeroes">YouTube ↗</a><a href="about.html">About &amp; privacy</a><a href="#main-content">Back to top ↑</a></nav></footer>
+<script src="js/nav.js?v=20261118"></script>
+<noscript><p class="site-footer">Enable JavaScript to load the interactive content. <a href="https://www.youtube.com/@HelmetCamHeroes">Watch HelmetCamHeroes on YouTube</a>.</p></noscript>
 </body>
 </html>
