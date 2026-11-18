@@ -9,8 +9,8 @@
   <meta http-equiv="X-XSS-Protection" content="1; mode=block">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <title>Karting Session Viewer</title>
-  <meta name="description" content="View individual karting session telemetry, lap times, compare video feeds, and dive into driver performance.">  <link rel="preconnect" href="https://www.youtube.com">
-  <link rel="preconnect" href="https://s.ytimg.com">
+  <meta name="description" content="View individual karting session telemetry, lap times, compare video feeds, and dive into driver performance.">
+
   <link rel="preconnect" href="https://unpkg.com">
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">  <link rel="stylesheet" href="css/session.css">
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js" defer></script>
@@ -33,7 +33,7 @@
   <meta name="twitter:title" content="Karting Session Viewer">
   <meta name="twitter:description" content="View individual karting session telemetry, lap times, compare video feeds, and dive into driver performance.">
   <meta name="twitter:image" content="https://helmetcamheroes.com/og-image.png">
-  <link rel="stylesheet" href="css/brand.css?v=20261118">
+  <link rel="stylesheet" href="css/brand.css?v=20261118b">
 </head>
 
 <body>
@@ -138,6 +138,12 @@
       </div>
 
       <!-- Video grid -->
+      <section class="video-permission" aria-label="YouTube video privacy">
+        <p id="video-permission-status">Loading videos connects to YouTube, which receives your IP address and may use cookies or browser storage. Your choice applies to all videos on this page until you leave or reload.</p>
+        <button id="allow-youtube" type="button">Allow YouTube videos</button>
+        <button id="stop-youtube" type="button" hidden>Disable videos and reload</button>
+        <a href="about.html">Privacy information</a>
+      </section>
       <div class="video-grid" id="video-grid">
         <!-- Dynamically injected -->
       </div>
@@ -294,8 +300,8 @@
     </div>
   </div>
 
-  <script src="js/session.js"></script>
-  <script src="js/nav.js?v=20261118"></script>
+  <script src="js/session.js?v=20261118b"></script>
+  <script src="js/nav.js?v=20261118b"></script>
 <footer class="site-footer"><a class="footer-brand" href="index.html">HelmetCamHeroes</a><p>Rental karting from the driver’s seat.</p><nav aria-label="Footer"><a href="https://www.youtube.com/@HelmetCamHeroes">YouTube ↗</a><a href="about.html">About &amp; privacy</a><a href="#main-content">Back to top ↑</a></nav></footer>
 </body>
 

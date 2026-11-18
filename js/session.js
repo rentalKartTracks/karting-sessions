@@ -403,12 +403,26 @@ function renderStatsGrid(data) {
 /**
 * Load YouTube IFrame API
 */
+let youtubeAllowed = false;
+let youtubeLoading = false;
+
 function loadYouTubeAPI() {
-  if (window.YT && window.YT.Player) return;
+  if (!youtubeAllowed || youtubeLoading) return;
+  if (window.YT && window.YT.Player) {
+    window.onYouTubeIframeAPIReady();
+    return;
+  }
+  youtubeLoading = true;
 
   const tag = document.createElement('script');
   tag.src = 'https://www.youtube.com/iframe_api';
   tag.async = true;
+  tag.onerror = () => {
+    youtubeLoading = false;
+    tag.remove();
+    document.getElementById('video-permission-status').textContent = 'YouTube could not load. Try again or keep browsing the lap data.';
+    document.getElementById('allow-youtube').hidden = false;
+  };
   document.body.appendChild(tag);
 }
 
@@ -431,6 +445,7 @@ window.onYouTubeIframeAPIReady = function () {
  * Generic create player function
  */
 function createPlayer(id, config) {
+  if (!youtubeAllowed) return;
   const { videoId, startTimeSeconds } = config;
   const containerId = `player-${id}`;
 
@@ -440,7 +455,7 @@ function createPlayer(id, config) {
   }
 
   videoPlayers[id] = new YT.Player(containerId, {
-    host: 'https://www.youtube.com',
+    host: 'https://www.youtube-nocookie.com',
     videoId: videoId,
     playerVars: {
       start: startTimeSeconds,
@@ -2995,8 +3010,16 @@ function initializeApp() {
   // Initialize PeerJS for remote control
   initializePeer();
 
-  // Load YouTube API
-  loadYouTubeAPI();
+  document.getElementById('allow-youtube').addEventListener('click', () => {
+    youtubeAllowed = true;
+    document.getElementById('allow-youtube').hidden = true;
+    document.getElementById('stop-youtube').hidden = false;
+    document.getElementById('video-permission-status').textContent = 'YouTube videos are enabled for this page. Disable them to reload with video connections blocked.';
+    loadYouTubeAPI();
+  });
+  document.getElementById('stop-youtube').addEventListener('click', () => {
+    window.location.reload();
+  });
 
   // Load sessions list for autocomplete
   loadSessionsList();

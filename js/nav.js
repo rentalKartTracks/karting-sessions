@@ -9,25 +9,9 @@
     { href: 'championship.html', label: 'Championship', icon: '🏆' },
   ];
 
-  // ── Usage tracking (per-browser, localStorage) ──────────────────────────
-  var VISITS_KEY = 'hch:pageVisits';
-  function getVisits() {
-    try { return JSON.parse(localStorage.getItem(VISITS_KEY) || '{}'); }
-    catch (e) { return {}; }
-  }
-  function recordVisit(page) {
-    try {
-      var v = getVisits();
-      v[page] = (v[page] || 0) + 1;
-      localStorage.setItem(VISITS_KEY, JSON.stringify(v));
-    } catch (e) {}
-  }
-
+  // Remove visit counts left by earlier versions.
+  try { localStorage.removeItem('hch:pageVisits'); } catch (e) {}
   var current = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
-  if (LINKS.some(function (l) { return l.href.toLowerCase() === current; })) recordVisit(current);
-
-  // Expose for the Hub's "Most Visited" row (single source of page metadata).
-  window.HCHNav = { links: LINKS, getVisits: getVisits };
 
   var nav = document.querySelector('.header-nav');
   if (!nav) return;

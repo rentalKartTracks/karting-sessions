@@ -93,3 +93,9 @@ button { font-family: var(--font-body) }
 
 .lap-context { display:block; color:var(--muted); font-size:12px; margin-top:4px }
 .lap-context[hidden] { display:none }
+
+.video-permission { padding: 20px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); margin-bottom: 16px }
+.video-permission p { color: var(--muted-strong); margin: 0 0 12px }
+.video-permission button { background: var(--accent); color: #21130f; border: 0; border-radius: 8px; min-height: 44px; padding: 10px 16px; margin: 0 12px 8px 0; cursor: pointer }
+.video-permission button[hidden] { display: none }
+.video-permission a { color: var(--text); text-underline-offset: 4px }
