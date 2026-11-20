@@ -667,26 +667,62 @@ body .container {
   color: var(--gold);
 }
 
-/* Fullscreen Grid */
-.video-grid.fullscreen-grid {
-  position: fixed !important;
-  inset: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  z-index: 9999 !important;
-  background: #000 !important;
-  margin: 0 !important;
-  padding: var(--spacing-md) !important;
-  box-sizing: border-box !important;
-  border-radius: 0 !important;
-  align-content: center;
-  overflow-y: auto;
+/* The fullscreen stage includes layout, video and shared playback controls. */
+.fullscreen-toggle-btn {
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: 8px 12px;
+  background: var(--surface2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  cursor: pointer;
 }
-
-.video-grid.fullscreen-grid .video-container {
+.video-toolbar { flex-wrap: wrap; gap: var(--spacing-sm); }
+.video-stage:fullscreen,
+.video-stage.is-fullscreen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  margin: 0;
+  padding: var(--spacing-sm);
+  box-sizing: border-box;
+  background: #000;
+  overflow: auto;
+}
+.video-stage.is-fullscreen { position: fixed; inset: 0; z-index: 10000; }
+html.video-fullscreen-open { overflow: hidden; }
+.video-stage:fullscreen .video-toolbar,
+.video-stage.is-fullscreen .video-toolbar { flex-shrink: 0; margin: 0; }
+.video-stage:fullscreen .video-grid,
+.video-stage.is-fullscreen .video-grid {
+  flex: 1;
+  min-height: 200px;
+  margin: 0;
+  grid-auto-rows: minmax(0, 1fr);
+}
+.video-stage:fullscreen .video-grid.layout-main-side,
+.video-stage.is-fullscreen .video-grid.layout-main-side { grid-template-rows: repeat(2, minmax(0, 1fr)); }
+.video-stage:fullscreen .video-container,
+.video-stage.is-fullscreen .video-container {
+  min-height: 0;
   border: none;
   box-shadow: none;
   background: #000;
+}
+.video-stage:fullscreen .video-wrapper,
+.video-stage.is-fullscreen .video-wrapper { padding-bottom: 0; height: 100%; }
+.video-stage:fullscreen .video-grid.layout-pip .video-container:nth-child(2),
+.video-stage.is-fullscreen .video-grid.layout-pip .video-container:nth-child(2) { aspect-ratio: 16 / 9; }
+body .video-stage:fullscreen .playback-controls,
+body .video-stage.is-fullscreen .playback-controls {
+  display: block !important;
+  flex-shrink: 0;
+  padding: var(--spacing-sm);
+  margin: 0;
 }
 
 /* Video Live Stats */

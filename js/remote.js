@@ -5,6 +5,14 @@ let conn = null;
 let isSeeking = false;
 let currentDuration = 0;
 let currentTime = 0;
+let reconnectAttempts = 0;
+const MAX_RECONNECT_ATTEMPTS = 3;
+let reconnectTimer = null;
+let connectionTimer = null;
+let heartbeatTimer = null;
+let lastStatsAt = 0;
+let seekControlsCleanup = null;
+let connectionState = 'connecting';
 
 function init() {
     if (!hostId) {
@@ -20,13 +28,36 @@ function preventDefaults() {
     document.addEventListener('contextmenu', e => e.preventDefault());
 }
 
+function setConnectionState(state, message = '') {
+    connectionState = state;
+    const connected = state === 'connected';
+    document.getElementById('body').classList.toggle('connected', connected);
+    document.getElementById('connection-banner').classList.toggle('connected', connected);
+    const titles = {connected: 'Connected', connecting: 'Connecting…', reconnecting: 'Reconnecting…', offline: 'Offline'};
+    const descriptions = {connected: 'Controlling session playback', connecting: 'Finding the TV session', reconnecting: 'Playback controls will return when connected', offline: 'Scan the current QR code on the TV to pair again'};
+    const text = document.getElementById('connection-text');
+    text.innerHTML = `<strong>${titles[state]}</strong><small>${message || descriptions[state]}</small>`;
+    document.querySelectorAll('#content-area .control-btn, #content-area .quick-btn').forEach(button => {
+        button.disabled = !connected;
+    });
+    const timeline = document.getElementById('seek-container');
+    if (timeline) {
+        timeline.style.pointerEvents = connected ? '' : 'none';
+        timeline.setAttribute('aria-disabled', String(!connected));
+    }
+    const pill = document.querySelector('.status-pill span');
+    if (pill) pill.textContent = connected ? 'Live' : titles[state];
+}
+
 function showError(title, message) {
+    setConnectionState('offline');
+    if (seekControlsCleanup) seekControlsCleanup();
     document.getElementById('content-area').innerHTML = `
         <div class="error-state">
             <div class="error-icon">⚠️</div>
             <div class="error-title">${title}</div>
             <div class="error-message">${message}</div>
-            <button class="retry-btn" onclick="location.reload()">Retry Connection</button>
+            <button class="retry-btn" onclick="retryConnection()">Retry Connection</button>
         </div>
     `;
 }
@@ -36,9 +67,14 @@ function haptic() {
 }
 
 function sendCommand(type, value = null) {
-    haptic();
-    if (conn?.open) {
-        conn.send({ type, value });
+    if (connectionState !== 'connected' || !conn?.open) return false;
+    try {
+        conn.send({type, value});
+        haptic();
+        return true;
+    } catch (_) {
+        scheduleRemoteReconnect();
+        return false;
     }
 }
 
@@ -73,6 +109,7 @@ function formatTime(seconds) {
 }
 
 function showConnectedUI() {
+    if (seekControlsCleanup) seekControlsCleanup();
     document.getElementById('body').classList.add('connected');
     document.getElementById('connection-banner').classList.add('connected');
     document.getElementById('connection-text').innerHTML = `
@@ -150,98 +187,159 @@ function showConnectedUI() {
     `;
 
     setupSeekControls();
+    setConnectionState('connected');
 }
 
 function setupSeekControls() {
     const container = document.getElementById('seek-container');
-    const thumb = document.getElementById('seek-thumb');
-    const progress = document.getElementById('seek-progress');
-    if (!container || !thumb || !progress) return;
-
-    let isDragging = false;
-
-    function updatePosition(clientX) {
-        if (!container || currentDuration === 0) return;
+    if (!container) return;
+    let pointerId = null;
+    const updatePosition = clientX => {
+        if (!currentDuration) return;
         const rect = container.getBoundingClientRect();
-        let x = Math.max(0, Math.min(clientX - rect.left, rect.width));
-        const percentage = x / rect.width;
-
-        thumb.style.left = `${percentage * 100}%`;
-        progress.style.width = `${percentage * 100}%`;
-
-        currentTime = percentage * currentDuration;
-        document.getElementById('current-time').textContent = formatTime(currentTime);
-    }
-
-    function endSeek() {
-        if (!isDragging) return;
-        isDragging = false;
+        if (!rect.width) return;
+        currentTime = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width)) * currentDuration;
+        updateSeekUI();
+    };
+    const start = event => {
+        if (connectionState !== 'connected' || !currentDuration || pointerId !== null) return;
+        if (event.button !== undefined && event.button !== 0) return;
+        event.preventDefault();
+        pointerId = event.pointerId;
+        isSeeking = true;
+        container.setPointerCapture?.(pointerId);
+        updatePosition(event.clientX);
+    };
+    const move = event => {
+        if (event.pointerId === pointerId) updatePosition(event.clientX);
+    };
+    const finish = event => {
+        if (event.pointerId !== pointerId) return;
+        const canceled = event.type === 'pointercancel' || event.type === 'lostpointercapture';
+        const releasedId = pointerId;
+        pointerId = null;
         isSeeking = false;
-        sendCommand('SEEK', currentTime);
+        if (container.hasPointerCapture?.(releasedId)) container.releasePointerCapture(releasedId);
+        if (!canceled) sendCommand('SEEK', currentTime);
+    };
+    container.style.touchAction = 'pan-y';
+    container.addEventListener('pointerdown', start);
+    container.addEventListener('pointermove', move);
+    container.addEventListener('pointerup', finish);
+    container.addEventListener('pointercancel', finish);
+    container.addEventListener('lostpointercapture', finish);
+    seekControlsCleanup = () => {
+        pointerId = null;
+        isSeeking = false;
+        container.removeEventListener('pointerdown', start);
+        container.removeEventListener('pointermove', move);
+        container.removeEventListener('pointerup', finish);
+        container.removeEventListener('pointercancel', finish);
+        container.removeEventListener('lostpointercapture', finish);
+        seekControlsCleanup = null;
+    };
+}
+
+function cleanupRemoteConnection() {
+    clearTimeout(reconnectTimer);
+    clearTimeout(connectionTimer);
+    clearInterval(heartbeatTimer);
+    reconnectTimer = connectionTimer = heartbeatTimer = null;
+    const oldConnection = conn;
+    const oldPeer = peer;
+    conn = peer = null;
+    isSeeking = false;
+    if (oldConnection) {
+        oldConnection.removeAllListeners?.();
+        try { oldConnection.close(); } catch (_) { /* Already closed. */ }
     }
+    if (oldPeer) {
+        oldPeer.removeAllListeners?.();
+        try { oldPeer.destroy(); } catch (_) { /* Already destroyed. */ }
+    }
+}
 
-    container.addEventListener('mousedown', e => {
-        e.preventDefault();
-        isDragging = true;
-        isSeeking = true;
-        updatePosition(e.clientX);
-    });
+function scheduleRemoteReconnect(message = 'The TV connection was interrupted.') {
+    if (reconnectTimer) return;
+    cleanupRemoteConnection();
+    if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
+        showError('TV unavailable', `${message} Scan the current QR code on the TV, or retry when it is ready.`);
+        return;
+    }
+    reconnectAttempts++;
+    setConnectionState('reconnecting');
+    reconnectTimer = setTimeout(() => {
+        reconnectTimer = null;
+        setupPeerConnection();
+    }, Math.min(1000 * 2 ** (reconnectAttempts - 1), 5000));
+}
 
-    document.addEventListener('mousemove', e => {
-        if (isDragging) updatePosition(e.clientX);
-    });
-
-    document.addEventListener('mouseup', endSeek);
-
-    container.addEventListener('touchstart', e => {
-        e.preventDefault();
-        isDragging = true;
-        isSeeking = true;
-        updatePosition(e.touches[0].clientX);
-    });
-
-    document.addEventListener('touchmove', e => {
-        if (isDragging) updatePosition(e.touches[0].clientX);
-    });
-
-    document.addEventListener('touchend', endSeek);
+function retryConnection() {
+    if (!hostId) {
+        showError('No Connection ID', 'Scan the QR code on the TV to connect.');
+        return;
+    }
+    reconnectAttempts = 0;
+    setupPeerConnection();
 }
 
 function setupPeerConnection() {
-    peer = new Peer();
-
-    peer.on('open', () => {
-        conn = peer.connect(hostId, {
-            reliable: true,
-            serialization: 'json'
-        });
-        setupConnectionListeners();
+    cleanupRemoteConnection();
+    setConnectionState(reconnectAttempts ? 'reconnecting' : 'connecting');
+    if (typeof Peer !== 'function') {
+        showError('Connection unavailable', 'Reload this page to load the connection service, then scan the QR code again.');
+        return;
+    }
+    const instance = new Peer();
+    peer = instance;
+    connectionTimer = setTimeout(() => {
+        if (peer === instance && !conn?.open) scheduleRemoteReconnect('The TV did not answer.');
+    }, 10000);
+    instance.on('open', () => {
+        if (peer !== instance) return;
+        try {
+            conn = instance.connect(hostId, {reliable: true, serialization: 'json'});
+            setupConnectionListeners(conn, instance);
+        } catch (_) {
+            scheduleRemoteReconnect();
+        }
     });
-
-    peer.on('error', err => {
-        showError('Connection Error', 'Unable to establish connection. Please try again.');
+    instance.on('error', err => {
+        if (peer !== instance) return;
+        scheduleRemoteReconnect(err.type === 'peer-unavailable' ? 'The pairing code is no longer available.' : 'The connection service could not be reached.');
+    });
+    instance.on('disconnected', () => {
+        if (peer === instance) scheduleRemoteReconnect();
+    });
+    instance.on('close', () => {
+        if (peer === instance) scheduleRemoteReconnect();
     });
 }
 
-function setupConnectionListeners() {
-    conn.on('open', () => {
+function setupConnectionListeners(channel, instance) {
+    channel.on('open', () => {
+        if (conn !== channel || peer !== instance) return;
+        clearTimeout(connectionTimer);
+        connectionTimer = null;
+        reconnectAttempts = 0;
+        lastStatsAt = Date.now();
         showConnectedUI();
+        heartbeatTimer = setInterval(() => {
+            if (document.visibilityState !== 'hidden' && conn === channel && Date.now() - lastStatsAt > 10000) {
+                scheduleRemoteReconnect();
+            }
+        }, 1000);
     });
-
-    conn.on('data', data => {
-        if (data.type === 'STATS') updateStats(data);
+    channel.on('data', data => {
+        if (conn !== channel || !channel.open || !data || data.type !== 'STATS') return;
+        lastStatsAt = Date.now();
+        updateStats(data);
     });
-
-    conn.on('close', () => {
-        document.getElementById('body').classList.remove('connected');
-        showError('Disconnected', 'Connection to session was lost.');
-        setTimeout(() => {
-            if (!conn?.open) location.reload();
-        }, 5000);
+    channel.on('close', () => {
+        if (conn === channel) scheduleRemoteReconnect();
     });
-
-    conn.on('error', err => {
-        // Connection error occurred
+    channel.on('error', () => {
+        if (conn === channel) scheduleRemoteReconnect();
     });
 }
 
@@ -275,3 +373,12 @@ function updateStats(data) {
 }
 
 window.addEventListener('DOMContentLoaded', init);
+document.addEventListener('visibilitychange', () => {
+    // A suspended phone may resume before queued stats arrive. Give an open
+    // channel a fresh grace period rather than replacing a healthy connection.
+    if (document.visibilityState === 'visible' && conn?.open) lastStatsAt = Date.now();
+});
+window.addEventListener('pagehide', cleanupRemoteConnection);
+window.addEventListener('pageshow', event => {
+    if (event.persisted && hostId) retryConnection();
+});

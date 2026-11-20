@@ -12,7 +12,7 @@
   <meta name="description" content="View individual karting session telemetry, lap times, compare video feeds, and dive into driver performance.">
 
   <link rel="preconnect" href="https://unpkg.com">
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com">  <link rel="stylesheet" href="css/session.css">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">  <link rel="stylesheet" href="css/session.css?v=20261120">
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
   <link rel="stylesheet" href="css/site.min.css">
@@ -113,6 +113,13 @@
     <!-- ── VIDEO SECTION ── -->
     <section class="video-section" id="video-section" style="display:none;">
 
+      <section class="video-permission" aria-label="YouTube video privacy">
+        <p id="video-permission-status">Loading videos connects to YouTube, which receives your IP address and may use cookies or browser storage. Your choice applies to all videos on this page until you leave or reload.</p>
+        <button id="allow-youtube" type="button">Allow YouTube videos</button>
+        <button id="stop-youtube" type="button" hidden>Disable videos and reload</button>
+        <a href="about.html">Privacy information</a>
+      </section>
+      <div class="video-stage" id="video-stage">
       <!-- Layout & driver toolbar -->
       <div class="video-toolbar" id="video-toolbar" style="display:none;">
         <div class="layout-selector">
@@ -135,15 +142,11 @@
         <div class="driver-selector-container" id="driver-selector-container">
           <!-- Populated by JS -->
         </div>
+        <button class="fullscreen-toggle-btn" id="fullscreen-toggle" type="button"
+          onclick="toggleFullscreen()" aria-label="Enter fullscreen" aria-pressed="false">Fullscreen</button>
       </div>
 
       <!-- Video grid -->
-      <section class="video-permission" aria-label="YouTube video privacy">
-        <p id="video-permission-status">Loading videos connects to YouTube, which receives your IP address and may use cookies or browser storage. Your choice applies to all videos on this page until you leave or reload.</p>
-        <button id="allow-youtube" type="button">Allow YouTube videos</button>
-        <button id="stop-youtube" type="button" hidden>Disable videos and reload</button>
-        <a href="about.html">Privacy information</a>
-      </section>
       <div class="video-grid" id="video-grid">
         <!-- Dynamically injected -->
       </div>
@@ -167,6 +170,7 @@
           </div>
         </div>
       </div>
+      </div><!-- /video-stage -->
     </section>
 
     <!-- ── QR PANEL (Phone Remote) ── -->
@@ -300,7 +304,7 @@
     </div>
   </div>
 
-  <script src="js/session.js?v=20261118b"></script>
+  <script src="js/session.js?v=20261120"></script>
   <script src="js/nav.js?v=20261118b"></script>
 <footer class="site-footer"><a class="footer-brand" href="index.html">HelmetCamHeroes</a><p>Rental karting from the driver’s seat.</p><nav aria-label="Footer"><a href="https://www.youtube.com/@HelmetCamHeroes">YouTube ↗</a><a href="about.html">About &amp; privacy</a><a href="#main-content">Back to top ↑</a></nav></footer>
 </body>

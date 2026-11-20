@@ -7,7 +7,6 @@ let comparisonDatasets = [];
 let activePoint = null;
 let allSessionsList = [];
 let currentMode = 'pc';
-let autoFullscreenTriggered = false;
 let animationFrameId = null;
 let lastTooltipUpdate = 0;
 const TOOLTIP_DEBOUNCE = 50;
@@ -19,11 +18,17 @@ let activeVideoIds = []; // ordered list of sessionIds
 let activeLayout = 'single';
 let firstSelectedVideoId = null; // for swapping videos
 let activeAudioSessionId = null; // tracks which video plays sound
+let audioMuted = false;
+let comparisonRequestNumber = 0;
 
 // Lap tracking
 let lapStartTimes = [];
 let currentLapMarker = { lapNumber: 1 };
 let updateStatsInterval = null;
+let playbackRequested = false;
+let requestedVideoTime = null;
+let pendingSeekTime = null;
+let pendingSeekDeadline = 0;
 
 // PeerJS for remote control
 let peer = null;
@@ -31,6 +36,10 @@ let connections = [];
 let statsInterval = null;
 let reconnectAttempts = 0;
 const MAX_RECONNECT_ATTEMPTS = 3;
+let hostPeerId = null;
+let peerReconnectTimer = null;
+let peerConnectionTimer = null;
+let peerConnectionState = 'connecting';
 
 // URL parameters
 const params = new URLSearchParams(window.location.search);
@@ -487,6 +496,7 @@ function createPlayer(id, config) {
 function setHighestQuality(player) {
   if (!player || typeof player.getAvailableQualityLevels !== 'function') return;
   const qualities = player.getAvailableQualityLevels();
+  if (!Array.isArray(qualities) || typeof player.setPlaybackQuality !== 'function') return;
   const preferred = ['hd2160', 'hd1440', 'hd1080', 'hd720'];
   for (const q of preferred) {
     if (qualities.includes(q)) {
@@ -498,135 +508,62 @@ function setHighestQuality(player) {
 
 function onPlayerReady(event, id) {
   const player = videoPlayers[id];
-
-  // Set initial audio state
+  if (!player || event.target !== player) return;
+  player._hchReady = true;
   updateAudioState();
+  // Pause a newly cued player before seeking so seekTo preserves that state.
+  if (!playbackRequested && typeof player.pauseVideo === 'function') player.pauseVideo();
 
   if (id === sessionId) {
-    seekToLap(currentLapMarker.lapNumber || 1);
-
-    // Show QR panel and auto-play in TV mode
+    if (requestedVideoTime !== null) seekToVideoTime(requestedVideoTime);
     if (currentMode === 'tv') {
       const qrPanel = document.getElementById('qr-panel');
       if (qrPanel) qrPanel.style.display = 'block';
-      setTimeout(() => {
-        if (videoPlayers[sessionId] && typeof videoPlayers[sessionId].playVideo === 'function') {
-          videoPlayers[sessionId].playVideo();
-        }
-      }, 500);
     }
-  } else {
-    // Comparison player ready: sync to wherever the main player currently is
-    const mainP = videoPlayers[sessionId];
-    if (mainP && typeof mainP.getCurrentTime === 'function') {
-      const mainConfig = videoConfigs[sessionId];
-      const newConfig = videoConfigs[id];
+  } else if (typeof player.seekTo === 'function') {
+    const referenceTime = getReferenceVideoTime();
+    const initialTime = requestedVideoTime ?? getVideoStartOffset(sessionId);
+    const mainTime = referenceTime === null || (!playbackRequested && requestedVideoTime === null && referenceTime < initialTime)
+      ? initialTime : referenceTime;
+    const target = mapVideoTime(sessionId, id, mainTime);
+    player.seekTo(clampPlayerTime(player, target), true);
+  }
 
-      if (mainConfig && newConfig) {
-        const mainVideoTime = mainP.getCurrentTime();
-        const mainStartOffset = mainConfig.startTimeSeconds || 0;
-        const currentSessionTime = mainVideoTime - mainStartOffset;
-
-        let targetTime = newConfig.startTimeSeconds || 0;
-
-        if (currentLapMarker && currentLapMarker.lapNumber) {
-          const lapNum = currentLapMarker.lapNumber;
-          const compSession = comparisonSessions.find(s => s.id === id);
-
-          if (compSession && compSession.laps && lapNum <= compSession.laps.length &&
-            currentSessionData && currentSessionData.laps && lapNum <= currentSessionData.laps.length) {
-
-            let mainAccumulatedTime = 0;
-            for (let i = 0; i < lapNum - 1; i++) {
-              mainAccumulatedTime += parseTime(currentSessionData.laps[i].time);
-            }
-            const timeIntoLap = currentSessionTime - mainAccumulatedTime;
-
-            let newAccumulatedTime = 0;
-            for (let i = 0; i < lapNum - 1; i++) {
-              newAccumulatedTime += parseTime(compSession.laps[i].time);
-            }
-
-            targetTime = (newConfig.startTimeSeconds || 0) + newAccumulatedTime + timeIntoLap;
-          } else {
-            targetTime += currentSessionTime;
-          }
-        } else {
-          targetTime += currentSessionTime;
-        }
-
-        player.seekTo(targetTime, true);
-      } else {
-        player.seekTo(mainP.getCurrentTime(), true);
-      }
-
-      if (mainP.getPlayerState() === YT.PlayerState.PLAYING) {
-        player.playVideo();
-      }
-    }
+  // A newly cued comparison may start when sought; it follows the shared intent.
+  if (playbackRequested) {
+    if (typeof player.playVideo === 'function') player.playVideo();
+  } else if (typeof player.pauseVideo === 'function') {
+    player.pauseVideo();
   }
 }
 
 /**
- * Player state change handler (unified)
+ * Only the reference player owns shared playback state and the live-stats timer.
+ * A comparison buffering, pausing or ending must not freeze the main timeline.
  */
 function onPlayerStateChange(event) {
+  const senderId = Object.keys(videoPlayers).find(id => videoPlayers[id] === event.target);
+  if (!senderId) return;
   const isPlaying = event.data === YT.PlayerState.PLAYING;
-  const senderId = Object.keys(videoPlayers).find(key => videoPlayers[key] === event.target);
-
-  // Enforce highest quality on first PLAYING event, when quality levels are available
-  if (isPlaying && senderId && !videoPlayers[senderId]._qualitySet) {
-    setHighestQuality(videoPlayers[senderId]);
-    videoPlayers[senderId]._qualitySet = true;
+  if (isPlaying && !event.target._qualitySet) {
+    setHighestQuality(event.target);
+    event.target._qualitySet = true;
   }
 
-  // Update UI icons based on state
-  const playIcon = document.getElementById('play-icon');
-  const playText = document.getElementById('play-text');
-  const playIconTV = document.getElementById('play-icon-tv');
+  if (event.target !== getReferencePlayer()) {
+    if (isPlaying && !playbackRequested && typeof event.target.pauseVideo === 'function') {
+      event.target.pauseVideo();
+    }
+    return;
+  }
 
   if (isPlaying) {
-    if (playIcon) playIcon.textContent = '⏸️';
-    if (playText) playText.textContent = 'Pause';
-    if (playIconTV) playIconTV.textContent = '⏸️';
-    startStatsUpdateInterval();
-  } else {
-    // Check if ALL are paused before showing play icon?
-    // For now, if any pauses, we show play (as we pause all)
-    if (playIcon) playIcon.textContent = '▶️';
-    if (playText) playText.textContent = 'Play';
-    if (playIconTV) playIconTV.textContent = '▶️';
-    stopStatsUpdateInterval();
+    setPlaybackPlaying(true);
+  } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
+    setPlaybackPlaying(false);
+    updateLiveStats();
   }
-
-  // Sync other players
-  // Only sync on explicit PLAYING or PAUSED events to avoid buffering loops
-  if (isPlaying) {
-    Object.keys(videoPlayers).forEach(id => {
-      if (id === senderId) return; // Don't sync self
-      const p = videoPlayers[id];
-      if (!p || typeof p.getPlayerState !== 'function') return;
-
-      const pState = p.getPlayerState();
-      // If valid state to play (not already playing or buffering)
-      if (pState !== YT.PlayerState.PLAYING && pState !== YT.PlayerState.BUFFERING) {
-        p.playVideo();
-      }
-    });
-  } else if (event.data === YT.PlayerState.PAUSED) {
-    // Only pause if the source explicitly paused
-    Object.keys(videoPlayers).forEach(id => {
-      if (id === senderId) return; // Don't sync self
-      const p = videoPlayers[id];
-      if (!p || typeof p.getPlayerState !== 'function') return;
-
-      const pState = p.getPlayerState();
-      if (pState === YT.PlayerState.PLAYING || pState === YT.PlayerState.BUFFERING) {
-        p.pauseVideo();
-      }
-    });
-  }
-  // Ignore BUFFERING, ENDED, CUED for sync triggers to prevent loops
+  // BUFFERING/CUED/UNSTARTED do not change the user's playback intent.
 }
 
 /**
@@ -669,22 +606,23 @@ function changeVideoLayout(layout) {
 /**
  * Render Video Grid
  */
+function getRenderedVideoIds() {
+  const limits = { single: 1, dual: 2, pip: 2, 'main-side': 3, grid: 4 };
+  const ids = activeVideoIds.slice(0, limits[activeLayout] || 4);
+  // Keep the telemetry reference alive when a narrower layout hides cameras.
+  if (activeVideoIds.includes(sessionId) && !ids.includes(sessionId)) {
+    ids[ids.length - 1] = sessionId;
+  }
+  return ids;
+}
+
 function renderVideoGrid() {
   const grid = document.getElementById('video-grid');
   if (!grid) {
     return;
   }
 
-  // Determine limit based on layout
-  let limit = 4;
-  if (activeLayout === 'single') limit = 1;
-  else if (activeLayout === 'dual') limit = 2;
-  else if (activeLayout === 'pip') limit = 2;
-  else if (activeLayout === 'main-side') limit = 3;
-  // grid is 4
-
-  // Active IDs (limited by layout)
-  const idsRendering = activeVideoIds.slice(0, limit);
+  const idsRendering = getRenderedVideoIds();
 
   // Cleanup removed players
   Object.keys(videoPlayers).forEach(id => {
@@ -769,13 +707,18 @@ function renderVideoGrid() {
  * Toggles which video has active audio
  */
 function toggleAudio(id) {
+  if (!getRenderedVideoIds().includes(id)) return;
   if (activeAudioSessionId === id) {
-    // If clicking the currently active one, mute it
-    activeAudioSessionId = null;
+    audioMuted = !audioMuted;
   } else {
-    // Set new active audio
     activeAudioSessionId = id;
+    audioMuted = false;
   }
+  updateAudioState();
+}
+
+function toggleMute() {
+  audioMuted = !audioMuted;
   updateAudioState();
 }
 
@@ -783,41 +726,86 @@ function toggleAudio(id) {
  * Applies the audio state to all players and UI
  */
 function updateAudioState() {
-  if (activeAudioSessionId === null && activeVideoIds.length > 0) {
-    // Default to first video if none selected
-    activeAudioSessionId = activeVideoIds[0];
+  const visibleIds = getRenderedVideoIds();
+  if (!visibleIds.includes(activeAudioSessionId)) {
+    activeAudioSessionId = visibleIds[0] || null;
   }
 
-  Object.keys(videoPlayers).forEach(id => {
+  visibleIds.forEach(id => {
     const player = videoPlayers[id];
-    if (player && typeof player.isMuted === 'function') {
-      const btn = document.querySelector(`#container-${id} .sound-control-btn`);
-
-      if (id === activeAudioSessionId) {
-        player.unMute();
-        if (btn) btn.textContent = '🔊';
-      } else {
-        player.mute();
-        if (btn) btn.textContent = '🔇';
-      }
+    const audible = !audioMuted && id === activeAudioSessionId;
+    if (player && typeof player.mute === 'function' && typeof player.unMute === 'function') {
+      if (audible) player.unMute();
+      else player.mute();
+    }
+    const btn = document.querySelector(`#container-${id} .sound-control-btn`);
+    if (btn) {
+      btn.textContent = audible ? '🔊' : '🔇';
+      btn.title = audible ? 'Mute sound' : 'Play sound from this camera';
+      btn.setAttribute('aria-label', btn.title);
+      btn.setAttribute('aria-pressed', String(audible));
     }
   });
 }
 
-/**
- * Toggles fullscreen for the entire video grid
- */
-function toggleFullscreen(id) {
-  const container = document.getElementById('video-grid');
-  if (!container) return;
+// Keep fullscreen on a stable parent so changing layouts cannot remove it.
+let fullscreenRequestVersion = 0;
 
-  if (document.fullscreenElement) {
-    document.exitFullscreen();
-  } else if (container.classList.contains('fullscreen-grid')) {
-    container.classList.remove('fullscreen-grid');
-  } else {
-    // CSS-based faux-fullscreen for the whole grid
-    container.classList.add('fullscreen-grid');
+function isVideoFullscreen() {
+  const stage = document.getElementById('video-stage');
+  return !!stage && (document.fullscreenElement === stage || stage.classList.contains('is-fullscreen'));
+}
+
+function updateFullscreenControls() {
+  const active = isVideoFullscreen();
+  document.documentElement.classList.toggle('video-fullscreen-open', active);
+  const button = document.getElementById('fullscreen-toggle');
+  if (button) {
+    button.textContent = active ? 'Exit fullscreen' : 'Fullscreen';
+    button.setAttribute('aria-label', active ? 'Exit fullscreen' : 'Enter fullscreen');
+    button.setAttribute('aria-pressed', String(active));
+  }
+  document.querySelectorAll('.fullscreen-control-btn').forEach(button => {
+    button.title = active ? 'Exit fullscreen' : 'Enter fullscreen';
+    button.setAttribute('aria-label', button.title);
+  });
+}
+
+async function exitVideoFullscreen() {
+  fullscreenRequestVersion++;
+  const stage = document.getElementById('video-stage');
+  if (stage) stage.classList.remove('is-fullscreen');
+  if (document.fullscreenElement && typeof document.exitFullscreen === 'function') {
+    try {
+      await document.exitFullscreen();
+    } catch { /* Keep controls in sync if the browser has already exited. */ }
+  }
+  updateFullscreenControls();
+}
+
+/** Use native fullscreen when available, with one keyboard-accessible fallback. */
+async function toggleFullscreen() {
+  const stage = document.getElementById('video-stage');
+  if (!stage) return;
+  if (document.fullscreenElement || stage.classList.contains('is-fullscreen')) {
+    return exitVideoFullscreen();
+  }
+
+  const requestVersion = ++fullscreenRequestVersion;
+  if (typeof stage.requestFullscreen === 'function') {
+    try {
+      await stage.requestFullscreen();
+      if (requestVersion !== fullscreenRequestVersion) {
+        if (document.fullscreenElement === stage) await exitVideoFullscreen();
+        return;
+      }
+      updateFullscreenControls();
+      return;
+    } catch { /* Some browsers cannot enter fullscreen; retain an explicit exit. */ }
+  }
+  if (requestVersion === fullscreenRequestVersion) {
+    stage.classList.add('is-fullscreen');
+    updateFullscreenControls();
   }
 }
 
@@ -917,7 +905,7 @@ function updateVideoSelector() {
     });
   }
 
-  comparisonSessions.forEach(s => {
+  comparisonSessions.filter(s => videoConfigs[s.id]).forEach(s => {
     allSessions.push({
       id: s.id,
       name: s.driver,
@@ -941,6 +929,9 @@ function updateVideoSelector() {
     btn.className = `driver-circle-btn ${isActive ? 'active' : ''}`;
     btn.title = `${s.name} ${s.date ? `(${s.date})` : ''}`;
     btn.dataset.id = s.id;
+    btn.setAttribute('aria-label', `${s.name}${s.date ? ', ' + s.date : ''}${s.id === sessionId ? ' (reference camera)' : ''}`);
+    btn.setAttribute('aria-pressed', String(isActive));
+    btn.disabled = s.id === sessionId;
 
     // Set initials as content
     btn.textContent = getInitials(s.name);
@@ -957,10 +948,14 @@ function updateVideoSelector() {
  * Toggle active video state
  */
 function toggleActiveVideo(id, isActive) {
+  if (id === sessionId && !isActive) return;
+  if (!videoConfigs[id]) return;
   if (isActive) {
     if (!activeVideoIds.includes(id)) {
       if (activeVideoIds.length >= 4) {
-        activeVideoIds.pop();
+        const replaceId = [...activeVideoIds].reverse().find(vid => vid !== sessionId);
+        const replaceIndex = activeVideoIds.indexOf(replaceId);
+        if (replaceIndex !== -1) activeVideoIds.splice(replaceIndex, 1);
       }
       activeVideoIds.push(id);
     }
@@ -974,7 +969,8 @@ function toggleActiveVideo(id, isActive) {
 /**
  * Register and display a video
  */
-function registerVideo(id, url, startTime, label) {
+function registerVideo(id, url, startTime, label, render = true) {
+  if (typeof url !== 'string') return;
   const vidId = extractYouTubeId(url);
   if (!vidId) return;
 
@@ -993,7 +989,7 @@ function registerVideo(id, url, startTime, label) {
     // For now, simple logic: if space, add.
   }
 
-  renderVideoGrid();
+  if (render) renderVideoGrid();
 
   // Ensure section is visible
   const videoSection = document.getElementById('video-section');
@@ -1038,26 +1034,129 @@ function renderVideoPlayer(videoUrl, videoStartTime, isMainPlayer = true) {
 /**
 * Toggle play/pause for all players
 */
-function togglePlayPause() {
-  const players = Object.values(videoPlayers);
-  if (players.length === 0) return;
+function getReferencePlayer() {
+  return videoPlayers[sessionId] || activeVideoIds.map(id => videoPlayers[id]).find(Boolean) || null;
+}
 
-  // Use the first player to determine state
-  const primaryPlayer = players[0];
-  if (typeof primaryPlayer.getPlayerState !== 'function') return;
+function getVideoStartOffset(id) {
+  const configured = videoConfigs[id]?.startTimeSeconds;
+  if (Number.isFinite(configured)) return configured;
+  const data = id === sessionId ? currentSessionData : comparisonSessions.find(session => session.id === id);
+  return parseTime(data?.video_start_time || '0:00');
+}
 
-  const state = primaryPlayer.getPlayerState();
-  const isPlaying = state === YT.PlayerState.PLAYING;
+function getVideoLapTimes(id) {
+  const data = id === sessionId ? currentSessionData : comparisonSessions.find(session => session.id === id);
+  return validateLapData(data?.laps || []).map(lap => parseTime(lap.time));
+}
 
-  players.forEach(p => {
-    if (typeof p.getPlayerState === 'function') {
-      if (isPlaying) {
-        p.pauseVideo();
-      } else {
-        p.playVideo();
-      }
+/** Map the same lap and elapsed seconds into that lap between recordings. */
+function mapVideoTime(sourceId, targetId, videoTime) {
+  if (sourceId === targetId) return videoTime;
+  const sourceTimes = getVideoLapTimes(sourceId);
+  const targetTimes = getVideoLapTimes(targetId);
+  let elapsed = videoTime - getVideoStartOffset(sourceId);
+  const targetOffset = getVideoStartOffset(targetId);
+  if (elapsed < 0 || !sourceTimes.length || !targetTimes.length) {
+    return Math.max(0, targetOffset + elapsed);
+  }
+  let lapIndex = 0;
+  while (lapIndex < sourceTimes.length - 1 && elapsed >= sourceTimes[lapIndex]) {
+    elapsed -= sourceTimes[lapIndex++];
+  }
+  if (lapIndex >= targetTimes.length) {
+    return targetOffset + targetTimes.reduce((total, time) => total + time, 0);
+  }
+  const lapStart = targetTimes.slice(0, lapIndex).reduce((total, time) => total + time, 0);
+  return targetOffset + lapStart + Math.min(elapsed, targetTimes[lapIndex]);
+}
+
+function clampPlayerTime(player, time) {
+  const duration = typeof player?.getDuration === 'function' ? player.getDuration() : 0;
+  return Math.max(0, Number.isFinite(duration) && duration > 0 ? Math.min(time, duration) : time);
+}
+
+function getReferenceVideoTime() {
+  const player = getReferencePlayer();
+  if (!player || typeof player.getCurrentTime !== 'function') return null;
+  const time = player.getCurrentTime();
+  if (!Number.isFinite(time)) return null;
+  const id = Object.keys(videoPlayers).find(key => videoPlayers[key] === player);
+  const mappedTime = mapVideoTime(id, sessionId, time);
+  if (pendingSeekTime !== null) {
+    const buffering = typeof player.getPlayerState === 'function' && player.getPlayerState() === YT.PlayerState.BUFFERING;
+    if (Math.abs(mappedTime - pendingSeekTime) > 0.5 && (Date.now() < pendingSeekDeadline || buffering)) {
+      return pendingSeekTime;
+    }
+    pendingSeekTime = null;
+  }
+  return mappedTime;
+}
+
+function getReferenceDuration() {
+  const primary = videoPlayers[sessionId];
+  const duration = typeof primary?.getDuration === 'function' ? primary.getDuration() : 0;
+  if (Number.isFinite(duration) && duration > 0) return duration;
+  return getVideoStartOffset(sessionId) + getVideoLapTimes(sessionId).reduce((total, time) => total + time, 0);
+}
+
+/** The phone, chart and lap buttons all seek on the main video's timeline. */
+function seekToVideoTime(value) {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value < 0 || !currentSessionData) return false;
+  const duration = getReferenceDuration();
+  const target = duration > 0 ? Math.min(value, duration) : value;
+  requestedVideoTime = target;
+  // YouTube reports the old time briefly after seekTo. Late-ready cameras and
+  // remote stats must use the requested position until the seek settles.
+  pendingSeekTime = target;
+  pendingSeekDeadline = Date.now() + 2000;
+  Object.entries(videoPlayers).forEach(([id, player]) => {
+    if (typeof player.seekTo === 'function') {
+      player.seekTo(clampPlayerTime(player, mapVideoTime(sessionId, id, target)), true);
     }
   });
+  currentLapMarker.lapNumber = getCurrentLapNumber(target);
+  const lapDisplay = document.getElementById('current-lap-display');
+  if (lapDisplay) lapDisplay.textContent = `Lap: ${currentLapMarker.lapNumber} / ${currentSessionData.laps.length}`;
+  drawLineChart(validateLapData(currentSessionData.laps), comparisonDatasets, target);
+  sendStatsToRemotes();
+  return true;
+}
+
+function updatePlaybackControls() {
+  const playIcon = document.getElementById('play-icon');
+  const playText = document.getElementById('play-text');
+  const playIconTV = document.getElementById('play-icon-tv');
+  if (playIcon) playIcon.textContent = playbackRequested ? '⏸️' : '▶️';
+  if (playText) playText.textContent = playbackRequested ? 'Pause' : 'Play';
+  if (playIconTV) playIconTV.textContent = playbackRequested ? '⏸️' : '▶️';
+}
+
+function setPlaybackPlaying(playing) {
+  playbackRequested = Boolean(playing);
+  updatePlaybackControls();
+  const reference = getReferencePlayer();
+  Object.values(videoPlayers).forEach(player => {
+    if (typeof player.getPlayerState !== 'function') return;
+    const state = player.getPlayerState();
+    if (playbackRequested) {
+      // A shorter comparison that has ended stays at its end until the next seek.
+      if (player !== reference && state === YT.PlayerState.ENDED) return;
+      if (state !== YT.PlayerState.PLAYING && state !== YT.PlayerState.BUFFERING && typeof player.playVideo === 'function') {
+        player.playVideo();
+      }
+    } else if ((state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING) && typeof player.pauseVideo === 'function') {
+      player.pauseVideo();
+    }
+  });
+  if (playbackRequested) startStatsUpdateInterval();
+  else stopStatsUpdateInterval();
+  sendStatsToRemotes();
+}
+
+function togglePlayPause() {
+  if (!getReferencePlayer()) return;
+  setPlaybackPlaying(!playbackRequested);
 }
 
 /**
@@ -1087,67 +1186,10 @@ function previousLap() {
  * Seek to specific lap
  */
 function seekToLap(lapNumber) {
-  if (!currentSessionData || !currentSessionData.laps) return;
-  const maxLap = currentSessionData.laps.length;
-
-  // Clamp lap number
-  if (lapNumber < 1) lapNumber = 1;
-  if (lapNumber > maxLap) lapNumber = maxLap;
-
-  // Find lap start time
-  const lapStartTimeObj = lapStartTimes.find(l => l.lapNumber === lapNumber);
-
-  if (lapStartTimeObj) {
-    // Calculate fallback session time from main player's lap start
-    const mainConfig = videoConfigs[sessionId];
-    const mainStartOffset = mainConfig ? (mainConfig.startTimeSeconds || 0) : 0;
-    const sessionTime = lapStartTimeObj.videoTime - mainStartOffset;
-
-    // Seek all players to their respective video times for this target lap
-    Object.keys(videoPlayers).forEach(id => {
-      const player = videoPlayers[id];
-      if (typeof player.seekTo === 'function') {
-        const config = videoConfigs[id];
-        let targetTime = 0;
-
-        // Find the specific lap data for this session to get its exact start time
-        let sessionDataToUse = (id === sessionId) ? currentSessionData : comparisonSessions.find(s => s.id === id);
-
-        if (sessionDataToUse && sessionDataToUse.laps && lapNumber <= sessionDataToUse.laps.length) {
-          // Calculate time by summing previous laps + offset
-          let accumulatedTime = 0;
-          for (let i = 0; i < lapNumber - 1; i++) {
-            accumulatedTime += parseTime(sessionDataToUse.laps[i].time);
-          }
-          const startOffset = config ? (config.startTimeSeconds || 0) : 0;
-          targetTime = startOffset + accumulatedTime;
-          player.seekTo(targetTime, true);
-        } else if (config) {
-          // Fallback if session data is missing or lap out of bounds
-          const playerStartOffset = config.startTimeSeconds || 0;
-          targetTime = playerStartOffset + sessionTime;
-          player.seekTo(targetTime, true);
-        } else {
-          player.seekTo(lapStartTimeObj.videoTime, true);
-        }
-      }
-    });
-
-    // Update UI
-    currentLapMarker.lapNumber = lapNumber;
-
-    const lapDisplay = document.getElementById('current-lap-display');
-    if (lapDisplay) {
-      const maxLap = currentSessionData && currentSessionData.laps ? currentSessionData.laps.length : 0;
-      lapDisplay.textContent = `Lap: ${lapNumber} / ${maxLap}`;
-    }
-
-    // Redraw chart with current lap marker and time
-    if (currentSessionData) {
-      const currentLaps = validateLapData(currentSessionData.laps);
-      drawLineChart(currentLaps, comparisonDatasets, lapStartTimeObj.videoTime);
-    }
-  }
+  if (!currentSessionData?.laps?.length || !Number.isFinite(lapNumber)) return;
+  const clamped = Math.max(1, Math.min(Math.trunc(lapNumber), currentSessionData.laps.length));
+  const lapStart = lapStartTimes.find(lap => lap.lapNumber === clamped);
+  if (lapStart) seekToVideoTime(lapStart.videoTime);
 }
 
 /**
@@ -1189,10 +1231,8 @@ function stopStatsUpdateInterval() {
  * Update live stats overlays and detect lap changes
  */
 function updateLiveStats() {
-  const player = videoPlayers[sessionId];
-  if (!player || typeof player.getCurrentTime !== 'function') return;
-
-  const videoTime = player.getCurrentTime();
+  const videoTime = getReferenceVideoTime();
+  if (videoTime === null) return;
   const newLapNumber = getCurrentLapNumber(videoTime);
 
   // Update lap if changed
@@ -1701,52 +1741,24 @@ function setupTooltipInteractions(maxLapsCount, rect, padding, chartWidth) {
   canvas.addEventListener('touchmove', canvas.currentTouchMoveHandler, { passive: false });
   canvas.addEventListener('touchend', canvas.currentTouchEndHandler);
 
-  // Click to seek
-  canvas.addEventListener('click', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const dpr = window.devicePixelRatio || 1;
-
-    // Calculate effective index from x
-    const chartWidth = rect.width - padding * 2;
-    const relativeX = x - padding;
-
-    if (relativeX < 0 || relativeX > chartWidth) return;
-
-    // Inverse of: xPos = padding + (chartWidth / (maxLapsCount - 1 || 1)) * effectiveIndex;
-    // effectiveIndex = (xPos - padding) / (chartWidth / (maxLapsCount - 1 || 1))
-
-    const step = chartWidth / (maxLapsCount - 1 || 1);
-    const effectiveIndex = relativeX / step;
-
-    // Convert effectiveIndex to time
-    // effectiveIndex = lapIdx + progress
-
-    const lapIdx = Math.floor(effectiveIndex);
-    const progress = effectiveIndex - lapIdx;
-
-    // Safety check
-    if (lapIdx < 0 || lapIdx >= currentSessionData.laps.length) return;
-
-    const lapData = currentSessionData.laps[lapIdx];
-    const validLaps = validateLapData(currentSessionData.laps);
-
-    if (lapData) {
-      // Find lap start time
-      // Note: lapStartTimes uses 1-based lapNumber
-      const lapNum = lapIdx + 1;
-      const lapStartTime = lapStartTimes.find(l => l.lapNumber === lapNum)?.videoTime || 0;
-      const lapDuration = parseTime(lapData.time);
-
-      const targetTime = lapStartTime + (lapDuration * progress);
-
-      Object.values(videoPlayers).forEach(p => {
-        if (typeof p.seekTo === 'function') {
-          p.seekTo(targetTime, true);
-        }
-      });
-    }
-  });
+  canvas.seekGeometry = { maxLapsCount, padding };
+  if (!canvas.currentClickHandler) {
+    canvas.currentClickHandler = event => {
+      const rect = canvas.getBoundingClientRect();
+      const { maxLapsCount, padding } = canvas.seekGeometry;
+      const chartWidth = rect.width - padding * 2;
+      const relativeX = event.clientX - rect.left - padding;
+      if (chartWidth <= 0 || relativeX < 0 || relativeX > chartWidth || !currentSessionData) return;
+      const effectiveIndex = relativeX / chartWidth * Math.max(1, maxLapsCount - 1);
+      const lapIndex = Math.floor(effectiveIndex);
+      const laps = validateLapData(currentSessionData.laps);
+      if (lapIndex >= laps.length) return;
+      const lapStart = lapStartTimes[lapIndex]?.videoTime;
+      if (!Number.isFinite(lapStart)) return;
+      seekToVideoTime(lapStart + parseTime(laps[lapIndex].time) * (effectiveIndex - lapIndex));
+    };
+    canvas.addEventListener('click', canvas.currentClickHandler);
+  }
 }
 
 /**
@@ -1866,6 +1878,7 @@ function hideTooltip() {
 * Compare sessions
 */
 async function compareSession() {
+  const requestNumber = ++comparisonRequestNumber;
   const compareIdsInput = document.getElementById('compare-id-input').value.trim();
 
   let sessionIds = compareIdsInput
@@ -1876,18 +1889,17 @@ async function compareSession() {
   // Remove duplicates
   sessionIds = Array.from(new Set(sessionIds));
 
-  comparisonSessions = [];
-  comparisonDatasets = [];
-
   if (!currentSessionData) return;
 
   const currentLaps = validateLapData(currentSessionData.laps);
 
   // If no comparison IDs, just show main session
   if (sessionIds.length === 0) {
+    comparisonSessions = [];
+    comparisonDatasets = [];
+    reconcileComparisonVideos();
     drawLineChart(currentLaps, []);
     renderComparisonResults([]);
-    hideComparisonVideo();
     return;
   }
 
@@ -1901,16 +1913,25 @@ async function compareSession() {
   const fetchPromises = sessionIds.map(id =>
     fetch(`sessions/${id}.json`, { cache: 'no-cache' })
       .then(r => r.ok ? r.json() : Promise.reject(`Session ${id} not found`))
-      .catch(err => ({ error: err }))
+      .then(data => {
+        if (!data || typeof data !== 'object' || !Array.isArray(data.laps)) {
+          throw new Error(`Invalid session data for ${id}`);
+        }
+        // Preserve the requested ID even when an earlier lookup failed.
+        return { ...data, id };
+      })
+      .catch(err => ({ error: err.message || String(err) }))
   );
 
   const results = await Promise.all(fetchPromises);
+  if (requestNumber !== comparisonRequestNumber) return;
   const successfulSessions = results.filter(r => !r.error);
   const errorSessions = results.filter(r => r.error);
+  comparisonSessions = [];
+  comparisonDatasets = [];
 
   // Process successful sessions
   successfulSessions.forEach(sessionData => {
-    sessionData.id = sessionData.id || sessionIds[successfulSessions.indexOf(sessionData)];
     const compareLaps = validateLapData(sessionData.laps);
     const compareTimes = compareLaps.map(l => parseTime(l.time));
     const compareFastest = compareTimes.length > 0 ? Math.min(...compareTimes) : 0;
@@ -1939,20 +1960,33 @@ async function compareSession() {
   // Render comparison results
   renderComparisonResults(errorSessions);
 
-  // Show comparison video if available
-  if (comparisonSessions.length > 0 && currentMode === 'pc') {
-    // Register all sessions
-    comparisonSessions.forEach(s => {
-      registerVideo(s.id, s.video_url, s.video_start_time, s.driver);
-    });
+  // Viewing mode changes presentation; both PC and TV restore the same cameras.
+  reconcileComparisonVideos();
+}
 
-    // Auto-switch layout based on active count
-    if (activeVideoIds.length === 2) changeVideoLayout('dual');
-    else if (activeVideoIds.length === 3) changeVideoLayout('main-side');
-    else if (activeVideoIds.length >= 4) changeVideoLayout('grid');
-  } else {
-    hideComparisonVideo();
-  }
+function reconcileComparisonVideos() {
+  const desiredIds = videoConfigs[sessionId] ? [sessionId] : [];
+  comparisonSessions.forEach(session => {
+    if (typeof session.video_url !== 'string' || !extractYouTubeId(session.video_url)) return;
+    registerVideo(session.id, session.video_url, session.video_start_time, session.driver, false);
+    desiredIds.push(session.id);
+  });
+
+  const desired = new Set(desiredIds);
+  Object.keys(videoConfigs).forEach(id => {
+    if (!desired.has(id)) delete videoConfigs[id];
+  });
+  Object.keys(videoPlayers).forEach(id => {
+    if (desired.has(id)) return;
+    if (typeof videoPlayers[id].destroy === 'function') videoPlayers[id].destroy();
+    delete videoPlayers[id];
+    document.getElementById(`container-${id}`)?.remove();
+  });
+  activeVideoIds = desiredIds.slice(0, 4);
+  if (!desired.has(firstSelectedVideoId)) firstSelectedVideoId = null;
+  const layout = activeVideoIds.length >= 4 ? 'grid' :
+    activeVideoIds.length === 3 ? 'main-side' : activeVideoIds.length === 2 ? 'dual' : 'single';
+  changeVideoLayout(layout);
 }
 
 /**
@@ -2097,23 +2131,15 @@ function showComparisonVideo(comparisonSession) {
  * Hide comparison video
  */
 function hideComparisonVideo(idToHide) {
-  // If id provided, hide just that one
-  if (idToHide) {
-    toggleActiveVideo(idToHide, false);
-  } else {
-    // Hide all except main? Legacy behavior was hiding "the" comparison video.
-    // Now we might have multiple.
-    // Let's hide all active videos except the main one.
-    [...activeVideoIds].forEach(id => {
-      if (id !== sessionId) toggleActiveVideo(id, false);
-    });
-  }
+  activeVideoIds = activeVideoIds.filter(id => id === sessionId || (idToHide && id !== idToHide));
+  renderVideoGrid();
 }
 
 /**
  * Clear comparison
  */
 function clearComparison() {
+  comparisonRequestNumber++;
   comparisonSessions = [];
   comparisonDatasets = [];
 
@@ -2122,7 +2148,7 @@ function clearComparison() {
     compareInput.value = '';
   }
 
-  hideComparisonVideo(); // Hides all non-main
+  reconcileComparisonVideos();
 
   if (currentSessionData) {
     const validLaps = validateLapData(currentSessionData.laps);
@@ -2298,152 +2324,173 @@ function generateShortPeerId() {
   return id;
 }
 
+function cleanupPeerConnection() {
+  clearTimeout(peerReconnectTimer);
+  clearTimeout(peerConnectionTimer);
+  peerReconnectTimer = null;
+  peerConnectionTimer = null;
+  if (statsInterval) clearInterval(statsInterval);
+  statsInterval = null;
+
+  const oldConnections = connections;
+  const oldPeer = peer;
+  connections = [];
+  peer = null;
+  oldConnections.forEach(conn => {
+    conn.removeAllListeners?.();
+    try { conn.close(); } catch (_) { /* Already closed. */ }
+  });
+  if (oldPeer) {
+    oldPeer.removeAllListeners?.();
+    try { oldPeer.destroy(); } catch (_) { /* Already destroyed. */ }
+  }
+  peerConnectionState = 'offline';
+  updateConnectionUI();
+}
+
+function schedulePeerReconnect(instance, replaceId = false) {
+  if (peer !== instance || peerReconnectTimer) return;
+  clearTimeout(peerConnectionTimer);
+  peerConnectionTimer = null;
+  if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
+    peerConnectionState = 'offline';
+    updateConnectionUI();
+    return;
+  }
+  reconnectAttempts++;
+  peerConnectionState = 'reconnecting';
+  updateConnectionUI();
+  peerReconnectTimer = setTimeout(() => {
+    peerReconnectTimer = null;
+    if (peer !== instance) return;
+    if (replaceId || instance.destroyed || !instance.disconnected) {
+      cleanupPeerConnection();
+      if (replaceId) hostPeerId = generateShortPeerId();
+      initializePeer();
+    } else {
+      try {
+        instance.reconnect();
+        // Some network failures produce no further event. Bound those attempts too.
+        peerReconnectTimer = setTimeout(() => {
+          peerReconnectTimer = null;
+          if (peer === instance && !instance.open) schedulePeerReconnect(instance);
+        }, 5000);
+      } catch (_) {
+        schedulePeerReconnect(instance);
+      }
+    }
+  }, Math.min(1000 * 2 ** (reconnectAttempts - 1), 5000));
+}
+
 function initializePeer() {
-  if (peer) {
-    peer.destroy();
+  if (peer && !peer.destroyed) {
+    if (peer.disconnected) schedulePeerReconnect(peer);
+    return;
+  }
+  if (typeof Peer !== 'function') {
+    peerConnectionState = 'offline';
+    updateConnectionUI();
+    return;
   }
 
-  peer = new Peer(generateShortPeerId());
+  hostPeerId = hostPeerId || generateShortPeerId();
+  peerConnectionState = reconnectAttempts ? 'reconnecting' : 'connecting';
+  const instance = new Peer(hostPeerId);
+  peer = instance;
+  updateConnectionUI();
 
-  peer.on('error', (err) => {
-    // If our custom ID is already taken, retry with a fresh one
-    if (err.type === 'unavailable-id') {
-      peer = new Peer(generateShortPeerId());
-    }
-  });
-
-  peer.on('open', (id) => {
+  instance.on('open', id => {
+    if (peer !== instance) return;
+    clearTimeout(peerReconnectTimer);
+    clearTimeout(peerConnectionTimer);
+    peerReconnectTimer = null;
+    peerConnectionTimer = null;
     reconnectAttempts = 0;
-
+    hostPeerId = id;
+    peerConnectionState = 'ready';
     const base = window.location.origin + window.location.pathname.replace('session.html', 'remote.html');
-    const remoteUrl = `${base}?host=${id}`;
-
+    const remoteUrl = `${base}?host=${encodeURIComponent(id)}`;
     const remoteUrlEl = document.getElementById('remote-url');
-    if (remoteUrlEl) {
-      remoteUrlEl.textContent = remoteUrl;
-    }
-
-    const peerStatus = document.getElementById('peer-status');
-    if (peerStatus) {
-      peerStatus.textContent = 'Ready';
-    }
-
-    // Generate QR code — short URL + error correction L keeps the code small and easy to scan
+    if (remoteUrlEl) remoteUrlEl.textContent = remoteUrl;
     const qrContainer = document.getElementById('qr-code');
     if (qrContainer) {
       qrContainer.innerHTML = '';
       try {
         new QRCode(qrContainer, {
-          text: remoteUrl,
-          width: 300,
-          height: 300,
-          colorDark: '#000000',
-          colorLight: '#ffffff',
+          text: remoteUrl, width: 300, height: 300,
+          colorDark: '#000000', colorLight: '#ffffff',
           correctLevel: QRCode.CorrectLevel.L
         });
-      } catch (error) {
-        qrContainer.innerHTML = '<p style="color:var(--error);">QR code generation failed</p>';
+      } catch (_) {
+        qrContainer.innerHTML = '<p>QR code unavailable. Open the remote link above.</p>';
       }
     }
-  });
-
-  peer.on('connection', (conn) => {
-    connections.push(conn);
-
-    conn.on('data', (data) => {
-      handleRemoteCommand(data);
-    });
-
-    conn.on('close', () => {
-      connections = connections.filter(c => c.peer !== conn.peer);
-      updateConnectionUI();
-    });
-
-    conn.on('error', (err) => {
-      connections = connections.filter(c => c.peer !== conn.peer);
-      updateConnectionUI();
-    });
-
-    startStatsSync();
     updateConnectionUI();
-
-    // Auto fullscreen in TV mode
-    if (currentMode === 'tv' && !autoFullscreenTriggered) {
-      autoFullscreenTriggered = true;
-      setTimeout(() => {
-        const videoSection = document.getElementById('video-section');
-        if (videoSection && !document.fullscreenElement) {
-          if (videoSection.requestFullscreen) {
-            videoSection.requestFullscreen().catch(err => {
-              // Fullscreen request failed
-            });
-          }
-        }
-      }, 2000);
-    }
   });
 
-  peer.on('disconnected', () => {
-    const peerStatus = document.getElementById('peer-status');
-    if (peerStatus) {
-      peerStatus.textContent = 'Reconnecting...';
-    }
+  instance.on('connection', conn => {
+    if (peer !== instance) { conn.close(); return; }
+    connections.push(conn);
+    const removeConnection = () => {
+      connections = connections.filter(current => current !== conn);
+      if (!connections.some(current => current.open) && statsInterval) {
+        clearInterval(statsInterval);
+        statsInterval = null;
+      }
+      updateConnectionUI();
+    };
+    conn.on('open', () => {
+      if (peer !== instance || !connections.includes(conn)) return;
+      startStatsSync();
+      updateConnectionUI();
+      sendStatsToRemotes();
+    });
+    conn.on('data', data => {
+      if (peer === instance && conn.open && data && typeof data.type === 'string') {
+        handleRemoteCommand(data);
+      }
+    });
+    conn.on('close', removeConnection);
+    conn.on('error', () => {
+      removeConnection();
+      try { conn.close(); } catch (_) { /* Already closed. */ }
+    });
+    updateConnectionUI();
+  });
 
-    if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
-      reconnectAttempts++; setTimeout(() => {
-        if (!peer.destroyed) {
-          peer.reconnect();
-        }
-      }, 3000);
+  instance.on('disconnected', () => schedulePeerReconnect(instance));
+  instance.on('close', () => {
+    if (peer === instance) schedulePeerReconnect(instance);
+  });
+  instance.on('error', err => {
+    if (peer !== instance) return;
+    if (err.type === 'unavailable-id') {
+      // A replacement must go through initialization so every handler is attached.
+      schedulePeerReconnect(instance, true);
+    } else if (err.type === 'network' || err.type === 'server-error' || err.type === 'socket-error' || err.type === 'socket-closed') {
+      schedulePeerReconnect(instance);
     } else {
-      if (peerStatus) {
-        peerStatus.textContent = 'Failed';
-      }
+      peerConnectionState = 'offline';
+      updateConnectionUI();
     }
   });
-
-  peer.on('error', (err) => {
-    const peerStatus = document.getElementById('peer-status');
-    if (peerStatus) {
-      peerStatus.textContent = 'Error';
-    }
-
-    if (err.type === 'network' || err.type === 'server-error') {
-      if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
-        setTimeout(() => initializePeer(), 5000);
-      }
-    }
-  });
+  peerConnectionTimer = setTimeout(() => {
+    peerConnectionTimer = null;
+    if (peer === instance && !instance.open) schedulePeerReconnect(instance);
+  }, 10000);
 }
 
 /**
 * Handle remote command
 */
 function handleRemoteCommand(data) {
-  const players = Object.values(videoPlayers);
-  const mainPlayer = players.length > 0 ? players[0] : null;
-  const comparePlayer = players.length > 1 ? players[1] : null;
-
+  if (!data || typeof data !== 'object' || typeof data.type !== 'string') return false;
   switch (data.type) {
-    case 'NEXT_LAP':
-      nextLap();
-      break;
-    case 'PREV_LAP':
-      previousLap();
-      break;
-    case 'PLAY_PAUSE':
-      togglePlayPause();
-      break;
-    case 'SEEK':
-      if (data.value !== undefined) {
-        if (mainPlayer && typeof mainPlayer.seekTo === 'function') {
-          mainPlayer.seekTo(parseFloat(data.value), true);
-        }
-        if (comparePlayer && typeof comparePlayer.seekTo === 'function') {
-          comparePlayer.seekTo(parseFloat(data.value), true);
-        }
-      }
-      break;
+    case 'NEXT_LAP': nextLap(); return true;
+    case 'PREV_LAP': previousLap(); return true;
+    case 'PLAY_PAUSE': togglePlayPause(); return true;
+    case 'SEEK': return seekToVideoTime(data.value);
+    default: return false;
   }
 }
 
@@ -2468,23 +2515,21 @@ function sendCommandToRemote(command) {
 * Update connection UI
 */
 function updateConnectionUI() {
-  const count = connections.length;
+  const count = connections.filter(conn => conn.open).length;
   const countEl = document.getElementById('connected-count');
   const panel = document.getElementById('qr-panel');
   const statusText = document.getElementById('connection-status');
-
-  if (countEl) {
-    countEl.textContent = count;
+  const peerStatus = document.getElementById('peer-status');
+  if (countEl) countEl.textContent = count;
+  if (peerStatus) {
+    peerStatus.textContent = count ? 'Connected' : ({
+      connecting: 'Connecting…', reconnecting: 'Reconnecting…', ready: 'Ready',
+      offline: 'Offline — reload to retry'
+    }[peerConnectionState] || 'Offline');
   }
-
-  if (panel && statusText) {
-    if (count > 0) {
-      panel.classList.add('connected');
-      statusText.textContent = `✅ ${count} Device${count > 1 ? 's' : ''} Connected`;
-    } else {
-      panel.classList.remove('connected');
-      statusText.textContent = '📱 Phone Remote Control';
-    }
+  if (panel) panel.classList.toggle('connected', count > 0);
+  if (statusText) {
+    statusText.textContent = count ? `✅ ${count} Device${count > 1 ? 's' : ''} Connected` : '📱 Phone Remote Control';
   }
 }
 
@@ -2492,52 +2537,34 @@ function updateConnectionUI() {
 * Start syncing stats to remotes
 */
 function startStatsSync() {
-  if (statsInterval) return;
-
-  statsInterval = setInterval(() => {
-    sendStatsToRemotes();
-  }, 500);
+  if (statsInterval || !connections.some(conn => conn.open)) return;
+  statsInterval = setInterval(sendStatsToRemotes, 500);
 }
 
 /**
 * Send stats to remote devices
 */
 function sendStatsToRemotes() {
-  if (connections.length === 0) return;
-
-  const players = Object.values(videoPlayers);
-  const mainPlayer = players.length > 0 ? players[0] : null;
-
-  const currentLap = currentLapMarker.lapNumber;
-  const currentLapData = currentSessionData?.laps[currentLap - 1];
-  const currentTime = mainPlayer && typeof mainPlayer.getCurrentTime === 'function' ?
-    mainPlayer.getCurrentTime() : 0;
-  const duration = mainPlayer && typeof mainPlayer.getDuration === 'function' ?
-    mainPlayer.getDuration() : 0;
+  if (!connections.some(conn => conn.open)) return;
+  const mainPlayer = getReferencePlayer();
   const validLaps = validateLapData(currentSessionData?.laps || []);
-  const totalLaps = validLaps.length;
-  const fastestLap = currentSessionData?.fastest_lap || '--:--';
-  const isPlaying = mainPlayer && mainPlayer.getPlayerState ?
-    mainPlayer.getPlayerState() === YT.PlayerState.PLAYING : false;
-
+  const currentTime = getReferenceVideoTime();
+  const duration = getReferenceDuration();
+  // Remote polling continues while the host chart timer is suspended in a
+  // hidden tab. Derive the lap from the clock so remote lap controls stay live.
+  const currentLap = Number.isFinite(currentTime) ? getCurrentLapNumber(currentTime) : currentLapMarker.lapNumber;
+  currentLapMarker.lapNumber = currentLap;
   const stats = {
-    type: 'STATS',
-    lap: currentLap,
-    totalLaps: totalLaps,
-    fastestLap: fastestLap,
-    time: currentLapData?.time || '--:--',
-    currentTime: currentTime,
-    duration: duration,
-    isPlaying: isPlaying
+    type: 'STATS', lap: currentLap, totalLaps: validLaps.length,
+    fastestLap: currentSessionData?.fastest_lap || '--:--',
+    time: validLaps[currentLap - 1]?.time || '--:--',
+    currentTime: Number.isFinite(currentTime) ? currentTime : 0,
+    duration: Number.isFinite(duration) ? duration : 0,
+    isPlaying: mainPlayer?.getPlayerState?.() === 1
   };
-
   connections.forEach(conn => {
-    if (conn.open) {
-      try {
-        conn.send(stats);
-      } catch (error) {
-      }
-    }
+    if (!conn.open) return;
+    try { conn.send(stats); } catch (_) { /* Close/error events handle recovery. */ }
   });
 }
 
@@ -2847,17 +2874,32 @@ window.addEventListener('resize', () => {
 * Keyboard shortcuts
 */
 document.addEventListener('keydown', (e) => {
-  // Ignore if typing in input
-  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+  if (e.defaultPrevented) return;
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('browse-modal');
+    if (modal && modal.style.display !== 'none') {
+      closeBrowseModal();
+      e.preventDefault();
+    } else if (isVideoFullscreen()) {
+      e.preventDefault();
+      exitVideoFullscreen();
+    }
     return;
   }
 
-  switch (e.key) {
-    case 'ArrowLeft':
+  // Preserve normal activation/navigation inside native controls and dialogs.
+  if (e.altKey || e.ctrlKey || e.metaKey || e.target.isContentEditable ||
+      e.target.closest('input, textarea, select, button, a, [contenteditable], [role="dialog"], [role="slider"]')) {
+    return;
+  }
+  if (e.repeat && [' ', 'k', 'f', 'm'].includes(e.key.toLowerCase())) return;
+
+  switch (e.key.toLowerCase()) {
+    case 'arrowleft':
       e.preventDefault();
       previousLap();
       break;
-    case 'ArrowRight':
+    case 'arrowright':
       e.preventDefault();
       nextLap();
       break;
@@ -2868,42 +2910,12 @@ document.addEventListener('keydown', (e) => {
       break;
     case 'f':
       e.preventDefault();
-      // Toggle fullscreen
-      if (!document.fullscreenElement) {
-        const videoSection = document.getElementById('video-section');
-        if (videoSection && videoSection.requestFullscreen) {
-          videoSection.requestFullscreen();
-        }
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        }
-      }
+      toggleFullscreen();
       break;
     case 'm':
       e.preventDefault();
-      // Toggle mute
-      // Toggle mute
-      const players = Object.values(videoPlayers);
-      if (players.length > 0) {
-        const firstP = players[0];
-        if (typeof firstP.isMuted === 'function') {
-          const isMuted = firstP.isMuted();
-          players.forEach(p => {
-            if (typeof p.unMute === 'function' && isMuted) p.unMute();
-            else if (typeof p.mute === 'function' && !isMuted) p.mute();
-          });
-        }
-      }
+      toggleMute();
       break;
-    case 'Escape': {
-      const modal = document.getElementById('browse-modal');
-      if (modal && modal.style.display !== 'none') {
-        modal.style.display = 'none';
-        e.preventDefault();
-      }
-      break;
-    }
   }
 });
 
@@ -2912,12 +2924,7 @@ document.addEventListener('keydown', (e) => {
 */
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') {
-    // Resume
-    if (currentMode === 'tv') {
-      Object.values(videoPlayers).forEach(p => {
-        if (typeof p.playVideo === 'function') p.playVideo();
-      });
-    }
+    if (playbackRequested) startStatsUpdateInterval();
 
     // Redraw chart
     if (currentSessionData) {
@@ -2925,6 +2932,7 @@ document.addEventListener('visibilitychange', () => {
       drawLineChart(validLaps, comparisonDatasets);
     }
   } else {
+    stopStatsUpdateInterval();
     // Pause animation frames
     if (animationFrameId) {
       cancelAnimationFrame(animationFrameId);
@@ -2941,9 +2949,7 @@ window.addEventListener('pageshow', (event) => {
     detectInitialMode();
 
     // Reconnect peer if needed
-    if (peer && peer.disconnected) {
-      setTimeout(() => initializePeer(), 1000);
-    }
+    initializePeer();
   }
 });
 
@@ -2964,16 +2970,7 @@ window.addEventListener('pagehide', () => {
     animationFrameId = null;
   }
 
-  // Close peer connections
-  if (peer) {
-    connections.forEach(conn => {
-      try {
-        conn.close();
-      } catch (e) {
-      }
-    });
-    peer.destroy();
-  }
+  cleanupPeerConnection();
 
   // Stop videos
   // Stop videos
@@ -2995,6 +2992,7 @@ window.addEventListener('beforeunload', () => {
 * Fullscreen change handler
 */
 document.addEventListener('fullscreenchange', () => {
+  updateFullscreenControls();
 });
 
 // ===== INITIALIZATION =====
