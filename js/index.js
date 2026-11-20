@@ -46,31 +46,19 @@ function showSkeletonLoading() {
 }
 
 function generateSparkline(session) {
-  const { fastest_lap, average_lap, laps_count, trend } = session;
-  if (!fastest_lap || !laps_count || laps_count < 3) return '';
-  const parseTime = (t) => {
-    if (!t) return null;
-    const m = t.match(/(\d+):(\d+\.?\d*)/);
-    return m ? parseFloat(m[1]) * 60 + parseFloat(m[2]) : parseFloat(t) || null;
-  };
-  const fastest = parseTime(fastest_lap);
-  const avg = parseTime(average_lap);
-  if (!fastest || fastest <= 0) return '';
-  const spread = Math.max((avg || fastest + 1) - fastest, 0.5);
-  const points = Math.min(laps_count, 14);
-  const seed = fastest * 100;
-  const data = Array.from({ length: points }, (_, i) => {
-    const p = i / (points - 1);
-    let base = (avg || fastest + spread * 0.5);
-    if (trend === 'improving') base = (avg || fastest + spread) - spread * p * 0.6;
-    else if (trend === 'declining') base = fastest + spread * p * 0.7;
-    return base + Math.abs(Math.sin(seed + i * 1.9) * spread * 0.35);
-  });
-  const min = Math.min(...data), max = Math.max(...data), range = max - min || 0.1;
+  const { lap_times_s, trend } = session;
+  if (!Array.isArray(lap_times_s)) return '';
+  const data = lap_times_s.filter(value => Number.isFinite(value) && value > 0);
+  if (data.length < 3) return '';
+  const min = Math.min(...data), max = Math.max(...data), range = max - min;
   const W = 72, H = 22;
-  const pts = data.map((v, i) => `${((i / (points - 1)) * W).toFixed(1)},${(H - 2 - ((v - min) / range) * (H - 4)).toFixed(1)}`).join(' ');
+  const pts = data.map((value, i) => {
+    const x = (i / (data.length - 1)) * W;
+    const y = range ? H - 2 - ((value - min) / range) * (H - 4) : H / 2;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
   const color = trend === 'improving' ? '#30D158' : trend === 'declining' ? '#FF453A' : '#0A84FF';
-  return `<svg class="lap-sparkline" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/></svg>`;
+  return `<svg class="lap-sparkline" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Recorded lap times in order"><title>${data.length} recorded laps; fastest ${min.toFixed(3)} s; slowest ${max.toFixed(3)} s</title><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/></svg>`;
 }
 
 function getUrlParams() {
@@ -189,6 +177,7 @@ async function loadAllSessions() {
         kart: session.kart,
         laps_count: session.laps_count,
         average_lap: session.average_lap,
+        lap_times_s: session.lap_times_s,
         has_video: session.has_video || false,
         weather: session.weather || null
       }));

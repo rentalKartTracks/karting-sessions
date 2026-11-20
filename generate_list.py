@@ -435,6 +435,8 @@ def process_session_file(filepath: Path) -> Optional[Dict[str, Any]]:
         # Numeric derived metrics
         "fastest_lap_s": fastest_lap_s,
         "average_lap_s": average_lap_s,
+        # Preserve recorded order for session-card lap charts.
+        "lap_times_s": valid_lap_times_seconds,
         "laps_count": total_valid_laps
     }
     

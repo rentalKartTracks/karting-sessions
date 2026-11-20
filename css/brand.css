@@ -89,6 +89,15 @@ button { font-family: var(--font-body) }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important }
+  /* Entrance animations normally reveal these elements; keep their final state
+     visible when animations are disabled without changing hidden controls. */
+  .header-nav,
+  .page-wrapper .header-eyebrow,
+  .page-wrapper .header h1,
+  .page-wrapper .header-sub,
+  .page-wrapper .stats-strip,
+  .page-wrapper .controls,
+  .page-wrapper .sessions-grid { opacity: 1; transform: none }
 }
 
 .lap-context { display:block; color:var(--muted); font-size:12px; margin-top:4px }
