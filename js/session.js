@@ -39,7 +39,8 @@ const MAX_RECONNECT_ATTEMPTS = 3;
 let hostPeerId = null;
 let peerReconnectTimer = null;
 let peerConnectionTimer = null;
-let peerConnectionState = 'connecting';
+let peerConnectionState = 'disabled';
+let remoteAllowed = false;
 
 // URL parameters
 const params = new URLSearchParams(window.location.search);
@@ -247,8 +248,7 @@ function applyMode(mode) {
     if (footer) footer.style.display = 'block';
     if (detailedChart) detailedChart.style.display = 'block';
 
-    // Hide QR panel by default (can be shown manually)
-    if (qrPanel) qrPanel.style.display = 'none';
+    if (qrPanel) qrPanel.style.display = remoteAllowed ? 'block' : 'none';
 
     // Show normal stats
     if (statsGrid && currentSessionData) {
@@ -2324,6 +2324,30 @@ function generateShortPeerId() {
   return id;
 }
 
+function enablePhoneRemote() {
+  if (remoteAllowed) return;
+  remoteAllowed = true;
+  reconnectAttempts = 0;
+  const qrPanel = document.getElementById('qr-panel');
+  if (qrPanel) qrPanel.style.display = 'block';
+  initializePeer();
+}
+
+function disablePhoneRemote() {
+  remoteAllowed = false;
+  cleanupPeerConnection();
+  hostPeerId = null;
+  reconnectAttempts = 0;
+  peerConnectionState = 'disabled';
+  const qrCode = document.getElementById('qr-code');
+  const remoteUrl = document.getElementById('remote-url');
+  const qrPanel = document.getElementById('qr-panel');
+  if (qrPanel && currentMode === 'pc') qrPanel.style.display = 'none';
+  if (qrCode) qrCode.innerHTML = '';
+  if (remoteUrl) remoteUrl.textContent = 'Enable phone remote to create a pairing link.';
+  updateConnectionUI();
+}
+
 function cleanupPeerConnection() {
   clearTimeout(peerReconnectTimer);
   clearTimeout(peerConnectionTimer);
@@ -2349,7 +2373,7 @@ function cleanupPeerConnection() {
 }
 
 function schedulePeerReconnect(instance, replaceId = false) {
-  if (peer !== instance || peerReconnectTimer) return;
+  if (!remoteAllowed || peer !== instance || peerReconnectTimer) return;
   clearTimeout(peerConnectionTimer);
   peerConnectionTimer = null;
   if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
@@ -2362,7 +2386,7 @@ function schedulePeerReconnect(instance, replaceId = false) {
   updateConnectionUI();
   peerReconnectTimer = setTimeout(() => {
     peerReconnectTimer = null;
-    if (peer !== instance) return;
+    if (!remoteAllowed || peer !== instance) return;
     if (replaceId || instance.destroyed || !instance.disconnected) {
       cleanupPeerConnection();
       if (replaceId) hostPeerId = generateShortPeerId();
@@ -2383,6 +2407,7 @@ function schedulePeerReconnect(instance, replaceId = false) {
 }
 
 function initializePeer() {
+  if (!remoteAllowed) return;
   if (peer && !peer.destroyed) {
     if (peer.disconnected) schedulePeerReconnect(peer);
     return;
@@ -2520,11 +2545,19 @@ function updateConnectionUI() {
   const panel = document.getElementById('qr-panel');
   const statusText = document.getElementById('connection-status');
   const peerStatus = document.getElementById('peer-status');
+  const allowButton = document.getElementById('allow-remote');
+  const stopButton = document.getElementById('stop-remote');
+  const permissionStatus = document.getElementById('remote-permission-status');
+  if (allowButton) allowButton.hidden = remoteAllowed;
+  if (stopButton) stopButton.hidden = !remoteAllowed;
+  if (permissionStatus) permissionStatus.textContent = remoteAllowed
+    ? 'Phone remote is enabled for this page. Disable it to close all remote connections and invalidate the pairing link.'
+    : 'Phone remote is off. No remote connection starts until you enable it.';
   if (countEl) countEl.textContent = count;
   if (peerStatus) {
     peerStatus.textContent = count ? 'Connected' : ({
       connecting: 'Connecting…', reconnecting: 'Reconnecting…', ready: 'Ready',
-      offline: 'Offline — reload to retry'
+      offline: 'Offline — disable and enable to retry', disabled: 'Disabled'
     }[peerConnectionState] || 'Offline');
   }
   if (panel) panel.classList.toggle('connected', count > 0);
@@ -2949,7 +2982,7 @@ window.addEventListener('pageshow', (event) => {
     detectInitialMode();
 
     // Reconnect peer if needed
-    initializePeer();
+    if (remoteAllowed) initializePeer();
   }
 });
 
@@ -3005,8 +3038,10 @@ function initializeApp() {
   // Detect and apply mode
   detectInitialMode();
 
-  // Initialize PeerJS for remote control
-  initializePeer();
+  // Remote networking is optional and starts only on an explicit request.
+  document.getElementById('allow-remote').addEventListener('click', enablePhoneRemote);
+  document.getElementById('stop-remote').addEventListener('click', disablePhoneRemote);
+  updateConnectionUI();
 
   document.getElementById('allow-youtube').addEventListener('click', () => {
     youtubeAllowed = true;

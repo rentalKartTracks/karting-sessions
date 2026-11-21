@@ -4,6 +4,7 @@ const validId = value => /^[A-Za-z0-9_-]{11}$/.test(value || '');
 const dates = new Intl.DateTimeFormat('en-GB', {dateStyle:'medium', timeZone:'UTC'});
 let featured, map, requestNumber = 0;
 let tracks = [], sessions = [];
+let previewsAllowed = false, currentVideoId = null, mapLoading = false;
 const markers = new Map();
 
 async function readJson(path) {
@@ -13,6 +14,7 @@ async function readJson(path) {
 }
 
 function render(label, title, meta, id, href) {
+  currentVideoId = validId(id) ? id : null;
   el('label').textContent = label;
   el('title').textContent = title;
   el('meta').textContent = meta;
@@ -22,8 +24,14 @@ function render(label, title, meta, id, href) {
   if (validId(id)) {
     el('cover').href = href;
     el('cover').setAttribute('aria-label', 'Watch ' + title);
-    el('thumbnail').src = 'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg';
   }
+  updatePreview();
+}
+
+function updatePreview() {
+  el('thumbnail').src = previewsAllowed && currentVideoId
+    ? 'https://i.ytimg.com/vi/' + currentVideoId + '/hqdefault.jpg'
+    : 'og-image.png';
 }
 
 function videoId(raw) {
@@ -84,16 +92,31 @@ async function selectTrack(name) {
   }
 }
 
-async function loadMap() {
+async function loadTracks() {
   try {
     [tracks, {sessions}] = await Promise.all([readJson('sessions/tracks-list.json'), readJson('sessions/sessions-list.json')]);
     for (const track of tracks.sort((a,b) => a.name.localeCompare(b.name))) {
       el('track').add(new Option(track.name, track.name));
     }
     el('track').options[0].text = 'All ' + tracks.length + ' tracks';
+  } catch {
+    el('map-status').textContent = 'Track data unavailable. Browse the session archive.';
+    el('map-status').hidden = false;
+  }
+}
+
+async function loadMap() {
+  if (map || mapLoading) return;
+  mapLoading = true;
+  el('allow-map').disabled = true;
+  try {
+    await tracksReady;
+    if (!tracks.length) throw new Error('No track data');
+    el('map-status').hidden = true;
+    el('map').hidden = false;
     map = L.map('map', {scrollWheelZoom:false}).setView([55.25,23.8], 6);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', maxZoom:19
+      attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors', maxZoom:19
     }).addTo(map);
     for (const track of tracks) {
       if (!Number.isFinite(track.lat) || !Number.isFinite(track.lng) || (!track.lat && !track.lng)) continue;
@@ -104,16 +127,45 @@ async function loadMap() {
       markers.set(track.name,marker);
     }
     showAllMarkers();
+    const selected = markers.get(el('track').value);
+    if (selected) {
+      map.setView(selected.getLatLng(), 8);
+      selected.openTooltip();
+    }
+    el('map-permission').hidden = true;
+    el('stop-map').hidden = false;
+    map.invalidateSize();
   } catch {
+    if (map) map.remove();
+    map = null;
+    markers.clear();
+    el('map').hidden = true;
     el('map-status').textContent = tracks.length ? 'Map unavailable. Choose a track above.' : 'Track data unavailable. Browse the session archive below.';
     el('map-status').hidden = false;
+  } finally {
+    mapLoading = false;
+    el('allow-map').disabled = false;
   }
 }
 
 el('track').addEventListener('change', event => selectTrack(event.target.value));
 el('reset').addEventListener('click', showLatest);
+el('allow-preview').addEventListener('click', () => {
+  previewsAllowed = true;
+  el('allow-preview').hidden = true;
+  el('stop-preview').hidden = false;
+  el('preview-status').textContent = 'YouTube images are enabled for this page. Reloading resets this choice. Disabling cannot undo information already sent to Google.';
+  updatePreview();
+});
+el('stop-preview').addEventListener('click', () => {
+  previewsAllowed = false;
+  updatePreview();
+  window.location.reload();
+});
+el('allow-map').addEventListener('click', loadMap);
+el('stop-map').addEventListener('click', () => window.location.reload());
 readJson('latest-video.json').then(data => {
   if (validId(data.id) && data.title && Number.isFinite(Date.parse(data.published))) featured = data;
   if (!el('track').value) showLatest();
 }).catch(() => { /* The channel link works even when the cache cannot be read. */ });
-loadMap();
+const tracksReady = loadTracks();

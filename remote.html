@@ -4,12 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Kart Remote</title>
-    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <script src="vendor/peerjs/peerjs.min.js"></script>
   <link rel="stylesheet" href="css/site.min.css">
+  <link rel="stylesheet" href="css/remote.css?v=20261121">
 
   <!-- Favicon / theme / PWA -->
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -21,19 +22,25 @@
     <div class="connection-banner" id="connection-banner">
         <div class="connection-dot" id="connection-dot"></div>
         <div class="connection-text" id="connection-text">
-            <strong>Connecting…</strong>
-            <small>Finding the TV session</small>
+            <strong>Not connected</strong>
+            <small>Select Connect to pair with the screen</small>
         </div>
     </div>
+
+    <section class="control-section remote-privacy" aria-label="Remote connection privacy">
+        <p>Connecting uses PeerJS cloud signaling and WebRTC connection services, which receive connection details including IP addresses. The paired devices may learn each other’s IP address and exchange playback commands, playback position and lap statistics. Connect only to a screen you trust.</p>
+        <p><a href="about.html#privacy">Privacy information</a></p>
+        <button id="stop-remote" class="retry-btn" type="button" onclick="disconnectRemote()" hidden>Disconnect</button>
+    </section>
 
     <div class="container" id="content-area">
-        <div class="loading-state">
-            <div class="spinner"></div>
-            <p class="loading-text">Connecting to session...</p>
+        <div class="error-state">
+            <h1>Kart Remote</h1>
+            <p>Select Connect to pair with the screen.</p>
+            <button class="retry-btn" type="button" onclick="connectRemote()">Connect</button>
         </div>
     </div>
-
-    <script src="js/remote.js?v=20261120"></script>
+    <script src="js/remote.js?v=20261121"></script>
 </body>
 
 </html>

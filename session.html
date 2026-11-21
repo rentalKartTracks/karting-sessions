@@ -5,16 +5,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self' https://www.youtube.com https://s.ytimg.com https://www.google.com https://static.doubleclick.net https://unpkg.com https://cdnjs.cloudflare.com https://static.cloudflareinsights.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com https://www.google.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://www.google.com https://www.youtube.com https://static.doubleclick.net wss: https:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';">
+    content="default-src 'self'; script-src 'self' https://www.youtube.com https://s.ytimg.com https://www.google.com https://static.doubleclick.net 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com https://www.google.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com; font-src 'self'; connect-src 'self' https://www.google.com https://www.youtube.com https://static.doubleclick.net wss: https:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';">
   <meta http-equiv="X-XSS-Protection" content="1; mode=block">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <title>Karting Session Viewer</title>
   <meta name="description" content="View individual karting session telemetry, lap times, compare video feeds, and dive into driver performance.">
-
-  <link rel="preconnect" href="https://unpkg.com">
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com">  <link rel="stylesheet" href="css/session.css?v=20261120">
-  <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+  <link rel="stylesheet" href="css/session.css?v=20261120">
+  <script src="vendor/peerjs/peerjs.min.js" defer></script>
+  <script src="vendor/qrcodejs/qrcode.min.js" defer></script>
   <link rel="stylesheet" href="css/site.min.css">
 
   <!-- Favicon / theme / PWA -->
@@ -33,7 +31,7 @@
   <meta name="twitter:title" content="Karting Session Viewer">
   <meta name="twitter:description" content="View individual karting session telemetry, lap times, compare video feeds, and dive into driver performance.">
   <meta name="twitter:image" content="https://helmetcamheroes.com/og-image.png">
-  <link rel="stylesheet" href="css/brand.css?v=20261118b">
+  <link rel="stylesheet" href="css/brand.css?v=20261121">
 </head>
 
 <body>
@@ -114,7 +112,8 @@
     <section class="video-section" id="video-section" style="display:none;">
 
       <section class="video-permission" aria-label="YouTube video privacy">
-        <p id="video-permission-status">Loading videos connects to YouTube, which receives your IP address and may use cookies or browser storage. Your choice applies to all videos on this page until you leave or reload.</p>
+        <p id="video-permission-status">Loading videos connects to YouTube, which receives your IP address and may use cookies or browser storage. Your choice applies to all videos on this page until you reload.</p>
+        <p>By loading videos, you agree to the <a href="https://www.youtube.com/t/terms">YouTube Terms of Service</a> and acknowledge our <a href="about.html#privacy">privacy notice</a> and <a href="https://policies.google.com/privacy">Google’s privacy policy</a>.</p>
         <button id="allow-youtube" type="button">Allow YouTube videos</button>
         <button id="stop-youtube" type="button" hidden>Disable videos and reload</button>
         <a href="about.html">Privacy information</a>
@@ -173,6 +172,14 @@
       </div><!-- /video-stage -->
     </section>
 
+    <section class="video-permission" aria-label="Phone remote privacy">
+      <p>Phone remote uses PeerJS cloud signaling and WebRTC connection services, which receive connection details including IP addresses. The paired devices may learn each other’s IP address and exchange playback commands, playback position and lap statistics. Anyone with the pairing link can control this page. Share it only with people you trust.</p>
+      <p id="remote-permission-status" role="status">Phone remote is off. No remote connection starts until you enable it.</p>
+      <button id="allow-remote" type="button">Enable phone remote</button>
+      <button id="stop-remote" type="button" hidden>Disable phone remote</button>
+      <a href="about.html#privacy">Privacy information</a>
+    </section>
+
     <!-- ── QR PANEL (Phone Remote) ── -->
     <div class="qr-panel" id="qr-panel">
       <div class="qr-header">
@@ -188,12 +195,12 @@
         <p class="qr-instructions">Scan this QR code with your phone to control video playback remotely.</p>
         <div class="qr-code-wrapper">
           <div id="qr-code"></div>
-          <div class="remote-url" id="remote-url">Generating…</div>
+          <div class="remote-url" id="remote-url">Enable phone remote to create a pairing link.</div>
         </div>
         <div class="connection-stats">
           <div class="connection-stat">
             <div class="connection-stat-label">Status</div>
-            <div class="connection-stat-value" id="peer-status">Initializing…</div>
+            <div class="connection-stat-value" id="peer-status">Disabled</div>
           </div>
           <div class="connection-stat">
             <div class="connection-stat-label">Connected</div>
@@ -304,8 +311,8 @@
     </div>
   </div>
 
-  <script src="js/session.js?v=20261120"></script>
-  <script src="js/nav.js?v=20261118b"></script>
+  <script src="js/session.js?v=20261121"></script>
+  <script src="js/nav.js?v=20261121"></script>
 <footer class="site-footer"><a class="footer-brand" href="index.html">HelmetCamHeroes</a><p>Rental karting from the driver’s seat.</p><nav aria-label="Footer"><a href="https://www.youtube.com/@HelmetCamHeroes">YouTube ↗</a><a href="about.html">About &amp; privacy</a><a href="#main-content">Back to top ↑</a></nav></footer>
 </body>
 

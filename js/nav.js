@@ -7,6 +7,7 @@
     { href: 'index.html', label: 'Home', icon: '🏁' },
     { href: 'sessions.html', label: 'Sessions', icon: '📊' },
     { href: 'championship.html', label: 'Championship', icon: '🏆' },
+    { href: 'about.html', label: 'About & privacy' },
   ];
 
   // Remove visit counts left by earlier versions.

@@ -9,11 +9,12 @@
   <link rel="icon" href="favicon.svg">
   <meta property="og:title" content="Ride along with HelmetCamHeroes">
   <meta property="og:image" content="https://helmetcamheroes.com/og-image.png">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="css/ride.css?v=20261118">
-  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script defer src="js/ride.js?v=20261118"></script>
-  <link rel="stylesheet" href="css/brand.css?v=20261118b">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="css/ride.css?v=20261121">
+  <script defer src="vendor/leaflet/leaflet.js"></script>
+  <script defer src="js/ride.js?v=20261121"></script>
+  <link rel="stylesheet" href="css/brand.css?v=20261121">
 <meta name="theme-color" content="#0d1117">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://helmetcamheroes.com/">
@@ -28,11 +29,17 @@
   <p class="intro">Watch our latest helmet-cam ride or pick a track to see footage from that circuit.</p>
   <div class="grid">
     <article id="ride" aria-live="polite">
-      <a id="cover" hidden aria-label="Watch featured video on YouTube"><img id="thumbnail" alt="" width="480" height="360" decoding="async"><span class="play" aria-hidden="true">▶</span></a>
+      <a id="cover" hidden aria-label="Watch featured video on YouTube"><img id="thumbnail" src="og-image.png" alt="" width="480" height="360" decoding="async"><span class="play" aria-hidden="true">▶</span></a>
       <div class="detail">
         <p class="eyebrow" id="label">Latest on HelmetCamHeroes</p>
         <h2 id="title">Watch the latest upload</h2>
         <p id="meta"></p>
+        <div class="external-choice">
+          <p id="preview-status">YouTube preview images are off. Loading them shares your IP address, browser information and this site’s origin with Google. Video links open YouTube.</p>
+          <button id="allow-preview" type="button">Load YouTube images</button>
+          <button id="stop-preview" type="button" hidden>Disable images and reload</button>
+          <a href="about.html#privacy">Privacy details</a>
+        </div>
         <a id="watch" href="https://www.youtube.com/@HelmetCamHeroes">Watch on YouTube ↗</a>
         <a id="archive" hidden>All sessions at this track →</a>
         <button id="reset" hidden>Back to latest upload</button>
@@ -43,15 +50,22 @@
         <label for="track">Track map</label>
         <select id="track"><option value="">All tracks</option></select>
       </div>
-      <div id="map" aria-label="Interactive track map"></div>
+      <div id="map-permission" class="external-choice map-choice">
+        <h2>Explore the track map</h2>
+        <p>Loading the map shares your IP address, browser information, this site’s origin and the map areas you view with the OpenStreetMap Foundation. You can choose a track above without loading it.</p>
+        <button id="allow-map" type="button">Load OpenStreetMap</button>
+        <a href="about.html#privacy">Privacy details</a>
+      </div>
+      <div id="map" aria-label="Interactive track map" hidden></div>
+      <button id="stop-map" type="button" hidden>Disable map and reload</button>
       <a id="view-ride" href="#ride" hidden>View selected track’s ride ↑</a>
       <p id="map-status" hidden></p>
     </section>
   </div>
 
 </main>
-<footer class="site-footer"><a class="footer-brand" href="index.html">HelmetCamHeroes</a><p>Rental karting from the driver’s seat.</p><nav aria-label="Footer"><a href="https://www.youtube.com/@HelmetCamHeroes">YouTube ↗</a><a href="about.html">About &amp; privacy</a><a href="#main-content">Back to top ↑</a></nav></footer>
-<script src="js/nav.js?v=20261118b"></script>
+<footer class="site-footer"><a class="footer-brand" href="index.html">HelmetCamHeroes</a><p>Rental karting from the driver’s seat.</p><nav aria-label="Footer"><a href="https://www.youtube.com/@HelmetCamHeroes">YouTube ↗</a><a href="about.html">About &amp; privacy</a><a href="about.html#your-choices">Privacy choices</a><a href="#main-content">Back to top ↑</a></nav></footer>
+<script src="js/nav.js?v=20261121"></script>
 <noscript><p class="site-footer">Enable JavaScript to load the interactive content. <a href="https://www.youtube.com/@HelmetCamHeroes">Watch HelmetCamHeroes on YouTube</a>.</p></noscript>
 </body>
 </html>

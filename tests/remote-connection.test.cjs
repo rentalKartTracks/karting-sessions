@@ -12,6 +12,7 @@ function harness() {
   const nodes = new Map();
   const peers = [];
   const documentListeners = new Map();
+  const windowListeners = new Map();
   const document = {
     visibilityState: 'visible',
     getElementById(id) {
@@ -53,7 +54,13 @@ function harness() {
   const context = vm.createContext({
     document, Peer, QRCode, URLSearchParams,
     navigator: {},
-    window: {location: {origin: 'https://example.com', pathname: '/session.html', search: '?host=HCH123456'}, addEventListener() {}},
+    window: {
+      location: {origin: 'https://example.com', pathname: '/session.html', search: '?host=HCH123456'},
+      addEventListener(type, callback) {
+        if (!windowListeners.has(type)) windowListeners.set(type, []);
+        windowListeners.get(type).push(callback);
+      }
+    },
     setTimeout(callback, delay) { const id = ++timerId; timers.set(id, {callback, delay}); return id; },
     clearTimeout(id) { timers.delete(id); },
     setInterval(callback) { const id = ++timerId; intervals.set(id, callback); return id; },
@@ -73,7 +80,8 @@ function harness() {
     next[1].callback();
   };
   const dispatchDocument = type => (documentListeners.get(type) || []).forEach(callback => callback());
-  return {context, read, runNext, peers, nodes, document, dispatchDocument, Channel, timers, intervals};
+  const dispatchWindow = (type, event = {}) => (windowListeners.get(type) || []).forEach(callback => callback(event));
+  return {context, read, runNext, peers, nodes, document, dispatchDocument, dispatchWindow, Channel, timers, intervals};
 }
 
 function hostHarness() {
@@ -83,15 +91,15 @@ function hostHarness() {
   const stats = source.slice(source.indexOf('function updateConnectionUI()'), source.indexOf('/**\n* Toggle QR panel'));
   h.read(`let peer = null, connections = [], statsInterval = null, reconnectAttempts = 0;
     const MAX_RECONNECT_ATTEMPTS = 3;
-    let hostPeerId = null, peerReconnectTimer = null, peerConnectionTimer = null, peerConnectionState = 'connecting';
-    let currentLapMarker = {lapNumber: 1}, currentSessionData = {laps: [{time: '00:40.000'}]};
+    let hostPeerId = null, peerReconnectTimer = null, peerConnectionTimer = null, peerConnectionState = 'disabled', remoteAllowed = false;
+    let currentMode = 'pc', currentLapMarker = {lapNumber: 1}, currentSessionData = {laps: [{time: '00:40.000'}]};
     ${networking}\n${stats}`);
   return h;
 }
 
 test('host retries ID collisions through full initialization and preserves IDs on network recovery', () => {
   const h = hostHarness();
-  h.context.initializePeer();
+  h.context.enablePhoneRemote();
   const first = h.peers[0];
   first.emit('error', {type: 'unavailable-id'});
   h.runNext();
@@ -107,7 +115,7 @@ test('host retries ID collisions through full initialization and preserves IDs o
 
 test('host retries are bounded even when the signaling service never answers', () => {
   const h = hostHarness();
-  h.context.initializePeer();
+  h.context.enablePhoneRemote();
   for (let i = 0; i < 4; i++) {
     h.peers.at(-1).emit('error', {type: 'network'});
     if (i < 3) h.runNext();
@@ -119,7 +127,7 @@ test('host retries are bounded even when the signaling service never answers', (
 
 test('host counts only open channels and clears timers and channels on cleanup', () => {
   const h = hostHarness();
-  h.context.initializePeer();
+  h.context.enablePhoneRemote();
   const peer = h.peers[0];
   peer.ready();
   const channel = new h.Channel('phone');
@@ -141,7 +149,7 @@ test('host counts only open channels and clears timers and channels on cleanup',
 
 test('host connection timeouts terminate without an endless retry loop', () => {
   const h = hostHarness();
-  h.context.initializePeer();
+  h.context.enablePhoneRemote();
   for (let step = 0; step < 10 && h.timers.size; step++) h.runNext();
   assert.equal(h.timers.size, 0, 'Connection attempts must terminate');
   assert.equal(h.peers.length, 4, 'Initial connection plus three attempts');
@@ -150,7 +158,7 @@ test('host connection timeouts terminate without an endless retry loop', () => {
 
 test('a disconnected host reconnects the existing peer and cancels its watchdog on success', () => {
   const h = hostHarness();
-  h.context.initializePeer();
+  h.context.enablePhoneRemote();
   const peer = h.peers[0];
   peer.ready();
   peer.open = false;
@@ -166,7 +174,7 @@ test('a disconnected host reconnects the existing peer and cancels its watchdog 
 
 test('remote stats advance the lap from the video clock while the host chart timer is stopped', () => {
   const h = hostHarness();
-  h.context.initializePeer();
+  h.context.enablePhoneRemote();
   h.peers[0].ready();
   const channel = new h.Channel('phone');
   h.peers[0].emit('connection', channel);
@@ -188,9 +196,64 @@ function phoneHarness() {
   return h;
 }
 
+test('host networking stays blocked until enabled and disabling cancels retries and pairing', () => {
+  const h = hostHarness();
+  h.context.initializePeer();
+  assert.equal(h.peers.length, 0);
+  h.context.enablePhoneRemote();
+  h.context.enablePhoneRemote();
+  assert.equal(h.peers.length, 1, 'Repeated enable does not create extra connections');
+  const peer = h.peers[0];
+  peer.ready();
+  const channel = new h.Channel('phone');
+  peer.emit('connection', channel);
+  channel.ready();
+  peer.emit('error', {type: 'network'});
+  assert.ok(h.timers.size > 0);
+  h.context.disablePhoneRemote();
+  assert.equal(h.read('remoteAllowed'), false);
+  assert.equal(h.read('hostPeerId'), null);
+  assert.ok(peer.destroyed);
+  assert.equal(channel.open, false);
+  assert.equal(h.timers.size, 0);
+  assert.equal(h.intervals.size, 0);
+  assert.equal(h.document.getElementById('qr-code').innerHTML, '');
+  h.context.initializePeer();
+  h.context.schedulePeerReconnect(peer);
+  assert.equal(h.peers.length, 1, 'Disabled state blocks resume and late retry requests');
+  assert.equal(h.timers.size, 0);
+  h.context.enablePhoneRemote();
+  assert.equal(h.peers.length, 2, 'Explicit re-enable works');
+});
+
+test('phone landing and BFCache restoration wait for Connect and disconnect prevents resume', () => {
+  const h = phoneHarness();
+  h.dispatchWindow('DOMContentLoaded');
+  h.dispatchWindow('pageshow', {persisted: true});
+  h.context.setupPeerConnection();
+  assert.equal(h.peers.length, 0);
+  assert.equal(h.read('connectionState'), 'disabled');
+  h.context.connectRemote();
+  h.context.connectRemote();
+  assert.equal(h.peers.length, 1);
+  h.peers[0].ready();
+  h.peers[0].channels[0].ready();
+  h.context.disconnectRemote();
+  assert.ok(h.peers[0].destroyed);
+  assert.equal(h.timers.size, 0);
+  assert.equal(h.intervals.size, 0);
+  h.dispatchWindow('pageshow', {persisted: true});
+  h.context.retryConnection();
+  assert.equal(h.peers.length, 1);
+  assert.equal(h.read('remoteAllowed'), false);
+  assert.equal(h.read('connectionState'), 'disabled');
+  h.context.connectRemote();
+  assert.equal(h.peers.length, 2);
+});
+
 test('phone clears the connected banner and reconnects to the same scanned host', () => {
   const h = phoneHarness();
-  h.context.init();
+  h.context.connectRemote();
   h.peers[0].ready();
   const channel = h.peers[0].channels[0];
   channel.ready();
@@ -207,7 +270,7 @@ test('phone clears the connected banner and reconnects to the same scanned host'
 
 test('phone stops retrying an obsolete pairing code and offers an explicit retry', () => {
   const h = phoneHarness();
-  h.context.init();
+  h.context.connectRemote();
   for (let i = 0; i < 4; i++) {
     h.peers.at(-1).emit('error', {type: 'peer-unavailable'});
     if (i < 3) h.runNext();
@@ -223,7 +286,7 @@ test('phone stops retrying an obsolete pairing code and offers an explicit retry
 
 test('phone detects a silent channel and clears the stale connected indicator', () => {
   const h = phoneHarness();
-  h.context.init();
+  h.context.connectRemote();
   h.peers[0].ready();
   h.peers[0].channels[0].ready();
   h.read('lastStatsAt = Date.now() - 11000');
@@ -235,7 +298,7 @@ test('phone detects a silent channel and clears the stale connected indicator', 
 
 test('phone preserves an open channel across background suspension and grants resume grace', () => {
   const h = phoneHarness();
-  h.context.init();
+  h.context.connectRemote();
   h.peers[0].ready();
   const channel = h.peers[0].channels[0];
   channel.ready();

@@ -1,4 +1,8 @@
 /* Remote Control Page Styles */
+.remote-privacy { width:min(600px,calc(100% - 32px)); margin:24px auto 0; padding:20px; background:#1c1c1e; border:1px solid #454545; border-radius:12px; font-size:16px; line-height:1.5 }
+.remote-privacy p { margin:0 0 12px }
+.remote-privacy a { color:#8dc5ff }
+.remote-privacy button[hidden] { display:none }
 :root {
     --primary: #FF3B30;
     --primary-dark: #D32F2F;

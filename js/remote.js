@@ -12,15 +12,50 @@ let connectionTimer = null;
 let heartbeatTimer = null;
 let lastStatsAt = 0;
 let seekControlsCleanup = null;
-let connectionState = 'connecting';
+let connectionState = 'disabled';
+let remoteAllowed = false;
 
 function init() {
+    showRemotePermission();
+}
+
+function showRemotePermission() {
+    setConnectionState('disabled');
+    document.getElementById('stop-remote').hidden = true;
+    document.getElementById('content-area').innerHTML = `
+        <div class="error-state">
+            <h1>Kart Remote</h1>
+            <p>Connect to control the session shown on the paired screen. The connection starts only when you select Connect.</p>
+            <button class="retry-btn" type="button" onclick="connectRemote()">Connect</button>
+        </div>
+    `;
+}
+
+function connectRemote() {
     if (!hostId) {
         showError('No Connection ID', 'Please scan the QR code again to connect.');
         return;
     }
+    if (remoteAllowed) return;
+    remoteAllowed = true;
+    document.getElementById('stop-remote').hidden = false;
+    reconnectAttempts = 0;
+    document.getElementById('content-area').innerHTML = `
+        <div class="loading-state">
+            <div class="spinner"></div>
+            <p class="loading-text">Connecting to session…</p>
+        </div>
+    `;
     setupPeerConnection();
     preventDefaults();
+}
+
+function disconnectRemote() {
+    remoteAllowed = false;
+    cleanupRemoteConnection();
+    if (seekControlsCleanup) seekControlsCleanup();
+    reconnectAttempts = 0;
+    showRemotePermission();
 }
 
 function preventDefaults() {
@@ -33,8 +68,8 @@ function setConnectionState(state, message = '') {
     const connected = state === 'connected';
     document.getElementById('body').classList.toggle('connected', connected);
     document.getElementById('connection-banner').classList.toggle('connected', connected);
-    const titles = {connected: 'Connected', connecting: 'Connecting…', reconnecting: 'Reconnecting…', offline: 'Offline'};
-    const descriptions = {connected: 'Controlling session playback', connecting: 'Finding the TV session', reconnecting: 'Playback controls will return when connected', offline: 'Scan the current QR code on the TV to pair again'};
+    const titles = {connected: 'Connected', connecting: 'Connecting…', reconnecting: 'Reconnecting…', offline: 'Offline', disabled: 'Not connected'};
+    const descriptions = {connected: 'Controlling session playback', connecting: 'Finding the TV session', reconnecting: 'Playback controls will return when connected', offline: 'Scan the current QR code on the TV to pair again', disabled: 'Select Connect to pair with the screen'};
     const text = document.getElementById('connection-text');
     text.innerHTML = `<strong>${titles[state]}</strong><small>${message || descriptions[state]}</small>`;
     document.querySelectorAll('#content-area .control-btn, #content-area .quick-btn').forEach(button => {
@@ -260,7 +295,7 @@ function cleanupRemoteConnection() {
 }
 
 function scheduleRemoteReconnect(message = 'The TV connection was interrupted.') {
-    if (reconnectTimer) return;
+    if (!remoteAllowed || reconnectTimer) return;
     cleanupRemoteConnection();
     if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
         showError('TV unavailable', `${message} Scan the current QR code on the TV, or retry when it is ready.`);
@@ -275,6 +310,7 @@ function scheduleRemoteReconnect(message = 'The TV connection was interrupted.')
 }
 
 function retryConnection() {
+    if (!remoteAllowed) { showRemotePermission(); return; }
     if (!hostId) {
         showError('No Connection ID', 'Scan the QR code on the TV to connect.');
         return;
@@ -284,6 +320,7 @@ function retryConnection() {
 }
 
 function setupPeerConnection() {
+    if (!remoteAllowed) return;
     cleanupRemoteConnection();
     setConnectionState(reconnectAttempts ? 'reconnecting' : 'connecting');
     if (typeof Peer !== 'function') {
@@ -380,5 +417,5 @@ document.addEventListener('visibilitychange', () => {
 });
 window.addEventListener('pagehide', cleanupRemoteConnection);
 window.addEventListener('pageshow', event => {
-    if (event.persisted && hostId) retryConnection();
+    if (event.persisted && hostId && remoteAllowed) retryConnection();
 });

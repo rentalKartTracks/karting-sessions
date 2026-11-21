@@ -5,11 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tracks Map — Helmet Cam Heroes</title>
 <meta name="description" content="Explore every driven circuit and configuration plotted on our interactive map. View distance and layouts for our championship venues.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,400&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css"/>
+<script src="vendor/leaflet/leaflet.js" defer></script>
 <style>
   :root {
     --gold:   #e8c84a;
@@ -483,6 +480,25 @@
   }
 </style>
   <link rel="stylesheet" href="css/site.min.css">
+  <style>
+    .topbar { flex-direction: row; align-items: center; }
+    .map-pane { display: flex; flex-direction: column; flex: 1; min-width: 0; min-height: 0; }
+    .map-permission { flex-shrink: 0; padding: 16px 20px; background: var(--surface); border-bottom: 1px solid var(--line); font: 400 1rem/1.5 var(--font-body); }
+    .map-permission p { margin: 0 0 10px; color: var(--text); }
+    .map-permission a, .track-sessions-link { color: var(--accent-bright); text-decoration: underline; text-underline-offset: 3px; }
+    .map-permission button { margin-right: 12px; background: var(--accent); color: white; }
+    .map-permission [hidden] { display: none; }
+    #map { min-height: 180px; }
+    .near-me-btn:disabled { opacity: .6; cursor: default; }
+    .track-sessions-link { display: inline-block; margin-top: 12px; font-size: 14px; }
+    @media (max-width: 768px) {
+      body { height: auto; min-height: 100dvh; overflow: auto; }
+      .main { overflow: visible; flex: none; }
+      .map-pane { min-height: 65vh; }
+      #map { min-height: 320px; }
+      .map-permission { padding: 14px; }
+    }
+  </style>
 
   <!-- Favicon / theme / PWA -->
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -509,7 +525,7 @@
 <div class="topbar">
   <div class="topbar-title">Tracks Map</div>
   <div class="topbar-tag" id="venue-count">Venues</div>
-  <button class="near-me-btn" id="near-me-btn" title="Center the map on your location">📍 Near me</button>
+  <button class="near-me-btn" id="near-me-btn" title="Load OpenStreetMap first to use your location" disabled>📍 Near me</button>
 </div>
 
 <div class="main">
@@ -523,13 +539,26 @@
   </div>
 
   <!-- MAP -->
-  <div id="map"></div>
+  <section class="map-pane" aria-label="Track map">
+    <div class="map-permission">
+      <p id="map-permission-status" role="status">The track list works without external map tiles. Loading OpenStreetMap shares your IP address, browser information, referring site and the map area you view with the OpenStreetMap Foundation. Your choice lasts for this page.</p>
+      <p>“Near me” also asks your browser for your location. It stays in this page’s memory, but the map tiles requested around it can reveal the area to OpenStreetMap.</p>
+      <button id="allow-map" type="button">Load OpenStreetMap</button>
+      <button id="stop-map" type="button" hidden>Disable map and reload</button>
+      <a href="about.html#privacy">Privacy information</a>
+    </div>
+    <div id="map" aria-label="Interactive track map"></div>
+  </section>
 </div>
 
 <script>
 window.addEventListener('DOMContentLoaded', () => {
 
 let tracks = [];
+let mapAllowed = false;
+
+// Remove location-related views saved by older versions. New views stay in memory.
+try { localStorage.removeItem('hch:mapView'); } catch (e) {}
 
 // Init map centered on Lithuania
 const map = L.map('map', {
@@ -538,11 +567,24 @@ const map = L.map('map', {
   zoomControl: false,
 });
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '© OpenStreetMap',
-  subdomains: 'abc',
-  maxZoom: 19,
-}).addTo(map);
+document.getElementById('allow-map').addEventListener('click', () => {
+  if (mapAllowed) return;
+  mapAllowed = true;
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 19,
+  }).addTo(map);
+  document.getElementById('allow-map').hidden = true;
+  document.getElementById('stop-map').hidden = false;
+  document.getElementById('map-permission-status').textContent = 'OpenStreetMap is enabled for this page. It receives your IP address, browser information, referring site and requested map areas. Disable it to reload with external map connections blocked.';
+  if ('geolocation' in navigator) {
+    const button = document.getElementById('near-me-btn');
+    button.disabled = false;
+    button.title = 'Use your location on the map; the viewed area is sent to OpenStreetMap';
+  }
+  map.invalidateSize();
+});
+document.getElementById('stop-map').addEventListener('click', () => window.location.reload());
 
 L.control.zoom({ position: 'bottomright' }).addTo(map);
 
@@ -584,11 +626,7 @@ const popupContent = (t) => `
 const list = document.getElementById('tracks-list');
 let activeId = null;
 
-// ── Location centering (Geolocation API — free, no backend) ──────────────
-// We remember the user's LAST map view (center + zoom), not a fixed point,
-// so panning is respected on return and a saved spot never goes stale. The
-// "Near me" button always fetches a fresh fix.
-const VIEW_KEY = 'hch:mapView';
+// Location is requested only after the visitor enables the map and selects Near me.
 let userMarker = null;
 
 const placedTracks = () => tracks.filter(t => !(t.lat === 0 && t.lng === 0));
@@ -615,8 +653,7 @@ function nearestTrack(lat, lng) {
   return best;
 }
 
-// Drop a "you are here" marker and frame the user together with their
-// nearest track. The resulting view is persisted by the moveend handler.
+// Drop a "you are here" marker and frame the user with their nearest track.
 function showUserLocation(lat, lng) {
   if (userMarker) map.removeLayer(userMarker);
   const icon = L.divIcon({
@@ -633,33 +670,11 @@ function showUserLocation(lat, lng) {
   }
 }
 
-// Persist the current view so the next visit restores exactly where the user
-// left the map (handles panning — no snapping back to a stale location).
-function saveView() {
-  try {
-    const c = map.getCenter();
-    localStorage.setItem(VIEW_KEY, JSON.stringify({ lat: c.lat, lng: c.lng, zoom: map.getZoom() }));
-  } catch (e) {}
-}
-
-// First view: restore the last view if we have one, otherwise frame all tracks
-// (better than the fixed default — Spain/Norway venues were off-screen).
-function applyInitialView() {
-  let v = null;
-  try { v = JSON.parse(localStorage.getItem(VIEW_KEY) || 'null'); } catch (e) {}
-  if (v && typeof v.lat === 'number' && typeof v.lng === 'number' && typeof v.zoom === 'number') {
-    map.setView([v.lat, v.lng], v.zoom);
-  } else {
-    fitAllTracks();
-  }
-  map.on('moveend', saveView); // remember subsequent pans/zooms
-}
-
 const nearBtn = document.getElementById('near-me-btn');
 if (nearBtn) {
   if (!('geolocation' in navigator)) { nearBtn.disabled = true; nearBtn.title = 'Geolocation not supported'; }
   nearBtn.addEventListener('click', () => {
-    if (!('geolocation' in navigator)) return;
+    if (!mapAllowed || !('geolocation' in navigator)) return;
     nearBtn.disabled = true; nearBtn.textContent = '📍 Locating…';
     navigator.geolocation.getCurrentPosition(
       pos => {
@@ -734,6 +749,7 @@ fetch('sessions/tracks-list.json', { cache: 'no-cache' })
           <div class="track-best-label">Track Record</div>
           <div class="track-best-time">${t.bestLap || '--:--'}</div>
         </div>
+        <a class="track-sessions-link" href="sessions.html?track=${encodeURIComponent(t.name)}">View sessions</a>
       `;
 
       card.addEventListener('click', () => {
@@ -749,7 +765,7 @@ fetch('sessions/tracks-list.json', { cache: 'no-cache' })
       list.appendChild(card);
     });
 
-    applyInitialView();
+    fitAllTracks();
   })
   .catch(err => {
     console.error("Error loading map data:", err);
@@ -758,6 +774,6 @@ fetch('sessions/tracks-list.json', { cache: 'no-cache' })
 
 }); // End of DOMContentLoaded
 </script>
-<script src="js/nav.js?v=20261118b"></script>
+<script src="js/nav.js?v=20261121"></script>
 </body>
 </html>

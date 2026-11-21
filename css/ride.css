@@ -32,4 +32,14 @@ h2 { font-size:clamp(24px,2.7vw,40px); line-height:1.1; letter-spacing:-.035em; 
 button { background:transparent; color:#c0c5ca; border:0; text-decoration:underline; cursor:pointer }
 footer { padding:22px 0; color:#bcc1c7 }
 [hidden],#watch[hidden],#cover[hidden] { display:none }
+.external-choice { margin:20px 0; font-size:14px; line-height:1.6; color:#c6cdd5 }
+.external-choice p { margin:0 0 12px }
+.external-choice button,#stop-map { min-height:44px; padding:10px 14px; margin:0 10px 10px 0; border:1px solid #697581; border-radius:6px; color:#f7f3eb; text-decoration:none; font:600 14px/1.4 system-ui,sans-serif }
+.external-choice button:hover,#stop-map:hover { background:#293541 }
+.external-choice button:disabled { opacity:.6; cursor:wait }
+.map-choice { margin:0; padding:clamp(20px,3vw,32px); flex:1; display:flex; flex-direction:column; align-items:flex-start; justify-content:center; min-height:320px }
+.map-choice h2 { margin-bottom:16px; font-size:28px }
+.map-choice[hidden] { display:none }
+#stop-map { margin:12px 16px; align-self:flex-start }
+.external-choice button[hidden],#stop-map[hidden],#archive[hidden] { display:none }
 @media(max-width:740px) { .grid { grid-template-columns:1fr } #map { min-height:350px } #view-ride:not([hidden]) { display:block; padding:12px 16px } .bar { height:56px } }
